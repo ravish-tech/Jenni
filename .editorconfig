@@ -1,0 +1,4 @@
+root = true
+
+[*]
+csharp_empty_block_style = together_same_line

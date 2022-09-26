@@ -1,0 +1,39 @@
+[
+  {
+    "Name": "Workspace Sample",
+    "Constants": {
+      "baseUrl": "https://jsonplaceholder.typicode.com/users"
+    },
+    "Requests": [
+      {
+        "Id:": "SomeTest",
+        "Method": "Get",
+        "Request": "https://gorest.co.in/public/v2/users",
+        "Payload": {
+          "data": "here"
+        }
+      },
+      {
+        "Id:": "Post test",
+        "Method": "Post",
+        "Request": "https://jsonplaceholder.typicode.com/posts",
+        "Headers": {
+          "Content-Type": "application/json"
+        },
+        "Payload": {
+          "Id": 123,
+          "title": "something"
+        }
+      }
+    ],
+    "Environments": [
+      {
+        "Name": "CUI",
+        "constants": {
+          "baseUrl": "https://jsonplaceholder.typicode.com/users"
+        },
+        "Variables": {}
+      }
+    ]
+  }
+]
