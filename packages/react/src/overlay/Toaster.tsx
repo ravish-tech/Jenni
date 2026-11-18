@@ -9,7 +9,7 @@ import {
   toast,
   type ToastItem,
   type ToasterPosition,
-} from '@jenni/core/behaviors/toast.js';
+} from 'jenni-core/behaviors/toast.js';
 import { cx, flag, mergeRefs } from './types';
 
 export { toast };

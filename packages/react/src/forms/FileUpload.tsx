@@ -7,7 +7,7 @@ import {
   type DragEvent as ReactDragEvent,
   type ReactNode,
 } from 'react';
-import { formatFileSize, validateUploadFile } from '@jenni/core/behaviors/file-upload.js';
+import { formatFileSize, validateUploadFile } from 'jenni-core/behaviors/file-upload.js';
 import { FieldContext, cx, flag, useControllable, type Tone } from './types';
 
 export interface RejectedFileEntry {

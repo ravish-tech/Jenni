@@ -19,7 +19,7 @@ import {
   JButton,
   JStack,
   JInline,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const heroSlide = ref(0);
 

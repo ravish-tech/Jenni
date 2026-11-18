@@ -7,7 +7,7 @@ import {
   type ReactNode,
   type SyntheticEvent,
 } from 'react';
-import { lightDismiss } from '@jenni/core/behaviors/dialog.js';
+import { lightDismiss } from 'jenni-core/behaviors/dialog.js';
 import { cx, mergeRefs, sizeAttr, useControllable, type OverlaySize } from './types';
 
 export interface DialogProps extends Omit<ComponentProps<'dialog'>, 'title' | 'children'> {

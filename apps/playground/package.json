@@ -9,9 +9,9 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "@jenni/core": "*",
-    "@jenni/vue": "*",
-    "@jenni/react": "*",
+    "jenni-core": "*",
+    "jenni-vue": "*",
+    "jenni-react": "*",
     "vue": "^3.5.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

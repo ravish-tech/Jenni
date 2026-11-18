@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JInline, JRadio, JRadioGroup } from '@jenni/vue';
+import { JInline, JRadio, JRadioGroup } from 'jenni-vue';
 
 const tones = ['accent', 'neutral', 'danger', 'success', 'warning', 'info'] as const;
 const plan = ref('pro');

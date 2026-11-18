@@ -17,7 +17,7 @@ import {
   JStack,
   JInline,
   JBadge,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const pageMain = ref(5);
 const pageSoft = ref(4);

@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JCard, JInline, JList, JListItem, JStack, JSwitch } from '@jenni/vue';
+import { JCard, JInline, JList, JListItem, JStack, JSwitch } from 'jenni-vue';
 
 const tones = ['accent', 'neutral', 'danger', 'success', 'warning', 'info'] as const;
 const wifi = ref(true);

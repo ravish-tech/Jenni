@@ -12,7 +12,7 @@ import {
 import {
   createResizableGroup,
   type ResizableGroupController,
-} from '@jenni/core/behaviors/resizable.js';
+} from 'jenni-core/behaviors/resizable.js';
 import { attr, cx, mergeRefs, type ResizableOrientation } from './types';
 
 export type ResizableGroupHandle = ResizableGroupController;

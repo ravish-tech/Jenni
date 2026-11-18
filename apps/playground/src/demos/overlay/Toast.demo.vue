@@ -21,7 +21,7 @@ import {
   JStack,
   JInline,
   type ToasterPosition,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const position = ref<ToasterPosition>('bottom-end');
 const lastUndo = ref(false);

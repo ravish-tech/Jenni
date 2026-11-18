@@ -34,7 +34,7 @@ import {
   JSeparator,
   type JCanvasGrid,
   type JCanvasToolsPlacement,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 /* ---- 1. AI Canvas state ---- */
 const artifactOpen = ref(true);

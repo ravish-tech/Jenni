@@ -18,7 +18,7 @@ import {
   parseTimeValue,
   stepTimePart,
   to12HourDisplay,
-} from '@jenni/core/behaviors/time-picker.js';
+} from 'jenni-core/behaviors/time-picker.js';
 import {
   cx,
   flag,

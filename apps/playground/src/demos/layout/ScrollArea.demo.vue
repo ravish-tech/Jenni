@@ -22,7 +22,7 @@ import {
   JAvatar,
   JButton,
   JKbd,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const verticalRef = ref<InstanceType<typeof JScrollArea> | null>(null);
 const vState = ref({

@@ -8,7 +8,7 @@ import {
   createScrollArea,
   type ScrollAreaController,
   type ScrollAreaState,
-} from '@jenni/core/behaviors/scroll-area.js';
+} from 'jenni-core/behaviors/scroll-area.js';
 import {
   attr,
   cx,

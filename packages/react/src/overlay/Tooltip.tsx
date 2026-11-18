@@ -6,7 +6,7 @@ import {
   type ReactNode,
   type ToggleEvent,
 } from 'react';
-import { createTooltip } from '@jenni/core/behaviors/tooltip.js';
+import { createTooltip } from 'jenni-core/behaviors/tooltip.js';
 import {
   alignAttr,
   cx,

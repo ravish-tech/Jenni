@@ -12,7 +12,7 @@ import {
   shiftYearMonth,
   stepFocusedDate,
   todayIso,
-} from '@jenni/core/behaviors/date-picker.js';
+} from 'jenni-core/behaviors/date-picker.js';
 import type { DatePickerMode, DateRange, Tone } from './types';
 
 const model = defineModel<string | DateRange | null>({ default: null });

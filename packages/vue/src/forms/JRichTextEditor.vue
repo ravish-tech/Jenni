@@ -21,7 +21,7 @@ import {
   restoreSelectionRange,
   saveSelectionRange,
   type ActiveFormats,
-} from '@jenni/core/behaviors/rich-text.js';
+} from 'jenni-core/behaviors/rich-text.js';
 import {
   splitAttrs,
   useFieldAttrs,

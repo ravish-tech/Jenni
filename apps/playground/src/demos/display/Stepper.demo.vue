@@ -21,7 +21,7 @@ import {
   JInline,
   JGrid,
   type JStepItem,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const activeStep = ref(1);
 

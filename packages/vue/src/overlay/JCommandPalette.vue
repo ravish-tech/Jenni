@@ -9,12 +9,12 @@ import {
   useSlots,
   watch,
 } from 'vue';
-import { lightDismiss } from '@jenni/core/behaviors/dialog.js';
+import { lightDismiss } from 'jenni-core/behaviors/dialog.js';
 import {
   bindCommandShortcut,
   createCommandPalette,
   type CommandPaletteController,
-} from '@jenni/core/behaviors/command-palette.js';
+} from 'jenni-core/behaviors/command-palette.js';
 import type { CommandGroup, CommandItem, JCommandPaletteProps } from './types';
 
 defineOptions({ inheritAttrs: false });

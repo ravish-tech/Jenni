@@ -10,7 +10,7 @@ export const meta = {
 
 <script setup lang="ts">
 import { DemoSection, DemoCode } from '@/kit';
-import { JSpinner, JCard, JButton, JInline } from '@jenni/vue';
+import { JSpinner, JCard, JButton, JInline } from 'jenni-vue';
 
 const colors = [
   'var(--j-fg-muted)',

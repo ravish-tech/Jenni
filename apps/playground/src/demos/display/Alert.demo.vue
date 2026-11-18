@@ -10,7 +10,7 @@ export const meta = {
 
 <script setup lang="ts">
 import { DemoSection, DemoCode } from '@/kit';
-import { JAlert, JButton, JStack } from '@jenni/vue';
+import { JAlert, JButton, JStack } from 'jenni-vue';
 
 const tones = [
   { tone: 'info', title: 'Scheduled maintenance', text: 'Read-only mode begins Sunday at 02:00 UTC for 15 minutes.' },

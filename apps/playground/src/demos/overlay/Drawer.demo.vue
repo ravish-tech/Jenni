@@ -23,7 +23,7 @@ import {
   JInline,
   type DrawerSide,
   type DrawerSize,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const envName = ref('production-eu-central');
 const domain = ref('api.acme.dev');

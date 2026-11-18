@@ -11,7 +11,7 @@
     "preview": "vite preview --port 5174"
   },
   "dependencies": {
-    "@jenni/core": "*",
+    "jenni-core": "*",
     "@shoelace-style/shoelace": "^2.20.0",
     "@tailwindcss/postcss": "^4.1.0",
     "bootstrap": "^5.3.3",
@@ -21,8 +21,8 @@
   "devDependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@jenni/react": "^0.1.0",
-    "@jenni/vue": "^0.1.0",
+    "jenni-react": "^0.1.0",
+    "jenni-vue": "^0.1.0",
     "@mui/material": "^9.5.0",
     "@primeuix/themes": "^2.0.3",
     "@radix-ui/themes": "^3.3.0",

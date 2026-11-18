@@ -1,14 +1,14 @@
-declare module '@jenni/core/behaviors/table.js' {
+declare module 'jenni-core/behaviors/table.js' {
   export function createDataTable(root: HTMLElement): () => void;
   export function initDataTables(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/stepper.js' {
+declare module 'jenni-core/behaviors/stepper.js' {
   export function createStepper(root: HTMLElement): () => void;
   export function initSteppers(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/tree-view.js' {
+declare module 'jenni-core/behaviors/tree-view.js' {
   export type TreeKeyActionType = 'focus' | 'expand' | 'collapse' | 'select';
   export interface TreeKeyResult {
     action: TreeKeyActionType;
@@ -20,7 +20,7 @@ declare module '@jenni/core/behaviors/tree-view.js' {
   export function initTreeViews(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/carousel.js' {
+declare module 'jenni-core/behaviors/carousel.js' {
   export function createCarousel(root: HTMLElement): () => void;
   export function initCarousels(root?: ParentNode): () => void;
 }

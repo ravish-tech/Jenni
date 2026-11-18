@@ -19,7 +19,7 @@ import {
   JInline,
   JStack,
   type DateRange,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const dueDate = ref<string | null>('2026-11-18');
 const sprintWindow = ref<DateRange | null>({ start: '2026-11-09', end: '2026-11-20' });

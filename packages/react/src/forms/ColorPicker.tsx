@@ -15,7 +15,7 @@ import {
   hsvToHex,
   parseColor,
   type HsvaColor,
-} from '@jenni/core/behaviors/color-picker.js';
+} from 'jenni-core/behaviors/color-picker.js';
 import {
   cx,
   flag,

@@ -25,7 +25,7 @@ import {
   JBadge,
   JAvatar,
   JKbd,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const collapsed = ref(false);
 const activeItem = ref('issues');

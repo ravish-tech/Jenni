@@ -21,7 +21,7 @@ import {
   type JDataTableColumn,
   type JDisplayTone,
   type JTableSortDirection,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 interface DeploymentRow {
   id: string;

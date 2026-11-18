@@ -25,7 +25,7 @@ import {
   TabList,
   TabPanel,
   Tabs,
-} from '@jenni/react';
+} from 'jenni-react';
 
 function applyTheme(dark: boolean, density = 'default') {
   document.documentElement.dataset.theme = dark ? 'dark' : 'light';
@@ -100,8 +100,8 @@ function ParityApp() {
       <Alert
         tone="info"
         variant="soft"
-        title="@jenni/react · React 19 native ref & zero CSS-in-JS"
-        description="Direct Fiber-to-DOM primitives over @jenni/core @layer CSS + native <dialog>."
+        title="jenni-react · React 19 native ref & zero CSS-in-JS"
+        description="Direct Fiber-to-DOM primitives over jenni-core @layer CSS + native <dialog>."
       />
 
       <Progress value={78} max={100} size="sm" label="Canary rollout progress" />

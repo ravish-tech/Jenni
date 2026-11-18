@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, provide, useTemplateRef, watch } from 'vue';
-import { segmentedKeydown, syncSegmentedIndicator } from '@jenni/core/behaviors/segmented.js';
+import { segmentedKeydown, syncSegmentedIndicator } from 'jenni-core/behaviors/segmented.js';
 import { FieldKey, SegmentedKey, sizeAttr, type SegmentedOption, type Size, type Tone } from './types';
 
 const model = defineModel<string>();

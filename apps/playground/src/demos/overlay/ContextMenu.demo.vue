@@ -21,7 +21,7 @@ import {
   JStack,
   JInline,
   JGrid,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const lastAction = ref('Right-click the canvas card');
 const snapToGrid = ref(true);

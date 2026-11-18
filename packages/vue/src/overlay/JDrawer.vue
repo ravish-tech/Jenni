@@ -2,7 +2,7 @@
 // JDrawer — native modal <dialog class="j-drawer"> sheet anchored to any viewport edge.
 // Supports flush docking or `inset` (floating sheet with 8px margin & 4-corner radius).
 import { onBeforeUnmount, onMounted, ref, useId, useSlots, watch } from 'vue';
-import { createDrawer } from '@jenni/core/behaviors/drawer.js';
+import { createDrawer } from 'jenni-core/behaviors/drawer.js';
 import type { DrawerSide, DrawerSize } from './types';
 
 defineOptions({ inheritAttrs: false });

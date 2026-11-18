@@ -11,7 +11,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from 'react';
-import { treeKeydown } from '@jenni/core/behaviors/tree-view.js';
+import { treeKeydown } from 'jenni-core/behaviors/tree-view.js';
 import { attr, type DisplaySize, type DisplayTone } from './types';
 
 export interface TreeNode {

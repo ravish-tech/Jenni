@@ -10,7 +10,7 @@ export const meta = {
 
 <script setup lang="ts">
 import { DemoSection, DemoCode } from '@/kit';
-import { JSeparator, JCard, JButton, JInput, JStack, JInline } from '@jenni/vue';
+import { JSeparator, JCard, JButton, JInput, JStack, JInline } from 'jenni-vue';
 
 const html = `<div class="j-stack" data-gap="field" style="width:100%;max-width:420px">
   <hr class="j-separator">

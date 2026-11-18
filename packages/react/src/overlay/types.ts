@@ -7,7 +7,7 @@ import type {
   ToastOptions,
   ToasterPosition,
   ToastTone,
-} from '@jenni/core/behaviors/toast.js';
+} from 'jenni-core/behaviors/toast.js';
 
 export type FloatingSide = 'top' | 'right' | 'bottom' | 'left';
 export type FloatingAlign = 'start' | 'center' | 'end';

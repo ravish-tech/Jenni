@@ -10,7 +10,7 @@ export const meta = {
 
 <script setup lang="ts">
 import { DemoSection, DemoCode } from '@/kit';
-import { JBadge, JAvatar, JInline, JStack, JList, JListItem } from '@jenni/vue';
+import { JBadge, JAvatar, JInline, JStack, JList, JListItem } from 'jenni-vue';
 
 const tones = ['accent', 'neutral', 'success', 'warning', 'danger', 'info'] as const;
 const variants = ['soft', 'solid', 'outline'] as const;

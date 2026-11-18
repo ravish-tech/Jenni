@@ -11,11 +11,11 @@ import {
   type ReactNode,
   type SyntheticEvent,
 } from 'react';
-import { lightDismiss } from '@jenni/core/behaviors/dialog.js';
+import { lightDismiss } from 'jenni-core/behaviors/dialog.js';
 import {
   bindCommandShortcut,
   createCommandPalette,
-} from '@jenni/core/behaviors/command-palette.js';
+} from 'jenni-core/behaviors/command-palette.js';
 import {
   cx,
   flag,

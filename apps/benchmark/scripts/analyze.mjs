@@ -135,13 +135,13 @@ async function bundleViteEntry({
 }
 
 function resolvePkgVersion(name) {
-  if (name === '@jenni/core') {
+  if (name === 'jenni-core') {
     return JSON.parse(fsSync.readFileSync(path.join(REPO_ROOT, 'packages/core/package.json'), 'utf8')).version;
   }
-  if (name === '@jenni/vue') {
+  if (name === 'jenni-vue') {
     return JSON.parse(fsSync.readFileSync(path.join(REPO_ROOT, 'packages/vue/package.json'), 'utf8')).version;
   }
-  if (name === '@jenni/react') {
+  if (name === 'jenni-react') {
     return JSON.parse(fsSync.readFileSync(path.join(REPO_ROOT, 'packages/react/package.json'), 'utf8')).version;
   }
   for (const base of [path.join(BENCH_ROOT, 'node_modules'), path.join(REPO_ROOT, 'node_modules')]) {
@@ -330,7 +330,7 @@ async function main() {
   // =========================================================================
   // LEVEL 1: BASE / CORE
   // =========================================================================
-  console.log('⚡ [Level 1/3] Analyzing Base / Core frameworks (@jenni/core, Bootstrap 5, Tailwind+DaisyUI, Shoelace)...');
+  console.log('⚡ [Level 1/3] Analyzing Base / Core frameworks (jenni-core, Bootstrap 5, Tailwind+DaisyUI, Shoelace)...');
 
   const jenniKitCssEntry = path.join(TMP_DIR, 'jenni-kit.css');
   await fs.writeFile(
@@ -656,8 +656,8 @@ async function main() {
   const coreFrameworks = [
     {
       id: 'jenni',
-      name: '@jenni/core',
-      package: `@jenni/core@${resolvePkgVersion('@jenni/core')}`,
+      name: 'jenni-core',
+      package: `jenni-core@${resolvePkgVersion('jenni-core')}`,
       paradigm: 'Zero-specificity @layer CSS + OKLCH tokens + native <dialog>/[popover] + O(1) delegated JS',
       kit: packBundle(jenniKitCss, jenniKitJs, 12),
       full: packBundle(jenniFullCss, jenniFullJs, jenniCoreCompCount),
@@ -739,7 +739,7 @@ async function main() {
   // =========================================================================
   // LEVEL 2: VUE 3 WRAPPERS & UI FRAMEWORKS
   // =========================================================================
-  console.log('⚡ [Level 2/3] Analyzing Vue 3 UI libraries (@jenni/vue, Vuetify 3, PrimeVue 4, Element Plus)...');
+  console.log('⚡ [Level 2/3] Analyzing Vue 3 UI libraries (jenni-vue, Vuetify 3, PrimeVue 4, Element Plus)...');
 
   const vueRuntimeEntry = `
     import { createApp, ref, computed, watch, h, nextTick } from 'vue';
@@ -753,11 +753,11 @@ async function main() {
   const vueRuntimeStats = measureBytes(vueRuntimeBundle.jsBuf);
 
   const vueJenniKitCode = `
-    import { JButton, JInput, JSelect, JCheckbox, JSwitch, JBadge, JAvatar, JCard, JAlert, JProgress, JTabs, JTabList, JTab, JTabPanel, JDialog } from '@jenni/vue';
+    import { JButton, JInput, JSelect, JCheckbox, JSwitch, JBadge, JAvatar, JCard, JAlert, JProgress, JTabs, JTabList, JTab, JTabPanel, JDialog } from 'jenni-vue';
     export const kit = [JButton, JInput, JSelect, JCheckbox, JSwitch, JBadge, JAvatar, JCard, JAlert, JProgress, JTabs, JTabList, JTab, JTabPanel, JDialog];
   `;
   const vueJenniFullCode = `
-    import * as JenniVue from '@jenni/vue';
+    import * as JenniVue from 'jenni-vue';
     export { JenniVue };
   `;
 
@@ -915,9 +915,9 @@ async function main() {
   const vueFrameworks = [
     {
       id: 'jenni',
-      name: '@jenni/vue',
-      package: `@jenni/vue@${resolvePkgVersion('@jenni/vue')}`,
-      paradigm: 'Zero-<style> Vue 3 SFC primitives over @jenni/core @layer CSS + native <dialog>/[popover]',
+      name: 'jenni-vue',
+      package: `jenni-vue@${resolvePkgVersion('jenni-vue')}`,
+      paradigm: 'Zero-<style> Vue 3 SFC primitives over jenni-core @layer CSS + native <dialog>/[popover]',
       kit: packBundle(jenniKitCss, vJenniKit.jsBuf, 12, vJenniKitWithVue.jsBuf),
       full: packBundle(jenniFullCss, vJenniFull.jsBuf, jenniVueCompCount),
       cssHygiene: analyzeCssHygiene(jenniFullCss),
@@ -998,7 +998,7 @@ async function main() {
   // =========================================================================
   // LEVEL 3: REACT 19 WRAPPERS & UI FRAMEWORKS
   // =========================================================================
-  console.log('⚡ [Level 3/3] Analyzing React 19 UI libraries (@jenni/react, MUI, Ant Design, Radix Themes)...');
+  console.log('⚡ [Level 3/3] Analyzing React 19 UI libraries (jenni-react, MUI, Ant Design, Radix Themes)...');
 
   const reactExt = ['react', 'react-dom', 'react/jsx-runtime', 'react-dom/client'];
 
@@ -1013,11 +1013,11 @@ async function main() {
   const reactRuntimeStats = measureBytes(reactRuntimeBundle.jsBuf);
 
   const reactJenniKitCode = `
-    import { Button, Input, Select, Checkbox, Switch, Badge, Avatar, Card, Alert, Progress, Tabs, TabList, Tab, TabPanel, Dialog } from '@jenni/react';
+    import { Button, Input, Select, Checkbox, Switch, Badge, Avatar, Card, Alert, Progress, Tabs, TabList, Tab, TabPanel, Dialog } from 'jenni-react';
     export const kit = [Button, Input, Select, Checkbox, Switch, Badge, Avatar, Card, Alert, Progress, Tabs, TabList, Tab, TabPanel, Dialog];
   `;
   const reactJenniFullCode = `
-    import * as JenniReact from '@jenni/react';
+    import * as JenniReact from 'jenni-react';
     export { JenniReact };
   `;
 
@@ -1127,9 +1127,9 @@ async function main() {
   const reactFrameworks = [
     {
       id: 'jenni',
-      name: '@jenni/react',
-      package: `@jenni/react@${resolvePkgVersion('@jenni/react')}`,
-      paradigm: 'React 19 native-ref TSX primitives over @jenni/core @layer CSS + zero CSS-in-JS',
+      name: 'jenni-react',
+      package: `jenni-react@${resolvePkgVersion('jenni-react')}`,
+      paradigm: 'React 19 native-ref TSX primitives over jenni-core @layer CSS + zero CSS-in-JS',
       kit: packBundle(jenniKitCss, rJenniKit.jsBuf, 12, rJenniKitWithReact.jsBuf),
       full: packBundle(jenniFullCss, rJenniFull.jsBuf, jenniReactCompCount),
       cssHygiene: analyzeCssHygiene(jenniFullCss),

@@ -1,6 +1,6 @@
 import { createSSRApp, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
-import { JBadge, JButton, JCard, JCol, JGrid, JList, JListItem, JSwitch } from '@jenni/vue';
+import { JBadge, JButton, JCard, JCol, JGrid, JList, JListItem, JSwitch } from 'jenni-vue';
 import { createVuetify } from 'vuetify';
 import { VBtn, VCard, VCardText, VChip, VCol, VRow, VSwitch as VtSwitch } from 'vuetify/components';
 import PrimeVue from 'primevue/config';
@@ -15,7 +15,7 @@ export async function renderVuePayloads(rows = 200, cards = 24): Promise<Record<
   const rowIdx = Array.from({ length: rows }, (_, i) => i);
   const cardIdx = Array.from({ length: cards }, (_, i) => i);
 
-  // 1. @jenni/vue
+  // 1. jenni-vue
   const jenniApp = createSSRApp({
     render: () =>
       h('div', [

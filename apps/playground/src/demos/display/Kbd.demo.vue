@@ -10,7 +10,7 @@ export const meta = {
 
 <script setup lang="ts">
 import { DemoSection, DemoCode } from '@/kit';
-import { JKbd, JInline, JList, JListItem } from '@jenni/vue';
+import { JKbd, JInline, JList, JListItem } from 'jenni-vue';
 
 const shortcuts = [
   { label: 'Command palette', keys: ['⌘', 'K'] },

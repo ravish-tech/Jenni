@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { createShell, type ShellController } from '@jenni/core/behaviors/shell.js';
+import { createShell, type ShellController } from 'jenni-core/behaviors/shell.js';
 import { attr, type JAppShellHandle, type JAppShellProps, type JShellPane } from './types';
 
 const props = withDefaults(defineProps<JAppShellProps>(), {

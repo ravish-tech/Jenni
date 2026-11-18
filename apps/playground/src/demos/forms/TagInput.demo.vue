@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JCard, JField, JStack, JTagInput } from '@jenni/vue';
+import { JCard, JField, JStack, JTagInput } from 'jenni-vue';
 
 const topics = ref(['design-system', 'oklch', 'a11y']);
 const sizeTags = reactive({

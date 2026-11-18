@@ -15,10 +15,10 @@ This file is the contract every contributor (human or agent) follows.
 ## Layers
 
 ```
-@jenni/core   → tokens.css + base.css + component CSS + tiny vanilla JS behaviors
+jenni-core   → tokens.css + base.css + component CSS + tiny vanilla JS behaviors
                 Works in plain HTML. Zero framework. This is the source of truth.
-@jenni/vue    → Vue 3 components. Render core markup. Add state, v-model, a11y wiring.
-@jenni/react  → React 19 components. Same markup, same props names where possible.
+jenni-vue    → Vue 3 components. Render core markup. Add state, v-model, a11y wiring.
+jenni-react  → React 19 components. Same markup, same props names where possible.
 (future)      → svelte, solid, web-components… all thin wrappers over core.
 apps/playground → Dev-only showcase + design lab with feedback notes.
 ```

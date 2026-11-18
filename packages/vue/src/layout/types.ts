@@ -1,7 +1,7 @@
 /// <reference path="./core.d.ts" />
 import type { InjectionKey } from 'vue';
-import type { ResizableGroupController } from '@jenni/core/behaviors/resizable.js';
-import type { ScrollAreaState } from '@jenni/core/behaviors/scroll-area.js';
+import type { ResizableGroupController } from 'jenni-core/behaviors/resizable.js';
+import type { ScrollAreaState } from 'jenni-core/behaviors/scroll-area.js';
 
 export type { ScrollAreaState };
 export type ResizableGroupHandle = ResizableGroupController;

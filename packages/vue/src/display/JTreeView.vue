@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, provide, ref } from 'vue';
-import { treeKeydown } from '@jenni/core/behaviors/tree-view.js';
+import { treeKeydown } from 'jenni-core/behaviors/tree-view.js';
 import JTreeItem from './JTreeItem.vue';
 import { TREE_VIEW_KEY, type JTreeViewProps } from './types';
 

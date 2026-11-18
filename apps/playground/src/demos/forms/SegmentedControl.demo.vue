@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JCard, JInline, JSegmentedControl, JSegmentedItem, JStack } from '@jenni/vue';
+import { JCard, JInline, JSegmentedControl, JSegmentedItem, JStack } from 'jenni-vue';
 
 const period = ref('week');
 const view = ref('board');

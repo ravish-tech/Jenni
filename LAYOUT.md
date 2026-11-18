@@ -2,7 +2,7 @@
 
 The layout system defines **where content lives, how components relate in space, canonical heights, and page-level screen architectures** — inspired by Material Design 3, Apple HIG, Dieter Rams, and Linear.
 
-All spatial rules live as CSS custom properties in `@jenni/core` (`tokens.css` + `components/layout.css`) and scale automatically with `--j-density`.
+All spatial rules live as CSS custom properties in `jenni-core` (`tokens.css` + `components/layout.css`) and scale automatically with `--j-density`.
 
 ---
 

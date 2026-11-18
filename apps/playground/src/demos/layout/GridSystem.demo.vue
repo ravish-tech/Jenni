@@ -25,7 +25,7 @@ import {
   JField,
   JInput,
   type JGap,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const showGuides = ref(true);
 const gridGap = ref<JGap>('field');

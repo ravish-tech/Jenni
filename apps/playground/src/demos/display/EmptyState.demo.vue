@@ -15,7 +15,7 @@ import {
   JButton,
   JCard,
   JGrid,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const html = `<div class="j-empty-state" data-variant="dashed" style="max-width:480px">
   <div class="j-empty-state__icon" aria-hidden="true">

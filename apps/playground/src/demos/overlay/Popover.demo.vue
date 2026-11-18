@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JPopover, JButton, JInput, JField, JSwitch, JBadge, JStack, JInline, JGrid } from '@jenni/vue';
+import { JPopover, JButton, JInput, JField, JSwitch, JBadge, JStack, JInline, JGrid } from 'jenni-vue';
 
 const publicLink = ref(true);
 const linkCopied = ref(false);

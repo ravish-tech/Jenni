@@ -6,7 +6,7 @@
 //     <JDropdownItem shortcut="⇧⌘P">Profile</JDropdownItem>
 //   </JDropdownMenu>
 import { onBeforeUnmount, onMounted, ref, useId, useSlots, watch } from 'vue';
-import { createMenu } from '@jenni/core/behaviors/menu.js';
+import { createMenu } from 'jenni-core/behaviors/menu.js';
 import type { FloatingAlign, FloatingSide } from './types';
 
 defineOptions({ inheritAttrs: false });

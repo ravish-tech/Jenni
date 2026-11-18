@@ -1,5 +1,5 @@
 {
-  "name": "@jenni/react",
+  "name": "jenni-react",
   "version": "0.1.0",
   "description": "Jenni (pronounced 'yenni') components for React 19 — beauty, simplicity, and performance. Built in loving memory of Jenni.",
   "license": "Apache-2.0",
@@ -40,7 +40,7 @@
     }
   },
   "peerDependencies": {
-    "@jenni/core": "^0.1.0",
+    "jenni-core": "^0.1.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
   },

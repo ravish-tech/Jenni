@@ -5,7 +5,7 @@
 //     <template #footer="{ close }"><button class="j-button" @click="close">Cancel</button></template>
 //   </JDialog>
 import { onBeforeUnmount, onMounted, ref, useId, useSlots, watch } from 'vue';
-import { lightDismiss } from '@jenni/core/behaviors/dialog.js';
+import { lightDismiss } from 'jenni-core/behaviors/dialog.js';
 
 defineOptions({ inheritAttrs: false });
 

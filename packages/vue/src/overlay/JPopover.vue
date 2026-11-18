@@ -5,7 +5,7 @@
 //     …panel content…
 //   </JPopover>
 import { onBeforeUnmount, onMounted, ref, useId, useSlots, watch } from 'vue';
-import { createPopover } from '@jenni/core/behaviors/popover.js';
+import { createPopover } from 'jenni-core/behaviors/popover.js';
 
 defineOptions({ inheritAttrs: false });
 

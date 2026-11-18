@@ -40,9 +40,9 @@ jobs:
       - name: Pack release tarballs & CDN assets
         run: |
           mkdir -p release-assets
-          npm pack -w @jenni/core --pack-destination ./release-assets
-          npm pack -w @jenni/vue --pack-destination ./release-assets
-          npm pack -w @jenni/react --pack-destination ./release-assets
+          npm pack -w jenni-core --pack-destination ./release-assets
+          npm pack -w jenni-vue --pack-destination ./release-assets
+          npm pack -w jenni-react --pack-destination ./release-assets
           cp packages/core/dist/jenni.css ./release-assets/jenni.css
           cp packages/core/dist/jenni.iife.js ./release-assets/jenni.iife.js
           # Stable versionless aliases so latest/download URLs never change
@@ -111,6 +111,6 @@ jobs:
         run: |
           npm ci
           npm run build:packages
-          npm publish -w @jenni/core --provenance --access public
-          npm publish -w @jenni/vue --provenance --access public
-          npm publish -w @jenni/react --provenance --access public
+          npm publish -w jenni-core --provenance --access public
+          npm publish -w jenni-vue --provenance --access public
+          npm publish -w jenni-react --provenance --access public

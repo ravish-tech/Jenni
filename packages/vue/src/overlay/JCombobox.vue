@@ -4,7 +4,7 @@
 // with live filtering, grouped headers, checkmark indicators, and active-descendant
 // keyboard navigation without stealing focus from the input.
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, watch } from 'vue';
-import { anchorCombobox } from '@jenni/core/behaviors/combobox.js';
+import { anchorCombobox } from 'jenni-core/behaviors/combobox.js';
 import type { ComboboxOption, ComboboxSize } from './types';
 
 defineOptions({ inheritAttrs: false });

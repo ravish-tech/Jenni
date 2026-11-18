@@ -28,7 +28,7 @@ import {
   JProgress,
   JKbd,
   type JLayoutTone,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const bentoWidth = ref<'100%' | '780px' | '480px'>('100%');
 

@@ -1,4 +1,4 @@
-declare module '@jenni/core/behaviors/tooltip.js' {
+declare module 'jenni-core/behaviors/tooltip.js' {
   export interface TooltipOptions {
     delay?: number;
     closeDelay?: number;
@@ -17,7 +17,7 @@ declare module '@jenni/core/behaviors/tooltip.js' {
   export function initTooltips(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/popover.js' {
+declare module 'jenni-core/behaviors/popover.js' {
   export function createPopover(
     trigger: HTMLElement,
     panel: HTMLElement,
@@ -26,13 +26,13 @@ declare module '@jenni/core/behaviors/popover.js' {
   export function initPopovers(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/dialog.js' {
+declare module 'jenni-core/behaviors/dialog.js' {
   export function lightDismiss(dialog: HTMLDialogElement): () => void;
   export function requestClose(dialog: HTMLDialogElement): void;
   export function initDialogs(root?: Document | HTMLElement): () => void;
 }
 
-declare module '@jenni/core/behaviors/menu.js' {
+declare module 'jenni-core/behaviors/menu.js' {
   export interface MenuOptions {
     side?: string;
     loop?: boolean;
@@ -46,7 +46,7 @@ declare module '@jenni/core/behaviors/menu.js' {
   export function initMenus(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/tabs.js' {
+declare module 'jenni-core/behaviors/tabs.js' {
   export function getTabs(list: HTMLElement): HTMLElement[];
   export function syncTabIndicator(list: HTMLElement, animate?: boolean): void;
   export function tabsKeydown(list: HTMLElement, e: KeyboardEvent): HTMLElement | null;
@@ -54,7 +54,7 @@ declare module '@jenni/core/behaviors/tabs.js' {
   export function initTabs(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/toast.js' {
+declare module 'jenni-core/behaviors/toast.js' {
   export type ToastTone = 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info';
   export type ToasterPosition = 'bottom-end' | 'bottom-center' | 'top-end' | 'top-center';
   export interface ToastAction {
@@ -108,7 +108,7 @@ declare module '@jenni/core/behaviors/toast.js' {
   export function initToasts(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/drawer.js' {
+declare module 'jenni-core/behaviors/drawer.js' {
   export function lightDismiss(dialog: HTMLDialogElement): () => void;
   export function requestClose(dialog: HTMLDialogElement): void;
   export function createDrawer(
@@ -118,7 +118,7 @@ declare module '@jenni/core/behaviors/drawer.js' {
   export function initDrawers(root?: Document | HTMLElement): () => void;
 }
 
-declare module '@jenni/core/behaviors/combobox.js' {
+declare module 'jenni-core/behaviors/combobox.js' {
   export function anchorCombobox(
     shell: HTMLElement,
     listbox: HTMLElement,
@@ -128,7 +128,7 @@ declare module '@jenni/core/behaviors/combobox.js' {
   export function initComboboxes(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/context-menu.js' {
+declare module 'jenni-core/behaviors/context-menu.js' {
   export interface ContextMenuOptions {
     loop?: boolean;
     manageChecked?: boolean;
@@ -141,7 +141,7 @@ declare module '@jenni/core/behaviors/context-menu.js' {
   export function initContextMenus(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/hover-card.js' {
+declare module 'jenni-core/behaviors/hover-card.js' {
   export interface HoverCardOptions {
     openDelay?: number;
     closeDelay?: number;
@@ -160,7 +160,7 @@ declare module '@jenni/core/behaviors/hover-card.js' {
   export function initHoverCards(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/command-palette.js' {
+declare module 'jenni-core/behaviors/command-palette.js' {
   export interface CommandSelectDetail {
     value: string;
     label: string;

@@ -21,7 +21,7 @@ import {
   toast,
   type CommandGroup,
   type CommandItem,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 // 1. Modal ⌘K launcher state
 const modalOpen = ref(false);

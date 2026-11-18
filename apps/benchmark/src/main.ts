@@ -1,4 +1,4 @@
-import '@jenni/core/css';
+import 'jenni-core/css';
 import './styles.css';
 import staticReport from './generated/static-metrics.json';
 

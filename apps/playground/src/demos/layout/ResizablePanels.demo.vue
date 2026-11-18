@@ -20,7 +20,7 @@ import {
   JBadge,
   JButton,
   JKbd,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 // 1. Studio 3-pane & 2-pane split state
 const studioRef = ref<InstanceType<typeof JResizableGroup> | null>(null);
@@ -53,7 +53,7 @@ const nestedOuterSizes = ref<number[]>([24, 76]);
 const nestedInnerSizes = ref<number[]>([64, 36]);
 
 const terminalLogs = [
-  { ts: '20:14:02', level: 'info', msg: 'build @jenni/core — 0 !important declarations verified' },
+  { ts: '20:14:02', level: 'info', msg: 'build jenni-core — 0 !important declarations verified' },
   { ts: '20:14:03', level: 'pass', msg: 'a11y separator aria-valuenow/min/max synchronized' },
   { ts: '20:14:04', level: 'pass', msg: 'density matrix passed at 0.65x, 1.0x, and 1.15x' },
   { ts: '20:14:05', level: 'info', msg: 'listening on port 5173 — ready in 118ms' },

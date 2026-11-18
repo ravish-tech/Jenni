@@ -23,7 +23,7 @@ import {
   JField,
   JInput,
   type JGap,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const activeGap = ref<JGap>('related');
 const minWidth = ref(180);

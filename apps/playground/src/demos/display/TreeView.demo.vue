@@ -22,7 +22,7 @@ import {
   JInline,
   JGrid,
   type JTreeNode,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const selectedFile = ref<string>('tokens.css');
 const expandedDirs = ref<string[]>(['packages', 'core', 'components']);

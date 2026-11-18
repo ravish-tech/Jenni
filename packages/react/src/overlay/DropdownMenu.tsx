@@ -8,7 +8,7 @@ import {
   type ReactNode,
   type ToggleEvent,
 } from 'react';
-import { createMenu } from '@jenni/core/behaviors/menu.js';
+import { createMenu } from 'jenni-core/behaviors/menu.js';
 import {
   alignAttr,
   cx,

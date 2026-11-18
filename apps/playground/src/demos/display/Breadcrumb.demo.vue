@@ -18,7 +18,7 @@ import {
   JStack,
   JInline,
   JBadge,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const manualExpanded = ref(false);
 

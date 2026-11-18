@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JDialog, JButton, JField, JInput, JSwitch, JStack, JInline } from '@jenni/vue';
+import { JDialog, JButton, JField, JInput, JSwitch, JStack, JInline } from 'jenni-vue';
 
 const name = ref('Ada Lovelace');
 const handle = ref('@ada');

@@ -1,5 +1,5 @@
 {
-  "name": "@jenni/core",
+  "name": "jenni-core",
   "version": "0.1.0",
   "description": "Jenni (pronounced 'yenni') core layer: OKLCH design tokens, spatial layout, @layer component CSS, and delegated WAI-ARIA behaviors. Built in loving memory of Jenni.",
   "license": "Apache-2.0",

@@ -7,7 +7,7 @@ import {
   type ReactNode,
   type SyntheticEvent,
 } from 'react';
-import { createDrawer } from '@jenni/core/behaviors/drawer.js';
+import { createDrawer } from 'jenni-core/behaviors/drawer.js';
 import {
   cx,
   flag,

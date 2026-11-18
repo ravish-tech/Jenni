@@ -1,3 +1,3 @@
 /// <reference types="vite/client" />
 
-declare module '@jenni/core/css' {}
+declare module 'jenni-core/css' {}

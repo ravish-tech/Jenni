@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JButton, JInline, JInput, JKbd, JStack } from '@jenni/vue';
+import { JButton, JInline, JInput, JKbd, JStack } from 'jenni-vue';
 
 const query = ref('');
 const domain = ref('meridian');

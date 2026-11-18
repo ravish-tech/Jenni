@@ -1,4 +1,4 @@
-declare module '@jenni/core/behaviors/shell.js' {
+declare module 'jenni-core/behaviors/shell.js' {
   export interface ShellOptions {
     onOpenChange?: (open: boolean) => void;
     onAsideOpenChange?: (open: boolean) => void;
@@ -22,7 +22,7 @@ declare module '@jenni/core/behaviors/shell.js' {
   export function initShells(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/scroll-area.js' {
+declare module 'jenni-core/behaviors/scroll-area.js' {
   export interface ScrollAreaState {
     canScrollStart: boolean;
     canScrollEnd: boolean;
@@ -42,7 +42,7 @@ declare module '@jenni/core/behaviors/scroll-area.js' {
   export function initScrollAreas(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/resizable.js' {
+declare module 'jenni-core/behaviors/resizable.js' {
   export interface ResizableGroupOptions {
     orientation?: 'horizontal' | 'vertical';
     autoSaveId?: string;

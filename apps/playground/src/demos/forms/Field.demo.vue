@@ -26,7 +26,7 @@ import {
   JStack,
   JSwitch,
   JTextarea,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const email = ref('');
 const touched = ref(false);

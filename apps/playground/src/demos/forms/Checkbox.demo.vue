@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JCard, JCheckbox, JInline, JStack } from '@jenni/vue';
+import { JCard, JCheckbox, JInline, JStack } from 'jenni-vue';
 
 const tones = ['accent', 'neutral', 'danger', 'success', 'warning', 'info'] as const;
 

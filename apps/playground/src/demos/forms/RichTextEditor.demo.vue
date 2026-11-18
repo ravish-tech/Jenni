@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JField, JRichTextEditor, JStack, type RichTextAction } from '@jenni/vue';
+import { JField, JRichTextEditor, JStack, type RichTextAction } from 'jenni-vue';
 
 const docsUrl = 'https://studio.design/tokens';
 

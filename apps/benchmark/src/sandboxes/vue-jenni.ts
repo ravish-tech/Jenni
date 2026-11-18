@@ -23,7 +23,7 @@ import {
   JTabList,
   JTabPanel,
   JTabs,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 function applyTheme(dark: boolean, density = 'default') {
   document.documentElement.dataset.theme = dark ? 'dark' : 'light';
@@ -107,8 +107,8 @@ function unmountActive() {
             h(JAlert, {
               tone: 'info',
               variant: 'soft',
-              title: '@jenni/vue · Zero-<style> SFC wrappers',
-              description: 'Thin Vue 3 reactivity over @jenni/core @layer CSS + native <dialog> top-layer.',
+              title: 'jenni-vue · Zero-<style> SFC wrappers',
+              description: 'Thin Vue 3 reactivity over jenni-core @layer CSS + native <dialog> top-layer.',
             }),
 
             h(JProgress, { value: 78, max: 100, size: 'sm', label: 'Canary rollout progress' }),

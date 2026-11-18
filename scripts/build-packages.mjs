@@ -1,5 +1,5 @@
 /**
- * Production package builder for @jenni/core, @jenni/vue, and @jenni/react.
+ * Production package builder for jenni-core, jenni-vue, and jenni-react.
  * Emits ESM bundles, standalone CSS/IIFE CDN bundles, TypeScript declarations (.d.ts),
  * and copies LICENSE into each publishable package.
  */
@@ -36,7 +36,7 @@ async function copyLicense(pkgDir) {
 }
 
 async function buildCore() {
-  console.log('📦 [1/3] Building @jenni/core...');
+  console.log('📦 [1/3] Building jenni-core...');
   const pkgDir = path.join(ROOT, 'packages/core');
   const distDir = path.join(pkgDir, 'dist');
   await fs.rm(distDir, { recursive: true, force: true });
@@ -119,13 +119,13 @@ async function buildCore() {
 }
 
 async function buildVue() {
-  console.log('📦 [2/3] Building @jenni/vue...');
+  console.log('📦 [2/3] Building jenni-vue...');
   const pkgDir = path.join(ROOT, 'packages/vue');
   const distDir = path.join(pkgDir, 'dist');
   await fs.rm(distDir, { recursive: true, force: true });
   await fs.mkdir(distDir, { recursive: true });
 
-  // 1. ESM bundle preserving tree-shakable structure (externalizing vue & @jenni/core)
+  // 1. ESM bundle preserving tree-shakable structure (externalizing vue & jenni-core)
   await viteBuild({
     root: pkgDir,
     configFile: false,
@@ -141,7 +141,7 @@ async function buildVue() {
         fileName: () => 'index.js',
       },
       rollupOptions: {
-        external: ['vue', /^@jenni\/core(\/.*)?$/],
+        external: ['vue', /^jenni-core(\/.*)?$/],
       },
     },
   });
@@ -189,13 +189,13 @@ async function buildVue() {
 }
 
 async function buildReact() {
-  console.log('📦 [3/3] Building @jenni/react...');
+  console.log('📦 [3/3] Building jenni-react...');
   const pkgDir = path.join(ROOT, 'packages/react');
   const distDir = path.join(pkgDir, 'dist');
   await fs.rm(distDir, { recursive: true, force: true });
   await fs.mkdir(distDir, { recursive: true });
 
-  // 1. ESM bundle externalizing react, react-dom, and @jenni/core
+  // 1. ESM bundle externalizing react, react-dom, and jenni-core
   await viteBuild({
     root: pkgDir,
     configFile: false,
@@ -215,7 +215,7 @@ async function buildReact() {
           'react-dom',
           'react/jsx-runtime',
           'react/jsx-dev-runtime',
-          /^@jenni\/core(\/.*)?$/,
+          /^jenni-core(\/.*)?$/,
         ],
       },
     },
@@ -262,4 +262,4 @@ async function buildReact() {
 await buildCore();
 await buildVue();
 await buildReact();
-console.log('✅ All 3 publishable packages (@jenni/core, @jenni/vue, @jenni/react) built in packages/*/dist.');
+console.log('✅ All 3 publishable packages (jenni-core, jenni-vue, jenni-react) built in packages/*/dist.');

@@ -42,7 +42,7 @@ import {
   type JShellVariant,
   type JShellPane,
   type JShellSide,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 type ShellFamily = 'all' | 'saas' | 'workbench' | 'multipane' | 'spatial';
 
@@ -989,7 +989,7 @@ const html = `<!-- Global Header + Left Sidebar (GitHub / Cloud Console) -->
             </div>
             <div class="j-shell__dock-body" style="font-family: var(--j-font-mono); font-size: var(--j-text-xs); color: var(--j-fg-muted)">
               <div>$ npm run typecheck && npm run build</div>
-              <div style="color: var(--j-success)">✓ 0 errors across @jenni/core, @jenni/vue, @jenni/react</div>
+              <div style="color: var(--j-success)">✓ 0 errors across jenni-core, jenni-vue, jenni-react</div>
             </div>
           </template>
 
@@ -999,7 +999,7 @@ const html = `<!-- Global Header + Left Sidebar (GitHub / Cloud Console) -->
               <JButton size="sm" variant="ghost" tone="neutral" @click="closeAside()">×</JButton>
             </div>
             <div class="j-shell__copilot-body">
-              <JCard size="sm" variant="outline" title="Zero-style SFC verified" description="All 16 shell layouts share @jenni/core container queries with 0 !important." />
+              <JCard size="sm" variant="outline" title="Zero-style SFC verified" description="All 16 shell layouts share jenni-core container queries with 0 !important." />
               <JCard size="sm" variant="outline" title="Compact 0.65× ready" description="Activity rail, editor tabs, and statusbar snap cleanly to pixel floors." />
             </div>
           </template>
@@ -1210,7 +1210,7 @@ const html = `<!-- Global Header + Left Sidebar (GitHub / Cloud Console) -->
             </div>
             <div class="j-shell__dock-body" style="font-family: var(--j-font-mono); font-size: var(--j-text-xs); color: var(--j-fg-muted)">
               <JStack gap="inline">
-                <div>[00:24.11] @jenni/core compiled 16 shell layouts (0ms overshoot verified)</div>
+                <div>[00:24.11] jenni-core compiled 16 shell layouts (0ms overshoot verified)</div>
                 <div>[00:24.18] Container queries bound: j-shell, j-bento, j-docs, j-auth, j-ai-canvas</div>
                 <div style="color: var(--j-fg)">[00:24.22] Ready — interactive preview mounted cleanly.</div>
               </JStack>
@@ -1599,9 +1599,9 @@ const html = `<!-- Global Header + Left Sidebar (GitHub / Cloud Console) -->
           <JPage size="md">
             <JStack gap="group">
               <JGrid :min-cell-width="190" gap="item">
-                <JCard variant="elevated" size="sm" title="@jenni/core" description="Tokens + 66 CSS modules + vanilla ARIA behaviors" />
-                <JCard variant="elevated" size="sm" title="@jenni/vue" description="Zero-style Vue 3 SFCs · 20.2 kB gzip kit" />
-                <JCard variant="elevated" size="sm" title="@jenni/react" description="React 19 native ref · 19.1 kB gzip kit" />
+                <JCard variant="elevated" size="sm" title="jenni-core" description="Tokens + 66 CSS modules + vanilla ARIA behaviors" />
+                <JCard variant="elevated" size="sm" title="jenni-vue" description="Zero-style Vue 3 SFCs · 20.2 kB gzip kit" />
+                <JCard variant="elevated" size="sm" title="jenni-react" description="React 19 native ref · 19.1 kB gzip kit" />
               </JGrid>
             </JStack>
           </JPage>

@@ -9,7 +9,7 @@ import {
   type MouseEvent as ReactMouseEvent,
   type ReactNode,
 } from 'react';
-import { clampNumberValue, stepNumberValue } from '@jenni/core/behaviors/number-input.js';
+import { clampNumberValue, stepNumberValue } from 'jenni-core/behaviors/number-input.js';
 import { cx, mergeRefs, sizeAttr, useControllable, type Size, type Tone } from './types';
 import { useFieldProps } from './useFieldProps';
 

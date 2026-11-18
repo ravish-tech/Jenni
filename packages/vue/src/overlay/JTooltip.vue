@@ -2,7 +2,7 @@
 // JTooltip — wraps ONE trigger element (default slot) and shows a hint.
 //   <JTooltip content="Copy link" :kbd="['⌘', 'C']"><button class="j-button">…</button></JTooltip>
 import { onBeforeUnmount, onMounted, ref, useId, watch } from 'vue';
-import { createTooltip } from '@jenni/core/behaviors/tooltip.js';
+import { createTooltip } from 'jenni-core/behaviors/tooltip.js';
 
 defineOptions({ inheritAttrs: false });
 

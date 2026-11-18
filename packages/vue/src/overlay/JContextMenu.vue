@@ -3,7 +3,7 @@
 // a `.j-menu` popover clamped cleanly inside the viewport.
 // Compose items with `JDropdownItem`, `JDropdownLabel`, and `JDropdownSeparator`.
 import { onBeforeUnmount, onMounted, ref, useId, useSlots, watch } from 'vue';
-import { createContextMenu } from '@jenni/core/behaviors/context-menu.js';
+import { createContextMenu } from 'jenni-core/behaviors/context-menu.js';
 
 defineOptions({ inheritAttrs: false });
 

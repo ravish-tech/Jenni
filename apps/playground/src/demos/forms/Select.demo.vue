@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JButton, JInline, JSelect, JStack } from '@jenni/vue';
+import { JButton, JInline, JSelect, JStack } from 'jenni-vue';
 
 const fruit = ref<string | number>();
 const region = ref<string | number>('fra1');

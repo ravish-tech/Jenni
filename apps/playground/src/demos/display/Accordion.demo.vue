@@ -20,7 +20,7 @@ import {
   JGrid,
   JStack,
   JInline,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const activeFaq = ref('billing');
 const multiOpen = ref<string[]>(['security', 'audit']);

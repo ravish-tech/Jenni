@@ -11,8 +11,8 @@ export const meta = {
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JCard, JColorPicker, JField, JInline, JStack } from '@jenni/vue';
-import { hexToOklchString } from '@jenni/core/behaviors/color-picker.js';
+import { JCard, JColorPicker, JField, JInline, JStack } from 'jenni-vue';
+import { hexToOklchString } from 'jenni-core/behaviors/color-picker.js';
 
 const brandColor = ref('oklch(52.1% 0.193 266)');
 const glassTint = ref('rgb(37 99 235 / 0.72)');

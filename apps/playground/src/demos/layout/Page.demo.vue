@@ -25,7 +25,7 @@ import {
   JSwitch,
   JButton,
   JBadge,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const workspaceName = ref('Meridian Design');
 const workspaceSlug = ref('meridian-design');

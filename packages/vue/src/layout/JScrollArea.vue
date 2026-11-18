@@ -4,7 +4,7 @@ import {
   createScrollArea,
   type ScrollAreaController,
   type ScrollAreaState,
-} from '@jenni/core/behaviors/scroll-area.js';
+} from 'jenni-core/behaviors/scroll-area.js';
 import { attr, type JScrollAreaProps } from './types';
 
 const props = withDefaults(defineProps<JScrollAreaProps>(), {

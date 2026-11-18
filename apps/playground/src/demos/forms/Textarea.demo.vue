@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JButton, JCard, JInline, JStack, JTextarea } from '@jenni/vue';
+import { JButton, JCard, JInline, JStack, JTextarea } from 'jenni-vue';
 
 const note = ref('Type here — I grow as you write.\nNo JS needed.');
 const comment = ref('');

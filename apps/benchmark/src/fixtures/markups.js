@@ -1,6 +1,6 @@
 /**
  * Canonical, apples-to-apples HTML fixtures for Level 1 (Base / Core):
- *   - jenni     : @jenni/core (Light DOM semantic CSS + @layer + native <dialog>/<popover> + delegated behaviors)
+ *   - jenni     : jenni-core (Light DOM semantic CSS + @layer + native <dialog>/<popover> + delegated behaviors)
  *   - bootstrap : Bootstrap 5.3 (Component CSS + Bootstrap JS + Popper)
  *   - tailwind  : Tailwind CSS v4 + DaisyUI 5 (Utility + semantic component classes)
  *   - shoelace  : Shoelace 2.20 (Lit + Shadow DOM Web Components + Floating UI)

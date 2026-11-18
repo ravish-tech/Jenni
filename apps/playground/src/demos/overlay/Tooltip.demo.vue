@@ -10,7 +10,7 @@ export const meta = {
 
 <script setup lang="ts">
 import { DemoSection, DemoCode } from '@/kit';
-import { JTooltip, JButton, JButtonGroup, JInline } from '@jenni/vue';
+import { JTooltip, JButton, JButtonGroup, JInline } from 'jenni-vue';
 
 const sides = ['top', 'right', 'bottom', 'left'] as const;
 

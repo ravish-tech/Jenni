@@ -1,4 +1,4 @@
-declare module '@jenni/core/behaviors/segmented.js' {
+declare module 'jenni-core/behaviors/segmented.js' {
   export function getSegmentedItems(root: HTMLElement): HTMLElement[];
   export function syncSegmentedIndicator(root: HTMLElement, animate?: boolean): void;
   export function segmentedKeydown(root: HTMLElement, e: KeyboardEvent): HTMLElement | null;
@@ -6,7 +6,7 @@ declare module '@jenni/core/behaviors/segmented.js' {
   export function initSegmented(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/number-input.js' {
+declare module 'jenni-core/behaviors/number-input.js' {
   export interface NumberBounds {
     min?: number;
     max?: number;
@@ -22,13 +22,13 @@ declare module '@jenni/core/behaviors/number-input.js' {
   export function initNumberInputs(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/pin-input.js' {
+declare module 'jenni-core/behaviors/pin-input.js' {
   export function sanitizePinChars(raw: string, type?: 'numeric' | 'alphanumeric'): string[];
   export function createPinInput(root: HTMLElement): () => void;
   export function initPinInputs(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/file-upload.js' {
+declare module 'jenni-core/behaviors/file-upload.js' {
   export interface UploadValidationOptions {
     maxSize?: number;
     accept?: string;
@@ -42,7 +42,7 @@ declare module '@jenni/core/behaviors/file-upload.js' {
   export function initFileUploads(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/date-picker.js' {
+declare module 'jenni-core/behaviors/date-picker.js' {
   export interface DateParts {
     year: number;
     month: number;
@@ -115,7 +115,7 @@ declare module '@jenni/core/behaviors/date-picker.js' {
   export function initDatePickers(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/time-picker.js' {
+declare module 'jenni-core/behaviors/time-picker.js' {
   export interface TimeParts {
     hour: number;
     minute: number;
@@ -154,7 +154,7 @@ declare module '@jenni/core/behaviors/time-picker.js' {
   export function initTimePickers(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/color-picker.js' {
+declare module 'jenni-core/behaviors/color-picker.js' {
   export interface HsvaColor {
     h: number;
     s: number;
@@ -197,7 +197,7 @@ declare module '@jenni/core/behaviors/color-picker.js' {
   export function initColorPickers(root?: ParentNode): () => void;
 }
 
-declare module '@jenni/core/behaviors/rich-text.js' {
+declare module 'jenni-core/behaviors/rich-text.js' {
   export type RichTextAction =
     | 'p'
     | 'h2'

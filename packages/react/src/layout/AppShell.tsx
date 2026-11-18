@@ -11,7 +11,7 @@ import {
   type ReactNode,
   type Ref,
 } from 'react';
-import { createShell, type ShellController } from '@jenni/core/behaviors/shell.js';
+import { createShell, type ShellController } from 'jenni-core/behaviors/shell.js';
 import {
   attr,
   cx,

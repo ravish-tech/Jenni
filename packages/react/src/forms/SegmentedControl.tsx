@@ -7,7 +7,7 @@ import {
   type KeyboardEvent as ReactKeyboardEvent,
   type MouseEvent as ReactMouseEvent,
 } from 'react';
-import { segmentedKeydown, syncSegmentedIndicator } from '@jenni/core/behaviors/segmented.js';
+import { segmentedKeydown, syncSegmentedIndicator } from 'jenni-core/behaviors/segmented.js';
 import {
   FieldContext,
   SegmentedContext,

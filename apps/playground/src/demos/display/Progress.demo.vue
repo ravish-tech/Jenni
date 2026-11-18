@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JProgress, JCard, JBadge, JStack, JInline } from '@jenni/vue';
+import { JProgress, JCard, JBadge, JStack, JInline } from 'jenni-vue';
 
 const tones = ['accent', 'neutral', 'info', 'success', 'warning', 'danger'] as const;
 const steps = [18, 42, 68, 88, 100];

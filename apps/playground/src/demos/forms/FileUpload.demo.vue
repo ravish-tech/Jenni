@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JCard, JField, JFileUpload, JStack } from '@jenni/vue';
+import { JCard, JField, JFileUpload, JStack } from 'jenni-vue';
 
 function sampleFile(name: string, bytes: number, type: string): File {
   const buf = new Uint8Array(bytes);

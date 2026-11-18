@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, inject, ref } from 'vue';
-import { sanitizePinChars } from '@jenni/core/behaviors/pin-input.js';
+import { sanitizePinChars } from 'jenni-core/behaviors/pin-input.js';
 import { FieldKey, sizeAttr, type Size, type Tone } from './types';
 
 const model = defineModel<string>({ default: '' });

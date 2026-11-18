@@ -8,7 +8,7 @@ import {
   List as JList,
   ListItem as JListItem,
   Switch as JSwitch,
-} from '@jenni/react';
+} from 'jenni-react';
 import {
   Box as MBox,
   Button as MButton,

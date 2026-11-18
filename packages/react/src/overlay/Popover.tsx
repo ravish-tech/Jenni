@@ -7,7 +7,7 @@ import {
   type ReactNode,
   type ToggleEvent,
 } from 'react';
-import { createPopover } from '@jenni/core/behaviors/popover.js';
+import { createPopover } from 'jenni-core/behaviors/popover.js';
 import {
   alignAttr,
   cx,

@@ -9,7 +9,7 @@ import {
   JInline,
   JSegmentedControl,
   JStack,
-} from '@jenni/vue';
+} from 'jenni-vue';
 import Icon from './Icon.vue';
 import { prefs } from '@/lib/prefs';
 

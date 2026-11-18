@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // JTabList — tablist container managing roving focus + FLIP sliding indicator.
 import { inject, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import { syncTabIndicator, tabsKeydown } from '@jenni/core/behaviors/tabs.js';
+import { syncTabIndicator, tabsKeydown } from 'jenni-core/behaviors/tabs.js';
 import { TabsKey } from './types';
 
 const ctx = inject(TabsKey, null);

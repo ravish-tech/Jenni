@@ -19,7 +19,7 @@ import {
   JStack,
   JInline,
   type ComboboxOption,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const region = ref<string | null>('eu-central-1');
 const reviewers = ref<string[]>(['ada', 'dieter']);

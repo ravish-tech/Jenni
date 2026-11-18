@@ -11,7 +11,7 @@ import {
   type MouseEvent,
   type ToggleEvent,
 } from 'react';
-import { anchorCombobox } from '@jenni/core/behaviors/combobox.js';
+import { anchorCombobox } from 'jenni-core/behaviors/combobox.js';
 import {
   cx,
   flag,

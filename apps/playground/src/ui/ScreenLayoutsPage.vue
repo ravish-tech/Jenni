@@ -10,7 +10,7 @@ import {
   JProgress,
   JSeparator,
   JSwitch,
-} from '@jenni/vue';
+} from 'jenni-vue';
 import { DemoCode, DemoSection } from '@/kit';
 import { DEMO_CONTEXT, sectionId } from '@/kit/context';
 import { openCount } from '@/lib/feedback';
@@ -716,7 +716,7 @@ const s6ThreadId = ref('t1');
 const s6Threads = [
   { id: 't1', folder: 'inbox', from: 'Zurich Studio', subject: 'Q4 Design Token Freeze & Release Cut', snippet: 'All 18 canonical screen specs approved by architecture review...', time: '09:42', unread: true },
   { id: 't2', folder: 'vip', from: 'Clara Vance', subject: 'Enterprise SSO SAML metadata rotation', snippet: 'Rotating primary signing certificate before Friday window...', time: '08:15', unread: false },
-  { id: 't3', folder: 'assigned', from: 'Build Bot', subject: 'Bundle budget report: @jenni/core 17.7 kB kit gz', snippet: 'Zero runtime layout overhead; all CSS layers verified...', time: 'Yesterday', unread: false },
+  { id: 't3', folder: 'assigned', from: 'Build Bot', subject: 'Bundle budget report: jenni-core 17.7 kB kit gz', snippet: 'Zero runtime layout overhead; all CSS layers verified...', time: 'Yesterday', unread: false },
 ];
 const s6VisibleThreads = computed(() =>
   s6Folder.value === 'inbox' ? s6Threads : s6Threads.filter((t) => t.folder === s6Folder.value),
@@ -1574,7 +1574,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
 
                       <div v-if="s7ConsoleOpen" class="sc-07__console">
                         <span class="sc-dim is-right">156px dock</span>
-                        <div class="sc-console-line"><span>12:04:08</span> <code>✓ @jenni/core</code> compiled 18 layout rules in 38 ms</div>
+                        <div class="sc-console-line"><span>12:04:08</span> <code>✓ jenni-core</code> compiled 18 layout rules in 38 ms</div>
                         <div class="sc-console-line"><span>12:04:09</span> <code>✓ a11y</code> contrast ≥ 7.2:1 AAA verified on {{ s7Layer }}</div>
                       </div>
                     </div>
@@ -1666,7 +1666,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKeydown));
                       </div>
                       <div class="sc-sidenote">
                         <strong>2 · Measure token</strong>
-                        <p>Defined globally in @jenni/core as <code>--j-measure-prose: 65ch</code>.</p>
+                        <p>Defined globally in jenni-core as <code>--j-measure-prose: 65ch</code>.</p>
                       </div>
                     </aside>
                   </div>

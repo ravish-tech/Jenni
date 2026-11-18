@@ -20,7 +20,7 @@ import {
   JBadge,
   JAvatar,
   JInline,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const lastAction = ref('None selected');
 const showGrid = ref(true);

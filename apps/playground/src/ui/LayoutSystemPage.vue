@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, provide, ref } from 'vue';
-import { JAvatar, JBadge, JButton, JCard, JCheckbox, JField, JInput, JKbd, JSwitch } from '@jenni/vue';
+import { JAvatar, JBadge, JButton, JCard, JCheckbox, JField, JInput, JKbd, JSwitch } from 'jenni-vue';
 import { DemoSection } from '@/kit';
 import { DEMO_CONTEXT, sectionId } from '@/kit/context';
 import { openCount } from '@/lib/feedback';

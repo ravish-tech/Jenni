@@ -19,7 +19,7 @@ import {
   shiftYearMonth,
   stepFocusedDate,
   todayIso,
-} from '@jenni/core/behaviors/date-picker.js';
+} from 'jenni-core/behaviors/date-picker.js';
 import {
   cx,
   flag,

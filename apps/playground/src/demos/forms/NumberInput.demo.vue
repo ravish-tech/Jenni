@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JCard, JField, JInline, JNumberInput, JStack } from '@jenni/vue';
+import { JCard, JField, JInline, JNumberInput, JStack } from 'jenni-vue';
 
 const quantity = ref<number | null>(4);
 const seats = ref<number | null>(12);

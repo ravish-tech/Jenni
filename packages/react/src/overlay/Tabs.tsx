@@ -8,7 +8,7 @@ import {
   type KeyboardEvent,
   type MouseEvent,
 } from 'react';
-import { syncTabIndicator, tabsKeydown } from '@jenni/core/behaviors/tabs.js';
+import { syncTabIndicator, tabsKeydown } from 'jenni-core/behaviors/tabs.js';
 import {
   TabsContext,
   cx,

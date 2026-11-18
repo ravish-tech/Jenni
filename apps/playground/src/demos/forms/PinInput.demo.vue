@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JButton, JCard, JField, JInline, JPinInput, JStack } from '@jenni/vue';
+import { JButton, JCard, JField, JInline, JPinInput, JStack } from 'jenni-vue';
 
 const otp = ref('482');
 const completedCode = ref('');

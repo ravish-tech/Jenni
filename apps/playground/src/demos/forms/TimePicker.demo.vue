@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JCard, JField, JInline, JStack, JTimePicker } from '@jenni/vue';
+import { JCard, JField, JInline, JStack, JTimePicker } from 'jenni-vue';
 
 const deployTime = ref<string | null>('14:30');
 const standupTime = ref<string | null>('09:15');

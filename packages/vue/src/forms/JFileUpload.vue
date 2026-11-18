@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, inject, ref, useTemplateRef } from 'vue';
-import { formatFileSize, validateUploadFile } from '@jenni/core/behaviors/file-upload.js';
+import { formatFileSize, validateUploadFile } from 'jenni-core/behaviors/file-upload.js';
 import { FieldKey, type Tone } from './types';
 
 export interface RejectedFileEntry {

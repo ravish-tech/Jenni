@@ -2,7 +2,7 @@
 // JHoverCard — rich interactive preview card opened on pointer hover or keyboard
 // focus after a calm 320ms delay, bridged across a 180ms close delay.
 import { onBeforeUnmount, onMounted, ref, useId, useSlots, watch } from 'vue';
-import { createHoverCard } from '@jenni/core/behaviors/hover-card.js';
+import { createHoverCard } from 'jenni-core/behaviors/hover-card.js';
 import type { FloatingAlign, FloatingSide, OverlaySize } from './types';
 
 defineOptions({ inheritAttrs: false });

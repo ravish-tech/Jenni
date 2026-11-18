@@ -2,7 +2,7 @@
 // Public API is fixed: props `lang` ('html' | 'vue' | 'tsx'), `code` (string).
 // When lang="html" the code is ALSO rendered live (v-html) above the code block to prove core works.
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-import * as core from '@jenni/core';
+import * as core from 'jenni-core';
 import { highlight } from './highlight';
 import Icon from '@/ui/Icon.vue';
 

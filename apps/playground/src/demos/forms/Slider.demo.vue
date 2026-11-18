@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JCard, JInline, JSlider, JStack } from '@jenni/vue';
+import { JCard, JInline, JSlider, JStack } from 'jenni-vue';
 
 const tones = ['accent', 'neutral', 'danger', 'success', 'warning', 'info'] as const;
 const volume = ref(40);
@@ -32,7 +32,7 @@ const html = `<div class="j-stack" data-gap="field" style="width:100%;max-width:
   <input type="range" class="j-slider" value="30" style="--j-slider-progress: 0.3" aria-label="Volume">
   <input type="range" class="j-slider" data-tone="success" data-size="lg" value="70" style="--j-slider-progress: 0.7" aria-label="Progress">
 </div>
-<!-- import { initSliders } from '@jenni/core'; initSliders(); keeps the fill in sync -->`;
+<!-- import { initSliders } from 'jenni-core'; initSliders(); keeps the fill in sync -->`;
 </script>
 
 <template>
@@ -91,7 +91,7 @@ const html = `<div class="j-stack" data-gap="field" style="width:100%;max-width:
     </JCard>
   </DemoSection>
 
-  <DemoSection title="Plain HTML" description="Set --j-slider-progress (0…1) yourself, or call initSliders() from @jenni/core.">
+  <DemoSection title="Plain HTML" description="Set --j-slider-progress (0…1) yourself, or call initSliders() from jenni-core.">
     <DemoCode lang="html" :code="html" />
   </DemoSection>
 </template>

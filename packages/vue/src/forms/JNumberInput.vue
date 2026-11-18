@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, useAttrs, useTemplateRef, watch } from 'vue';
-import { clampNumberValue, stepNumberValue } from '@jenni/core/behaviors/number-input.js';
+import { clampNumberValue, stepNumberValue } from 'jenni-core/behaviors/number-input.js';
 import { sizeAttr, splitAttrs, useFieldAttrs, type Size, type Tone } from './types';
 
 defineOptions({ inheritAttrs: false });

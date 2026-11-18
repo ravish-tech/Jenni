@@ -19,7 +19,7 @@ import {
   JCard,
   JStack,
   JInline,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const followingAda = ref(false);
 const followingDieter = ref(true);
@@ -30,13 +30,13 @@ const html = `<span style="font-size:var(--j-text-sm);color:var(--j-fg-muted)">
     href="#pkg-core"
     data-j-hover-card="demo-html-hc-1"
     style="color:var(--j-fg);font-weight:var(--j-weight-medium);text-decoration:underline;text-underline-offset:3px"
-  >@jenni/core</a>
+  >jenni-core</a>
   in the monorepo.
 </span>
 <div class="j-hover-card" id="demo-html-hc-1" popover="manual" data-side="top" data-align="start" data-arrow>
   <div class="j-stack" data-gap="related">
     <div class="j-inline" data-gap="related" data-justify="between">
-      <strong style="font-size:var(--j-text-sm)">@jenni/core</strong>
+      <strong style="font-size:var(--j-text-sm)">jenni-core</strong>
       <span class="j-badge" data-size="sm" data-variant="soft">v0.0.1</span>
     </div>
     <p style="margin:0;font-size:var(--j-text-xs);color:var(--j-fg-muted)">

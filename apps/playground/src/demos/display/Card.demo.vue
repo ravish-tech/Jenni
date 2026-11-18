@@ -21,7 +21,7 @@ import {
   JInline,
   JList,
   JListItem,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const variants = ['surface', 'outline', 'ghost', 'elevated'] as const;
 const plans = [

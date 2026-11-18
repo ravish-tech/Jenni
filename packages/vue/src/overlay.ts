@@ -16,7 +16,7 @@ export { default as JCombobox } from './overlay/JCombobox.vue';
 export { default as JContextMenu } from './overlay/JContextMenu.vue';
 export { default as JHoverCard } from './overlay/JHoverCard.vue';
 export { default as JCommandPalette } from './overlay/JCommandPalette.vue';
-export { toast } from '@jenni/core/behaviors/toast.js';
+export { toast } from 'jenni-core/behaviors/toast.js';
 export type {
   FloatingSide,
   FloatingAlign,

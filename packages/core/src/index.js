@@ -29,7 +29,7 @@ export * from './behaviors/display.js';
 export * from './behaviors/overlay.js';
 
 /**
- * Initialize all vanilla @jenni/core behaviors inside `root` (idempotent, returns cleanup).
+ * Initialize all vanilla jenni-core behaviors inside `root` (idempotent, returns cleanup).
  * @param {Document | HTMLElement} [root]
  * @returns {() => void}
  */

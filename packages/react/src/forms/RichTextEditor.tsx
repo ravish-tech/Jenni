@@ -18,7 +18,7 @@ import {
   restoreSelectionRange,
   saveSelectionRange,
   type ActiveFormats,
-} from '@jenni/core/behaviors/rich-text.js';
+} from 'jenni-core/behaviors/rich-text.js';
 import {
   cx,
   flag,

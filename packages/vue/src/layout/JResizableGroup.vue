@@ -3,7 +3,7 @@ import { computed, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue';
 import {
   createResizableGroup,
   type ResizableGroupController,
-} from '@jenni/core/behaviors/resizable.js';
+} from 'jenni-core/behaviors/resizable.js';
 import { attr, ResizableGroupKey, type JResizableGroupProps } from './types';
 
 const props = withDefaults(defineProps<JResizableGroupProps>(), {

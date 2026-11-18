@@ -21,7 +21,7 @@ import {
   JKbd,
   JSwitch,
   JButton,
-} from '@jenni/vue';
+} from 'jenni-vue';
 
 const selectedInbox = ref('m1');
 const settings = reactive({
@@ -40,7 +40,7 @@ const messages = [
   {
     id: 'm1',
     from: 'Design Systems',
-    title: 'Keyline inset dividers landed in @jenni/core',
+    title: 'Keyline inset dividers landed in jenni-core',
     desc: 'Row hairlines now start cleanly under the title column past leading icons or avatars, reducing left-edge visual clutter.',
     time: '09:41',
     unread: true,

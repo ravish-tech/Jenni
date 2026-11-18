@@ -16,8 +16,8 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
-      '@jenni/vue': fileURLToPath(new URL('../../packages/vue/src/index.ts', import.meta.url)),
-      '@jenni/react': fileURLToPath(new URL('../../packages/react/src/index.ts', import.meta.url)),
+      'jenni-vue': fileURLToPath(new URL('../../packages/vue/src/index.ts', import.meta.url)),
+      'jenni-react': fileURLToPath(new URL('../../packages/react/src/index.ts', import.meta.url)),
     },
   },
   server: { port: 5173 },

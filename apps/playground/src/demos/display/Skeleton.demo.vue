@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JSkeleton, JCard, JAvatar, JBadge, JButton, JSwitch, JInline, JStack } from '@jenni/vue';
+import { JSkeleton, JCard, JAvatar, JBadge, JButton, JSwitch, JInline, JStack } from 'jenni-vue';
 
 const loading = ref(true);
 const html = `<div class="j-inline" data-gap="item" data-nowrap style="width:100%;max-width:340px">

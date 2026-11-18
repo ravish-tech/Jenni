@@ -4,7 +4,7 @@ import {
   anchorDatePopover,
   formatDisplayDate,
   formatDisplayRange,
-} from '@jenni/core/behaviors/date-picker.js';
+} from 'jenni-core/behaviors/date-picker.js';
 import JCalendar from './JCalendar.vue';
 import {
   sizeAttr,

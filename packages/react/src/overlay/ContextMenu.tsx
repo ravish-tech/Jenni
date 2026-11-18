@@ -7,7 +7,7 @@ import {
   type ReactNode,
   type ToggleEvent,
 } from 'react';
-import { createContextMenu } from '@jenni/core/behaviors/context-menu.js';
+import { createContextMenu } from 'jenni-core/behaviors/context-menu.js';
 import { cx, mergeRefs, useControllable } from './types';
 
 export interface ContextMenuProps extends Omit<ComponentProps<'div'>, 'children' | 'onSelect'> {

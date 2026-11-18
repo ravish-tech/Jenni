@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { reactive, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JCard, JInline, JStack, JToggle, JToggleGroup } from '@jenni/vue';
+import { JCard, JInline, JStack, JToggle, JToggleGroup } from 'jenni-vue';
 
 const pinned = ref(true);
 const muted = ref(false);

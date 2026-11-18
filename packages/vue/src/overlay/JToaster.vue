@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // JToaster — top-layer `popover="manual"` notification deck.
-// Pair with `import { toast } from '@jenni/vue'` anywhere in your app.
+// Pair with `import { toast } from 'jenni-vue'` anywhere in your app.
 import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import {
   bindToasterInteractions,
@@ -11,7 +11,7 @@ import {
   syncToasterLayout,
   type ToastItem,
   type ToasterPosition,
-} from '@jenni/core/behaviors/toast.js';
+} from 'jenni-core/behaviors/toast.js';
 
 defineOptions({ inheritAttrs: false });
 

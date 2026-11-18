@@ -7,7 +7,7 @@ import {
   type ReactNode,
   type ToggleEvent,
 } from 'react';
-import { createHoverCard } from '@jenni/core/behaviors/hover-card.js';
+import { createHoverCard } from 'jenni-core/behaviors/hover-card.js';
 import {
   alignAttr,
   cx,

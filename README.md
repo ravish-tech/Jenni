@@ -9,13 +9,23 @@
 
 | Package | Description | 12-Component Kit (gzip) |
 |---|---|---:|
-| [`@jenni/core`](./packages/core) | OKLCH design tokens, `@layer` CSS primitives (`0 !important`), 16 container-query app shells, and delegated WAI-ARIA behaviors | **17.7 kB** |
-| [`@jenni/vue`](./packages/vue) | Zero-`<style>` Vue 3 SFC components over `@jenni/core` markup | **20.1 kB** |
-| [`@jenni/react`](./packages/react) | Zero-CSS-in-JS React 19 native-ref TSX components over `@jenni/core` markup | **23.3 kB** |
+| [`jenni-core`](./packages/core) | OKLCH design tokens, `@layer` CSS primitives (`0 !important`), 16 container-query app shells, and delegated WAI-ARIA behaviors | **17.7 kB** |
+| [`jenni-vue`](./packages/vue) | Zero-`<style>` Vue 3 SFC components over `jenni-core` markup | **20.1 kB** |
+| [`jenni-react`](./packages/react) | Zero-CSS-in-JS React 19 native-ref TSX components over `jenni-core` markup | **23.3 kB** |
 
 ## Quick Start
 
-### Install from GitHub Releases (works immediately)
+### Install from npm
+
+```sh
+# Vue 3
+npm install jenni-core jenni-vue
+
+# React 19
+npm install jenni-core jenni-react
+```
+
+### Or install directly from GitHub Releases
 
 ```sh
 # Vue 3
@@ -31,7 +41,7 @@ npm install \
 
 ```ts
 // Import styles once at your application root
-import '@jenni/core/css';
+import 'jenni-core/css';
 ```
 
 ## Monorepo Commands

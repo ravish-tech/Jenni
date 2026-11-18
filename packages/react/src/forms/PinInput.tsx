@@ -7,7 +7,7 @@ import {
   type ComponentProps,
   type KeyboardEvent as ReactKeyboardEvent,
 } from 'react';
-import { sanitizePinChars } from '@jenni/core/behaviors/pin-input.js';
+import { sanitizePinChars } from 'jenni-core/behaviors/pin-input.js';
 import { FieldContext, cx, sizeAttr, useControllable, type Size, type Tone } from './types';
 
 export interface PinInputProps extends Omit<ComponentProps<'div'>, 'defaultValue' | 'onChange'> {
