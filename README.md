@@ -15,9 +15,18 @@
 
 ## Quick Start
 
+### Install from GitHub Releases (works immediately)
+
 ```sh
-# Install
-npm install @jenni/core @jenni/vue    # or @jenni/react
+# Vue 3
+npm install \
+  https://github.com/ravish-tech/Jenni/releases/latest/download/jenni-core.tgz \
+  https://github.com/ravish-tech/Jenni/releases/latest/download/jenni-vue.tgz
+
+# React 19
+npm install \
+  https://github.com/ravish-tech/Jenni/releases/latest/download/jenni-core.tgz \
+  https://github.com/ravish-tech/Jenni/releases/latest/download/jenni-react.tgz
 ```
 
 ```ts

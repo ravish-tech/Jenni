@@ -40,10 +40,8 @@
     }
   },
   "peerDependencies": {
+    "@jenni/core": "^0.1.0",
     "vue": "^3.5.0"
-  },
-  "dependencies": {
-    "@jenni/core": "^0.1.0"
   },
   "publishConfig": {
     "access": "public"

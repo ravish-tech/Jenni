@@ -1,0 +1,116 @@
+name: Release (GitHub Assets & npm)
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (for manual re-run, e.g. v0.1.0)"
+        required: false
+        default: "v0.1.0"
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  github-release:
+    name: Build & Publish GitHub Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck & build packages
+        run: |
+          npm run typecheck
+          npm run build:packages
+
+      - name: Pack release tarballs & CDN assets
+        run: |
+          mkdir -p release-assets
+          npm pack -w @jenni/core --pack-destination ./release-assets
+          npm pack -w @jenni/vue --pack-destination ./release-assets
+          npm pack -w @jenni/react --pack-destination ./release-assets
+          cp packages/core/dist/jenni.css ./release-assets/jenni.css
+          cp packages/core/dist/jenni.iife.js ./release-assets/jenni.iife.js
+          # Stable versionless aliases so latest/download URLs never change
+          cp ./release-assets/jenni-core-*.tgz ./release-assets/jenni-core.tgz
+          cp ./release-assets/jenni-vue-*.tgz ./release-assets/jenni-vue.tgz
+          cp ./release-assets/jenni-react-*.tgz ./release-assets/jenni-react.tgz
+          ls -lh ./release-assets
+
+      - name: Create or Update GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || inputs.tag }}
+          name: "Jenni ${{ github.ref_type == 'tag' && github.ref_name || inputs.tag }}"
+          generate_release_notes: true
+          body: |
+            ### Install directly from GitHub Release (no npm token required)
+
+            **Vue 3:**
+            ```sh
+            npm install \
+              https://github.com/${{ github.repository }}/releases/download/${{ github.ref_type == 'tag' && github.ref_name || inputs.tag }}/jenni-core.tgz \
+              https://github.com/${{ github.repository }}/releases/download/${{ github.ref_type == 'tag' && github.ref_name || inputs.tag }}/jenni-vue.tgz
+            ```
+
+            **React 19:**
+            ```sh
+            npm install \
+              https://github.com/${{ github.repository }}/releases/download/${{ github.ref_type == 'tag' && github.ref_name || inputs.tag }}/jenni-core.tgz \
+              https://github.com/${{ github.repository }}/releases/download/${{ github.ref_type == 'tag' && github.ref_name || inputs.tag }}/jenni-react.tgz
+            ```
+
+            **Plain HTML / CSS:**
+            Download `jenni.css` and `jenni.iife.js` attached below.
+          files: |
+            release-assets/*.tgz
+            release-assets/jenni.css
+            release-assets/jenni.iife.js
+
+  npm-publish:
+    name: Publish to npm (when NPM_TOKEN is set)
+    needs: github-release
+    runs-on: ubuntu-latest
+    env:
+      HAS_NPM_TOKEN: ${{ secrets.NPM_TOKEN != '' }}
+    steps:
+      - name: Check if NPM_TOKEN is configured
+        if: env.HAS_NPM_TOKEN != 'true'
+        run: echo "Skipping npm publish (NPM_TOKEN secret not set yet). GitHub Release assets are live."
+
+      - name: Checkout repository
+        if: env.HAS_NPM_TOKEN == 'true'
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22 for npmjs.org
+        if: env.HAS_NPM_TOKEN == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: "https://registry.npmjs.org"
+          cache: npm
+
+      - name: Install, build & publish to npm
+        if: env.HAS_NPM_TOKEN == 'true'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          npm ci
+          npm run build:packages
+          npm publish -w @jenni/core --provenance --access public
+          npm publish -w @jenni/vue --provenance --access public
+          npm publish -w @jenni/react --provenance --access public

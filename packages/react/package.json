@@ -40,11 +40,9 @@
     }
   },
   "peerDependencies": {
+    "@jenni/core": "^0.1.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
-  },
-  "dependencies": {
-    "@jenni/core": "^0.1.0"
   },
   "publishConfig": {
     "access": "public"
