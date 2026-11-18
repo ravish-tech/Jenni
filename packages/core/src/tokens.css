@@ -1,0 +1,251 @@
+/*
+ * Jenni — design tokens.
+ * Driven by mature elegance, architectural calm, and spatial precision.
+ * Every visual decision lives here. Components only read tokens.
+ * Colors use OKLCH + light-dark(); theme follows the OS unless
+ * [data-theme="light" | "dark"] is set on an ancestor (usually <html>).
+ */
+@layer jenni.reset, jenni.tokens, jenni.base, jenni.components, jenni.utilities;
+
+@layer jenni.tokens {
+  :root {
+    color-scheme: light dark;
+
+    /* ---- Knobs (change these to re-skin everything) ---- */
+    --j-hue: 262;              /* composed slate-indigo accent hue */
+    --j-hue-neutral: 262;      /* subtle architectural tint of grays */
+    --j-chroma-neutral: 0.005; /* 0 = pure neutral gray */
+    --j-radius-factor: 1;      /* 0 = square, 1 = tailored default, 2 = round */
+    --j-density: 1;            /* 0.65 = compact, 1 = default, 1.15 = comfortable */
+
+    /* ---- Neutral surfaces (calm, warm-balanced paper & deep obsidian) ---- */
+    --j-bg:        light-dark(oklch(99% 0.002 var(--j-hue-neutral)),   oklch(14.8% 0.005 var(--j-hue-neutral)));
+    --j-surface-1: light-dark(oklch(100% 0 0),                         oklch(18.2% var(--j-chroma-neutral) var(--j-hue-neutral)));
+    --j-surface-2: light-dark(oklch(97.2% var(--j-chroma-neutral) var(--j-hue-neutral)), oklch(21.5% var(--j-chroma-neutral) var(--j-hue-neutral)));
+    --j-surface-3: light-dark(oklch(94.6% var(--j-chroma-neutral) var(--j-hue-neutral)), oklch(25.2% var(--j-chroma-neutral) var(--j-hue-neutral)));
+    --j-overlay:   light-dark(oklch(18% 0.008 var(--j-hue-neutral) / 0.32), oklch(4% 0 0 / 0.64));
+
+    /* ---- Text ---- */
+    --j-fg:        light-dark(oklch(19% 0.008 var(--j-hue-neutral)),   oklch(95.5% 0.003 var(--j-hue-neutral)));
+    --j-fg-muted:  light-dark(oklch(46% 0.01 var(--j-hue-neutral)),    oklch(72% 0.008 var(--j-hue-neutral)));
+    --j-fg-subtle: light-dark(oklch(61% 0.008 var(--j-hue-neutral)),   oklch(55% 0.008 var(--j-hue-neutral)));
+
+    /* ---- Hairline borders ---- */
+    --j-border:        light-dark(oklch(90.5% 0.005 var(--j-hue-neutral)), oklch(27.5% 0.007 var(--j-hue-neutral)));
+    --j-border-strong: light-dark(oklch(82.5% 0.007 var(--j-hue-neutral)), oklch(35.5% 0.009 var(--j-hue-neutral)));
+
+    /* ---- Accent (poised, ink-rich chroma — never neon or candy) ---- */
+    --j-accent:         light-dark(oklch(49% 0.155 var(--j-hue)),   oklch(68% 0.135 var(--j-hue)));
+    --j-accent-hover:   light-dark(oklch(44.5% 0.155 var(--j-hue)), oklch(72.5% 0.13 var(--j-hue)));
+    --j-accent-fg:      light-dark(oklch(99% 0.005 var(--j-hue)),   oklch(15% 0.025 var(--j-hue)));
+    --j-accent-soft:    light-dark(oklch(95.8% 0.022 var(--j-hue)), oklch(25.5% 0.045 var(--j-hue)));
+    --j-accent-soft-fg: light-dark(oklch(42% 0.14 var(--j-hue)),    oklch(84% 0.085 var(--j-hue)));
+
+    /* ---- Status palettes (composed, editorial chroma) ---- */
+    --j-danger:          light-dark(oklch(53% 0.175 25),   oklch(65% 0.155 25));
+    --j-danger-hover:    light-dark(oklch(48.5% 0.175 25), oklch(69.5% 0.15 25));
+    --j-danger-fg:       oklch(99% 0.006 25);
+    --j-danger-soft:     light-dark(oklch(96% 0.022 25),   oklch(25.5% 0.055 25));
+    --j-danger-soft-fg:  light-dark(oklch(45% 0.155 25),   oklch(83% 0.09 25));
+
+    --j-success:         light-dark(oklch(53% 0.13 155),   oklch(68% 0.125 155));
+    --j-success-hover:   light-dark(oklch(48.5% 0.13 155), oklch(72.5% 0.12 155));
+    --j-success-fg:      light-dark(oklch(99% 0.006 155),  oklch(16% 0.03 155));
+    --j-success-soft:    light-dark(oklch(96% 0.025 155),  oklch(25% 0.042 155));
+    --j-success-soft-fg: light-dark(oklch(40% 0.105 155),  oklch(84% 0.085 155));
+
+    --j-warning:         light-dark(oklch(72% 0.135 75),   oklch(77% 0.13 75));
+    --j-warning-hover:   light-dark(oklch(67.5% 0.135 75), oklch(81% 0.125 75));
+    --j-warning-fg:      oklch(21% 0.04 75);
+    --j-warning-soft:    light-dark(oklch(96.4% 0.032 82), oklch(26.5% 0.042 75));
+    --j-warning-soft-fg: light-dark(oklch(45% 0.1 65),     oklch(85% 0.085 80));
+
+    --j-info:            light-dark(oklch(53% 0.125 240),  oklch(68% 0.11 240));
+    --j-info-hover:      light-dark(oklch(48.5% 0.125 240),oklch(72.5% 0.105 240));
+    --j-info-fg:         light-dark(oklch(99% 0.006 240),  oklch(16% 0.025 240));
+    --j-info-soft:       light-dark(oklch(96% 0.022 240),  oklch(25.5% 0.04 240));
+    --j-info-soft-fg:    light-dark(oklch(43% 0.11 240),   oklch(84% 0.075 240));
+
+    --j-neutral:         var(--j-fg);
+    --j-neutral-hover:   light-dark(oklch(28% 0.008 var(--j-hue-neutral)), oklch(88% 0.004 var(--j-hue-neutral)));
+    --j-neutral-fg:      var(--j-bg);
+    --j-neutral-soft:    var(--j-surface-3);
+    --j-neutral-soft-fg: var(--j-fg);
+
+    /* ---- Typography ---- */
+    --j-font-sans: "InterVariable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --j-font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --j-font-scale: clamp(0.9, calc(0.77 + 0.23 * var(--j-density)), 1.03);
+    --j-text-xs: calc(0.75rem * var(--j-font-scale));     /* 12 @ 1x · 11 @ 0.65x */
+    --j-text-sm: calc(0.8125rem * var(--j-font-scale));   /* 13 @ 1x · 12 @ 0.65x */
+    --j-text-md: calc(0.875rem * var(--j-font-scale));    /* 14 @ 1x · 12.9 @ 0.65x */
+    --j-text-lg: calc(1rem * var(--j-font-scale));        /* 16 @ 1x · 14.7 @ 0.65x */
+    --j-text-xl: calc(1.125rem * var(--j-font-scale));    /* 18 @ 1x · 16.6 @ 0.65x */
+    --j-text-2xl: 1.375rem;   /* 22 */
+    --j-text-3xl: 1.75rem;    /* 28 */
+    --j-text-4xl: 2.25rem;    /* 36 */
+    --j-leading-tight: 1.25;
+    --j-leading: 1.5;
+    --j-weight-regular: 400;
+    --j-weight-medium: 500;
+    --j-weight-semibold: 600;
+    --j-tracking-tight: -0.012em;
+
+    /* ---- Space (4px grid, scaled by density) ---- */
+    --j-space-0-5: calc(2px * var(--j-density));
+    --j-space-1: calc(4px * var(--j-density));
+    --j-space-1-5: calc(6px * var(--j-density));
+    --j-space-2: calc(8px * var(--j-density));
+    --j-space-3: calc(12px * var(--j-density));
+    --j-space-4: calc(16px * var(--j-density));
+    --j-space-5: calc(20px * var(--j-density));
+    --j-space-6: calc(24px * var(--j-density));
+    --j-space-8: calc(32px * var(--j-density));
+    --j-space-10: calc(40px * var(--j-density));
+    --j-space-12: calc(48px * var(--j-density));
+    --j-space-16: calc(64px * var(--j-density));
+    --j-space-20: calc(80px * var(--j-density));
+
+    /* ---- Semantic relationship gaps ---- */
+    --j-gap-inline:  var(--j-space-1-5); /* 6px  — icon + label, dot + badge */
+    --j-gap-related: var(--j-space-2);   /* 8px  — sibling buttons (Cancel + Save), toolbar cluster */
+    --j-gap-item:    var(--j-space-3);   /* 12px — internal row slots: avatar + text + action */
+    --j-gap-field:   var(--j-space-4);   /* 16px — vertical stack of form fields */
+    --j-gap-group:   var(--j-space-6);   /* 24px — card grid gutter, distinct sub-groups */
+    --j-gap-section: var(--j-space-10);  /* 40px — major vertical break between page sections */
+
+    /* ---- Control & list heights (pixel-snapped with compact legibility floors) ---- */
+    --j-control-sm: max(20px, round(calc(28px * var(--j-density)), 1px));
+    --j-control-md: max(24px, round(calc(34px * var(--j-density)), 1px));
+    --j-control-lg: max(30px, round(calc(42px * var(--j-density)), 1px));
+    --j-hit-min: 44px;
+
+    --j-list-h-compact: max(24px, round(calc(32px * var(--j-density)), 1px));
+    --j-list-h-1:       max(30px, round(calc(44px * var(--j-density)), 1px));
+    --j-list-h-2:       max(42px, round(calc(60px * var(--j-density)), 1px));
+    --j-list-h-3:       max(54px, round(calc(76px * var(--j-density)), 1px));
+    --j-list-px:        var(--j-space-3);
+    --j-list-gap:       var(--j-space-3);
+
+    /* ---- Application chrome & containers ---- */
+    --j-topbar-h:       52px;
+    --j-subbar-h:       40px;
+    --j-bottombar-h:    60px;
+    --j-sidebar-w:      248px;
+    --j-sidebar-rail-w: 60px;
+    --j-aside-w:        320px;
+    --j-split-master-w: 320px;
+
+    --j-measure-prose:  65ch;
+    --j-container-sm:   640px;
+    --j-container-md:   880px;
+    --j-container-lg:   1160px;
+    --j-container-xl:   1400px;
+    --j-page-gutter:    clamp(16px, 4vw, 40px);
+    --j-page-py:        calc(28px * var(--j-density));
+
+    /* ---- Radius (tailored architectural precision — never bubbly) ---- */
+    --j-radius-xs: calc(4px * var(--j-radius-factor));
+    --j-radius-sm: calc(5px * var(--j-radius-factor));
+    --j-radius-md: calc(7px * var(--j-radius-factor));
+    --j-radius-lg: calc(10px * var(--j-radius-factor));
+    --j-radius-xl: calc(14px * var(--j-radius-factor));
+    --j-radius-full: 9999px;
+
+    /* ---- Elevation (quiet, diffused ambient depth) ---- */
+    --j-shadow-xs: 0 1px 2px light-dark(oklch(18% 0.01 var(--j-hue-neutral) / 0.045), oklch(0% 0 0 / 0.32));
+    --j-shadow-sm: 0 1px 2px light-dark(oklch(18% 0.01 var(--j-hue-neutral) / 0.04),  oklch(0% 0 0 / 0.34)),
+                   0 3px 8px light-dark(oklch(18% 0.01 var(--j-hue-neutral) / 0.045), oklch(0% 0 0 / 0.28));
+    --j-shadow-md: 0 2px 6px light-dark(oklch(18% 0.01 var(--j-hue-neutral) / 0.04),  oklch(0% 0 0 / 0.36)),
+                   0 10px 28px light-dark(oklch(18% 0.01 var(--j-hue-neutral) / 0.075), oklch(0% 0 0 / 0.44));
+    --j-shadow-lg: 0 4px 12px light-dark(oklch(18% 0.01 var(--j-hue-neutral) / 0.045), oklch(0% 0 0 / 0.4)),
+                   0 24px 60px light-dark(oklch(18% 0.01 var(--j-hue-neutral) / 0.12), oklch(0% 0 0 / 0.54));
+    --j-inset-highlight: inset 0 1px 0 light-dark(transparent, oklch(100% 0 0 / 0.035));
+
+    /* ---- Focus (composed 3px optical halo) ---- */
+    --j-ring-color: color-mix(in oklch, var(--j-accent) 40%, transparent);
+    --j-ring: 0 0 0 1.5px var(--j-bg), 0 0 0 3.5px var(--j-ring-color);
+
+    /* ---- Motion (poised, weighted deceleration — ZERO overshoot or bounce) ---- */
+    --j-duration-fast: 150ms;
+    --j-duration:      220ms;
+    --j-duration-slow: 300ms;
+    --j-ease-out:        cubic-bezier(0.19, 1, 0.22, 1);
+    --j-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+    --j-ease-in-out:     cubic-bezier(0.45, 0, 0.55, 1);
+    /* Kept as a zero-overshoot alias for backwards compatibility; never bounces. */
+    --j-ease-spring:     cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* ---- Layers ---- */
+    --j-z-dropdown: 1000;
+    --j-z-sticky: 1100;
+    --j-z-overlay: 1200;
+    --j-z-modal: 1300;
+    --j-z-toast: 1400;
+    --j-z-tooltip: 1500;
+
+    /* ---- Tone defaults (overridden by [data-tone]) ---- */
+    --j-tone: var(--j-accent);
+    --j-tone-hover: var(--j-accent-hover);
+    --j-tone-fg: var(--j-accent-fg);
+    --j-tone-soft: var(--j-accent-soft);
+    --j-tone-soft-fg: var(--j-accent-soft-fg);
+  }
+
+  [data-theme="light"] { color-scheme: light; }
+  [data-theme="dark"]  { color-scheme: dark; }
+
+  /* Density switching: works on :root or any scoped [data-density] subtree. */
+  [data-density="compact"]     { --j-density: 0.65; }
+  [data-density="default"]     { --j-density: 1; }
+  [data-density="comfortable"] { --j-density: 1.15; }
+  [data-density] {
+    --j-font-scale: clamp(0.9, calc(0.77 + 0.23 * var(--j-density)), 1.03);
+    --j-text-xs: calc(0.75rem * var(--j-font-scale));
+    --j-text-sm: calc(0.8125rem * var(--j-font-scale));
+    --j-text-md: calc(0.875rem * var(--j-font-scale));
+    --j-text-lg: calc(1rem * var(--j-font-scale));
+    --j-text-xl: calc(1.125rem * var(--j-font-scale));
+    --j-space-0-5: calc(2px * var(--j-density));
+    --j-space-1:   calc(4px * var(--j-density));
+    --j-space-1-5: calc(6px * var(--j-density));
+    --j-space-2:   calc(8px * var(--j-density));
+    --j-space-3:   calc(12px * var(--j-density));
+    --j-space-4:   calc(16px * var(--j-density));
+    --j-space-5:   calc(20px * var(--j-density));
+    --j-space-6:   calc(24px * var(--j-density));
+    --j-space-8:   calc(32px * var(--j-density));
+    --j-space-10:  calc(40px * var(--j-density));
+    --j-space-12:  calc(48px * var(--j-density));
+    --j-space-16:  calc(64px * var(--j-density));
+    --j-space-20:  calc(80px * var(--j-density));
+    --j-gap-inline:  var(--j-space-1-5);
+    --j-gap-related: var(--j-space-2);
+    --j-gap-item:    var(--j-space-3);
+    --j-gap-field:   var(--j-space-4);
+    --j-gap-group:   var(--j-space-6);
+    --j-gap-section: var(--j-space-10);
+    --j-control-sm:  max(20px, round(calc(28px * var(--j-density)), 1px));
+    --j-control-md:  max(24px, round(calc(34px * var(--j-density)), 1px));
+    --j-control-lg:  max(30px, round(calc(42px * var(--j-density)), 1px));
+    --j-list-h-compact: max(24px, round(calc(32px * var(--j-density)), 1px));
+    --j-list-h-1:       max(30px, round(calc(44px * var(--j-density)), 1px));
+    --j-list-h-2:       max(42px, round(calc(60px * var(--j-density)), 1px));
+    --j-list-h-3:       max(54px, round(calc(76px * var(--j-density)), 1px));
+    --j-list-px:        var(--j-space-3);
+    --j-list-gap:       var(--j-space-3);
+    --j-page-py:        calc(28px * var(--j-density));
+  }
+
+  /* Tone switching: works on :root or any scoped [data-tone] element; components read --j-tone-*. */
+  [data-tone="accent"]  { --j-tone: var(--j-accent);  --j-tone-hover: var(--j-accent-hover);  --j-tone-fg: var(--j-accent-fg);  --j-tone-soft: var(--j-accent-soft);  --j-tone-soft-fg: var(--j-accent-soft-fg); }
+  [data-tone="neutral"] { --j-tone: var(--j-neutral); --j-tone-hover: var(--j-neutral-hover); --j-tone-fg: var(--j-neutral-fg); --j-tone-soft: var(--j-neutral-soft); --j-tone-soft-fg: var(--j-neutral-soft-fg); }
+  [data-tone="danger"]  { --j-tone: var(--j-danger);  --j-tone-hover: var(--j-danger-hover);  --j-tone-fg: var(--j-danger-fg);  --j-tone-soft: var(--j-danger-soft);  --j-tone-soft-fg: var(--j-danger-soft-fg); }
+  [data-tone="success"] { --j-tone: var(--j-success); --j-tone-hover: var(--j-success-hover); --j-tone-fg: var(--j-success-fg); --j-tone-soft: var(--j-success-soft); --j-tone-soft-fg: var(--j-success-soft-fg); }
+  [data-tone="warning"] { --j-tone: var(--j-warning); --j-tone-hover: var(--j-warning-hover); --j-tone-fg: var(--j-warning-fg); --j-tone-soft: var(--j-warning-soft); --j-tone-soft-fg: var(--j-warning-soft-fg); }
+  [data-tone="info"]    { --j-tone: var(--j-info);    --j-tone-hover: var(--j-info-hover);    --j-tone-fg: var(--j-info-fg);    --j-tone-soft: var(--j-info-soft);    --j-tone-soft-fg: var(--j-info-soft-fg); }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root { --j-duration-fast: 0ms; --j-duration: 0ms; --j-duration-slow: 0ms; }
+  }
+}

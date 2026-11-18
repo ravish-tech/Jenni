@@ -1,0 +1,115 @@
+/*
+ * Badge — <span class="j-badge">Label</span>
+ *   data-variant: soft (default) | solid | outline
+ *   data-size:    sm | md (default) | lg
+ *   data-tone:    accent (default) | neutral | danger | success | warning | info
+ * Parts: .j-badge__dot (status dot), any <svg> child is sized as an icon.
+ * Public props: --j-badge-radius
+ */
+@layer jenni.components {
+  :where(.j-badge) {
+    --_h: max(16px, round(calc(22px * var(--j-density)), 1px));
+    --_px: var(--j-space-2);
+    --_fs: var(--j-text-xs);
+    --_icon: 12px;
+    --_dot: 6px;
+    --_bg: var(--j-tone-soft);
+    --_fg: var(--j-tone-soft-fg);
+    --_edge: color-mix(in oklch, var(--j-tone) 14%, transparent);
+    --_dot-color: var(--j-tone);
+
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    block-size: var(--_h);
+    padding-inline: var(--_px);
+    border-radius: var(--j-badge-radius, var(--j-radius-sm));
+    background-color: var(--_bg);
+    color: var(--_fg);
+    box-shadow: inset 0 0 0 1px var(--_edge);
+    font-size: var(--_fs);
+    font-weight: var(--j-weight-medium);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    letter-spacing: 0.005em;
+    white-space: nowrap;
+    vertical-align: middle;
+    text-decoration: none;
+    user-select: none;
+  }
+
+  /* Variants */
+  :where(.j-badge[data-tone="neutral"]:not([data-variant="solid"])) {
+    --_bg: var(--j-surface-2);
+    --_fg: var(--j-fg-muted);
+    --_edge: var(--j-border);
+    --_dot-color: var(--j-fg-subtle);
+  }
+  :where(.j-badge[data-variant="solid"]) {
+    --_bg: var(--j-tone);
+    --_fg: var(--j-tone-fg);
+    --_edge: color-mix(in oklch, var(--j-tone-hover) 50%, transparent);
+    --_dot-color: currentColor;
+  }
+  :where(.j-badge[data-variant="outline"]) {
+    --_bg: transparent;
+    --_edge: color-mix(in oklch, var(--j-tone) 30%, transparent);
+  }
+  :where(.j-badge[data-variant="outline"][data-tone="neutral"]) {
+    --_bg: transparent;
+    --_edge: var(--j-border-strong);
+    --_fg: var(--j-fg-muted);
+  }
+
+  /* Sizes */
+  :where(.j-badge[data-size="sm"]) {
+    --_h: max(15px, round(calc(18px * var(--j-density)), 1px));
+    --_px: var(--j-space-1-5);
+    --_fs: max(10px, calc(var(--j-text-xs) - 1px));
+    --_icon: 10px;
+    --_dot: 5px;
+    gap: var(--j-space-0-5);
+  }
+  :where(.j-badge[data-size="lg"]) {
+    --_h: max(19px, round(calc(26px * var(--j-density)), 1px));
+    --_px: calc(var(--j-space-2) * 1.25);
+    --_fs: var(--j-text-sm);
+    --_icon: 14px;
+    --_dot: 7px;
+    gap: var(--j-gap-inline);
+  }
+
+  /* Parts */
+  :where(.j-badge__dot) {
+    flex: none;
+    inline-size: var(--_dot);
+    block-size: var(--_dot);
+    border-radius: var(--j-radius-full);
+    background-color: var(--_dot-color);
+  }
+  :where(.j-badge > svg) {
+    flex: none;
+    inline-size: var(--_icon);
+    block-size: var(--_icon);
+  }
+  :where(.j-badge > svg:first-child, .j-badge > .j-badge__dot:first-child) {
+    margin-inline-start: calc(var(--j-space-0-5) * -1);
+  }
+
+  /* Interactive badges (links / buttons) */
+  :where(a.j-badge, button.j-badge) {
+    border: 0;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color var(--j-duration-fast) var(--j-ease-out), box-shadow var(--j-duration-fast) var(--j-ease-out);
+  }
+  :where(a.j-badge, button.j-badge):hover {
+    --_edge: color-mix(in oklch, var(--j-tone) 32%, transparent);
+  }
+  :where(a.j-badge[data-variant="solid"], button.j-badge[data-variant="solid"]):hover {
+    --_bg: var(--j-tone-hover);
+  }
+  :where(a.j-badge, button.j-badge):focus-visible {
+    box-shadow: inset 0 0 0 1px var(--_edge), var(--j-ring);
+  }
+}

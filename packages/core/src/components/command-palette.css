@@ -1,0 +1,456 @@
+/*
+ * Command Palette — .j-command-palette
+ *   Top-layer modal launcher (<dialog class="j-command-palette">) and inline
+ *   surface preview ([data-inline]) with WAI-ARIA combobox + listbox keyboard
+ *   navigation, grouped results, shortcut chords, and damped 300ms reveal.
+ *
+ * Markup:
+ *   <dialog class="j-command-palette" id="cmd" closedby="any" aria-label="Command palette">
+ *     <div class="j-command-palette__header">
+ *       <span class="j-command-palette__search-icon" aria-hidden="true">…</span>
+ *       <input class="j-command-palette__input" role="combobox" placeholder="Type a command or search…" />
+ *       <kbd class="j-kbd" data-size="sm">Esc</kbd>
+ *     </div>
+ *     <div class="j-command-palette__list" role="listbox">
+ *       <div class="j-command-palette__group" role="group" aria-label="Navigation">
+ *         <div class="j-command-palette__group-label">Navigation</div>
+ *         <div class="j-command-palette__item" role="option" data-value="home">
+ *           <span class="j-command-palette__item-icon">…</span>
+ *           <span class="j-command-palette__item-body">
+ *             <span class="j-command-palette__item-title">Go to Overview</span>
+ *             <span class="j-command-palette__item-description">Workspace</span>
+ *           </span>
+ *           <span class="j-command-palette__item-shortcut"><kbd class="j-kbd" data-size="sm">G</kbd><kbd class="j-kbd" data-size="sm">O</kbd></span>
+ *         </div>
+ *       </div>
+ *       <div class="j-command-palette__empty" hidden>No matching commands</div>
+ *     </div>
+ *     <footer class="j-command-palette__footer">…</footer>
+ *   </dialog>
+ *
+ * Public custom properties:
+ *   --j-command-palette-width       modal / surface max inline-size (default 36rem)
+ *   --j-command-palette-max-height  scrollable list max block-size (default 21rem)
+ */
+@layer jenni.components {
+  :where(.j-command-palette) {
+    --_w: var(--j-command-palette-width, 36rem);
+    --_list-max-h: var(--j-command-palette-max-height, 21rem);
+    --_radius: var(--j-radius-xl);
+    --_from: 0 -6px;
+    --_header-h: max(38px, round(calc(50px * var(--j-density)), 1px));
+    --_item-h: max(30px, round(calc(40px * var(--j-density)), 1px));
+
+    box-sizing: border-box;
+    position: fixed;
+    inset: 0;
+    margin: min(13dvh, 7rem) auto auto;
+    inline-size: min(var(--_w), calc(100vw - var(--j-space-6)));
+    max-inline-size: none;
+    max-block-size: min(32rem, calc(100dvh - var(--j-space-10)));
+    padding: 0;
+    border: 1px solid var(--j-border);
+    border-radius: var(--_radius);
+    background: light-dark(var(--j-surface-1), var(--j-surface-2));
+    color: var(--j-fg);
+    box-shadow: var(--j-shadow-lg), var(--j-inset-highlight);
+    overflow: hidden;
+    overscroll-behavior: contain;
+    z-index: var(--j-z-modal);
+    outline: none;
+
+    /* Damped 300ms opacity + translate reveal — zero bounce, zero scale squish */
+    opacity: 0;
+    translate: var(--_from);
+    transition:
+      opacity var(--j-duration-slow) var(--j-ease-emphasized),
+      translate var(--j-duration-slow) var(--j-ease-emphasized),
+      overlay var(--j-duration-slow) allow-discrete,
+      display var(--j-duration-slow) allow-discrete;
+
+    &[open] {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+      translate: 0 0;
+      @starting-style {
+        opacity: 0;
+        translate: var(--_from);
+      }
+    }
+
+    &::backdrop {
+      background: var(--j-overlay);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      transition:
+        opacity var(--j-duration-slow) var(--j-ease-emphasized),
+        overlay var(--j-duration-slow) allow-discrete,
+        display var(--j-duration-slow) allow-discrete;
+    }
+
+    &[open]::backdrop {
+      opacity: 1;
+      @starting-style {
+        opacity: 0;
+      }
+    }
+
+    @media (width < 40rem) {
+      --_from: 0 12px;
+      margin: auto 0 0;
+      inline-size: 100%;
+      max-block-size: calc(100dvh - var(--j-space-8));
+      border-width: 1px 0 0;
+      border-radius: var(--_radius) var(--_radius) 0 0;
+    }
+  }
+
+  /* Inline / embedded surface mode for live documentation stages & panels */
+  :where(.j-command-palette[data-inline]) {
+    position: relative;
+    inset: auto;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    inline-size: min(var(--_w), 100%);
+    max-block-size: none;
+    box-shadow: var(--j-shadow-md), var(--j-inset-highlight);
+    z-index: auto;
+    opacity: 1;
+    translate: 0 0;
+    transition: none;
+  }
+
+  /* Scroll lock while a modal command palette is open */
+  :where(html:has(.j-command-palette:modal)) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+
+  /* ---- Header (search icon + optional namespace crumb + input + Esc kbd) ---- */
+  :where(.j-command-palette__header) {
+    box-sizing: border-box;
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: var(--j-space-2-5, var(--j-space-2));
+    min-block-size: var(--_header-h);
+    padding-inline: var(--j-space-3-5, var(--j-space-4));
+    padding-block: var(--j-space-1-5);
+    border-bottom: 1px solid var(--j-border);
+    background: light-dark(var(--j-surface-1), var(--j-surface-2));
+  }
+
+  :where(.j-command-palette__search-icon) {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    inline-size: 16px;
+    block-size: 16px;
+    color: var(--j-fg-subtle);
+
+    & > svg {
+      inline-size: 16px;
+      block-size: 16px;
+    }
+  }
+
+  :where(.j-command-palette__breadcrumbs) {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+  }
+
+  :where(.j-command-palette__breadcrumb) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    block-size: max(18px, round(calc(22px * var(--j-density)), 1px));
+    padding-inline: var(--j-space-2);
+    border: 1px solid var(--j-border);
+    border-radius: var(--j-radius-xs);
+    background: var(--j-surface-2);
+    color: var(--j-fg-muted);
+    font-family: inherit;
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  :where(button.j-command-palette__breadcrumb) {
+    cursor: pointer;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out);
+
+    &:hover {
+      background: var(--j-surface-3);
+      color: var(--j-fg);
+      border-color: var(--j-border-strong);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+  }
+
+  :where(.j-command-palette__input) {
+    appearance: none;
+    flex: 1 1 6rem;
+    min-inline-size: 0;
+    block-size: max(24px, calc(var(--_header-h) - var(--j-space-3)));
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--j-fg);
+    font-family: inherit;
+    font-size: var(--j-text-md);
+    line-height: var(--j-leading-tight);
+    outline: none;
+
+    &::placeholder {
+      color: var(--j-fg-subtle);
+      opacity: 1;
+    }
+
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-decoration {
+      appearance: none;
+      display: none;
+    }
+  }
+
+  :where(.j-command-palette__close) {
+    appearance: none;
+    flex: none;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    line-height: 1;
+    border-radius: var(--j-radius-xs);
+
+    &:hover .j-kbd {
+      color: var(--j-fg);
+      background-color: var(--j-surface-3);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+  }
+
+  /* ---- Scrollable Results List ---- */
+  :where(.j-command-palette__list) {
+    --_thumb: color-mix(in oklch, var(--j-fg) 18%, transparent);
+    --_pad: var(--j-space-1-5);
+
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-block-size: 0;
+    max-block-size: var(--_list-max-h);
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    padding: var(--_pad);
+    scroll-padding-block: var(--_pad);
+    scrollbar-width: thin;
+    scrollbar-color: var(--_thumb) transparent;
+  }
+
+  :where(.j-command-palette__list)::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: transparent;
+  }
+
+  :where(.j-command-palette__list)::-webkit-scrollbar-thumb {
+    background-color: var(--_thumb);
+    border-radius: var(--j-radius-full);
+  }
+
+  /* ---- Groups ---- */
+  :where(.j-command-palette__group) {
+    display: flex;
+    flex-direction: column;
+
+    &[hidden] {
+      display: none;
+    }
+
+    & + .j-command-palette__group {
+      margin-block-start: var(--j-space-1-5);
+      padding-block-start: var(--j-space-1-5);
+      border-top: 1px solid var(--j-border);
+    }
+  }
+
+  :where(.j-command-palette__group-label) {
+    padding: var(--j-space-1) var(--j-space-2-5, var(--j-space-2));
+    color: var(--j-fg-subtle);
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+    letter-spacing: 0.01em;
+    user-select: none;
+  }
+
+  /* ---- Command Item ---- */
+  :where(.j-command-palette__item) {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--j-gap-item);
+    inline-size: 100%;
+    min-block-size: var(--_item-h);
+    padding: var(--j-space-1-5) var(--j-space-2-5, var(--j-space-3));
+    border-radius: var(--j-radius-md);
+    color: var(--j-fg);
+    cursor: pointer;
+    user-select: none;
+    scroll-margin-block: var(--_pad);
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    &[hidden] {
+      display: none;
+    }
+
+    &:is([data-highlighted], [aria-selected="true"]) {
+      background-color: light-dark(var(--j-surface-2), var(--j-surface-3));
+      box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--j-border-strong) 55%, transparent);
+      transition-duration: 0ms;
+    }
+
+    &:is([data-highlighted], [aria-selected="true"]) :where(.j-command-palette__item-icon) {
+      color: var(--j-accent);
+    }
+
+    &[aria-disabled="true"],
+    &[data-disabled] {
+      opacity: 0.45;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+  }
+
+  :where(.j-command-palette__item-icon) {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    inline-size: 18px;
+    block-size: 18px;
+    color: var(--j-fg-muted);
+    transition: color var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: 16px;
+      block-size: 16px;
+    }
+  }
+
+  :where(.j-command-palette__item-body) {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    column-gap: var(--j-space-2);
+    row-gap: 1px;
+  }
+
+  :where(.j-command-palette__item-title) {
+    font-size: var(--j-text-sm);
+    font-weight: var(--j-weight-medium);
+    color: var(--j-fg);
+    line-height: var(--j-leading-tight);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :where(.j-command-palette__item-description) {
+    font-size: var(--j-text-xs);
+    color: var(--j-fg-subtle);
+    line-height: var(--j-leading-tight);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :where(.j-command-palette__item-shortcut) {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    margin-inline-start: auto;
+  }
+
+  :where(.j-command-palette__item-chevron) {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    inline-size: 14px;
+    block-size: 14px;
+    color: var(--j-fg-subtle);
+    margin-inline-start: auto;
+
+    & > svg {
+      inline-size: 14px;
+      block-size: 14px;
+    }
+  }
+
+  /* ---- Empty State ---- */
+  :where(.j-command-palette__empty) {
+    padding: var(--j-space-8) var(--j-space-4);
+    text-align: center;
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-sm);
+
+    &[hidden] {
+      display: none;
+    }
+  }
+
+  /* ---- Footer (keyboard legend hints) ---- */
+  :where(.j-command-palette__footer) {
+    box-sizing: border-box;
+    flex: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-item);
+    padding: var(--j-space-2) var(--j-space-3-5, var(--j-space-4));
+    border-top: 1px solid var(--j-border);
+    background: light-dark(var(--j-surface-2), var(--j-surface-1));
+    color: var(--j-fg-subtle);
+    font-size: var(--j-text-xs);
+    user-select: none;
+  }
+
+  :where(.j-command-palette__hints) {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--j-space-3);
+  }
+
+  :where(.j-command-palette__hint) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,71 @@
+/*
+ * Skeleton — placeholder while content loads.
+ * <div class="j-skeleton" data-shape="text" style="inline-size: 60%"></div>
+ *   data-shape: rect (default) | text | circle
+ * Lines: <div class="j-skeleton-lines"> several text skeletons </div> (last one is shorter)
+ * Wrapping real content hides it and keeps its exact size:
+ *   <div class="j-skeleton"><button class="j-button">Save</button></div>
+ * Shimmer uses transform only and is removed for prefers-reduced-motion.
+ * Public props: --j-skeleton-size (circle diameter)
+ */
+@layer jenni.components {
+  :where(.j-skeleton) {
+    --_base: color-mix(in oklch, var(--j-fg) 6%, transparent);
+    --_shine: light-dark(
+      color-mix(in oklch, var(--j-surface-1) 55%, transparent),
+      color-mix(in oklch, var(--j-fg) 4%, transparent)
+    );
+
+    position: relative;
+    display: block;
+    min-block-size: 1em;
+    border-radius: var(--j-radius-md);
+    background-color: var(--_base);
+    overflow: hidden;
+    pointer-events: none;
+    user-select: none;
+  }
+  :where(.j-skeleton)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: linear-gradient(90deg, transparent, var(--_shine), transparent);
+    transform: translateX(-100%);
+    animation: j-skeleton-shimmer 2.2s var(--j-ease-in-out) infinite;
+  }
+  :where(.j-skeleton > *) { visibility: hidden; }
+
+  :where(.j-skeleton[data-shape="text"]) {
+    block-size: 0.78em;
+    min-block-size: 0;
+    margin-block: calc((1lh - 0.78em) / 2);
+    border-radius: var(--j-radius-xs);
+  }
+  :where(.j-skeleton[data-shape="circle"]) {
+    inline-size: var(--j-skeleton-size, 40px);
+    block-size: var(--j-skeleton-size, 40px);
+    border-radius: var(--j-radius-full);
+    flex: none;
+  }
+
+  :where(.j-skeleton-lines) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-inline);
+    inline-size: 100%;
+  }
+  :where(.j-skeleton-lines > .j-skeleton[data-shape="text"]) {
+    margin-block: 0;
+  }
+  :where(.j-skeleton-lines > .j-skeleton:last-child:not(:first-child)) {
+    inline-size: 62%;
+  }
+
+  @keyframes j-skeleton-shimmer {
+    to { transform: translateX(100%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(.j-skeleton)::after { animation: none; display: none; }
+  }
+}

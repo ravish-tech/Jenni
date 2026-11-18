@@ -1,0 +1,174 @@
+/*
+ * Card — <article class="j-card">
+ *   <div class="j-card__media"><img …></div>          (optional, full-bleed)
+ *   <header class="j-card__header">
+ *     <h3 class="j-card__title">…</h3>
+ *     <p class="j-card__description">…</p>
+ *     <button …>Action</button>                      (any other child = top-right action)
+ *   </header>
+ *   <div class="j-card__body">…</div>
+ *   <footer class="j-card__footer" [data-divider]>…</footer>
+ * </article>
+ *   data-variant: surface (default) | outline | ghost | elevated
+ *   data-size:    sm | md (default) | lg   (padding + title scale)
+ *   Interactive when rendered as <a>/<button> or with [data-interactive].
+ * Public props: --j-card-radius, --j-card-padding
+ */
+@layer jenni.components {
+  :where(.j-card) {
+    --_p: var(--j-card-padding, var(--j-space-5));
+    --_gap: var(--j-gap-field);
+    --_radius: var(--j-card-radius, var(--j-radius-lg));
+    --_bg: var(--j-surface-1);
+    --_edge: var(--j-border);
+    --_shadow: var(--j-shadow-xs);
+    --_title: var(--j-text-lg);
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--_gap);
+    min-inline-size: 0;
+    padding: var(--_p);
+    border-radius: var(--_radius);
+    background-color: var(--_bg);
+    color: var(--j-fg);
+    box-shadow: 0 0 0 1px var(--_edge), var(--_shadow), var(--j-inset-highlight);
+    text-align: start;
+  }
+
+  /* Variants */
+  :where(.j-card[data-variant="outline"]) {
+    --_bg: transparent;
+    --_shadow: 0 0 0 0 transparent;
+  }
+  :where(.j-card[data-variant="ghost"]) {
+    --_bg: transparent;
+    --_edge: transparent;
+    --_shadow: 0 0 0 0 transparent;
+  }
+  :where(.j-card[data-variant="elevated"]) {
+    --_edge: color-mix(in oklch, var(--j-border) 70%, transparent);
+    --_shadow: var(--j-shadow-md);
+  }
+
+  /* Sizes */
+  :where(.j-card[data-size="sm"]) {
+    --_p: var(--j-card-padding, var(--j-space-4));
+    --_gap: var(--j-gap-item);
+    --_radius: var(--j-card-radius, var(--j-radius-md));
+    --_title: var(--j-text-md);
+  }
+  :where(.j-card[data-size="lg"]) {
+    --_p: var(--j-card-padding, var(--j-space-6));
+    --_gap: var(--j-space-5);
+    --_radius: var(--j-card-radius, var(--j-radius-xl));
+    --_title: var(--j-text-xl);
+  }
+
+  /* Interactive */
+  :where(a.j-card, button.j-card, .j-card[data-interactive]) {
+    border: 0;
+    font: inherit;
+    color: var(--j-fg);
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      box-shadow var(--j-duration) var(--j-ease-out),
+      background-color var(--j-duration) var(--j-ease-out);
+  }
+  :where(a.j-card, button.j-card, .j-card[data-interactive]):hover {
+    --_edge: var(--j-border-strong);
+    --_shadow: var(--j-shadow-sm);
+  }
+  :where(a.j-card[data-variant="outline"], button.j-card[data-variant="outline"], .j-card[data-variant="outline"][data-interactive]):hover {
+    --_bg: color-mix(in oklch, var(--j-surface-2) 60%, transparent);
+    --_edge: var(--j-border-strong);
+    --_shadow: 0 0 0 0 transparent;
+  }
+  :where(a.j-card[data-variant="elevated"], button.j-card[data-variant="elevated"], .j-card[data-variant="elevated"][data-interactive]):hover {
+    --_edge: var(--j-border);
+    --_shadow: var(--j-shadow-lg);
+  }
+  :where(a.j-card[data-variant="ghost"], button.j-card[data-variant="ghost"], .j-card[data-variant="ghost"][data-interactive]):hover {
+    --_bg: var(--j-surface-2);
+    --_edge: transparent;
+    --_shadow: 0 0 0 0 transparent;
+  }
+  :where(a.j-card, button.j-card, .j-card[data-interactive]):active {
+    --_bg: var(--j-surface-2);
+    transition-duration: var(--j-duration-fast);
+  }
+  :where(a.j-card, button.j-card, .j-card[data-interactive]):focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 1px var(--_edge), var(--_shadow), var(--j-ring);
+  }
+
+  /* Parts */
+  :where(.j-card__header) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--j-gap-item);
+    row-gap: var(--j-space-1);
+    align-items: start;
+  }
+  :where(.j-card__header > :not(.j-card__title, .j-card__description)) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  :where(.j-card__title) {
+    grid-column: 1;
+    font-size: var(--_title);
+    font-weight: var(--j-weight-semibold);
+    line-height: var(--j-leading-tight);
+    letter-spacing: var(--j-tracking-tight);
+    color: var(--j-fg);
+  }
+  :where(.j-card__description) {
+    grid-column: 1;
+    font-size: var(--j-text-sm);
+    line-height: var(--j-leading);
+    color: var(--j-fg-muted);
+  }
+  :where(.j-card__body) {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    font-size: var(--j-text-md);
+    line-height: var(--j-leading);
+  }
+  :where(.j-card__footer) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--j-gap-related);
+  }
+  :where(.j-card__footer[data-divider]) {
+    margin-inline: calc(var(--_p) * -1);
+    margin-block-end: calc(var(--_p) * -1);
+    padding: var(--j-space-3) var(--_p);
+    border-block-start: 1px solid var(--j-border);
+    border-end-start-radius: var(--_radius);
+    border-end-end-radius: var(--_radius);
+    background-color: var(--j-surface-2);
+  }
+  :where(.j-card__media) {
+    margin-inline: calc(var(--_p) * -1);
+    overflow: hidden;
+  }
+  :where(.j-card__media:first-child) {
+    margin-block-start: calc(var(--_p) * -1);
+    border-start-start-radius: var(--_radius);
+    border-start-end-radius: var(--_radius);
+  }
+  :where(.j-card__media:last-child) {
+    margin-block-end: calc(var(--_p) * -1);
+    border-end-start-radius: var(--_radius);
+    border-end-end-radius: var(--_radius);
+  }
+  :where(.j-card__media > :is(img, video, picture, svg)) {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+}

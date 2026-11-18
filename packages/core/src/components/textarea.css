@@ -1,0 +1,29 @@
+/*
+ * Textarea — <textarea class="j-textarea">
+ * Auto-grows with content via `field-sizing: content` (where supported;
+ * otherwise falls back to `rows`). Opt out with data-fixed.
+ * Public props: --j-textarea-min-rows (default 3), --j-textarea-max-rows (default 12)
+ */
+@layer jenni.components {
+  :where(.j-textarea) {
+    --_py: calc(var(--j-space-2) - 1px);
+    display: block;
+    block-size: auto;
+    min-block-size: calc(var(--j-textarea-min-rows, 3) * 1lh + 2 * var(--_py) + 2px);
+    max-block-size: calc(var(--j-textarea-max-rows, 12) * 1lh + 2 * var(--_py) + 2px);
+    padding-block: var(--_py);
+    line-height: var(--j-leading);
+    field-sizing: content;
+    resize: vertical;
+    overflow-wrap: break-word;
+    scrollbar-width: thin;
+
+    &[data-size="sm"] { --_py: var(--j-space-1-5); }
+    &[data-size="lg"] { --_py: calc(var(--j-space-2) + 2px); }
+  }
+
+  :where(.j-textarea[data-fixed]) {
+    field-sizing: fixed;
+    max-block-size: none;
+  }
+}

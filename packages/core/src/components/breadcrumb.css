@@ -1,0 +1,174 @@
+/*
+ * Breadcrumb — <nav class="j-breadcrumb" aria-label="Breadcrumb">
+ *   <ol class="j-breadcrumb__list">
+ *     <li class="j-breadcrumb__item"><a class="j-breadcrumb__link" href="#">Home</a></li>
+ *     <li class="j-breadcrumb__item"><span class="j-breadcrumb__page" aria-current="page">Settings</span></li>
+ *   </ol>
+ * </nav>
+ *   data-separator / data-variant: chevron (default) | slash
+ *   data-size: sm | md (default)
+ */
+@layer jenni.components {
+  :where(.j-breadcrumb) {
+    --_fs: var(--j-text-sm);
+    --_icon: 14px;
+    --_chev: 12px;
+    --_gap: var(--j-gap-inline);
+
+    display: block;
+    min-inline-size: 0;
+    font-size: var(--_fs);
+    line-height: var(--j-leading-tight);
+  }
+
+  :where(.j-breadcrumb[data-size="sm"]) {
+    --_fs: var(--j-text-xs);
+    --_icon: 12px;
+    --_chev: 11px;
+    --_gap: var(--j-space-1);
+  }
+
+  :where(.j-breadcrumb__list) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_gap);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  :where(.j-breadcrumb__item) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--_gap);
+    min-inline-size: 0;
+    color: var(--j-fg-muted);
+
+    &:not(:last-child)::after {
+      content: "";
+      display: inline-block;
+      flex: none;
+      inline-size: var(--_chev);
+      block-size: var(--_chev);
+      background-color: var(--j-fg-subtle);
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 4l4 4-4 4'/%3E%3C/svg%3E") center / contain no-repeat;
+    }
+  }
+
+  :where(.j-breadcrumb[data-separator="slash"], .j-breadcrumb[data-variant="slash"]) :where(.j-breadcrumb__item:not(:last-child))::after {
+    content: "/";
+    inline-size: auto;
+    block-size: auto;
+    padding-inline: 1px;
+    background: none;
+    mask: none;
+    color: var(--j-fg-subtle);
+    font-size: 0.92em;
+    font-weight: var(--j-weight-regular);
+    line-height: 1;
+    user-select: none;
+  }
+
+  :where(.j-breadcrumb__link, .j-breadcrumb__item > a) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-gap-inline);
+    min-inline-size: 0;
+    padding-block: var(--j-space-0-5);
+    border-radius: var(--j-radius-xs);
+    color: var(--j-fg-muted);
+    font-weight: var(--j-weight-regular);
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      flex: none;
+      inline-size: var(--_icon);
+      block-size: var(--_icon);
+    }
+
+    @media (hover: hover) {
+      &:hover:not([aria-disabled="true"]) {
+        color: var(--j-fg);
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+      color: var(--j-fg);
+      box-shadow: var(--j-ring);
+    }
+
+    &[aria-current="page"] {
+      color: var(--j-fg);
+      font-weight: var(--j-weight-medium);
+      cursor: default;
+    }
+  }
+
+  :where(.j-breadcrumb__page, .j-breadcrumb__item > [aria-current="page"]) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-gap-inline);
+    min-inline-size: 0;
+    padding-block: var(--j-space-0-5);
+    color: var(--j-fg);
+    font-weight: var(--j-weight-medium);
+
+    & > svg {
+      flex: none;
+      inline-size: var(--_icon);
+      block-size: var(--_icon);
+    }
+  }
+
+  /* Collapsed middle items trigger (…) */
+  :where(.j-breadcrumb__ellipsis) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    block-size: max(18px, round(calc(22px * var(--j-density)), 1px));
+    min-inline-size: max(20px, round(calc(24px * var(--j-density)), 1px));
+    padding-inline: var(--j-space-1);
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background-color: transparent;
+    color: var(--j-fg-muted);
+    font: inherit;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: var(--_icon);
+      block-size: var(--_icon);
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled="true"]) {
+        background-color: var(--j-surface-3);
+        color: var(--j-fg);
+      }
+    }
+
+    &:active:not(:disabled, [aria-disabled="true"]) {
+      background-color: var(--j-surface-3);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+  }
+}

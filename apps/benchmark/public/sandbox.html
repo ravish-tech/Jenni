@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benchmark Sandbox</title>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+    <script>
+      window.process = window.process || { env: { NODE_ENV: 'production' } };
+      (function () {
+        const params = new URLSearchParams(location.search);
+        const level = params.get('level') || 'core';
+        const fw = params.get('fw') || 'jenni';
+        const assetBase = level === 'core' ? fw : level + '-' + fw;
+        window.__level = level;
+        window.__fw = fw;
+
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = './sandboxes/' + assetBase + '.css';
+        document.head.appendChild(link);
+
+        const script = document.createElement('script');
+        script.src = './sandboxes/' + assetBase + '.js';
+        script.defer = true;
+        document.head.appendChild(script);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="stage"></div>
+    <script type="module">
+      import {
+        buildParityHtml,
+        buildMountRowsHtml,
+        buildDashboardGridHtml,
+        buildOverlaySuiteHtml,
+      } from './sandboxes/markups.js';
+
+      const level = window.__level;
+      const fw = window.__fw;
+      const stage = document.getElementById('stage');
+
+      function nextFrame() {
+        return new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      }
+
+      function countDeepNodes(root) {
+        let lightNodes = 0;
+        let shadowRoots = 0;
+        let shadowNodes = 0;
+
+        function walkShadow(sr) {
+          const all = sr.querySelectorAll('*');
+          shadowNodes += all.length;
+          for (let i = 0; i < all.length; i++) {
+            if (all[i].shadowRoot) {
+              shadowRoots++;
+              walkShadow(all[i].shadowRoot);
+            }
+          }
+        }
+
+        const els = root.querySelectorAll('*');
+        lightNodes = els.length;
+        for (let i = 0; i < els.length; i++) {
+          if (els[i].shadowRoot) {
+            shadowRoots++;
+            walkShadow(els[i].shadowRoot);
+          }
+        }
+        // Exclude sandbox's own base <style> tag in <head>
+        const styleTags = Math.max(0, document.head.querySelectorAll('style').length - 1);
+        return {
+          lightNodes,
+          shadowRoots,
+          shadowNodes,
+          totalNodes: lightNodes + shadowNodes,
+          styleTags,
+        };
+      }
+
+      async function waitReady() {
+        for (let i = 0; i < 200; i++) {
+          if (window.__benchAdapter) break;
+          await new Promise((r) => setTimeout(r, 15));
+        }
+        if (level === 'core' && fw === 'shoelace' && window.customElements) {
+          await Promise.all([
+            customElements.whenDefined('sl-button'),
+            customElements.whenDefined('sl-switch'),
+            customElements.whenDefined('sl-card'),
+            customElements.whenDefined('sl-badge'),
+            customElements.whenDefined('sl-dialog'),
+            customElements.whenDefined('sl-dropdown'),
+          ]);
+        }
+      }
+
+      async function waitShoelaceUpgrade(root) {
+        if (level !== 'core' || fw !== 'shoelace') return;
+        const custom = root.querySelectorAll('sl-button, sl-switch, sl-badge, sl-card, sl-dialog, sl-dropdown');
+        const updates = [];
+        for (let i = 0; i < custom.length; i++) {
+          if (custom[i].updateComplete) updates.push(custom[i].updateComplete);
+        }
+        if (updates.length) await Promise.all(updates);
+      }
+
+      function median(values) {
+        const sorted = [...values].sort((a, b) => a - b);
+        const mid = Math.floor(sorted.length / 2);
+        return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+      }
+
+      async function renderParitySurface(dark, density) {
+        await waitReady();
+        const adapter = window.__benchAdapter;
+        if (adapter?.mode === 'component') {
+          await adapter.mountParity(stage, { dark, density });
+        } else {
+          stage.innerHTML = buildParityHtml(fw);
+          adapter?.init?.(stage);
+          await waitShoelaceUpgrade(stage);
+          if (dark != null) adapter?.setTheme?.(dark, density);
+        }
+        await nextFrame();
+      }
+
+      window.addEventListener('message', async (event) => {
+        const msg = event.data;
+        if (!msg || typeof msg !== 'object') return;
+
+        if (msg.type === 'RENDER_PARITY') {
+          await renderParitySurface(msg.dark, msg.density);
+          parent.postMessage(
+            {
+              type: 'PARITY_READY',
+              level,
+              fw,
+              height: document.documentElement.scrollHeight,
+            },
+            '*',
+          );
+          return;
+        }
+
+        if (msg.type === 'SET_THEME') {
+          await waitReady();
+          window.__benchAdapter?.setTheme?.(msg.dark, msg.density);
+          return;
+        }
+
+        if (msg.type === 'RUN_BENCH') {
+          await waitReady();
+          const adapter = window.__benchAdapter;
+          const runs = msg.runs || 5;
+
+          if (adapter?.mode === 'component') {
+            const rowCount = msg.rowCount || 400;
+
+            // Warmup VNode / Fiber JIT paths
+            const warm = adapter.mountRows(stage, 30);
+            await warm.updateState(1);
+            void stage.offsetHeight;
+            warm.unmount();
+            await nextFrame();
+
+            // 1. Cold Mount + Layout Flush
+            const mountSamples = [];
+            let domStats = { lightNodes: 0, shadowRoots: 0, shadowNodes: 0, totalNodes: 0, styleTags: 0 };
+            for (let r = 0; r < runs; r++) {
+              stage.innerHTML = '';
+              void stage.offsetHeight;
+              const t0 = performance.now();
+              const hnd = adapter.mountRows(stage, rowCount);
+              void stage.offsetHeight;
+              const t1 = performance.now();
+              mountSamples.push(t1 - t0);
+              hnd.unmount();
+            }
+
+            // Measure canonical 200-row DOM & style-tag footprint
+            const domHnd = adapter.mountRows(stage, 200);
+            void stage.offsetHeight;
+            domStats = countDeepNodes(stage);
+            domHnd.unmount();
+
+            // 2. Reactive State Update + 3. Live Theme Switch across mounted component tree
+            const liveHnd = adapter.mountRows(stage, rowCount);
+            void stage.offsetHeight;
+            const stateSamples = [];
+            for (let r = 0; r < runs; r++) {
+              const t0 = performance.now();
+              await liveHnd.updateState(r + 1);
+              void stage.offsetHeight;
+              const t1 = performance.now();
+              stateSamples.push(t1 - t0);
+            }
+
+            const themeSamples = [];
+            for (let r = 0; r < runs; r++) {
+              const t0 = performance.now();
+              await liveHnd.setTheme(true, 'compact');
+              void stage.offsetHeight;
+              if (stage.firstElementChild) getComputedStyle(stage.firstElementChild).color;
+              await liveHnd.setTheme(false, 'default');
+              void stage.offsetHeight;
+              if (stage.firstElementChild) getComputedStyle(stage.firstElementChild).color;
+              const t1 = performance.now();
+              themeSamples.push(t1 - t0);
+            }
+            liveHnd.unmount();
+
+            // 4. 12-Column Responsive Dashboard Reflow (48 Cards across 4 widths)
+            const gridHnd = adapter.mountGrid(stage, 48);
+            void stage.offsetHeight;
+            const widths = ['1200px', '840px', '540px', '360px', '100%'];
+            const reflowSamples = [];
+            for (let r = 0; r < runs; r++) {
+              const t0 = performance.now();
+              for (const w of widths) {
+                stage.style.width = w;
+                void stage.offsetHeight;
+              }
+              const t1 = performance.now();
+              reflowSamples.push(t1 - t0);
+            }
+            stage.style.width = '';
+            gridHnd.unmount();
+
+            // 5. Interactive Dialog + Tabs Cycle (15 cycles)
+            const overlaySamples = [];
+            for (let r = 0; r < Math.min(3, runs); r++) {
+              const t0 = performance.now();
+              await adapter.cycleOverlay(stage, 15);
+              const t1 = performance.now();
+              overlaySamples.push(t1 - t0);
+            }
+            stage.innerHTML = '';
+
+            parent.postMessage(
+              {
+                type: 'BENCH_DONE',
+                requestId: msg.requestId,
+                level,
+                fw,
+                metrics: {
+                  mountMs: Number(median(mountSamples).toFixed(2)),
+                  stateUpdateMs: Number(median(stateSamples).toFixed(2)),
+                  themeSwitchMs: Number(median(themeSamples).toFixed(2)),
+                  reflowMs: Number(median(reflowSamples).toFixed(2)),
+                  overlayCycleMs: Number(median(overlaySamples).toFixed(2)),
+                  dom: domStats,
+                },
+              },
+              '*',
+            );
+            return;
+          }
+
+          // Level 1: Core HTML + Delegated / Web Component Benchmark
+          const rowCount = msg.rowCount || 600;
+
+          // Warmup
+          stage.innerHTML = buildMountRowsHtml(fw, 40);
+          const warmCleanup = adapter.init(stage);
+          await waitShoelaceUpgrade(stage);
+          void stage.offsetHeight;
+          if (warmCleanup) warmCleanup();
+          stage.innerHTML = '';
+          await nextFrame();
+
+          // 1. Cold Mount + Layout Flush
+          const mountSamples = [];
+          let domStats = { lightNodes: 0, shadowRoots: 0, shadowNodes: 0, totalNodes: 0, styleTags: 0 };
+          for (let r = 0; r < runs; r++) {
+            stage.innerHTML = '';
+            void stage.offsetHeight;
+            const html = buildMountRowsHtml(fw, rowCount);
+            const t0 = performance.now();
+            stage.innerHTML = html;
+            const cleanup = adapter.init(stage);
+            await waitShoelaceUpgrade(stage);
+            void stage.offsetHeight;
+            const t1 = performance.now();
+            mountSamples.push(t1 - t0);
+            if (r === runs - 1) {
+              stage.innerHTML = buildMountRowsHtml(fw, 200);
+              const c2 = adapter.init(stage);
+              await waitShoelaceUpgrade(stage);
+              void stage.offsetHeight;
+              domStats = countDeepNodes(stage);
+              if (c2) c2();
+            }
+            if (cleanup) cleanup();
+          }
+
+          // 2. State Toggle + Theme Retokenization across mounted rows
+          stage.innerHTML = buildMountRowsHtml(fw, rowCount);
+          const themeCleanup = adapter.init(stage);
+          await waitShoelaceUpgrade(stage);
+          void stage.offsetHeight;
+
+          const stateSamples = [];
+          const switches = stage.querySelectorAll('input[type="checkbox"], sl-switch');
+          for (let r = 0; r < runs; r++) {
+            const t0 = performance.now();
+            for (let i = 0; i < switches.length; i++) {
+              switches[i].checked = (i + r) % 2 === 1;
+            }
+            await waitShoelaceUpgrade(stage);
+            void stage.offsetHeight;
+            const t1 = performance.now();
+            stateSamples.push(t1 - t0);
+          }
+
+          const themeSamples = [];
+          for (let r = 0; r < runs; r++) {
+            const t0 = performance.now();
+            adapter.setTheme(true, 'compact');
+            void stage.offsetHeight;
+            getComputedStyle(stage.firstElementChild).color;
+            adapter.setTheme(false, 'default');
+            void stage.offsetHeight;
+            getComputedStyle(stage.firstElementChild).color;
+            const t1 = performance.now();
+            themeSamples.push(t1 - t0);
+          }
+          if (themeCleanup) themeCleanup();
+
+          // 3. 12-Column Dashboard Reflow Sweep (48 cards across 4 widths)
+          stage.innerHTML = buildDashboardGridHtml(fw, 48);
+          await waitShoelaceUpgrade(stage);
+          void stage.offsetHeight;
+          const widths = ['1200px', '840px', '540px', '360px', '100%'];
+          const reflowSamples = [];
+          for (let r = 0; r < runs; r++) {
+            const t0 = performance.now();
+            for (const w of widths) {
+              stage.style.width = w;
+              void stage.offsetHeight;
+            }
+            const t1 = performance.now();
+            reflowSamples.push(t1 - t0);
+          }
+          stage.style.width = '';
+
+          // 4. Overlay Open/Layout/Close Cycle (25 cycles)
+          stage.innerHTML = buildOverlaySuiteHtml(fw);
+          const ovCleanup = adapter.init(stage);
+          await waitShoelaceUpgrade(stage);
+          void stage.offsetHeight;
+          const overlaySamples = [];
+          for (let r = 0; r < Math.min(3, runs); r++) {
+            const t0 = performance.now();
+            await adapter.cycleOverlay(stage, 25);
+            const t1 = performance.now();
+            overlaySamples.push(t1 - t0);
+          }
+          if (ovCleanup) ovCleanup();
+          stage.innerHTML = '';
+
+          parent.postMessage(
+            {
+              type: 'BENCH_DONE',
+              requestId: msg.requestId,
+              level,
+              fw,
+              metrics: {
+                mountMs: Number(median(mountSamples).toFixed(2)),
+                stateUpdateMs: Number(median(stateSamples).toFixed(2)),
+                themeSwitchMs: Number(median(themeSamples).toFixed(2)),
+                reflowMs: Number(median(reflowSamples).toFixed(2)),
+                overlayCycleMs: Number(median(overlaySamples).toFixed(2)),
+                dom: domStats,
+              },
+            },
+            '*',
+          );
+        }
+      });
+
+      const mode = new URLSearchParams(location.search).get('mode');
+      if (mode === 'parity') {
+        renderParitySurface().then(() => {
+          parent.postMessage(
+            { type: 'PARITY_READY', level, fw, height: document.documentElement.scrollHeight },
+            '*',
+          );
+        });
+      } else {
+        parent.postMessage({ type: 'SANDBOX_BOOTED', level, fw }, '*');
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,760 @@
+/*
+ * Canonical Screen Architectures — Bento, Board, DocsLayout, AuthSplit, AiCanvas, CanvasStage
+ *   1. .j-bento / .j-bento__cell         — 12-column container-responsive dashboard bento grid
+ *   2. .j-board / .j-board__column       — Horizontal Kanban / swimlane board with sticky column chrome
+ *   3. .j-docs-layout                    — 3-column knowledge base: 232px nav + 72ch prose + 200px TOC
+ *   4. .j-auth-split                     — Focused sign-in / onboarding split screen + editorial showcase
+ *   5. .j-ai-canvas                      — Conversational thread + gliding live artifact stage
+ *   6. .j-canvas-stage                   — Infinite / spatial stage with blurred floating HUD & palettes
+ */
+@layer jenni.components {
+  /* ==========================================================================
+   * 1. Bento Grid (.j-bento & .j-bento__cell)
+   * ========================================================================== */
+  :where(.j-bento) {
+    --_gap: var(--j-bento-gap, var(--j-gap-group));
+    container-type: inline-size;
+    container-name: j-bento;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-auto-rows: minmax(var(--j-bento-row-min, 120px), auto);
+    gap: var(--_gap);
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  :where(.j-bento[data-gap="none"])    { --_gap: 0px; }
+  :where(.j-bento[data-gap="inline"])  { --_gap: var(--j-gap-inline); }
+  :where(.j-bento[data-gap="related"]) { --_gap: var(--j-gap-related); }
+  :where(.j-bento[data-gap="item"])    { --_gap: var(--j-gap-item); }
+  :where(.j-bento[data-gap="field"])   { --_gap: var(--j-gap-field); }
+  :where(.j-bento[data-gap="group"])   { --_gap: var(--j-gap-group); }
+  :where(.j-bento[data-gap="section"]) { --_gap: var(--j-gap-section); }
+
+  :where(.j-bento__cell) {
+    grid-column: span 4 / span 4;
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    min-block-size: 0;
+  }
+
+  :where(.j-bento__cell[data-span="3"])  { grid-column: span 3 / span 3; }
+  :where(.j-bento__cell[data-span="4"])  { grid-column: span 4 / span 4; }
+  :where(.j-bento__cell[data-span="5"])  { grid-column: span 5 / span 5; }
+  :where(.j-bento__cell[data-span="6"])  { grid-column: span 6 / span 6; }
+  :where(.j-bento__cell[data-span="7"])  { grid-column: span 7 / span 7; }
+  :where(.j-bento__cell[data-span="8"])  { grid-column: span 8 / span 8; }
+  :where(.j-bento__cell[data-span="9"])  { grid-column: span 9 / span 9; }
+  :where(.j-bento__cell[data-span="12"]) { grid-column: 1 / -1; }
+
+  :where(.j-bento__cell[data-row-span="2"]) { grid-row: span 2 / span 2; }
+  :where(.j-bento__cell[data-row-span="3"]) { grid-row: span 3 / span 3; }
+
+  /* Stretch single child card to fill full cell height (especially row-span="2") */
+  :where(.j-bento__cell > .j-card:only-child) {
+    flex: 1 1 auto;
+    block-size: 100%;
+  }
+
+  /* Optional self-styled tile surface when not wrapping a JCard */
+  :where(.j-bento__cell[data-surface]) {
+    padding: var(--j-space-5);
+    border-radius: var(--j-radius-lg);
+    background-color: var(--j-surface-1);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs), var(--j-inset-highlight);
+  }
+
+  /* Medium container (< 900px): 3 & 4 col cells expand to 6 cols; wide 8/9 col cells take full row */
+  @container j-bento (width < 900px) {
+    :where(
+      .j-bento__cell:not([data-span]),
+      .j-bento__cell[data-span="3"],
+      .j-bento__cell[data-span="4"],
+      .j-bento__cell[data-span="5"],
+      .j-bento__cell[data-span="7"]
+    ) {
+      grid-column: span 6 / span 6;
+    }
+    :where(.j-bento__cell[data-span="8"], .j-bento__cell[data-span="9"]) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* Compact container (< 560px): single-column stack */
+  @container j-bento (width < 560px) {
+    :where(.j-bento__cell) {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+  }
+
+  /* ==========================================================================
+   * 2. Kanban / Swimlane Board (.j-board & .j-board__column)
+   * ========================================================================== */
+  :where(.j-board) {
+    --_gap: var(--j-board-gap, var(--j-gap-field));
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: var(--_gap);
+    inline-size: 100%;
+    block-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-block-end: var(--j-space-2);
+  }
+
+  :where(.j-board[data-gap="related"]) { --_gap: var(--j-gap-related); }
+  :where(.j-board[data-gap="item"])    { --_gap: var(--j-gap-item); }
+  :where(.j-board[data-gap="field"])   { --_gap: var(--j-gap-field); }
+  :where(.j-board[data-gap="group"])   { --_gap: var(--j-gap-group); }
+
+  :where(.j-board__column) {
+    inline-size: var(--j-board-col-w, 296px);
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    max-block-size: 100%;
+    min-block-size: 0;
+    border-radius: var(--j-radius-lg);
+    background-color: var(--j-surface-2);
+    box-shadow: inset 0 0 0 1px var(--j-border);
+    overflow: hidden;
+  }
+
+  :where(.j-board__header) {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 1;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-related);
+    padding: var(--j-space-3);
+    background-color: var(--j-surface-2);
+    border-block-end: 1px solid var(--j-border);
+    min-inline-size: 0;
+  }
+
+  :where(.j-board__heading) {
+    display: flex;
+    align-items: center;
+    gap: var(--j-gap-inline);
+    min-inline-size: 0;
+  }
+
+  :where(.j-board__dot) {
+    inline-size: 8px;
+    block-size: 8px;
+    border-radius: var(--j-radius-full);
+    background-color: var(--j-tone);
+    flex-shrink: 0;
+  }
+
+  :where(.j-board__title) {
+    font-size: var(--j-text-sm);
+    font-weight: var(--j-weight-semibold);
+    line-height: var(--j-leading-tight);
+    color: var(--j-fg);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :where(.j-board__count) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 20px;
+    block-size: 18px;
+    padding-inline: var(--j-space-1-5);
+    border-radius: var(--j-radius-full);
+    background-color: var(--j-surface-3);
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+
+  :where(.j-board__actions) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-gap-inline);
+    flex-shrink: 0;
+  }
+
+  :where(.j-board__body) {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-related);
+    padding: calc(var(--j-space-2) + var(--j-space-0-5));
+  }
+
+  :where(.j-board__footer) {
+    flex-shrink: 0;
+    padding: var(--j-space-2) var(--j-space-3);
+    border-block-start: 1px solid var(--j-border);
+  }
+
+  /* ==========================================================================
+   * 3. 3-Column Documentation / Knowledge-Base (.j-docs-layout)
+   * ========================================================================== */
+  :where(.j-docs-layout) {
+    container-type: inline-size;
+    container-name: j-docs;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    inline-size: 100%;
+    min-inline-size: 0;
+    background-color: var(--j-bg);
+    color: var(--j-fg);
+  }
+
+  :where(.j-docs-layout[data-embedded]) {
+    block-size: var(--j-docs-h, 520px);
+    overflow-y: auto;
+    border-radius: var(--j-radius-lg);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs);
+  }
+
+  :where(.j-docs-layout__nav) {
+    inline-size: var(--j-docs-nav-w, 232px);
+    flex-shrink: 0;
+    border-inline-end: 1px solid var(--j-border);
+    min-block-size: 0;
+  }
+  :where(.j-docs-layout__nav-inner),
+  :where(.j-docs-layout__nav:not(:has(> .j-docs-layout__nav-inner))) {
+    position: sticky;
+    inset-block-start: 0;
+    max-block-size: 100dvh;
+    overflow-y: auto;
+    padding: var(--j-space-6) var(--j-space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-4);
+  }
+
+  :where(.j-docs-layout__main) {
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    padding-block: var(--j-page-py);
+    padding-inline: var(--j-page-gutter);
+  }
+
+  :where(.j-docs-layout__prose) {
+    inline-size: 100%;
+    max-inline-size: 72ch;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-group);
+  }
+
+  :where(.j-docs-layout__toc) {
+    inline-size: var(--j-docs-toc-w, 200px);
+    flex-shrink: 0;
+    min-block-size: 0;
+  }
+  :where(.j-docs-layout__toc-inner),
+  :where(.j-docs-layout__toc:not(:has(> .j-docs-layout__toc-inner))) {
+    position: sticky;
+    inset-block-start: 0;
+    max-block-size: 100dvh;
+    overflow-y: auto;
+    padding: var(--j-space-6) var(--j-space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-2);
+    font-size: var(--j-text-xs);
+    color: var(--j-fg-muted);
+  }
+
+  :where(.j-docs-layout__toc-title) {
+    font-size: 0.6875rem;
+    font-weight: var(--j-weight-semibold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--j-fg-subtle);
+    margin-block-end: var(--j-space-1);
+  }
+
+  :where(.j-docs-layout__toc-list) {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-inline-start: 1px solid var(--j-border);
+  }
+
+  :where(.j-docs-layout__toc-link) {
+    display: block;
+    margin-inline-start: -1px;
+    padding-block: var(--j-space-1);
+    padding-inline-start: var(--j-space-3);
+    border-inline-start: 1.5px solid transparent;
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-xs);
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out);
+  }
+  @media (hover: hover) {
+    :where(.j-docs-layout__toc-link:hover) {
+      color: var(--j-fg);
+    }
+  }
+  :where(.j-docs-layout__toc-link[aria-current="true"], .j-docs-layout__toc-link[data-active]) {
+    color: var(--j-tone);
+    font-weight: var(--j-weight-medium);
+    border-inline-start-color: var(--j-tone);
+  }
+
+  @container j-docs (width < 1080px) {
+    :where(.j-docs-layout__toc) {
+      display: none;
+    }
+  }
+
+  @container j-docs (width < 760px) {
+    :where(.j-docs-layout__nav) {
+      display: none;
+    }
+  }
+
+  /* ==========================================================================
+   * 4. Focused Auth / Onboarding Split (.j-auth-split)
+   * ========================================================================== */
+  :where(.j-auth-split) {
+    container-type: inline-size;
+    container-name: j-auth;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    inline-size: 100%;
+    min-block-size: 100dvh;
+    min-inline-size: 0;
+    background-color: var(--j-bg);
+    color: var(--j-fg);
+  }
+
+  :where(.j-auth-split[data-embedded]) {
+    min-block-size: 0;
+    block-size: var(--j-auth-h, 520px);
+    border-radius: var(--j-radius-lg);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs);
+    overflow: hidden;
+  }
+
+  :where(.j-auth-split[data-reverse]) {
+    flex-direction: row-reverse;
+  }
+
+  :where(.j-auth-split__form) {
+    inline-size: clamp(320px, 46%, 460px);
+    flex: 0 0 clamp(320px, 46%, 460px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--j-gap-group);
+    padding: var(--j-space-8) var(--j-page-gutter);
+    overflow-y: auto;
+    min-inline-size: 0;
+  }
+  :where(.j-auth-split:not(:has(> .j-auth-split__showcase)) > .j-auth-split__form) {
+    flex: 1 1 100%;
+    inline-size: 100%;
+  }
+
+  :where(.j-auth-split__body) {
+    inline-size: 100%;
+    max-inline-size: 380px;
+    margin-inline: auto;
+    margin-block: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-group);
+  }
+
+  :where(.j-auth-split__header, .j-auth-split__footer) {
+    inline-size: 100%;
+    max-inline-size: 380px;
+    margin-inline: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-related);
+    font-size: var(--j-text-xs);
+    color: var(--j-fg-muted);
+  }
+
+  :where(.j-auth-split__showcase) {
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--j-gap-group);
+    padding: var(--j-space-8);
+    background-color: var(--j-surface-2);
+    border-inline-start: 1px solid var(--j-border);
+    overflow-y: auto;
+  }
+  :where(.j-auth-split[data-reverse] > .j-auth-split__showcase) {
+    border-inline-start: 0;
+    border-inline-end: 1px solid var(--j-border);
+  }
+
+  @container j-auth (width < 840px) {
+    :where(.j-auth-split:not([data-stack-showcase]) > .j-auth-split__showcase) {
+      display: none;
+    }
+    :where(.j-auth-split > .j-auth-split__form) {
+      flex: 1 1 100%;
+      inline-size: 100%;
+    }
+    :where(.j-auth-split[data-stack-showcase]) {
+      overflow-y: auto;
+    }
+    :where(.j-auth-split[data-stack-showcase] > .j-auth-split__showcase) {
+      flex: 1 1 100%;
+      inline-size: 100%;
+      border-inline: 0;
+      border-block-start: 1px solid var(--j-border);
+    }
+  }
+
+  /* ==========================================================================
+   * 5. Conversational + Live Artifact Screen (.j-ai-canvas)
+   * ========================================================================== */
+  :where(.j-ai-canvas) {
+    container-type: inline-size;
+    container-name: j-ai-canvas;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 0;
+    min-inline-size: 0;
+    overflow: hidden;
+    background-color: var(--j-bg);
+    color: var(--j-fg);
+    transition: background-color var(--j-duration-slow) var(--j-ease-out);
+  }
+
+  :where(.j-ai-canvas[data-artifact-open]) {
+    background-color: var(--j-surface-2);
+  }
+
+  :where(.j-ai-canvas[data-embedded]) {
+    block-size: var(--j-ai-canvas-h, 540px);
+    border-radius: var(--j-radius-lg);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs);
+  }
+
+  :where(.j-ai-canvas__thread) {
+    flex: 1 1 100%;
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  :where(.j-ai-canvas[data-artifact-open] > .j-ai-canvas__thread) {
+    flex: 0 0 var(--j-ai-thread-open-w, 420px);
+    inline-size: var(--j-ai-thread-open-w, 420px);
+    max-inline-size: 46%;
+  }
+
+  :where(.j-ai-canvas__header) {
+    block-size: var(--j-topbar-h);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-item);
+    padding-inline: var(--j-space-4);
+    border-block-end: 1px solid var(--j-border);
+  }
+  :where(.j-ai-canvas[data-artifact-open] .j-ai-canvas__header) {
+    border-block-end-color: transparent;
+  }
+
+  :where(.j-ai-canvas__messages) {
+    flex: 1 1 0%;
+    min-block-size: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--j-space-6) var(--j-space-4);
+  }
+
+  :where(.j-ai-canvas__stream) {
+    inline-size: 100%;
+    max-inline-size: 760px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-field);
+  }
+
+  :where(.j-ai-canvas__composer-wrap) {
+    flex-shrink: 0;
+    padding: var(--j-space-2) var(--j-space-4) var(--j-space-4);
+  }
+
+  :where(.j-ai-canvas__composer) {
+    inline-size: 100%;
+    max-inline-size: 760px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-related);
+    padding: var(--j-space-3);
+    border-radius: var(--j-radius-xl);
+    background-color: var(--j-surface-1);
+    box-shadow: 0 0 0 1px var(--j-border-strong), var(--j-shadow-sm);
+    transition: box-shadow var(--j-duration-fast) var(--j-ease-out);
+  }
+  :where(.j-ai-canvas__composer:focus-within) {
+    box-shadow: 0 0 0 1.5px var(--j-accent), var(--j-shadow-sm);
+  }
+
+  /* Live Artifact Stage (right inset rounded island) */
+  :where(.j-ai-canvas__stage) {
+    flex: 0 0 0px;
+    inline-size: 0px;
+    min-inline-size: 0;
+    min-block-size: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--j-radius-lg);
+    background-color: var(--j-surface-1);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-sm);
+    opacity: 0;
+    transform: translateX(16px);
+    pointer-events: none;
+    overflow: hidden;
+    transition:
+      opacity var(--j-duration-slow) var(--j-ease-emphasized),
+      transform var(--j-duration-slow) var(--j-ease-emphasized);
+  }
+
+  :where(.j-ai-canvas[data-artifact-open] > .j-ai-canvas__stage) {
+    flex: 1 1 0%;
+    inline-size: auto;
+    margin: var(--j-space-2);
+    margin-inline-start: 0;
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  :where(.j-ai-canvas__stage-header) {
+    block-size: var(--j-topbar-h);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-item);
+    padding-inline: var(--j-space-4);
+    border-block-end: 1px solid var(--j-border);
+    background-color: var(--j-surface-1);
+    min-inline-size: 0;
+  }
+
+  :where(.j-ai-canvas__stage-title) {
+    font-size: var(--j-text-sm);
+    font-weight: var(--j-weight-semibold);
+    color: var(--j-fg);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :where(.j-ai-canvas__stage-actions) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-gap-related);
+    flex-shrink: 0;
+  }
+
+  :where(.j-ai-canvas__stage-body) {
+    flex: 1 1 0%;
+    min-block-size: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: var(--j-space-5);
+  }
+
+  /* Compact container (< 760px): open artifact overlays full frame cleanly */
+  @container j-ai-canvas (width < 760px) {
+    :where(.j-ai-canvas[data-artifact-open] > .j-ai-canvas__thread) {
+      flex: 1 1 100%;
+      inline-size: 100%;
+      max-inline-size: 100%;
+    }
+    :where(.j-ai-canvas[data-artifact-open] > .j-ai-canvas__stage) {
+      position: absolute;
+      inset: var(--j-space-2);
+      margin: 0;
+      z-index: 2;
+    }
+  }
+
+  /* ==========================================================================
+   * 6. Spatial / Infinite Canvas / Node Stage (.j-canvas-stage)
+   * ========================================================================== */
+  :where(.j-canvas-stage) {
+    container-type: inline-size;
+    container-name: j-canvas;
+    position: relative;
+    inline-size: 100%;
+    block-size: 100%;
+    min-block-size: 360px;
+    overflow: hidden;
+    background-color: var(--j-surface-2);
+    color: var(--j-fg);
+    isolation: isolate;
+  }
+
+  :where(.j-canvas-stage[data-embedded]) {
+    block-size: var(--j-canvas-h, 520px);
+    border-radius: var(--j-radius-lg);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs);
+  }
+
+  :where(.j-canvas-stage[data-grid="dots"]) {
+    background-image: radial-gradient(
+      circle,
+      color-mix(in oklch, var(--j-fg) 16%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: var(--j-canvas-grid-size, 20px) var(--j-canvas-grid-size, 20px);
+  }
+
+  :where(.j-canvas-stage[data-grid="lines"]) {
+    background-image:
+      linear-gradient(to right, color-mix(in oklch, var(--j-fg) 7%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklch, var(--j-fg) 7%, transparent) 1px, transparent 1px);
+    background-size: var(--j-canvas-grid-size, 24px) var(--j-canvas-grid-size, 24px);
+  }
+
+  :where(.j-canvas-stage__viewport) {
+    position: relative;
+    inline-size: 100%;
+    block-size: 100%;
+    z-index: 0;
+  }
+
+  /* Shared translucent frosted floating chrome */
+  :where(
+    .j-canvas-stage__top,
+    .j-canvas-stage__tools,
+    .j-canvas-stage__inspector,
+    .j-canvas-stage__hud
+  ) {
+    position: absolute;
+    z-index: 2;
+    background-color: color-mix(in oklch, var(--j-surface-1) 84%, transparent);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-md), var(--j-inset-highlight);
+  }
+
+  /* Top-center omnibar / command pill */
+  :where(.j-canvas-stage__top) {
+    inset-block-start: var(--j-space-3);
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    max-inline-size: calc(100% - var(--j-space-6));
+    display: flex;
+    align-items: center;
+    gap: var(--j-gap-related);
+    padding: var(--j-space-1-5) var(--j-space-3);
+    border-radius: var(--j-radius-lg);
+  }
+
+  /* Left (default) or bottom floating tool palette */
+  :where(.j-canvas-stage__tools) {
+    inset-inline-start: var(--j-space-3);
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--j-space-1);
+    padding: var(--j-space-1-5);
+    border-radius: var(--j-radius-lg);
+  }
+  :where(
+    .j-canvas-stage[data-tools-placement="bottom"] > .j-canvas-stage__tools,
+    .j-canvas-stage__tools[data-placement="bottom"]
+  ) {
+    inset-inline-start: 50%;
+    inset-block-start: auto;
+    inset-block-end: var(--j-space-3);
+    transform: translateX(-50%);
+    flex-direction: row;
+  }
+
+  /* Floating right property inspector card */
+  :where(.j-canvas-stage__inspector) {
+    inset-inline-end: var(--j-space-3);
+    inset-block-start: calc(var(--j-space-3) + 48px);
+    inset-block-end: var(--j-space-3);
+    inline-size: var(--j-canvas-inspector-w, 272px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-field);
+    padding: var(--j-space-4);
+    border-radius: var(--j-radius-lg);
+  }
+  :where(.j-canvas-stage:not(:has(> .j-canvas-stage__top)) > .j-canvas-stage__inspector) {
+    inset-block-start: var(--j-space-3);
+  }
+
+  /* Bottom-start zoom / coordinate readout pill */
+  :where(.j-canvas-stage__hud) {
+    inset-inline-start: var(--j-space-3);
+    inset-block-end: var(--j-space-3);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-gap-inline);
+    padding: var(--j-space-1) var(--j-space-2);
+    border-radius: var(--j-radius-md);
+    font-size: var(--j-text-xs);
+    font-variant-numeric: tabular-nums;
+    color: var(--j-fg-muted);
+  }
+
+  @container j-canvas (width < 760px) {
+    :where(.j-canvas-stage:not([data-inspector-open]) > .j-canvas-stage__inspector) {
+      display: none;
+    }
+    :where(.j-canvas-stage__hud) {
+      display: none;
+    }
+  }
+}

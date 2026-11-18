@@ -1,0 +1,147 @@
+/*
+ * Jenni — Dropdown menu.
+ *   <div class="j-menu" id="m" popover role="menu" data-align="start">
+ *     <div class="j-menu__label">Account</div>
+ *     <button class="j-menu__item" role="menuitem">
+ *       <svg class="j-menu__icon">…</svg> Profile <kbd class="j-menu__shortcut">⇧⌘P</kbd>
+ *     </button>
+ *     <hr class="j-menu__separator">
+ *     <button class="j-menu__item" role="menuitemcheckbox" aria-checked="true">Show grid</button>
+ *     <button class="j-menu__item" role="menuitem" data-tone="danger">Delete</button>
+ *   </div>
+ * Highlight follows focus (keyboard) and pointer (behavior moves focus).
+ * Checkbox / radio items draw their own indicator — no extra markup.
+ * Public props: --j-menu-max-height, --j-menu-min-width.
+ */
+@layer jenni.components {
+  :where(.j-menu) {
+    --_min-w: var(--j-menu-min-width, 12rem);
+    --_item-h: var(--j-list-h-compact);
+    --_pad: var(--j-space-1);
+    --_check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='black' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    --_dot: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='3' fill='black'/%3E%3C/svg%3E");
+
+    min-width: var(--_min-w);
+    max-width: calc(100vw - 16px);
+    max-height: min(var(--j-menu-max-height, 24rem), 100dvh - 16px);
+    overflow: hidden auto;
+    overscroll-behavior: contain;
+    padding: var(--_pad);
+    border-radius: var(--j-radius-md);
+    font-size: var(--j-text-sm);
+    line-height: var(--j-leading-tight);
+    box-shadow: var(--j-shadow-md), var(--j-inset-highlight);
+    z-index: var(--j-z-dropdown);
+    user-select: none;
+    outline: none;
+    scroll-padding-block: var(--_pad);
+
+    &:popover-open { display: flex; flex-direction: column; }
+    &:focus-visible { box-shadow: var(--j-shadow-md), var(--j-inset-highlight); }
+  }
+
+  /* Match the trigger width when the browser can measure the anchor. */
+  @supports (width: anchor-size(width)) {
+    :where(.j-menu) { min-width: max(var(--_min-w), anchor-size(width)); }
+  }
+
+  :where(.j-menu__item) {
+    --_fg: var(--j-fg);
+    --_hl: var(--j-surface-3);
+    --_hl-fg: var(--j-fg);
+
+    appearance: none;
+    display: flex;
+    align-items: center;
+    gap: var(--j-gap-related);
+    width: 100%;
+    min-height: var(--_item-h);
+    padding: 0 var(--j-space-2);
+    border: 0;
+    border-radius: var(--j-radius-sm);
+    background: transparent;
+    color: var(--_fg);
+    font: inherit;
+    text-align: start;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: default;
+    outline: none;
+    scroll-margin-block: var(--_pad);
+    transition: background-color var(--j-duration-fast) var(--j-ease-out), color var(--j-duration-fast) var(--j-ease-out);
+
+    &:focus, &:focus-visible {
+      background: var(--_hl);
+      color: var(--_hl-fg);
+      box-shadow: none;
+      /* Snap in, fade out — highlight feels instant under the pointer. */
+      transition-duration: 0ms;
+    }
+    &:is(:disabled, [aria-disabled="true"]) {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+    &[data-tone="danger"] {
+      --_fg: var(--j-danger-soft-fg);
+      --_hl: var(--j-danger-soft);
+      --_hl-fg: var(--j-danger-soft-fg);
+    }
+
+    /* Checkbox / radio indicator, drawn with a mask so markup stays clean. */
+    &:is([role="menuitemcheckbox"], [role="menuitemradio"])::before {
+      content: "";
+      flex: none;
+      width: 16px;
+      height: 16px;
+      margin-inline-start: calc(var(--j-space-0-5) * -1);
+      background: currentColor;
+      mask: var(--_check) center / contain no-repeat;
+      opacity: 0;
+      scale: 0.9;
+      transition:
+        opacity var(--j-duration-fast) var(--j-ease-out),
+        scale calc(var(--j-duration-fast) * 1.2) var(--j-ease-out);
+    }
+    &[role="menuitemradio"]::before { mask-image: var(--_dot); }
+    &[aria-checked="true"]::before { opacity: 1; scale: 1; }
+    /* Align plain items with checkable ones. */
+    &[data-inset] { padding-inline-start: calc(var(--j-space-2) + 16px + var(--j-gap-related) - var(--j-space-0-5)); }
+  }
+
+  :where(.j-menu__icon, .j-menu__item > svg) {
+    flex: none;
+    width: 16px;
+    height: 16px;
+    color: var(--j-fg-muted);
+  }
+  :where(.j-menu__item:focus) :where(.j-menu__icon, svg) { color: currentColor; }
+  :where(.j-menu__item[data-tone="danger"]) :where(.j-menu__icon, svg) { color: currentColor; }
+
+  :where(.j-menu__shortcut) {
+    margin-inline-start: auto;
+    padding-inline-start: var(--j-space-4);
+    color: var(--j-fg-subtle);
+    font-family: var(--j-font-sans);
+    font-size: var(--j-text-xs);
+    letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  :where(.j-menu__label) {
+    padding: var(--j-space-1-5) var(--j-space-2) var(--j-space-1);
+    color: var(--j-fg-subtle);
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+    &[data-inset] { padding-inline-start: calc(var(--j-space-2) + 16px + var(--j-gap-related) - var(--j-space-0-5)); }
+  }
+
+  :where(.j-menu__separator) {
+    flex: none;
+    height: 1px;
+    margin: var(--_pad) calc(var(--_pad) * -1);
+    border: 0;
+    background: var(--j-border);
+  }
+
+  :where(.j-menu__group) { display: flex; flex-direction: column; }
+}

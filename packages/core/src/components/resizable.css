@@ -1,0 +1,223 @@
+/*
+ * Resizable Panels — .j-resizable
+ *   Multi-pane architectural split layout with a 1px hairline divider,
+ *   generous 10px invisible pointer target, optional centered grip capsule,
+ *   WAI-ARIA separator keyboard control, collapsible panes, and ratio persistence.
+ *
+ * Markup:
+ *   <div class="j-resizable" data-orientation="horizontal" data-bordered>
+ *     <div class="j-resizable__panel" data-panel-id="nav" data-default-size="25" data-min-size="15" data-collapsible>…</div>
+ *     <div class="j-resizable__handle" role="separator" tabindex="0" aria-orientation="vertical" data-with-grip></div>
+ *     <div class="j-resizable__panel" data-panel-id="main" data-default-size="75" data-min-size="30">…</div>
+ *   </div>
+ *
+ * Attributes on .j-resizable:
+ *   data-orientation: horizontal (default) | vertical
+ *   data-bordered:    optional 1px framed surface container
+ *   data-storage-key: optional localStorage key for persisted panel ratios
+ *
+ * Attributes on .j-resizable__panel:
+ *   data-panel-id, data-default-size, data-min-size, data-max-size,
+ *   data-collapsible, data-collapsed-size, data-collapsed (managed)
+ *
+ * Attributes on .j-resizable__handle:
+ *   data-with-grip, data-disabled, data-dragging (managed)
+ *
+ * Public custom properties:
+ *   --j-resizable-hit     invisible pointer hit target thickness (default 10px)
+ *   --j-resizable-radius  outer frame corner radius when [data-bordered]
+ *   --j-resizable-h       optional explicit block-size on root
+ *   --j-resizable-w       optional explicit inline-size on root
+ */
+@layer jenni.components {
+  :where(.j-resizable) {
+    --_hit: var(--j-resizable-hit, 10px);
+
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    inline-size: var(--j-resizable-w, 100%);
+    block-size: var(--j-resizable-h, 100%);
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  :where(.j-resizable[data-orientation="vertical"]) {
+    flex-direction: column;
+  }
+
+  :where(.j-resizable[data-bordered]) {
+    border-radius: var(--j-resizable-radius, var(--j-radius-lg));
+    background-color: var(--j-surface-1);
+    box-shadow: 0 0 0 1px var(--j-border);
+  }
+
+  /* Prevent accidental text selection and cursor flicker across panes during active drag */
+  :where(.j-resizable[data-dragging]) {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  :where(.j-resizable[data-dragging="horizontal"]),
+  :where(.j-resizable[data-dragging="horizontal"] *) {
+    cursor: col-resize;
+  }
+  :where(.j-resizable[data-dragging="vertical"]),
+  :where(.j-resizable[data-dragging="vertical"] *) {
+    cursor: row-resize;
+  }
+
+  /* ---- Panel ---- */
+  :where(.j-resizable__panel) {
+    box-sizing: border-box;
+    position: relative;
+    flex: var(--_panel-size, 1) 1 0%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: auto;
+  }
+
+  /* When a panel nests another .j-resizable directly, avoid double scrollports */
+  :where(.j-resizable__panel:has(> .j-resizable)) {
+    overflow: hidden;
+  }
+
+  :where(.j-resizable__panel[data-collapsed][data-collapsed-zero]) {
+    flex: 0 0 0%;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  /* ---- Handle (1px architectural hairline + 10px invisible hit target) ---- */
+  :where(.j-resizable__handle) {
+    --_line-bg: var(--j-border);
+    --_line-glow: transparent;
+    --_grip-bg: light-dark(var(--j-surface-1), var(--j-surface-2));
+    --_grip-border: var(--j-border-strong);
+    --_grip-dots: var(--j-fg-subtle);
+
+    box-sizing: border-box;
+    position: relative;
+    flex: 0 0 1px;
+    inline-size: 1px;
+    block-size: auto;
+    background-color: var(--_line-bg);
+    box-shadow: 0 0 0 1px var(--_line-glow);
+    z-index: 2;
+    outline: none;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: col-resize;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  :where(.j-resizable[data-orientation="vertical"] > .j-resizable__handle) {
+    inline-size: auto;
+    block-size: 1px;
+    cursor: row-resize;
+  }
+
+  /* Generous 10px invisible pointer hit zone centered over the 1px hairline */
+  :where(.j-resizable__handle)::before {
+    content: "";
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 50%;
+    inline-size: var(--_hit);
+    translate: -50% 0;
+    z-index: 1;
+  }
+
+  :where(.j-resizable[data-orientation="vertical"] > .j-resizable__handle)::before {
+    inset-block: auto;
+    inset-inline: 0;
+    inset-block-start: 50%;
+    inline-size: auto;
+    block-size: var(--_hit);
+    translate: 0 -50%;
+  }
+
+  /* Hover / Focus / Active Drag states — calm, poised accent highlight */
+  @media (hover: hover) {
+    :where(.j-resizable__handle:hover:not([data-disabled], [aria-disabled="true"])) {
+      --_line-bg: color-mix(in oklch, var(--j-accent) 72%, var(--j-border));
+      --_grip-border: color-mix(in oklch, var(--j-accent) 55%, var(--j-border-strong));
+      --_grip-dots: var(--j-fg-muted);
+    }
+  }
+
+  :where(.j-resizable__handle:focus-visible) {
+    --_line-bg: var(--j-accent);
+    --_line-glow: color-mix(in oklch, var(--j-accent) 26%, transparent);
+    --_grip-border: var(--j-accent);
+    --_grip-dots: var(--j-accent);
+    z-index: 3;
+  }
+
+  :where(.j-resizable__handle[data-dragging]) {
+    --_line-bg: var(--j-accent);
+    --_line-glow: color-mix(in oklch, var(--j-accent) 30%, transparent);
+    --_grip-bg: light-dark(var(--j-accent-soft), var(--j-surface-3));
+    --_grip-border: var(--j-accent);
+    --_grip-dots: var(--j-accent);
+    z-index: 4;
+    transition-duration: 0ms;
+  }
+
+  :where(.j-resizable__handle:is([data-disabled], [aria-disabled="true"])) {
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  /* ---- Centered Grip Pill (data-with-grip) ----
+   * Uses a 9px cross-axis width centered on the 1px hairline (-4px offset)
+   * so left and right 1px borders land on exact integer pixels at all densities.
+   */
+  :where(.j-resizable__handle[data-with-grip])::after {
+    --_grip-len: max(20px, round(calc(26px * var(--j-density)), 2px));
+
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: -4px;
+    inline-size: 9px;
+    block-size: var(--_grip-len);
+    translate: 0 -50%;
+    border-radius: var(--j-radius-full);
+    border: 1px solid var(--_grip-border);
+    background-color: var(--_grip-bg);
+    background-image: radial-gradient(circle, var(--_grip-dots) 1px, transparent 1.15px);
+    background-size: 3px 4px;
+    background-position: center;
+    background-repeat: repeat-y;
+    box-shadow: var(--j-shadow-xs);
+    z-index: 2;
+    pointer-events: none;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  :where(.j-resizable[data-orientation="vertical"] > .j-resizable__handle[data-with-grip])::after {
+    inset-inline-start: 50%;
+    inset-block-start: -4px;
+    inline-size: var(--_grip-len);
+    block-size: 9px;
+    translate: -50% 0;
+    background-size: 4px 3px;
+    background-repeat: repeat-x;
+  }
+
+  :where(.j-resizable__handle[data-with-grip]:focus-visible)::after {
+    box-shadow: var(--j-ring);
+  }
+}

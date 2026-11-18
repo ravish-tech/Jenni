@@ -1,0 +1,120 @@
+/*
+ * Select — <select class="j-select"> with native <option>s.
+ * Progressive enhancement: where `appearance: base-select` is supported
+ * (customizable select), the picker itself is styled too.
+ * Shared shell (sizes, focus, invalid, disabled) lives in control.css.
+ */
+@layer jenni.components {
+  :where(.j-select) {
+    --_chev: var(--j-fg-muted);
+    appearance: none;
+    padding-inline-end: calc(var(--_px) + var(--_icon) + var(--j-space-1));
+    cursor: pointer;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /* Thin CSS-drawn chevron that follows theme colors (no image). */
+    background-image:
+      linear-gradient(45deg, transparent calc(50% - 0.75px), var(--_chev) calc(50% - 0.75px), var(--_chev) calc(50% + 0.75px), transparent calc(50% + 0.75px)),
+      linear-gradient(135deg, transparent calc(50% - 0.75px), var(--_chev) calc(50% - 0.75px), var(--_chev) calc(50% + 0.75px), transparent calc(50% + 0.75px));
+    background-size: 5px 5px;
+    background-repeat: no-repeat;
+    background-position:
+      calc(100% - var(--_px) - 6px) 55%,
+      calc(100% - var(--_px) - 1px) 55%;
+
+    &:disabled { --_chev: var(--j-fg-subtle); }
+    /* Placeholder convention: a selected, disabled option. */
+    &:has(> option:checked:disabled) { color: var(--j-fg-subtle); }
+    &[multiple], &[size]:not([size="1"]) {
+      block-size: auto;
+      padding-block: var(--j-space-1);
+      padding-inline-end: var(--_px);
+      background-image: none;
+    }
+    & option { color: var(--j-fg); background-color: var(--j-surface-1); }
+  }
+
+  /* ---- Customizable select (Chromium 135+) ---- */
+  @supports (appearance: base-select) {
+    :where(.j-select:not([multiple], [size]:not([size="1"]))) {
+      appearance: base-select;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--j-gap-related);
+      padding-inline-end: var(--_px);
+      background-image: none;
+
+      &::picker-icon {
+        content: "";
+        inline-size: var(--_icon);
+        block-size: var(--_icon);
+        margin-inline-start: auto;
+        background-color: var(--_chev);
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 6.5 8 9.5l3-3'/%3E%3C/svg%3E") center / contain no-repeat;
+        transition: transform var(--j-duration) var(--j-ease-out);
+      }
+      &:open::picker-icon { transform: rotate(180deg); }
+
+      &::picker(select) {
+        appearance: base-select;
+        min-inline-size: anchor-size(width);
+        max-block-size: min(320px, 60vh);
+        margin-block: var(--j-space-1);
+        padding: var(--j-space-1);
+        border: 1px solid var(--j-border);
+        border-radius: var(--j-radius-lg);
+        background-color: var(--j-surface-1);
+        color: var(--j-fg);
+        box-shadow: var(--j-inset-highlight), var(--j-shadow-md);
+        opacity: 0;
+        transform: translateY(-2px);
+        transition:
+          opacity var(--j-duration) var(--j-ease-out),
+          transform var(--j-duration) var(--j-ease-out),
+          overlay var(--j-duration) allow-discrete,
+          display var(--j-duration) allow-discrete;
+      }
+      &:open::picker(select) {
+        opacity: 1;
+        transform: none;
+      }
+
+      & option {
+        display: flex;
+        align-items: center;
+        gap: var(--j-gap-related);
+        min-block-size: var(--j-list-h-compact);
+        padding-inline: var(--j-space-2);
+        border-radius: var(--j-radius-sm);
+        background-color: transparent;
+        font-size: var(--_fs);
+        cursor: pointer;
+        outline: none;
+        transition: background-color var(--j-duration-fast) var(--j-ease-out);
+      }
+      & option:hover,
+      & option:focus-visible { background-color: var(--j-surface-3); }
+      & option:checked { font-weight: var(--j-weight-medium); }
+      & option:disabled { color: var(--j-fg-subtle); cursor: not-allowed; background-color: transparent; }
+      & option::checkmark {
+        order: 1;
+        margin-inline-start: auto;
+        color: var(--j-tone);
+        content: "";
+        inline-size: 14px;
+        block-size: 14px;
+        background-color: currentColor;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.75 8.25l2.75 2.75 5.75-6'/%3E%3C/svg%3E") center / contain no-repeat;
+      }
+      & optgroup { font-size: var(--j-text-xs); color: var(--j-fg-subtle); }
+      & hr { margin: var(--j-space-1) calc(-1 * var(--j-space-1)); border: 0; border-block-start: 1px solid var(--j-border); }
+    }
+
+    @starting-style {
+      :where(.j-select):open::picker(select) {
+        opacity: 0;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}

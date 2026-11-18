@@ -1,0 +1,70 @@
+/*
+ * Spatial 1D & Measure Primitives — Stack, Inline, Container
+ *   .j-stack     — vertical flex column (default gap: field = 16px)
+ *   .j-inline    — horizontal flex-wrap row (default gap: related = 8px, align: center)
+ *   .j-container — centered max-width measure (data-size="sm|md|lg|xl|prose|full", [data-padded])
+ *   (For 2D grids & 12-column layouts, see ./grid.css — .j-grid & .j-col)
+ */
+@layer jenni.components {
+  :where(.j-stack) {
+    --_gap: var(--j-stack-gap, var(--j-gap-field));
+    display: flex;
+    flex-direction: column;
+    gap: var(--_gap);
+    min-inline-size: 0;
+  }
+
+  :where(.j-inline) {
+    --_gap: var(--j-inline-gap, var(--j-gap-related));
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--_gap);
+    min-inline-size: 0;
+  }
+  :where(.j-inline[data-nowrap]) {
+    flex-wrap: nowrap;
+  }
+
+  /* Semantic relationship gaps */
+  :where(.j-stack, .j-inline)[data-gap="none"]    { --_gap: 0px; }
+  :where(.j-stack, .j-inline)[data-gap="inline"]  { --_gap: var(--j-gap-inline); }
+  :where(.j-stack, .j-inline)[data-gap="related"] { --_gap: var(--j-gap-related); }
+  :where(.j-stack, .j-inline)[data-gap="item"]    { --_gap: var(--j-gap-item); }
+  :where(.j-stack, .j-inline)[data-gap="field"]   { --_gap: var(--j-gap-field); }
+  :where(.j-stack, .j-inline)[data-gap="group"]   { --_gap: var(--j-gap-group); }
+  :where(.j-stack, .j-inline)[data-gap="section"] { --_gap: var(--j-gap-section); }
+
+  /* Cross-axis alignment */
+  :where(.j-stack, .j-inline)[data-align="start"]    { align-items: flex-start; }
+  :where(.j-stack, .j-inline)[data-align="center"]   { align-items: center; }
+  :where(.j-stack, .j-inline)[data-align="end"]      { align-items: flex-end; }
+  :where(.j-stack, .j-inline)[data-align="stretch"]  { align-items: stretch; }
+  :where(.j-stack, .j-inline)[data-align="baseline"] { align-items: baseline; }
+
+  /* Main-axis justification */
+  :where(.j-stack, .j-inline)[data-justify="start"]   { justify-content: flex-start; }
+  :where(.j-stack, .j-inline)[data-justify="center"]  { justify-content: center; }
+  :where(.j-stack, .j-inline)[data-justify="end"]     { justify-content: flex-end; }
+  :where(.j-stack, .j-inline)[data-justify="between"] { justify-content: space-between; }
+
+  /* Container */
+  :where(.j-container) {
+    --_max: var(--j-container-lg);
+    inline-size: 100%;
+    max-inline-size: var(--_max);
+    margin-inline: auto;
+    min-inline-size: 0;
+  }
+  :where(.j-container[data-size="sm"])    { --_max: var(--j-container-sm); }
+  :where(.j-container[data-size="md"])    { --_max: var(--j-container-md); }
+  :where(.j-container[data-size="lg"])    { --_max: var(--j-container-lg); }
+  :where(.j-container[data-size="xl"])    { --_max: var(--j-container-xl); }
+  :where(.j-container[data-size="prose"]) { --_max: var(--j-measure-prose); }
+  :where(.j-container[data-size="full"])  { --_max: none; }
+
+  :where(.j-container[data-padded]) {
+    padding-inline: var(--j-page-gutter);
+  }
+}

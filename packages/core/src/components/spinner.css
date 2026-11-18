@@ -1,0 +1,36 @@
+/*
+ * Spinner — <span class="j-spinner" role="status" aria-label="Loading"></span>
+ * Pure CSS ring with a fading tail and a rounded head. Inherits currentColor.
+ *   data-size: sm | md (default) | lg
+ * Public props: --j-spinner-size, --j-spinner-thickness
+ */
+@layer jenni.components {
+  :where(.j-spinner) {
+    --_s: var(--j-spinner-size, 16px);
+    --_t: var(--j-spinner-thickness, max(1.5px, calc(var(--_s) / 8)));
+
+    display: inline-block;
+    flex: none;
+    inline-size: var(--_s);
+    block-size: var(--_s);
+    border-radius: var(--j-radius-full);
+    background:
+      radial-gradient(circle at 50% calc(var(--_t) / 2), currentColor calc(var(--_t) / 2 - 0.3px), transparent calc(var(--_t) / 2)),
+      conic-gradient(from 0deg, transparent 8%, currentColor),
+      color-mix(in oklch, currentColor 14%, transparent);
+    mask: radial-gradient(farthest-side, transparent calc(100% - var(--_t) - 0.5px), currentColor calc(100% - var(--_t)));
+    vertical-align: middle;
+    animation: j-spinner-rotate 0.95s linear infinite;
+  }
+  :where(.j-spinner[data-size="sm"]) { --_s: var(--j-spinner-size, 12px); }
+  :where(.j-spinner[data-size="lg"]) { --_s: var(--j-spinner-size, 24px); }
+
+  @keyframes j-spinner-rotate {
+    to { transform: rotate(1turn); }
+  }
+
+  /* Loading feedback stays, but calmer. */
+  @media (prefers-reduced-motion: reduce) {
+    :where(.j-spinner) { animation-duration: 2.2s; }
+  }
+}

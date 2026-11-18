@@ -1,0 +1,27 @@
+{
+  "name": "jenni-monorepo",
+  "version": "0.1.0",
+  "description": "Jenni (pronounced 'yenni') — a web UI framework driven by beauty, simplicity, and performance. Built in loving memory of Jenni.",
+  "private": true,
+  "license": "Apache-2.0",
+  "author": "Ravish Kumar",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ravish-tech/Jenni.git"
+  },
+  "homepage": "https://ravish-tech.github.io/Jenni/",
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @jenni/playground",
+    "build:packages": "node ./scripts/build-packages.mjs",
+    "build": "npm run build:packages && npm run build -w @jenni/playground",
+    "typecheck": "npm run typecheck -w @jenni/playground",
+    "bench": "npm run build:packages && npm run analyze -w @jenni/benchmark",
+    "dev:bench": "npm run dev -w @jenni/benchmark",
+    "build:bench": "npm run build -w @jenni/benchmark"
+  }
+}

@@ -1,0 +1,323 @@
+/*
+ * File Upload / Dropzone — <div class="j-file-upload">
+ *   <label class="j-file-upload__dropzone">
+ *     <input type="file" class="j-file-upload__input" multiple>
+ *     <span class="j-file-upload__icon">…</span>
+ *     <span class="j-file-upload__content">
+ *       <span class="j-file-upload__title">Drop files here or <span class="j-file-upload__browse">browse</span></span>
+ *       <span class="j-file-upload__hint">PNG, PDF up to 10 MB</span>
+ *     </span>
+ *   </label>
+ *   <ul class="j-file-upload__list">…</ul>
+ * </div>
+ * Options:
+ *   data-variant: dropzone (default) | compact
+ *   data-tone:    accent | neutral | danger | success | warning | info
+ *   data-dragging active dragover state on .j-file-upload or .j-file-upload__dropzone
+ */
+@layer jenni.components {
+  :where(.j-file-upload) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-item);
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  :where(.j-file-upload__dropzone) {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-gap-related);
+    padding: var(--j-space-6) var(--j-space-5);
+    border: 1px dashed var(--j-border-strong);
+    border-radius: var(--j-radius-lg);
+    background-color: var(--j-surface-1);
+    color: var(--j-fg);
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    @media (hover: hover) {
+      &:hover:not([aria-disabled="true"], :has(.j-file-upload__input:disabled)) {
+        background-color: var(--j-surface-2);
+        border-color: color-mix(in oklch, var(--j-border-strong), var(--j-fg) 18%);
+      }
+    }
+
+    &:focus-visible,
+    &:has(.j-file-upload__input:focus-visible) {
+      border-color: var(--j-tone);
+      box-shadow: var(--j-ring);
+    }
+
+    /* Calm 150ms dragover highlight. */
+    &[data-dragging],
+    .j-file-upload[data-dragging] > & {
+      background-color: var(--j-tone-soft);
+      border-color: var(--j-tone);
+      border-style: solid;
+      color: var(--j-tone-soft-fg);
+    }
+
+    &[aria-invalid="true"],
+    .j-file-upload[aria-invalid="true"] > & {
+      border-color: color-mix(in oklch, var(--j-danger) 75%, var(--j-border-strong));
+    }
+
+    &[aria-disabled="true"],
+    .j-file-upload[aria-disabled="true"] > &,
+    &:has(.j-file-upload__input:disabled) {
+      opacity: 0.55;
+      background-color: var(--j-surface-2);
+      border-color: var(--j-border);
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+
+  :where(.j-file-upload__input) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  :where(.j-file-upload__icon) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: max(26px, round(calc(36px * var(--j-density)), 1px));
+    block-size: max(26px, round(calc(36px * var(--j-density)), 1px));
+    border: 1px solid var(--j-border);
+    border-radius: var(--j-radius-md);
+    background-color: var(--j-surface-2);
+    color: var(--j-fg-muted);
+    flex-shrink: 0;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: 18px;
+      block-size: 18px;
+    }
+  }
+
+  :where(.j-file-upload__dropzone[data-dragging], .j-file-upload[data-dragging] > .j-file-upload__dropzone) :where(.j-file-upload__icon) {
+    background-color: color-mix(in oklch, var(--j-tone) 14%, var(--j-tone-soft));
+    border-color: color-mix(in oklch, var(--j-tone) 36%, transparent);
+    color: var(--j-tone-soft-fg);
+  }
+
+  :where(.j-file-upload__content) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-0-5);
+    min-inline-size: 0;
+  }
+
+  :where(.j-file-upload__title) {
+    font-size: var(--j-text-md);
+    font-weight: var(--j-weight-medium);
+    color: var(--j-fg);
+    line-height: var(--j-leading-tight);
+  }
+
+  :where(.j-file-upload__browse) {
+    color: var(--j-tone-soft-fg);
+    font-weight: var(--j-weight-medium);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+    text-decoration-color: color-mix(in oklch, currentColor 45%, transparent);
+  }
+
+  :where(.j-file-upload__hint) {
+    font-size: var(--j-text-xs);
+    color: var(--j-fg-subtle);
+    line-height: var(--j-leading);
+  }
+
+  :where(.j-file-upload__cta) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    block-size: var(--j-control-sm);
+    padding-inline: calc(var(--j-space-2) + 2px);
+    border: 1px solid var(--j-border-strong);
+    border-radius: var(--j-radius-sm);
+    background-color: var(--j-surface-1);
+    color: var(--j-fg);
+    box-shadow: var(--j-shadow-xs);
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ---- Compact inline row variant ---- */
+  :where(.j-file-upload[data-variant="compact"]) :where(.j-file-upload__dropzone) {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: var(--j-gap-item);
+    min-block-size: var(--j-list-h-1);
+    padding: var(--j-space-2) var(--j-space-3);
+    border-radius: var(--j-radius-md);
+    text-align: start;
+  }
+
+  :where(.j-file-upload[data-variant="compact"]) :where(.j-file-upload__lead) {
+    display: flex;
+    align-items: center;
+    gap: var(--j-gap-item);
+    min-inline-size: 0;
+    flex: 1 1 0;
+  }
+
+  :where(.j-file-upload[data-variant="compact"]) :where(.j-file-upload__icon) {
+    inline-size: max(22px, round(calc(30px * var(--j-density)), 1px));
+    block-size: max(22px, round(calc(30px * var(--j-density)), 1px));
+    border-radius: var(--j-radius-sm);
+
+    & > svg {
+      inline-size: 15px;
+      block-size: 15px;
+    }
+  }
+
+  /* ---- Selected files list ---- */
+  :where(.j-file-upload__list) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-related);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  :where(.j-file-upload__item) {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    gap: var(--j-gap-item);
+    min-block-size: var(--j-list-h-1);
+    padding: var(--j-space-2) var(--j-space-3);
+    border: 1px solid var(--j-border);
+    border-radius: var(--j-radius-md);
+    background-color: var(--j-surface-1);
+    transition:
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out);
+
+    &[data-invalid] {
+      border-color: color-mix(in oklch, var(--j-danger) 50%, var(--j-border));
+      background-color: color-mix(in oklch, var(--j-danger-soft) 45%, var(--j-surface-1));
+    }
+  }
+
+  :where(.j-file-upload__file-icon) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--j-fg-muted);
+    flex-shrink: 0;
+
+    & > svg {
+      inline-size: 16px;
+      block-size: 16px;
+    }
+  }
+
+  :where(.j-file-upload__item[data-invalid]) :where(.j-file-upload__file-icon) {
+    color: var(--j-danger-soft-fg);
+  }
+
+  :where(.j-file-upload__meta) {
+    flex: 1 1 0;
+    min-inline-size: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-0-5);
+  }
+
+  :where(.j-file-upload__name) {
+    font-size: var(--j-text-sm);
+    font-weight: var(--j-weight-medium);
+    color: var(--j-fg);
+    line-height: var(--j-leading-tight);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :where(.j-file-upload__size) {
+    font-size: var(--j-text-xs);
+    color: var(--j-fg-subtle);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.2;
+  }
+
+  :where(.j-file-upload__error) {
+    font-size: var(--j-text-xs);
+    color: var(--j-danger-soft-fg);
+    line-height: 1.2;
+  }
+
+  :where(.j-file-upload__remove) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: max(20px, round(calc(26px * var(--j-density)), 1px));
+    block-size: max(20px, round(calc(26px * var(--j-density)), 1px));
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-sm);
+    background: transparent;
+    color: var(--j-fg-subtle);
+    cursor: pointer;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: 14px;
+      block-size: 14px;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled) {
+        background-color: var(--j-surface-2);
+        color: var(--j-fg);
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}

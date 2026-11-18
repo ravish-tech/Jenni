@@ -1,0 +1,514 @@
+/*
+ * Jenni — Color Picker (2D SV spectrum + hue/alpha tracks + HEX/OKLCH/RGB readout + swatches).
+ * Supports inline inspector card (`.j-color-picker`) and compact swatch-trigger +
+ * anchored popover (`.j-color-picker-field` + `.j-color-picker__popover`).
+ *
+ * Custom properties set on `.j-color-picker` (distinct from --_h / --_w):
+ *   --_cp-hue    : 0..360 (unitless degrees)
+ *   --_cp-sat    : 0%..100%
+ *   --_cp-val    : 0%..100%
+ *   --_cp-solid  : opaque CSS color at current HSV
+ *   --_cp-preview: CSS color with alpha
+ */
+@layer jenni.components {
+  /* Shared checkerboard pattern for alpha transparency */
+  :where(.j-color-picker__well, .j-color-picker__track[data-track="alpha"], .j-color-picker-field__swatch, .j-color-picker__swatch) {
+    --_checker: repeating-conic-gradient(
+        light-dark(oklch(89% 0 0), oklch(30% 0 0)) 0% 25%,
+        light-dark(oklch(98% 0 0), oklch(20% 0 0)) 0% 50%
+      )
+      50% / 8px 8px;
+  }
+
+  /* ==========================================================================
+   * Inline Color Inspector Surface
+   * ========================================================================== */
+  :where(.j-color-picker) {
+    --_cp-hue: 262;
+    --_cp-sat: 68%;
+    --_cp-val: 78%;
+    --_cp-solid: oklch(52% 0.16 262);
+    --_cp-preview: var(--_cp-solid);
+
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-2);
+    inline-size: min(17.25rem, 100%);
+    padding: var(--j-space-3);
+    border: 1px solid var(--j-border);
+    border-radius: var(--j-radius-lg);
+    background: var(--j-surface-1);
+    color: var(--j-fg);
+    box-shadow: var(--j-shadow-xs), var(--j-inset-highlight);
+    font-family: var(--j-font-sans);
+    font-variant-numeric: tabular-nums;
+    user-select: none;
+
+    &[aria-disabled="true"],
+    &[data-disabled] {
+      opacity: 0.55;
+      pointer-events: none;
+    }
+  }
+
+  /* ---- 2D Saturation-Value Spectrum ---- */
+  :where(.j-color-picker__spectrum) {
+    position: relative;
+    inline-size: 100%;
+    block-size: max(104px, round(calc(136px * var(--j-density)), 1px));
+    border-radius: var(--j-radius-md);
+    box-shadow: inset 0 0 0 1px oklch(0% 0 0 / 0.12);
+    background:
+      linear-gradient(to top, #000, transparent),
+      linear-gradient(to right, #fff, hsl(var(--_cp-hue) 100% 50%));
+    cursor: crosshair;
+    touch-action: none;
+    outline: none;
+
+    &:focus-visible :where(.j-color-picker__loupe) {
+      box-shadow:
+        0 0 0 1.5px oklch(0% 0 0 / 0.45),
+        var(--j-ring);
+    }
+  }
+
+  :where(.j-color-picker__loupe) {
+    position: absolute;
+    left: var(--_cp-sat);
+    top: calc(100% - var(--_cp-val));
+    translate: -50% -50%;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #fff;
+    border-radius: var(--j-radius-full);
+    background: var(--_cp-solid);
+    box-shadow:
+      0 0 0 1px oklch(0% 0 0 / 0.36),
+      var(--j-shadow-sm);
+    pointer-events: none;
+  }
+
+  /* ---- Preview Well + Hue / Alpha Sliders ---- */
+  :where(.j-color-picker__controls) {
+    display: flex;
+    align-items: center;
+    gap: var(--j-space-2);
+  }
+
+  :where(.j-color-picker__well) {
+    position: relative;
+    flex-shrink: 0;
+    width: max(24px, round(calc(30px * var(--j-density)), 1px));
+    height: max(24px, round(calc(30px * var(--j-density)), 1px));
+    border-radius: var(--j-radius-sm);
+    background: var(--_checker);
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px oklch(0% 0 0 / 0.14);
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--_cp-preview);
+    }
+  }
+
+  :where(.j-color-picker__sliders) {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-2);
+  }
+
+  :where(.j-color-picker__track) {
+    position: relative;
+    inline-size: 100%;
+    block-size: max(10px, round(calc(12px * var(--j-density)), 1px));
+    border-radius: var(--j-radius-full);
+    box-shadow: inset 0 0 0 1px oklch(0% 0 0 / 0.14);
+    cursor: pointer;
+    touch-action: none;
+    outline: none;
+
+    &[data-track="hue"] {
+      background: linear-gradient(
+        to right,
+        #ff0000 0%,
+        #ffff00 17%,
+        #00ff00 33%,
+        #00ffff 50%,
+        #0000ff 67%,
+        #ff00ff 83%,
+        #ff0000 100%
+      );
+    }
+
+    &[data-track="alpha"] {
+      background-image: linear-gradient(to right, transparent, var(--_cp-solid)), var(--_checker);
+    }
+
+    &:focus-visible :where(.j-color-picker__thumb) {
+      box-shadow:
+        0 0 0 1px oklch(0% 0 0 / 0.4),
+        var(--j-ring);
+    }
+  }
+
+  :where(.j-color-picker__thumb) {
+    position: absolute;
+    top: 50%;
+    left: var(--_track-pct, 0%);
+    translate: -50% -50%;
+    width: max(12px, round(calc(14px * var(--j-density)), 1px));
+    height: max(12px, round(calc(14px * var(--j-density)), 1px));
+    border: 2px solid #fff;
+    border-radius: var(--j-radius-full);
+    background: var(--_thumb-bg, var(--_cp-solid));
+    box-shadow:
+      0 0 0 1px oklch(0% 0 0 / 0.35),
+      var(--j-shadow-xs);
+    pointer-events: none;
+  }
+
+  /* ---- Format Switcher + Editable Readout + Copy ---- */
+  :where(.j-color-picker__formats) {
+    display: inline-grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    padding: 2px;
+    border: 1px solid var(--j-border);
+    border-radius: var(--j-radius-sm);
+    background: var(--j-surface-2);
+  }
+
+  :where(.j-color-picker__format-btn) {
+    appearance: none;
+    height: max(18px, round(calc(22px * var(--j-density)), 1px));
+    padding-inline: var(--j-space-1-5);
+    border: 0;
+    border-radius: calc(var(--j-radius-sm) - 2px);
+    background: transparent;
+    color: var(--j-fg-muted);
+    font-family: inherit;
+    font-size: 10.5px;
+    font-weight: var(--j-weight-semibold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    &[aria-pressed="true"] {
+      background: var(--j-surface-1);
+      color: var(--j-fg);
+      box-shadow: var(--j-shadow-xs);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+  }
+
+  :where(.j-color-picker__readout) {
+    display: flex;
+    align-items: center;
+    gap: var(--j-space-1-5);
+  }
+
+  :where(.j-color-picker__input) {
+    appearance: none;
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    height: var(--j-control-sm);
+    padding-inline: var(--j-space-2);
+    border: 1px solid var(--j-border-strong);
+    border-radius: var(--j-radius-sm);
+    background: var(--j-surface-1);
+    color: var(--j-fg);
+    font-family: var(--j-font-mono);
+    font-size: var(--j-text-xs);
+    font-variant-numeric: tabular-nums;
+    outline: none;
+    user-select: text;
+    transition:
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    &:focus {
+      border-color: var(--j-tone);
+      box-shadow: 0 0 0 2.5px color-mix(in oklch, var(--j-tone) 15%, transparent);
+    }
+  }
+
+  :where(.j-color-picker__copy) {
+    appearance: none;
+    flex-shrink: 0;
+    display: inline-grid;
+    place-items: center;
+    width: var(--j-control-sm);
+    height: var(--j-control-sm);
+    padding: 0;
+    border: 1px solid var(--j-border);
+    border-radius: var(--j-radius-sm);
+    background: var(--j-surface-2);
+    color: var(--j-fg-muted);
+    cursor: pointer;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out);
+
+    @media (hover: hover) {
+      &:hover:not(:disabled) {
+        background: var(--j-surface-3);
+        color: var(--j-fg);
+      }
+    }
+
+    &[data-copied] {
+      color: var(--j-success);
+      border-color: color-mix(in oklch, var(--j-success) 45%, var(--j-border));
+      background: var(--j-success-soft);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+
+    & > svg {
+      width: 13px;
+      height: 13px;
+    }
+  }
+
+  /* ---- Curated OKLCH Swatches ---- */
+  :where(.j-color-picker__swatches) {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: var(--j-space-1-5);
+    padding-top: var(--j-space-2);
+    border-top: 1px solid var(--j-border);
+  }
+
+  :where(.j-color-picker__swatch) {
+    appearance: none;
+    position: relative;
+    aspect-ratio: 1;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: var(--_checker);
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px oklch(0% 0 0 / 0.14);
+    transition: box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--_swatch-bg, currentColor);
+    }
+
+    &[aria-selected="true"] {
+      box-shadow:
+        0 0 0 1.5px var(--j-surface-1),
+        0 0 0 3px var(--j-fg);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+  }
+
+  /* ==========================================================================
+   * Compact Swatch Trigger + Anchored Popover Mode
+   * ========================================================================== */
+  :where(.j-color-picker-field) {
+    --_h: var(--j-control-md);
+    --_px: var(--j-space-2);
+    --_fs: var(--j-text-md);
+    --_radius: var(--j-control-radius, var(--j-radius-md));
+    --_border: var(--j-border-strong);
+    --_border-hover: color-mix(in oklch, var(--j-border-strong), var(--j-fg) 14%);
+    --_focus: var(--j-tone);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--_h);
+    border: 1px solid var(--_border);
+    border-radius: var(--_radius);
+    background-color: var(--j-control-bg, var(--j-surface-1));
+    color: var(--j-fg);
+    box-shadow: var(--j-inset-highlight), var(--j-shadow-xs);
+    font-family: var(--j-font-sans);
+    font-size: var(--_fs);
+    font-variant-numeric: tabular-nums;
+    transition:
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out);
+
+    @media (hover: hover) {
+      &:hover:not(:focus-within, [data-open], [aria-disabled="true"], :has(:disabled)) {
+        border-color: var(--_border-hover);
+      }
+    }
+
+    &:focus-within,
+    &[data-open] {
+      border-color: var(--_focus);
+      box-shadow:
+        var(--j-inset-highlight),
+        0 0 0 3px color-mix(in oklch, var(--_focus) 15%, transparent);
+    }
+
+    &[aria-invalid="true"],
+    &:has([aria-invalid="true"]) {
+      --_border: color-mix(in oklch, var(--j-danger) 70%, var(--j-border-strong));
+      --_border-hover: var(--j-danger);
+      --_focus: var(--j-danger);
+    }
+
+    &[aria-disabled="true"],
+    &:has(.j-color-picker-field__trigger:disabled) {
+      background-color: var(--j-surface-2);
+      color: var(--j-fg-subtle);
+      border-color: var(--j-border);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    &[data-size="sm"] {
+      --_h: var(--j-control-sm);
+      --_px: var(--j-space-1-5);
+      --_fs: var(--j-text-sm);
+      --_radius: var(--j-control-radius, var(--j-radius-sm));
+    }
+
+    &[data-size="lg"] {
+      --_h: var(--j-control-lg);
+      --_px: var(--j-space-2);
+      --_fs: var(--j-text-lg);
+      --_radius: var(--j-control-radius, var(--j-radius-lg));
+    }
+  }
+
+  :where(.j-color-picker-field__trigger) {
+    appearance: none;
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    block-size: 100%;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-gap-related);
+    padding-inline: var(--_px);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+    outline: none;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  :where(.j-color-picker-field__swatch) {
+    position: relative;
+    flex-shrink: 0;
+    width: max(14px, calc(var(--_h) - max(8px, round(calc(12px * var(--j-density)), 1px))));
+    height: max(14px, calc(var(--_h) - max(8px, round(calc(12px * var(--j-density)), 1px))));
+    border-radius: var(--j-radius-xs);
+    background: var(--_checker);
+    overflow: hidden;
+    box-shadow: inset 0 0 0 1px oklch(0% 0 0 / 0.16);
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: var(--_swatch-color, transparent);
+    }
+  }
+
+  :where(.j-color-picker-field__label) {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: var(--j-font-mono);
+    font-size: calc(var(--_fs) * 0.92);
+    font-variant-numeric: tabular-nums;
+  }
+
+  :where(.j-color-picker__popover) {
+    --_offset: var(--j-floating-offset, 6px);
+    --_slide: 2px;
+    --_from: 0 calc(var(--_slide) * -1);
+
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--j-border);
+    border-radius: var(--j-radius-lg);
+    background: light-dark(var(--j-surface-1), var(--j-surface-2));
+    color: var(--j-fg);
+    box-shadow: var(--j-shadow-md), var(--j-inset-highlight);
+    z-index: var(--j-z-dropdown);
+    overflow: visible;
+
+    position-area: block-end span-inline-end;
+    margin-block-start: var(--_offset);
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+    position-visibility: anchors-visible;
+    transform-origin: top left;
+
+    opacity: 0;
+    translate: var(--_from);
+    scale: 0.99;
+    transition:
+      opacity var(--j-duration) var(--j-ease-out),
+      translate var(--j-duration) var(--j-ease-out),
+      scale var(--j-duration) var(--j-ease-out),
+      overlay var(--j-duration) allow-discrete,
+      display var(--j-duration) allow-discrete;
+
+    &:popover-open {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+      @starting-style {
+        opacity: 0;
+        translate: var(--_from);
+        scale: 0.99;
+      }
+    }
+
+    &[data-placement="top"] {
+      --_from: 0 var(--_slide);
+      transform-origin: bottom left;
+    }
+
+    & > :where(.j-color-picker) {
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+  }
+}

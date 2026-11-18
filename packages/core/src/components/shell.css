@@ -1,0 +1,1422 @@
+/*
+ * High-Level Application Shells — <div class="j-shell" data-layout="…" data-variant="…">
+ *   Uses CSS container queries (`container-name: j-shell`) so responsive drawers,
+ *   navigation suite morphing, right sidecar sheets, and multi-pane collapse work
+ *   identically at viewport scale (`100dvh`) AND inside embedded preview frames (`[data-embedded]`).
+ *
+ * Source-Order Architecture inside `@layer jenni.components` (strictly zero specificity overrides):
+ *   1. Base `.j-shell` & Chrome Sub-Elements
+ *   2. Layout Archetypes (`data-layout="…"` — all 16 canonical architectures)
+ *   3. `data-sidebar-side="end"` Desktop Mirroring Rules
+ *   4. Surface Variants (`inset`, `floating`, `contrast`)
+ *   5. `@container j-shell` Responsive Breakpoints & Off-Canvas Drawers
+ */
+@layer jenni.components {
+  /* ==========================================================================
+   * 1. BASE SHELL & CHROME SUB-ELEMENTS
+   * ========================================================================== */
+
+  :where(.j-shell) {
+    container-type: inline-size;
+    container-name: j-shell;
+    --_rail-w: var(--j-sidebar-rail-w);
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    inline-size: 100%;
+    block-size: 100dvh;
+    min-inline-size: 0;
+    overflow: clip;
+    background-color: var(--j-bg);
+    color: var(--j-fg);
+    isolation: isolate;
+  }
+
+  :where(.j-shell[data-embedded]) {
+    block-size: var(--j-shell-h, 480px);
+    border-radius: var(--j-radius-lg);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs);
+  }
+
+  /* Horizontal Workspace Row beneath Global Header (header-sidebar, holy-grail, ide, command-center) */
+  :where(.j-shell__workspace) {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: clip;
+  }
+
+  /* Body column (TopBar + SubBar + Stage/Main + Dock + BottomBar) */
+  :where(.j-shell__body) {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  /* Center workspace row (Main + optional right Aside or Master + Detail) */
+  :where(.j-shell__stage) {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  /* Center column when a bottom studio dock sits beneath Main alongside a full-height Aside */
+  :where(.j-shell__center) {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  :where(.j-shell__main) {
+    container-type: inline-size;
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Top System / Announcement Banner & Bottom Status Bar */
+  :where(.j-shell__banner) {
+    min-block-size: max(26px, round(calc(34px * var(--j-density)), 1px));
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-gap-related);
+    padding-inline: var(--j-space-4);
+    padding-block: var(--j-space-1);
+    background-color: var(--j-accent-soft);
+    color: var(--j-accent-soft-fg);
+    border-block-end: 1px solid color-mix(in oklch, var(--j-accent) 18%, var(--j-border));
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+  }
+
+  :where(.j-shell__statusbar) {
+    min-block-size: max(22px, round(calc(26px * var(--j-density)), 1px));
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-item);
+    padding-inline: var(--j-space-3);
+    background-color: var(--j-surface-2);
+    color: var(--j-fg-muted);
+    border-block-start: 1px solid var(--j-border);
+    font-size: var(--j-text-xs);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    overflow-x: auto;
+  }
+  :where(.j-shell__statusbar-group) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-gap-related);
+  }
+
+  /* Primary Icon Rail (60px default · 48px IDE · 52px Command Center) */
+  :where(.j-shell__rail) {
+    inline-size: var(--_rail-w);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--j-space-1-5);
+    padding-block: var(--j-space-3);
+    padding-inline: var(--j-space-1-5);
+    min-block-size: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: var(--j-surface-2);
+    color: var(--j-fg);
+    border-inline-end: 1px solid var(--j-border);
+  }
+  :where(.j-shell__rail:has(> .j-sidebar)) {
+    padding: 0;
+    gap: 0;
+    border-inline-end: 0;
+  }
+  :where(.j-shell__rail .j-sidebar__item) {
+    inline-size: max(26px, round(calc(38px * var(--j-density)), 1px));
+    block-size: max(26px, round(calc(38px * var(--j-density)), 1px));
+    min-block-size: 0;
+    justify-content: center;
+    padding: 0;
+  }
+  :where(.j-shell__rail) :where(.j-sidebar__label, .j-sidebar__item-label, .j-sidebar__item-badge, .j-sidebar__collapse-hide) {
+    display: none;
+  }
+  :where(.j-shell__rail-footer) {
+    margin-block-start: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--j-space-2);
+  }
+
+  /* Contextual Secondary Subnav (220px default · 232px IDE) */
+  :where(.j-shell__subnav) {
+    inline-size: var(--j-subnav-w, 220px);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-3);
+    padding: var(--j-space-3) var(--j-space-2);
+    min-block-size: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: var(--j-surface-2);
+    color: var(--j-fg);
+    border-inline-end: 1px solid var(--j-border);
+  }
+  :where(.j-shell__subnav:has(> .j-sidebar)) {
+    padding: 0;
+    gap: 0;
+    border-inline-end: 0;
+  }
+  :where(.j-shell__subnav > .j-sidebar) {
+    inline-size: 100%;
+  }
+  :where(.j-shell__subnav-header) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-related);
+    padding-inline: var(--j-space-2);
+    padding-block-end: var(--j-space-2);
+    border-block-end: 1px solid var(--j-border);
+    font-size: var(--j-text-sm);
+    font-weight: var(--j-weight-semibold);
+    color: var(--j-fg);
+  }
+
+  /* Secondary Horizontal SubBar (TopNav / Editor Tab Strip / Ops Ticker) */
+  :where(.j-shell__subbar, .j-subbar) {
+    min-block-size: var(--j-subbar-h);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-item);
+    inline-size: 100%;
+    padding-inline: var(--j-page-gutter);
+    background-color: var(--j-bg);
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-sm);
+    border-block-end: 1px solid var(--j-border);
+    overflow-x: auto;
+  }
+
+  /* Collapsible Bottom Studio / Console / Terminal Dock */
+  :where(.j-shell__dock) {
+    block-size: var(--j-dock-h, 180px);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: var(--j-surface-1);
+    border-block-start: 1px solid var(--j-border);
+  }
+  :where(.j-shell__dock[data-collapsed], .j-shell[data-dock-collapsed] .j-shell__dock) {
+    display: none;
+  }
+  :where(.j-shell__dock-header) {
+    min-block-size: max(26px, round(calc(34px * var(--j-density)), 1px));
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-related);
+    padding-inline: var(--j-space-3);
+    background-color: var(--j-surface-2);
+    border-block-end: 1px solid var(--j-border);
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+    color: var(--j-fg-muted);
+  }
+  :where(.j-shell__dock-body) {
+    flex: 1 1 0%;
+    min-block-size: 0;
+    overflow-y: auto;
+    padding: var(--j-space-3);
+  }
+
+  /* Right Inspector / AI Copilot Sidecar (.j-shell__aside) */
+  :where(.j-shell__aside) {
+    inline-size: var(--j-aside-w);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    min-block-size: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: var(--j-surface-1);
+    border-inline-start: 1px solid var(--j-border);
+  }
+  :where(.j-shell[data-aside-collapsed] .j-shell__aside, .j-shell__aside[data-collapsed]) {
+    display: none;
+  }
+
+  /* Structured Copilot / Agent Sidecar anatomy inside .j-shell__aside */
+  :where(.j-shell__copilot-header) {
+    min-block-size: var(--j-topbar-h);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-related);
+    padding-inline: var(--j-space-3);
+    border-block-end: 1px solid var(--j-border);
+    background-color: var(--j-surface-1);
+    font-size: var(--j-text-sm);
+    font-weight: var(--j-weight-semibold);
+  }
+  :where(.j-shell__copilot-body) {
+    flex: 1 1 0%;
+    min-block-size: 0;
+    overflow-y: auto;
+    padding: var(--j-space-3);
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-item);
+  }
+  :where(.j-shell__copilot-footer) {
+    flex-shrink: 0;
+    padding: var(--j-space-3);
+    border-block-start: 1px solid var(--j-border);
+    background-color: var(--j-surface-2);
+  }
+
+  /* Master–Detail Panes (split & three-pane archetypes) */
+  :where(.j-shell__master) {
+    inline-size: var(--j-split-master-w);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    min-block-size: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: var(--j-surface-1);
+    border-inline-end: 1px solid var(--j-border);
+  }
+  :where(.j-shell__master-header) {
+    block-size: var(--j-topbar-h);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-related);
+    padding-inline: var(--j-space-3);
+    border-block-end: 1px solid var(--j-border);
+  }
+  :where(.j-shell__detail) {
+    container-type: inline-size;
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: var(--j-bg);
+  }
+
+  /* Off-canvas backdrop, mobile drawer toggle & mobile drill-down back button */
+  :where(.j-shell__backdrop) {
+    display: none;
+  }
+  :where(.j-shell__menu-trigger) {
+    display: none;
+  }
+  :where(.j-shell__back) {
+    display: none;
+  }
+
+  /* ==========================================================================
+   * 2. LAYOUT ARCHETYPES (16 CANONICAL ARCHITECTURES)
+   * ========================================================================== */
+
+  /* Column-root shells stack vertically at the outer root */
+  :where(
+    .j-shell[data-layout="centered"],
+    .j-shell[data-layout="bars"],
+    .j-shell[data-layout="topnav"],
+    .j-shell[data-layout="focus"],
+    .j-shell[data-layout="floating-dock"],
+    .j-shell[data-layout="header-sidebar"],
+    .j-shell[data-layout="holy-grail"],
+    .j-shell[data-layout="ide"],
+    .j-shell[data-layout="command-center"]
+  ) {
+    flex-direction: column;
+  }
+
+  /* Archetype-tuned geometric tokens */
+  :where(.j-shell[data-layout="three-pane"]) {
+    --j-sidebar-w: 200px;
+    --j-split-master-w: 300px;
+  }
+  :where(.j-shell[data-layout="header-sidebar"]) {
+    --j-sidebar-w: 240px;
+  }
+  :where(.j-shell[data-layout="holy-grail"]) {
+    --j-sidebar-w: 220px;
+    --j-aside-w: 268px;
+  }
+  :where(.j-shell[data-layout="copilot"]) {
+    --j-sidebar-w: 224px;
+    --j-aside-w: 360px;
+  }
+  :where(.j-shell[data-layout="ide"]) {
+    --j-topbar-h: max(30px, round(calc(38px * var(--j-density)), 1px));
+    --j-subbar-h: max(28px, round(calc(36px * var(--j-density)), 1px));
+    --j-sidebar-rail-w: max(40px, round(calc(48px * var(--j-density)), 1px));
+    --_rail-w: var(--j-sidebar-rail-w);
+    --j-sidebar-w: 232px;
+    --j-subnav-w: 232px;
+    --j-aside-w: 304px;
+  }
+  :where(.j-shell[data-layout="command-center"]) {
+    --j-topbar-h: max(32px, round(calc(44px * var(--j-density)), 1px));
+    --j-subbar-h: max(26px, round(calc(34px * var(--j-density)), 1px));
+    --j-sidebar-rail-w: max(42px, round(calc(52px * var(--j-density)), 1px));
+    --_rail-w: var(--j-sidebar-rail-w);
+    --j-sidebar-w: 216px;
+    --j-aside-w: 296px;
+    --j-page-gutter: var(--j-space-4);
+    --j-page-py: var(--j-space-4);
+  }
+  :where(.j-shell:is([data-layout="ide"], [data-layout="command-center"]) .j-shell__subbar) {
+    padding-inline: var(--j-space-3);
+    background-color: var(--j-surface-2);
+  }
+
+  /* Adaptive Navigation Suite: hide BottomBar on medium & expanded (≥ 720px) */
+  :where(.j-shell[data-layout="adaptive"] .j-bottombar) {
+    display: none;
+  }
+
+  /* Focus / Zen Wizard Layout */
+  :where(.j-shell[data-layout="focus"] > .j-topbar) {
+    background-color: transparent;
+    border-block-end-color: transparent;
+  }
+  :where(.j-shell[data-layout="focus"] > .j-shell__main) {
+    display: flex;
+    flex-direction: column;
+  }
+  :where(.j-shell[data-layout="focus"] > .j-shell__main > *) {
+    inline-size: 100%;
+    max-inline-size: var(--j-focus-max-w, 680px);
+    margin-inline: auto;
+  }
+
+  /* Floating-Dock Spatial Stage Layout (Figma / Freeform / visionOS) */
+  :where(.j-shell[data-layout="floating-dock"]) {
+    background-color: var(--j-surface-2);
+    background-image: radial-gradient(
+      circle,
+      color-mix(in oklch, var(--j-fg-subtle) 26%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 20px 20px;
+  }
+  :where(.j-shell[data-layout="floating-dock"] > .j-shell__main) {
+    inline-size: 100%;
+    block-size: 100%;
+    padding-block-start: calc(var(--j-topbar-h) + var(--j-space-5));
+    padding-block-end: calc(var(--j-bottombar-h) + var(--j-space-5));
+  }
+  :where(.j-shell[data-layout="floating-dock"] > .j-topbar) {
+    position: absolute;
+    inset-block-start: var(--j-space-3);
+    inset-inline: var(--j-space-3);
+    inline-size: auto;
+    z-index: 4;
+    border-radius: var(--j-radius-lg);
+    border-block-end: 0;
+    background-color: color-mix(in oklch, var(--j-surface-1) 86%, transparent);
+    backdrop-filter: saturate(1.4) blur(16px);
+    -webkit-backdrop-filter: saturate(1.4) blur(16px);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-sm);
+  }
+  :where(.j-shell[data-layout="floating-dock"] > .j-bottombar) {
+    position: absolute;
+    inset-block-end: var(--j-space-3);
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    inline-size: max-content;
+    max-inline-size: calc(100% - var(--j-space-6));
+    min-block-size: max(40px, round(calc(50px * var(--j-density)), 1px));
+    padding: var(--j-space-1) var(--j-space-2);
+    display: flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    z-index: 4;
+    border-radius: var(--j-radius-full);
+    border-block-start: 0;
+    background-color: color-mix(in oklch, var(--j-surface-1) 88%, transparent);
+    backdrop-filter: saturate(1.4) blur(16px);
+    -webkit-backdrop-filter: saturate(1.4) blur(16px);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-md);
+  }
+  :where(.j-shell[data-layout="floating-dock"] > .j-bottombar .j-bottombar__item) {
+    flex: 0 0 auto;
+    min-inline-size: max(48px, round(calc(64px * var(--j-density)), 1px));
+    padding-inline: var(--j-space-2);
+    border-radius: var(--j-radius-full);
+  }
+  :where(.j-shell[data-layout="floating-dock"] > .j-bottombar .j-bottombar__item:is([aria-current="page"], [data-active])) {
+    background-color: var(--j-accent-soft);
+    color: var(--j-accent-soft-fg);
+  }
+  :where(.j-shell[data-layout="floating-dock"] > .j-shell__aside) {
+    position: absolute;
+    inset-block-start: calc(var(--j-topbar-h) + var(--j-space-5));
+    inset-block-end: calc(var(--j-bottombar-h) + var(--j-space-5));
+    inset-inline-end: var(--j-space-3);
+    inline-size: min(280px, calc(100% - var(--j-space-6)));
+    z-index: 3;
+    border-inline-start: 0;
+    border-radius: var(--j-radius-lg);
+    background-color: color-mix(in oklch, var(--j-surface-1) 92%, transparent);
+    backdrop-filter: saturate(1.4) blur(16px);
+    -webkit-backdrop-filter: saturate(1.4) blur(16px);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-sm);
+  }
+
+  /* ==========================================================================
+   * 3. DESKTOP MIRRORING (`data-sidebar-side="end"`)
+   * ========================================================================== */
+
+  :where(
+    .j-shell[data-sidebar-side="end"]:not([data-layout="centered"]):not([data-layout="bars"]):not([data-layout="topnav"]):not([data-layout="focus"]):not([data-layout="floating-dock"]):not([data-layout="header-sidebar"]):not([data-layout="holy-grail"]):not([data-layout="ide"]):not([data-layout="command-center"])
+  ) {
+    flex-direction: row-reverse;
+  }
+  :where(.j-shell[data-sidebar-side="end"] > .j-shell__workspace) {
+    flex-direction: row-reverse;
+  }
+  :where(.j-shell[data-sidebar-side="end"]) > :where(.j-sidebar, .j-shell__sidebar, .j-shell__rail, .j-shell__subnav),
+  :where(.j-shell[data-sidebar-side="end"] > .j-shell__workspace) > :where(.j-sidebar, .j-shell__sidebar, .j-shell__rail, .j-shell__subnav),
+  :where(.j-shell[data-sidebar-side="end"]) :where(.j-shell__rail > .j-sidebar, .j-shell__subnav > .j-sidebar) {
+    border-inline-end: 0;
+    border-inline-start: 1px solid var(--j-border);
+  }
+  :where(.j-shell[data-sidebar-side="end"]) > :where(.j-shell__rail:has(> .j-sidebar), .j-shell__subnav:has(> .j-sidebar)),
+  :where(.j-shell[data-sidebar-side="end"] > .j-shell__workspace) > :where(.j-shell__rail:has(> .j-sidebar), .j-shell__subnav:has(> .j-sidebar)) {
+    border-inline-start: 0;
+  }
+
+  /* Mirror .j-shell__stage so #aside sits on the opposite side of right-docked primary nav */
+  :where(.j-shell[data-sidebar-side="end"] .j-shell__stage) {
+    flex-direction: row-reverse;
+  }
+  :where(.j-shell[data-sidebar-side="end"]:not([data-layout="floating-dock"]) .j-shell__aside) {
+    border-inline-start: 0;
+    border-inline-end: 1px solid var(--j-border);
+  }
+  :where(.j-shell[data-sidebar-side="end"] .j-shell__master) {
+    border-inline-end: 0;
+    border-inline-start: 1px solid var(--j-border);
+  }
+  :where(.j-shell[data-layout="floating-dock"][data-sidebar-side="end"] > .j-shell__aside) {
+    inset-inline-end: auto;
+    inset-inline-start: var(--j-space-3);
+    border: 0;
+  }
+
+  /* ==========================================================================
+   * 4. SURFACE VARIANTS: flat | inset | floating | contrast
+   * ========================================================================== */
+
+  /* ---- 4A. Inset Island Variant (Arc / Linear / macOS) ---- */
+  :where(.j-shell[data-variant="inset"]:not([data-layout="floating-dock"])) {
+    background-color: var(--j-surface-2);
+  }
+  :where(.j-shell[data-variant="inset"]) > :where(.j-sidebar, .j-shell__sidebar, .j-shell__subnav),
+  :where(.j-shell[data-variant="inset"] > .j-shell__workspace) > :where(.j-sidebar, .j-shell__sidebar, .j-shell__subnav),
+  :where(.j-shell[data-variant="inset"]) :where(.j-shell__rail > .j-sidebar, .j-shell__subnav > .j-sidebar) {
+    background-color: transparent;
+    border-inline-end-color: transparent;
+    border-inline-start-color: transparent;
+  }
+  :where(.j-shell[data-variant="inset"]) > :where(.j-shell__rail:not(:has(+ .j-shell__subnav))),
+  :where(.j-shell[data-variant="inset"] > .j-shell__workspace) > :where(.j-shell__rail:not(:has(+ .j-shell__subnav))) {
+    background-color: transparent;
+    border-inline-end-color: transparent;
+    border-inline-start-color: transparent;
+  }
+  :where(.j-shell[data-variant="inset"]) > :where(.j-shell__rail:has(+ .j-shell__subnav)),
+  :where(.j-shell[data-variant="inset"] > .j-shell__workspace) > :where(.j-shell__rail:has(+ .j-shell__subnav)) {
+    background-color: transparent;
+  }
+  :where(.j-shell[data-variant="inset"]:not([data-layout="floating-dock"])) > :where(.j-topbar, .j-shell__subbar, .j-subbar) {
+    background-color: transparent;
+    border-block-end-color: transparent;
+  }
+  :where(.j-shell[data-variant="inset"]) > :where(.j-shell__statusbar) {
+    background-color: transparent;
+    border-block-start-color: transparent;
+  }
+
+  /* Main stage framed as a crisp --j-surface-1 rounded island */
+  :where(.j-shell[data-variant="inset"] > .j-shell__body, .j-shell[data-variant="inset"] > .j-shell__workspace > .j-shell__body) {
+    margin: var(--j-space-2);
+    border-radius: var(--j-radius-lg);
+    background-color: var(--j-surface-1);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs);
+  }
+  :where(
+    .j-shell[data-variant="inset"]:not([data-sidebar-side="end"]):has(> .j-sidebar, > .j-shell__sidebar, > .j-shell__rail, > .j-shell__subnav)
+      > .j-shell__body,
+    .j-shell[data-variant="inset"]:not([data-sidebar-side="end"]) > .j-shell__workspace:has(> .j-sidebar, > .j-shell__sidebar, > .j-shell__rail, > .j-shell__subnav)
+      > .j-shell__body
+  ) {
+    margin-inline-start: 0;
+    margin-inline-end: var(--j-space-2);
+  }
+  :where(
+    .j-shell[data-variant="inset"][data-sidebar-side="end"]:has(> .j-sidebar, > .j-shell__sidebar, > .j-shell__rail, > .j-shell__subnav)
+      > .j-shell__body,
+    .j-shell[data-variant="inset"][data-sidebar-side="end"] > .j-shell__workspace:has(> .j-sidebar, > .j-shell__sidebar, > .j-shell__rail, > .j-shell__subnav)
+      > .j-shell__body
+  ) {
+    margin-inline-start: var(--j-space-2);
+    margin-inline-end: 0;
+  }
+  :where(.j-shell[data-variant="inset"]:has(> .j-topbar) > .j-shell__workspace > .j-shell__body) {
+    margin-block-start: 0;
+  }
+  :where(.j-shell[data-variant="inset"]:has(> .j-shell__statusbar, > .j-bottombar) > .j-shell__workspace > .j-shell__body) {
+    margin-block-end: 0;
+  }
+  :where(.j-shell[data-variant="inset"] .j-shell__body > .j-topbar) {
+    background-color: var(--j-surface-1);
+  }
+  :where(.j-shell[data-variant="inset"] .j-shell__body > .j-topbar[data-translucent]) {
+    background-color: color-mix(in oklch, var(--j-surface-1) 84%, transparent);
+  }
+  :where(.j-shell[data-variant="inset"] .j-shell__detail) {
+    background-color: var(--j-surface-1);
+  }
+
+  /* Vertical shells (centered / bars / topnav / focus) frame .j-shell__main as the island */
+  :where(
+    .j-shell[data-variant="inset"]:not([data-layout="floating-dock"]):not(:has(> .j-shell__body)):not(:has(> .j-shell__workspace))
+      > .j-shell__main
+  ) {
+    margin: var(--j-space-2);
+    border-radius: var(--j-radius-lg);
+    background-color: var(--j-surface-1);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs);
+  }
+  :where(
+    .j-shell[data-variant="inset"]:not([data-layout="floating-dock"]):not(:has(> .j-shell__body)):not(:has(> .j-shell__workspace)):has(> .j-topbar, > .j-shell__subbar, > .j-subbar)
+      > .j-shell__main
+  ) {
+    margin-block-start: 0;
+  }
+  :where(
+    .j-shell[data-variant="inset"]:not([data-layout="floating-dock"]):not(:has(> .j-shell__body)):not(:has(> .j-shell__workspace)):has(> .j-bottombar, > .j-shell__statusbar)
+      > .j-shell__main
+  ) {
+    margin-block-end: 0;
+  }
+
+  /* ---- 4B. Floating Multi-Island Variant (Zed / Arc / Amie / macOS Tahoe) ---- */
+  :where(.j-shell[data-variant="floating"]:not([data-layout="floating-dock"])) {
+    background-color: var(--j-surface-2);
+    padding: var(--j-space-2);
+    gap: var(--j-space-2);
+  }
+  :where(.j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) > .j-shell__workspace) {
+    gap: var(--j-space-2);
+    background: transparent;
+    padding: 2px;
+    margin: -2px;
+  }
+
+  /* Intermediate structural wrappers act as transparent layout flexboxes */
+  :where(
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__body,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__stage,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__center
+  ) {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    gap: var(--j-space-2);
+    overflow: visible;
+  }
+
+  /* Leaf content & sidecar panes float as crisp --j-surface-1 rounded islands */
+  :where(
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) > .j-sidebar,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) > .j-shell__sidebar,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) > .j-shell__rail,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) > .j-shell__subnav,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) > .j-shell__workspace > .j-sidebar,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) > .j-shell__workspace > .j-shell__sidebar,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) > .j-shell__workspace > .j-shell__rail,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) > .j-shell__workspace > .j-shell__subnav,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__main,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__master,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__detail,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__aside,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__dock
+  ) {
+    background-color: var(--j-surface-1);
+    border: 0;
+    border-radius: var(--j-radius-lg);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs);
+  }
+
+  /* Avoid double island rings when .j-sidebar is slotted inside .j-shell__rail or .j-shell__subnav */
+  :where(.j-shell[data-variant="floating"]:not([data-layout="floating-dock"]))
+    :where(.j-shell__rail > .j-sidebar, .j-shell__subnav > .j-sidebar) {
+    background-color: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* Chrome bars float as tailored --j-radius-md islands */
+  :where(
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-topbar,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__subbar,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-subbar,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__statusbar,
+    .j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-bottombar
+  ) {
+    background-color: var(--j-surface-1);
+    border: 0;
+    border-radius: var(--j-radius-md);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs);
+  }
+  :where(.j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__banner) {
+    border: 0;
+    border-radius: var(--j-radius-md);
+    box-shadow: 0 0 0 1px color-mix(in oklch, var(--j-accent) 22%, var(--j-border));
+  }
+
+  /* ---- 4C. High-Contrast Obsidian Navigation Variant (Stripe / Vercel / Slack / Dark Chrome) ---- */
+  :where(
+    .j-shell[data-variant="contrast"] > .j-sidebar,
+    .j-shell[data-variant="contrast"] > .j-shell__sidebar,
+    .j-shell[data-variant="contrast"] > .j-shell__rail,
+    .j-shell[data-variant="contrast"] > .j-shell__subnav,
+    .j-shell[data-variant="contrast"] > .j-shell__statusbar,
+    .j-shell[data-variant="contrast"]:is([data-layout="header-sidebar"], [data-layout="holy-grail"], [data-layout="ide"], [data-layout="command-center"], [data-layout="topnav"]) > .j-topbar,
+    .j-shell[data-variant="contrast"]:is([data-layout="command-center"], [data-layout="topnav"]) > .j-shell__subbar,
+    .j-shell[data-variant="contrast"] > .j-shell__workspace > .j-sidebar,
+    .j-shell[data-variant="contrast"] > .j-shell__workspace > .j-shell__sidebar,
+    .j-shell[data-variant="contrast"] > .j-shell__workspace > .j-shell__rail,
+    .j-shell[data-variant="contrast"] > .j-shell__workspace > .j-shell__subnav
+  ) {
+    color-scheme: dark;
+    --j-bg: oklch(15.5% 0.01 var(--j-hue-neutral));
+    --j-surface-1: oklch(19% 0.012 var(--j-hue-neutral));
+    --j-surface-2: oklch(16.2% 0.011 var(--j-hue-neutral));
+    --j-surface-3: oklch(23.5% 0.014 var(--j-hue-neutral));
+    --j-fg: oklch(95.5% 0.004 var(--j-hue-neutral));
+    --j-fg-muted: oklch(72% 0.01 var(--j-hue-neutral));
+    --j-fg-subtle: oklch(56% 0.01 var(--j-hue-neutral));
+    --j-border: oklch(100% 0 0 / 0.1);
+    --j-border-strong: oklch(100% 0 0 / 0.16);
+    --j-accent: oklch(68% 0.16 var(--j-hue-accent, var(--j-hue)));
+    --j-accent-hover: oklch(73% 0.16 var(--j-hue-accent, var(--j-hue)));
+    --j-accent-fg: oklch(14% 0.02 var(--j-hue-accent, var(--j-hue)));
+    --j-accent-soft: oklch(26% 0.05 var(--j-hue-accent, var(--j-hue)));
+    --j-accent-soft-fg: oklch(90% 0.06 var(--j-hue-accent, var(--j-hue)));
+    --j-tone: var(--j-accent);
+    --j-tone-hover: var(--j-accent-hover);
+    --j-tone-fg: var(--j-accent-fg);
+    --j-tone-soft: var(--j-accent-soft);
+    --j-tone-soft-fg: var(--j-accent-soft-fg);
+    --j-neutral-soft: oklch(24% 0.012 var(--j-hue-neutral));
+    --j-neutral-soft-fg: oklch(93% 0.005 var(--j-hue-neutral));
+    --_chrome-bg: var(--j-surface-2);
+    background-color: var(--j-surface-2);
+    color: var(--j-fg);
+    border-color: var(--j-border);
+  }
+
+  /* Dark-mode Contrast Variant: sink chrome to deep obsidian (10.5%) & elevate workspace canvas (19.2%) */
+  :where(
+    [data-theme="dark"] .j-shell[data-variant="contrast"] > :is(.j-sidebar, .j-shell__sidebar, .j-shell__rail, .j-shell__subnav, .j-shell__statusbar),
+    [data-theme="dark"] .j-shell[data-variant="contrast"]:is([data-layout="header-sidebar"], [data-layout="holy-grail"], [data-layout="ide"], [data-layout="command-center"], [data-layout="topnav"]) > .j-topbar,
+    [data-theme="dark"] .j-shell[data-variant="contrast"]:is([data-layout="command-center"], [data-layout="topnav"]) > .j-shell__subbar,
+    [data-theme="dark"] .j-shell[data-variant="contrast"] > .j-shell__workspace > :is(.j-sidebar, .j-shell__sidebar, .j-shell__rail, .j-shell__subnav),
+    .j-shell[data-variant="contrast"][data-theme="dark"] > :is(.j-sidebar, .j-shell__sidebar, .j-shell__rail, .j-shell__subnav, .j-shell__statusbar),
+    .j-shell[data-variant="contrast"][data-theme="dark"]:is([data-layout="header-sidebar"], [data-layout="holy-grail"], [data-layout="ide"], [data-layout="command-center"], [data-layout="topnav"]) > .j-topbar,
+    .j-shell[data-variant="contrast"][data-theme="dark"]:is([data-layout="command-center"], [data-layout="topnav"]) > .j-shell__subbar,
+    .j-shell[data-variant="contrast"][data-theme="dark"] > .j-shell__workspace > :is(.j-sidebar, .j-shell__sidebar, .j-shell__rail, .j-shell__subnav)
+  ) {
+    --j-bg: oklch(10.5% 0.008 var(--j-hue-neutral));
+    --j-surface-1: oklch(13% 0.009 var(--j-hue-neutral));
+    --j-surface-2: oklch(15.5% 0.01 var(--j-hue-neutral));
+    --j-surface-3: oklch(19.5% 0.012 var(--j-hue-neutral));
+    --j-border: oklch(25% 0.012 var(--j-hue-neutral));
+    --_chrome-bg: oklch(10.5% 0.008 var(--j-hue-neutral));
+    background-color: var(--j-bg);
+    border-color: var(--j-border);
+  }
+  :where([data-theme="dark"] .j-shell[data-variant="contrast"], .j-shell[data-variant="contrast"][data-theme="dark"])
+    :where(.j-shell__rail > .j-sidebar, .j-shell__subnav > .j-sidebar) {
+    background-color: var(--j-bg);
+  }
+  :where([data-theme="dark"] .j-shell[data-variant="contrast"], .j-shell[data-variant="contrast"][data-theme="dark"])
+    :where(.j-shell__body, .j-shell__main, .j-shell__detail, .j-shell__master, .j-shell__body > .j-topbar) {
+    --j-bg: oklch(19.2% 0.009 var(--j-hue-neutral));
+    --j-surface-1: oklch(19.2% 0.009 var(--j-hue-neutral));
+    --j-surface-2: oklch(22.6% 0.01 var(--j-hue-neutral));
+    --j-surface-3: oklch(26.2% 0.011 var(--j-hue-neutral));
+    --j-border: oklch(28% 0.012 var(--j-hue-neutral));
+    background-color: var(--j-bg);
+  }
+  :where(
+    [data-theme="dark"] .j-shell[data-variant="contrast"] > .j-shell__body,
+    [data-theme="dark"] .j-shell[data-variant="contrast"] > .j-shell__workspace > .j-shell__body,
+    .j-shell[data-variant="contrast"][data-theme="dark"] > .j-shell__body,
+    .j-shell[data-variant="contrast"][data-theme="dark"] > .j-shell__workspace > .j-shell__body
+  ) {
+    box-shadow: inset 0 0 0 1px oklch(28% 0.012 var(--j-hue-neutral));
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :where(
+      :root:not([data-theme="light"]) .j-shell[data-variant="contrast"]:not([data-theme="light"] *) > :is(.j-sidebar, .j-shell__sidebar, .j-shell__rail, .j-shell__subnav, .j-shell__statusbar),
+      :root:not([data-theme="light"]) .j-shell[data-variant="contrast"]:not([data-theme="light"] *):is([data-layout="header-sidebar"], [data-layout="holy-grail"], [data-layout="ide"], [data-layout="command-center"], [data-layout="topnav"]) > .j-topbar,
+      :root:not([data-theme="light"]) .j-shell[data-variant="contrast"]:not([data-theme="light"] *):is([data-layout="command-center"], [data-layout="topnav"]) > .j-shell__subbar,
+      :root:not([data-theme="light"]) .j-shell[data-variant="contrast"]:not([data-theme="light"] *) > .j-shell__workspace > :is(.j-sidebar, .j-shell__sidebar, .j-shell__rail, .j-shell__subnav)
+    ) {
+      --j-bg: oklch(10.5% 0.008 var(--j-hue-neutral));
+      --j-surface-1: oklch(13% 0.009 var(--j-hue-neutral));
+      --j-surface-2: oklch(15.5% 0.01 var(--j-hue-neutral));
+      --j-surface-3: oklch(19.5% 0.012 var(--j-hue-neutral));
+      --j-border: oklch(25% 0.012 var(--j-hue-neutral));
+      --_chrome-bg: oklch(10.5% 0.008 var(--j-hue-neutral));
+      background-color: var(--j-bg);
+      border-color: var(--j-border);
+    }
+    :where(:root:not([data-theme="light"]) .j-shell[data-variant="contrast"]:not([data-theme="light"] *))
+      :where(.j-shell__rail > .j-sidebar, .j-shell__subnav > .j-sidebar) {
+      background-color: var(--j-bg);
+    }
+    :where(:root:not([data-theme="light"]) .j-shell[data-variant="contrast"]:not([data-theme="light"] *))
+      :where(.j-shell__body, .j-shell__main, .j-shell__detail, .j-shell__master, .j-shell__body > .j-topbar) {
+      --j-bg: oklch(19.2% 0.009 var(--j-hue-neutral));
+      --j-surface-1: oklch(19.2% 0.009 var(--j-hue-neutral));
+      --j-surface-2: oklch(22.6% 0.01 var(--j-hue-neutral));
+      --j-surface-3: oklch(26.2% 0.011 var(--j-hue-neutral));
+      --j-border: oklch(28% 0.012 var(--j-hue-neutral));
+      background-color: var(--j-bg);
+    }
+    :where(
+      :root:not([data-theme="light"]) .j-shell[data-variant="contrast"]:not([data-theme="light"] *) > .j-shell__body,
+      :root:not([data-theme="light"]) .j-shell[data-variant="contrast"]:not([data-theme="light"] *) > .j-shell__workspace > .j-shell__body
+    ) {
+      box-shadow: inset 0 0 0 1px oklch(28% 0.012 var(--j-hue-neutral));
+    }
+  }
+
+  /* ==========================================================================
+   * 5. RESPONSIVE CONTAINER QUERIES (@container j-shell)
+   * ========================================================================== */
+
+  /* Adaptive Medium (720px – 1099px): Sidebar morphs to a 60px icon rail */
+  @container j-shell (720px <= width < 1100px) {
+    :where(.j-shell[data-layout="adaptive"]) > :where(.j-sidebar, .j-shell__sidebar > .j-sidebar) {
+      inline-size: var(--j-sidebar-rail-w);
+    }
+    :where(.j-shell[data-layout="adaptive"]) :where(.j-sidebar__header) {
+      justify-content: center;
+      padding-inline: var(--j-space-2);
+    }
+    :where(.j-shell[data-layout="adaptive"]) :where(.j-sidebar__body) {
+      align-items: center;
+      padding-inline: var(--j-space-1-5);
+    }
+    :where(.j-shell[data-layout="adaptive"]) :where(.j-sidebar__footer) {
+      justify-content: center;
+      padding-inline: var(--j-space-2);
+    }
+    :where(.j-shell[data-layout="adaptive"]) :where(.j-sidebar__group) {
+      align-items: center;
+    }
+    :where(.j-shell[data-layout="adaptive"]) :where(.j-sidebar__item) {
+      inline-size: max(26px, round(calc(38px * var(--j-density)), 1px));
+      block-size: max(26px, round(calc(38px * var(--j-density)), 1px));
+      min-block-size: 0;
+      justify-content: center;
+      padding: 0;
+    }
+    :where(.j-shell[data-layout="adaptive"])
+      :where(.j-sidebar__label, .j-sidebar__item-label, .j-sidebar__item-badge, .j-sidebar__collapse-hide) {
+      display: none;
+    }
+  }
+
+  /* Three-Pane Medium (720px – 1023px): Left nav collapses cleanly to 60px icon rail */
+  @container j-shell (720px <= width < 1024px) {
+    :where(.j-shell[data-layout="three-pane"]) > :where(.j-sidebar, .j-shell__sidebar > .j-sidebar) {
+      inline-size: var(--j-sidebar-rail-w);
+    }
+    :where(.j-shell[data-layout="three-pane"]) :where(.j-sidebar__header, .j-sidebar__footer) {
+      justify-content: center;
+      padding-inline: var(--j-space-2);
+    }
+    :where(.j-shell[data-layout="three-pane"]) :where(.j-sidebar__body, .j-sidebar__group) {
+      align-items: center;
+    }
+    :where(.j-shell[data-layout="three-pane"]) :where(.j-sidebar__item) {
+      inline-size: max(26px, round(calc(38px * var(--j-density)), 1px));
+      block-size: max(26px, round(calc(38px * var(--j-density)), 1px));
+      min-block-size: 0;
+      justify-content: center;
+      padding: 0;
+    }
+    :where(.j-shell[data-layout="three-pane"])
+      :where(.j-sidebar__label, .j-sidebar__item-label, .j-sidebar__item-badge, .j-sidebar__collapse-hide) {
+      display: none;
+    }
+  }
+
+  /* Copilot & Holy-Grail (< 1024px): Right Aside / Copilot Sidecar becomes off-canvas drawer */
+  @container j-shell (width < 1024px) {
+    :where(.j-shell:is([data-layout="copilot"], [data-layout="holy-grail"])) .j-shell__aside {
+      display: flex;
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: auto;
+      inset-inline-end: 0;
+      z-index: var(--j-z-modal);
+      inline-size: min(var(--j-aside-w, 340px), 88%);
+      border: 0;
+      border-inline-start: 1px solid var(--j-border);
+      border-radius: 0;
+      background-color: var(--j-surface-1);
+      visibility: hidden;
+      transform: translateX(104%);
+      pointer-events: none;
+      box-shadow: none;
+      transition:
+        transform var(--j-duration-slow) var(--j-ease-emphasized),
+        box-shadow var(--j-duration-slow) var(--j-ease-emphasized),
+        visibility 0s linear var(--j-duration-slow);
+    }
+    :where(.j-shell:is([data-layout="copilot"], [data-layout="holy-grail"])[data-sidebar-side="end"]) .j-shell__aside {
+      inset-inline-end: auto;
+      inset-inline-start: 0;
+      border-inline-start: 0;
+      border-inline-end: 1px solid var(--j-border);
+      transform: translateX(-104%);
+    }
+    :where(.j-shell:is([data-layout="copilot"], [data-layout="holy-grail"]):dir(rtl):not([data-sidebar-side="end"])) .j-shell__aside {
+      transform: translateX(-104%);
+    }
+    :where(.j-shell:is([data-layout="copilot"], [data-layout="holy-grail"]):dir(rtl)[data-sidebar-side="end"]) .j-shell__aside {
+      transform: translateX(104%);
+    }
+    :where(.j-shell:is([data-layout="copilot"], [data-layout="holy-grail"])[data-aside-open]) .j-shell__aside {
+      visibility: visible;
+      transform: translateX(0);
+      pointer-events: auto;
+      box-shadow: var(--j-shadow-lg);
+      transition-delay: 0s;
+    }
+    :where(.j-shell:is([data-layout="copilot"], [data-layout="holy-grail"])[data-aside-open]) .j-shell__backdrop {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: var(--j-z-overlay);
+      border: 0;
+      padding: 0;
+      background-color: var(--j-overlay);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  /* All Non-Floating-Dock Shells (< 960px): Right Aside becomes off-canvas drawer */
+  @container j-shell (width < 960px) {
+    :where(.j-shell:not([data-layout="floating-dock"])) .j-shell__aside {
+      display: flex;
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: auto;
+      inset-inline-end: 0;
+      z-index: var(--j-z-modal);
+      inline-size: min(var(--j-aside-w, 320px), 88%);
+      border: 0;
+      border-inline-start: 1px solid var(--j-border);
+      border-radius: 0;
+      background-color: var(--j-surface-1);
+      visibility: hidden;
+      transform: translateX(104%);
+      pointer-events: none;
+      box-shadow: none;
+      transition:
+        transform var(--j-duration-slow) var(--j-ease-emphasized),
+        box-shadow var(--j-duration-slow) var(--j-ease-emphasized),
+        visibility 0s linear var(--j-duration-slow);
+    }
+    :where(.j-shell:not([data-layout="floating-dock"])[data-sidebar-side="end"]) .j-shell__aside {
+      inset-inline-end: auto;
+      inset-inline-start: 0;
+      border-inline-start: 0;
+      border-inline-end: 1px solid var(--j-border);
+      transform: translateX(-104%);
+    }
+    :where(.j-shell:not([data-layout="floating-dock"]):dir(rtl):not([data-sidebar-side="end"])) .j-shell__aside {
+      transform: translateX(-104%);
+    }
+    :where(.j-shell:not([data-layout="floating-dock"]):dir(rtl)[data-sidebar-side="end"]) .j-shell__aside {
+      transform: translateX(104%);
+    }
+    :where(.j-shell:not([data-layout="floating-dock"])[data-aside-open]) .j-shell__aside {
+      visibility: visible;
+      transform: translateX(0);
+      pointer-events: auto;
+      box-shadow: var(--j-shadow-lg);
+      transition-delay: 0s;
+    }
+    :where(.j-shell:not([data-layout="floating-dock"])[data-aside-open]) .j-shell__backdrop {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: var(--j-z-overlay);
+      border: 0;
+      padding: 0;
+      background-color: var(--j-overlay);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  /* Tablet Dual-Nav & IDE (720px – 899px): Secondary subnav/explorer becomes a slide-over drawer beside rail */
+  @container j-shell (width >= 720px) and (width < 900px) {
+    :where(.j-shell:is([data-layout="dual-nav"], [data-layout="ide"]) .j-shell__menu-trigger) {
+      display: inline-flex;
+    }
+    :where(
+      .j-shell:is([data-layout="dual-nav"], [data-layout="ide"])[data-variant="inset"] > .j-shell__rail,
+      .j-shell:is([data-layout="dual-nav"], [data-layout="ide"])[data-variant="inset"] > .j-shell__workspace > .j-shell__rail
+    ) {
+      border-inline-end-color: transparent;
+      border-inline-start-color: transparent;
+    }
+    :where(
+      .j-shell:is([data-layout="dual-nav"], [data-layout="ide"])[data-sidebar-open] > .j-shell__rail,
+      .j-shell:is([data-layout="dual-nav"], [data-layout="ide"])[data-sidebar-open] > .j-shell__workspace > .j-shell__rail
+    ) {
+      position: relative;
+      z-index: calc(var(--j-z-modal) + 1);
+    }
+    :where(
+      .j-shell[data-layout="dual-nav"] > .j-shell__subnav,
+      .j-shell[data-layout="ide"] > .j-shell__workspace > .j-shell__subnav
+    ) {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: var(--_rail-w);
+      inset-inline-end: auto;
+      z-index: var(--j-z-modal);
+      inline-size: min(var(--j-subnav-w, 220px), calc(88% - var(--_rail-w)));
+      border: 0;
+      border-inline-end: 1px solid var(--j-border);
+      border-radius: 0;
+      background-color: var(--_chrome-bg, var(--j-surface-2));
+      visibility: hidden;
+      transform: translateX(-110%);
+      box-shadow: none;
+      transition:
+        transform var(--j-duration-slow) var(--j-ease-emphasized),
+        box-shadow var(--j-duration-slow) var(--j-ease-emphasized),
+        visibility 0s linear var(--j-duration-slow);
+    }
+    :where(
+      .j-shell[data-layout="dual-nav"]:not(:has(> .j-shell__rail)) > .j-shell__subnav,
+      .j-shell[data-layout="ide"] > .j-shell__workspace:not(:has(> .j-shell__rail)) > .j-shell__subnav
+    ) {
+      inset-inline-start: 0;
+    }
+    :where(
+      .j-shell[data-layout="dual-nav"][data-sidebar-side="end"] > .j-shell__subnav,
+      .j-shell[data-layout="ide"][data-sidebar-side="end"] > .j-shell__workspace > .j-shell__subnav
+    ) {
+      inset-inline-start: auto;
+      inset-inline-end: var(--_rail-w);
+      border-inline-end: 0;
+      border-inline-start: 1px solid var(--j-border);
+      transform: translateX(110%);
+    }
+    :where(
+      .j-shell[data-layout="dual-nav"][data-sidebar-side="end"]:not(:has(> .j-shell__rail)) > .j-shell__subnav,
+      .j-shell[data-layout="ide"][data-sidebar-side="end"] > .j-shell__workspace:not(:has(> .j-shell__rail)) > .j-shell__subnav
+    ) {
+      inset-inline-end: 0;
+    }
+    :where(
+      .j-shell[data-layout="dual-nav"]:dir(rtl):not([data-sidebar-side="end"]) > .j-shell__subnav,
+      .j-shell[data-layout="ide"]:dir(rtl):not([data-sidebar-side="end"]) > .j-shell__workspace > .j-shell__subnav
+    ) {
+      transform: translateX(110%);
+    }
+    :where(
+      .j-shell[data-layout="dual-nav"]:dir(rtl)[data-sidebar-side="end"] > .j-shell__subnav,
+      .j-shell[data-layout="ide"]:dir(rtl)[data-sidebar-side="end"] > .j-shell__workspace > .j-shell__subnav
+    ) {
+      transform: translateX(-110%);
+    }
+    :where(
+      .j-shell[data-layout="dual-nav"][data-sidebar-open] > .j-shell__subnav,
+      .j-shell[data-layout="ide"][data-sidebar-open] > .j-shell__workspace > .j-shell__subnav
+    ) {
+      visibility: visible;
+      transform: translateX(0);
+      box-shadow: var(--j-shadow-lg);
+      transition-delay: 0s;
+    }
+    :where(.j-shell:is([data-layout="dual-nav"], [data-layout="ide"])[data-sidebar-open] .j-shell__backdrop) {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: var(--j-z-overlay);
+      border: 0;
+      padding: 0;
+      background-color: var(--j-overlay);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  /* Floating-Dock Compact (< 760px): Floating inspector transitions to off-canvas sheet */
+  @container j-shell (width < 760px) {
+    :where(.j-shell[data-layout="floating-dock"] > .j-shell__aside) {
+      display: flex;
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: auto;
+      inset-inline-end: 0;
+      z-index: var(--j-z-modal);
+      inline-size: min(var(--j-aside-w, 300px), 88%);
+      border: 0;
+      border-inline-start: 1px solid var(--j-border);
+      border-radius: 0;
+      background-color: var(--j-surface-1);
+      visibility: hidden;
+      transform: translateX(104%);
+      pointer-events: none;
+      box-shadow: none;
+      transition:
+        transform var(--j-duration-slow) var(--j-ease-emphasized),
+        box-shadow var(--j-duration-slow) var(--j-ease-emphasized),
+        visibility 0s linear var(--j-duration-slow);
+    }
+    :where(.j-shell[data-layout="floating-dock"][data-sidebar-side="end"] > .j-shell__aside) {
+      inset-inline-end: auto;
+      inset-inline-start: 0;
+      border-inline-start: 0;
+      border-inline-end: 1px solid var(--j-border);
+      transform: translateX(-104%);
+    }
+    :where(.j-shell[data-layout="floating-dock"]:dir(rtl):not([data-sidebar-side="end"]) > .j-shell__aside) {
+      transform: translateX(-104%);
+    }
+    :where(.j-shell[data-layout="floating-dock"]:dir(rtl)[data-sidebar-side="end"] > .j-shell__aside) {
+      transform: translateX(104%);
+    }
+    :where(.j-shell[data-layout="floating-dock"][data-aside-open] > .j-shell__aside) {
+      visibility: visible;
+      transform: translateX(0);
+      pointer-events: auto;
+      box-shadow: var(--j-shadow-lg);
+      transition-delay: 0s;
+    }
+    :where(.j-shell[data-layout="floating-dock"][data-aside-open] .j-shell__backdrop) {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: var(--j-z-overlay);
+      border: 0;
+      padding: 0;
+      background-color: var(--j-overlay);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  /* Compact (< 720px): Off-canvas drawer, Adaptive BottomBar, and Split/Three-Pane drill-down */
+  @container j-shell (width < 720px) {
+    :where(.j-shell__menu-trigger) {
+      display: inline-flex;
+    }
+    :where(.j-shell[data-layout="adaptive"] .j-shell__menu-trigger) {
+      display: none;
+    }
+    :where(.j-shell__back) {
+      display: inline-flex;
+    }
+
+    /* Inset island restores symmetrical inline margin when side chrome moves off-canvas */
+    :where(.j-shell[data-variant="inset"] > .j-shell__body),
+    :where(.j-shell[data-variant="inset"] > .j-shell__workspace > .j-shell__body) {
+      margin-inline: var(--j-space-2);
+    }
+
+    /* Adaptive Compact (< 720px): BottomBar becomes primary nav; sidebar hides unless explicitly opened */
+    :where(.j-shell[data-layout="adaptive"]:not([data-sidebar-open])) > :where(.j-sidebar, .j-shell__sidebar) {
+      display: none;
+    }
+    :where(.j-shell[data-layout="adaptive"] .j-bottombar:not([data-variant="actions"])) {
+      display: grid;
+    }
+    :where(.j-shell[data-layout="adaptive"] .j-bottombar[data-variant="actions"]) {
+      display: flex;
+    }
+
+    /* Sidebar off-canvas drawer (both root-level and inside .j-shell__workspace) */
+    :where(
+      .j-shell > .j-sidebar,
+      .j-shell__sidebar > .j-sidebar,
+      .j-shell__sidebar,
+      .j-shell__workspace > .j-sidebar
+    ) {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 0;
+      inset-inline-end: auto;
+      z-index: var(--j-z-modal);
+      inline-size: min(248px, 84%);
+      border: 0;
+      border-inline-end: 1px solid var(--j-border);
+      border-radius: 0;
+      background-color: var(--_chrome-bg, var(--j-surface-2));
+      visibility: hidden;
+      transform: translateX(-106%);
+      box-shadow: none;
+      transition:
+        transform var(--j-duration-slow) var(--j-ease-emphasized),
+        box-shadow var(--j-duration-slow) var(--j-ease-emphasized),
+        visibility 0s linear var(--j-duration-slow);
+    }
+    :where(
+      .j-shell[data-sidebar-side="end"] > .j-sidebar,
+      .j-shell[data-sidebar-side="end"] .j-shell__sidebar > .j-sidebar,
+      .j-shell[data-sidebar-side="end"] > .j-shell__sidebar,
+      .j-shell[data-sidebar-side="end"] > .j-shell__workspace > .j-sidebar,
+      .j-shell[data-sidebar-side="end"] > .j-shell__workspace > .j-shell__sidebar
+    ) {
+      inset-inline-start: auto;
+      inset-inline-end: 0;
+      border-inline-end: 0;
+      border-inline-start: 1px solid var(--j-border);
+      transform: translateX(106%);
+    }
+    :where(
+      .j-shell:dir(rtl):not([data-sidebar-side="end"]) > .j-sidebar,
+      .j-shell:dir(rtl):not([data-sidebar-side="end"]) .j-shell__sidebar > .j-sidebar,
+      .j-shell:dir(rtl):not([data-sidebar-side="end"]) > .j-shell__sidebar,
+      .j-shell:dir(rtl):not([data-sidebar-side="end"]) > .j-shell__workspace > .j-sidebar,
+      .j-shell:dir(rtl):not([data-sidebar-side="end"]) > .j-shell__workspace > .j-shell__sidebar
+    ) {
+      transform: translateX(106%);
+    }
+    :where(
+      .j-shell:dir(rtl)[data-sidebar-side="end"] > .j-sidebar,
+      .j-shell:dir(rtl)[data-sidebar-side="end"] .j-shell__sidebar > .j-sidebar,
+      .j-shell:dir(rtl)[data-sidebar-side="end"] > .j-shell__sidebar,
+      .j-shell:dir(rtl)[data-sidebar-side="end"] > .j-shell__workspace > .j-sidebar,
+      .j-shell:dir(rtl)[data-sidebar-side="end"] > .j-shell__workspace > .j-shell__sidebar
+    ) {
+      transform: translateX(-106%);
+    }
+
+    :where(
+      .j-shell[data-sidebar-open] > .j-sidebar,
+      .j-shell[data-sidebar-open] .j-shell__sidebar > .j-sidebar,
+      .j-shell[data-sidebar-open] > .j-shell__sidebar,
+      .j-shell[data-sidebar-open] > .j-shell__workspace > .j-sidebar,
+      .j-shell[data-sidebar-open] > .j-shell__workspace > .j-shell__sidebar
+    ) {
+      visibility: visible;
+      transform: translateX(0);
+      box-shadow: var(--j-shadow-lg);
+      transition-delay: 0s;
+    }
+
+    /* Dual-Nav / IDE / Command-Center off-canvas drawer (rail + subnav glide together) */
+    :where(.j-shell > .j-shell__rail, .j-shell__workspace > .j-shell__rail) {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 0;
+      inset-inline-end: auto;
+      z-index: calc(var(--j-z-modal) + 1);
+      border: 0;
+      border-inline-end: 1px solid var(--j-border);
+      border-radius: 0;
+      background-color: var(--_chrome-bg, var(--j-surface-2));
+      visibility: hidden;
+      transform: translateX(-106%);
+      box-shadow: none;
+      transition:
+        transform var(--j-duration-slow) var(--j-ease-emphasized),
+        visibility 0s linear var(--j-duration-slow);
+    }
+    :where(.j-shell > .j-shell__subnav, .j-shell__workspace > .j-shell__subnav) {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: var(--_rail-w);
+      inset-inline-end: auto;
+      z-index: var(--j-z-modal);
+      inline-size: min(var(--j-subnav-w, 220px), calc(88% - var(--_rail-w)));
+      border: 0;
+      border-inline-end: 1px solid var(--j-border);
+      border-radius: 0;
+      background-color: var(--_chrome-bg, var(--j-surface-2));
+      visibility: hidden;
+      transform: translateX(calc(-106% - var(--_rail-w)));
+      box-shadow: none;
+      transition:
+        transform var(--j-duration-slow) var(--j-ease-emphasized),
+        box-shadow var(--j-duration-slow) var(--j-ease-emphasized),
+        visibility 0s linear var(--j-duration-slow);
+    }
+    :where(.j-shell:not(:has(> .j-shell__rail)) > .j-shell__subnav),
+    :where(.j-shell__workspace:not(:has(> .j-shell__rail)) > .j-shell__subnav) {
+      inset-inline-start: 0;
+      transform: translateX(-106%);
+    }
+
+    /* Mirrored [data-sidebar-side="end"] & RTL for rail + subnav drawers */
+    :where(.j-shell[data-sidebar-side="end"]) > .j-shell__rail,
+    :where(.j-shell[data-sidebar-side="end"] > .j-shell__workspace) > .j-shell__rail {
+      inset-inline-start: auto;
+      inset-inline-end: 0;
+      border-inline-end: 0;
+      border-inline-start: 1px solid var(--j-border);
+      transform: translateX(106%);
+    }
+    :where(.j-shell[data-sidebar-side="end"]) > .j-shell__subnav,
+    :where(.j-shell[data-sidebar-side="end"] > .j-shell__workspace) > .j-shell__subnav {
+      inset-inline-start: auto;
+      inset-inline-end: var(--_rail-w);
+      border-inline-end: 0;
+      border-inline-start: 1px solid var(--j-border);
+      transform: translateX(calc(106% + var(--_rail-w)));
+    }
+    :where(.j-shell[data-sidebar-side="end"]:not(:has(> .j-shell__rail)) > .j-shell__subnav),
+    :where(.j-shell[data-sidebar-side="end"] > .j-shell__workspace:not(:has(> .j-shell__rail)) > .j-shell__subnav) {
+      inset-inline-end: 0;
+      transform: translateX(106%);
+    }
+    :where(.j-shell:dir(rtl):not([data-sidebar-side="end"])) > .j-shell__rail,
+    :where(.j-shell:dir(rtl):not([data-sidebar-side="end"]) > .j-shell__workspace) > .j-shell__rail {
+      transform: translateX(106%);
+    }
+    :where(.j-shell:dir(rtl)[data-sidebar-side="end"]) > .j-shell__rail,
+    :where(.j-shell:dir(rtl)[data-sidebar-side="end"] > .j-shell__workspace) > .j-shell__rail {
+      transform: translateX(-106%);
+    }
+    :where(.j-shell:dir(rtl):not([data-sidebar-side="end"])) > .j-shell__subnav,
+    :where(.j-shell:dir(rtl):not([data-sidebar-side="end"]) > .j-shell__workspace) > .j-shell__subnav {
+      transform: translateX(calc(106% + var(--_rail-w)));
+    }
+    :where(.j-shell:dir(rtl)[data-sidebar-side="end"]) > .j-shell__subnav,
+    :where(.j-shell:dir(rtl)[data-sidebar-side="end"] > .j-shell__workspace) > .j-shell__subnav {
+      transform: translateX(calc(-106% - var(--_rail-w)));
+    }
+
+    :where(.j-shell[data-sidebar-open]) > .j-shell__rail,
+    :where(.j-shell[data-sidebar-open] > .j-shell__workspace) > .j-shell__rail {
+      visibility: visible;
+      transform: translateX(0);
+      transition-delay: 0s;
+    }
+    :where(.j-shell[data-sidebar-open]) > .j-shell__subnav,
+    :where(.j-shell[data-sidebar-open] > .j-shell__workspace) > .j-shell__subnav {
+      visibility: visible;
+      transform: translateX(0);
+      box-shadow: var(--j-shadow-lg);
+      transition-delay: 0s;
+    }
+
+    /* Scrim backdrop */
+    :where(.j-shell__backdrop) {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: var(--j-z-overlay);
+      border: 0;
+      padding: 0;
+      background-color: var(--j-overlay);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity var(--j-duration-slow) var(--j-ease-out);
+    }
+    :where(.j-shell[data-sidebar-open] .j-shell__backdrop, .j-shell[data-aside-open] .j-shell__backdrop) {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Mobile drill-down for Split & Three-Pane when data-active-pane="master | detail" is set */
+    :where(.j-shell[data-active-pane="master"] .j-shell__master) {
+      inline-size: 100%;
+      max-block-size: none;
+      flex: 1 1 0%;
+      border-inline-end: 0;
+      border-inline-start: 0;
+      border-block-end: 0;
+    }
+    :where(.j-shell[data-active-pane="master"] .j-shell__detail) {
+      display: none;
+    }
+    :where(.j-shell[data-active-pane="detail"] .j-shell__master) {
+      display: none;
+    }
+    :where(.j-shell[data-active-pane="detail"] .j-shell__detail) {
+      inline-size: 100%;
+      flex: 1 1 0%;
+    }
+  }
+
+  /* Compact Chrome Helper (< 600px) */
+  @container j-shell (width < 600px) {
+    :where(.j-shell__compact-hide) {
+      display: none;
+    }
+  }
+
+  /* Below 580px fallback when data-active-pane is NOT set: stack Master + Detail vertically */
+  @container j-shell (width < 580px) {
+    :where(.j-shell:is([data-layout="split"], [data-layout="three-pane"]):not([data-active-pane]) .j-shell__stage) {
+      flex-direction: column;
+    }
+    :where(.j-shell:is([data-layout="split"], [data-layout="three-pane"]):not([data-active-pane]) .j-shell__master) {
+      inline-size: 100%;
+      max-block-size: 44%;
+      border-inline-end: 0;
+      border-inline-start: 0;
+      border-block-end: 1px solid var(--j-border);
+    }
+  }
+}

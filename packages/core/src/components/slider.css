@@ -1,0 +1,113 @@
+/*
+ * Slider — <input type="range" class="j-slider" style="--j-slider-progress: 0.4">
+ *   --j-slider-progress: 0…1 fraction for the filled track. Set by
+ *   initSliders() (core JS), JSlider (Vue) or Slider (React).
+ *   data-size: sm | md | lg · data-tone · :disabled
+ */
+@layer jenni.components {
+  :where(.j-slider) {
+    --_track-h: 3px;
+    --_thumb: 15px;
+    --_p: var(--j-slider-progress, -1); /* unset = no fill until JS sets it */
+    --_fill: var(--j-tone);
+    --_rest: color-mix(in oklch, var(--j-fg) 12%, var(--j-surface-3));
+    --_stop: calc(var(--_thumb) / 2 + var(--_p) * (100% - var(--_thumb)));
+    --_track-bg: linear-gradient(to right, var(--_fill) var(--_stop), var(--_rest) var(--_stop));
+    --_thumb-bg: light-dark(var(--j-surface-1), oklch(98% 0 0));
+    --_thumb-border: color-mix(in oklch, var(--j-fg) 22%, var(--j-border-strong));
+
+    appearance: none;
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 6rem;
+    block-size: calc(var(--_thumb) + 6px);
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: pan-y;
+
+    &:dir(rtl) { --_track-bg: linear-gradient(to left, var(--_fill) var(--_stop), var(--_rest) var(--_stop)); }
+
+    /* WebKit / Blink */
+    &::-webkit-slider-runnable-track {
+      block-size: var(--_track-h);
+      border-radius: var(--j-radius-full);
+      background: var(--_track-bg);
+    }
+    &::-webkit-slider-thumb {
+      appearance: none;
+      box-sizing: border-box;
+      inline-size: var(--_thumb);
+      block-size: var(--_thumb);
+      margin-block-start: calc((var(--_track-h) - var(--_thumb)) / 2);
+      border: 1px solid var(--_thumb-border);
+      border-radius: var(--j-radius-full);
+      background-color: var(--_thumb-bg);
+      box-shadow: var(--j-shadow-xs);
+      transition:
+        border-color var(--j-duration-fast) var(--j-ease-out),
+        box-shadow var(--j-duration-fast) var(--j-ease-out);
+    }
+
+    /* Firefox */
+    &::-moz-range-track {
+      block-size: var(--_track-h);
+      border-radius: var(--j-radius-full);
+      background: var(--_track-bg);
+    }
+    &::-moz-range-thumb {
+      box-sizing: border-box;
+      inline-size: var(--_thumb);
+      block-size: var(--_thumb);
+      border: 1px solid var(--_thumb-border);
+      border-radius: var(--j-radius-full);
+      background-color: var(--_thumb-bg);
+      box-shadow: var(--j-shadow-xs);
+      transition:
+        border-color var(--j-duration-fast) var(--j-ease-out),
+        box-shadow var(--j-duration-fast) var(--j-ease-out);
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled)::-webkit-slider-thumb {
+        border-color: color-mix(in oklch, var(--j-tone) 68%, var(--j-border-strong));
+      }
+      &:hover:not(:disabled)::-moz-range-thumb {
+        border-color: color-mix(in oklch, var(--j-tone) 68%, var(--j-border-strong));
+      }
+    }
+
+    &:active:not(:disabled)::-webkit-slider-thumb {
+      border-color: var(--j-tone);
+      box-shadow:
+        var(--j-shadow-xs),
+        0 0 0 3px color-mix(in oklch, var(--j-tone) 16%, transparent);
+    }
+    &:active:not(:disabled)::-moz-range-thumb {
+      border-color: var(--j-tone);
+      box-shadow:
+        var(--j-shadow-xs),
+        0 0 0 3px color-mix(in oklch, var(--j-tone) 16%, transparent);
+    }
+
+    &:focus-visible { outline: none; box-shadow: none; }
+    &:focus-visible::-webkit-slider-thumb {
+      border-color: var(--j-tone);
+      box-shadow: var(--j-ring);
+    }
+    &:focus-visible::-moz-range-thumb {
+      border-color: var(--j-tone);
+      box-shadow: var(--j-ring);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+      --_fill: var(--j-fg-subtle);
+    }
+
+    &[data-size="sm"] { --_track-h: 2px; --_thumb: 12px; }
+    &[data-size="lg"] { --_track-h: 4px; --_thumb: 18px; }
+  }
+}

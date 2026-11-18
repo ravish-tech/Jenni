@@ -1,0 +1,1199 @@
+{
+  "generatedAt": "2026-11-18T10:18:35.188Z",
+  "level": "core",
+  "frameworks": [
+    {
+      "id": "jenni",
+      "name": "@jenni/core",
+      "package": "@jenni/core@0.0.1",
+      "paradigm": "Zero-specificity @layer CSS + OKLCH tokens + native <dialog>/[popover] + O(1) delegated JS",
+      "kit": {
+        "css": {
+          "min": 77623,
+          "gzip": 13493,
+          "brotli": 11808
+        },
+        "js": {
+          "min": 14284,
+          "gzip": 4641,
+          "brotli": 4143
+        },
+        "total": {
+          "min": 91907,
+          "gzip": 18134,
+          "brotli": 15951
+        },
+        "componentCount": 12,
+        "gzipPerComponent": 1511
+      },
+      "full": {
+        "css": {
+          "min": 310632,
+          "gzip": 40680,
+          "brotli": 32416
+        },
+        "js": {
+          "min": 136996,
+          "gzip": 36999,
+          "brotli": 31892
+        },
+        "total": {
+          "min": 447628,
+          "gzip": 77679,
+          "brotli": 64308
+        },
+        "componentCount": 63,
+        "gzipPerComponent": 1233
+      },
+      "cssHygiene": {
+        "selectorCount": 2791,
+        "importantCount": 0,
+        "customPropsCount": 284,
+        "hasCascadeLayers": true,
+        "avgSpecificityScore": 11.7,
+        "maxSpecificityScore": 200,
+        "runtimeCssInJs": false
+      },
+      "htmlPayload": {
+        "rawBytes": 111503,
+        "gzipBytes": 2724,
+        "elementCount": 1790,
+        "totalClassTokens": 1755,
+        "avgClassesPerElement": 0.98
+      },
+      "capabilities": {
+        "zeroFouc": true,
+        "a11yKeyboardBehaviors": true,
+        "nativeTopLayerOverlays": true,
+        "liveRuntimeDensityMultiplier": true,
+        "oklchPerceptualTokens": true,
+        "containerQueryGrid": true,
+        "cssSubgridSupport": true,
+        "zeroExternalRuntimeDeps": true
+      }
+    },
+    {
+      "id": "bootstrap",
+      "name": "Bootstrap 5",
+      "package": "bootstrap@5.3.9",
+      "paradigm": "Monolithic SCSS/CSS components + Flexbox negative-margin grid + Popper.js class instances",
+      "kit": {
+        "css": {
+          "min": 228949,
+          "gzip": 30631,
+          "brotli": 22590
+        },
+        "js": {
+          "min": 74703,
+          "gzip": 21498,
+          "brotli": 19200
+        },
+        "total": {
+          "min": 303652,
+          "gzip": 52129,
+          "brotli": 41790
+        },
+        "componentCount": 12,
+        "gzipPerComponent": 4344
+      },
+      "full": {
+        "css": {
+          "min": 228949,
+          "gzip": 30631,
+          "brotli": 22590
+        },
+        "js": {
+          "min": 80641,
+          "gzip": 23585,
+          "brotli": 21381
+        },
+        "total": {
+          "min": 309590,
+          "gzip": 54216,
+          "brotli": 43971
+        },
+        "componentCount": 24,
+        "gzipPerComponent": 2259
+      },
+      "cssHygiene": {
+        "selectorCount": 2965,
+        "importantCount": 1713,
+        "customPropsCount": 449,
+        "hasCascadeLayers": false,
+        "avgSpecificityScore": 13.8,
+        "maxSpecificityScore": 70,
+        "runtimeCssInJs": false
+      },
+      "htmlPayload": {
+        "rawBytes": 127686,
+        "gzipBytes": 3005,
+        "elementCount": 1992,
+        "totalClassTokens": 4948,
+        "avgClassesPerElement": 2.48
+      },
+      "capabilities": {
+        "zeroFouc": true,
+        "a11yKeyboardBehaviors": true,
+        "nativeTopLayerOverlays": false,
+        "liveRuntimeDensityMultiplier": false,
+        "oklchPerceptualTokens": false,
+        "containerQueryGrid": false,
+        "cssSubgridSupport": false,
+        "zeroExternalRuntimeDeps": false
+      }
+    },
+    {
+      "id": "tailwind",
+      "name": "Tailwind v4 + DaisyUI 5",
+      "package": "tailwindcss@4.3.5 + daisyui@5.8.0",
+      "paradigm": "JIT utility classes + CSS-only component classes (no built-in JS ARIA/focus/anchor behaviors)",
+      "kit": {
+        "css": {
+          "min": 101748,
+          "gzip": 18412,
+          "brotli": 15848
+        },
+        "js": {
+          "min": 0,
+          "gzip": 0,
+          "brotli": 0
+        },
+        "total": {
+          "min": 101748,
+          "gzip": 18412,
+          "brotli": 15848
+        },
+        "componentCount": 12,
+        "gzipPerComponent": 1534
+      },
+      "full": {
+        "css": {
+          "min": 1195862,
+          "gzip": 69894,
+          "brotli": 44570
+        },
+        "js": {
+          "min": 0,
+          "gzip": 0,
+          "brotli": 0
+        },
+        "total": {
+          "min": 1195862,
+          "gzip": 69894,
+          "brotli": 44570
+        },
+        "componentCount": 61,
+        "gzipPerComponent": 1146
+      },
+      "cssHygiene": {
+        "selectorCount": 734,
+        "importantCount": 2,
+        "customPropsCount": 206,
+        "hasCascadeLayers": true,
+        "avgSpecificityScore": 14,
+        "maxSpecificityScore": 80,
+        "runtimeCssInJs": false
+      },
+      "htmlPayload": {
+        "rawBytes": 126499,
+        "gzipBytes": 2969,
+        "elementCount": 1761,
+        "totalClassTokens": 6653,
+        "avgClassesPerElement": 3.78
+      },
+      "capabilities": {
+        "zeroFouc": true,
+        "a11yKeyboardBehaviors": false,
+        "nativeTopLayerOverlays": true,
+        "liveRuntimeDensityMultiplier": false,
+        "oklchPerceptualTokens": true,
+        "containerQueryGrid": false,
+        "cssSubgridSupport": true,
+        "zeroExternalRuntimeDeps": true
+      }
+    },
+    {
+      "id": "shoelace",
+      "name": "Shoelace (Web Components)",
+      "package": "@shoelace-style/shoelace@2.20.1",
+      "paradigm": "Lit CustomElements + per-element ShadowRoot DOM + Floating UI JS positioning",
+      "kit": {
+        "css": {
+          "min": 29552,
+          "gzip": 4835,
+          "brotli": 3407
+        },
+        "js": {
+          "min": 236280,
+          "gzip": 56595,
+          "brotli": 45366
+        },
+        "total": {
+          "min": 265832,
+          "gzip": 61430,
+          "brotli": 48773
+        },
+        "componentCount": 12,
+        "gzipPerComponent": 5119
+      },
+      "full": {
+        "css": {
+          "min": 29552,
+          "gzip": 4835,
+          "brotli": 3407
+        },
+        "js": {
+          "min": 474661,
+          "gzip": 108869,
+          "brotli": 84019
+        },
+        "total": {
+          "min": 504213,
+          "gzip": 113704,
+          "brotli": 87426
+        },
+        "componentCount": 52,
+        "gzipPerComponent": 2187
+      },
+      "cssHygiene": {
+        "selectorCount": 14,
+        "importantCount": 8,
+        "customPropsCount": 390,
+        "hasCascadeLayers": false,
+        "avgSpecificityScore": 10,
+        "maxSpecificityScore": 10,
+        "runtimeCssInJs": false
+      },
+      "htmlPayload": {
+        "rawBytes": 108437,
+        "gzipBytes": 2535,
+        "elementCount": 1720,
+        "totalClassTokens": 0,
+        "avgClassesPerElement": 0
+      },
+      "capabilities": {
+        "zeroFouc": false,
+        "a11yKeyboardBehaviors": true,
+        "nativeTopLayerOverlays": false,
+        "liveRuntimeDensityMultiplier": false,
+        "oklchPerceptualTokens": false,
+        "containerQueryGrid": false,
+        "cssSubgridSupport": false,
+        "zeroExternalRuntimeDeps": false
+      }
+    }
+  ],
+  "levels": {
+    "core": {
+      "id": "core",
+      "title": "Level 1 · Base / Core",
+      "runtimeBase": null,
+      "frameworks": [
+        {
+          "id": "jenni",
+          "name": "@jenni/core",
+          "package": "@jenni/core@0.0.1",
+          "paradigm": "Zero-specificity @layer CSS + OKLCH tokens + native <dialog>/[popover] + O(1) delegated JS",
+          "kit": {
+            "css": {
+              "min": 77623,
+              "gzip": 13493,
+              "brotli": 11808
+            },
+            "js": {
+              "min": 14284,
+              "gzip": 4641,
+              "brotli": 4143
+            },
+            "total": {
+              "min": 91907,
+              "gzip": 18134,
+              "brotli": 15951
+            },
+            "componentCount": 12,
+            "gzipPerComponent": 1511
+          },
+          "full": {
+            "css": {
+              "min": 310632,
+              "gzip": 40680,
+              "brotli": 32416
+            },
+            "js": {
+              "min": 136996,
+              "gzip": 36999,
+              "brotli": 31892
+            },
+            "total": {
+              "min": 447628,
+              "gzip": 77679,
+              "brotli": 64308
+            },
+            "componentCount": 63,
+            "gzipPerComponent": 1233
+          },
+          "cssHygiene": {
+            "selectorCount": 2791,
+            "importantCount": 0,
+            "customPropsCount": 284,
+            "hasCascadeLayers": true,
+            "avgSpecificityScore": 11.7,
+            "maxSpecificityScore": 200,
+            "runtimeCssInJs": false
+          },
+          "htmlPayload": {
+            "rawBytes": 111503,
+            "gzipBytes": 2724,
+            "elementCount": 1790,
+            "totalClassTokens": 1755,
+            "avgClassesPerElement": 0.98
+          },
+          "capabilities": {
+            "zeroFouc": true,
+            "a11yKeyboardBehaviors": true,
+            "nativeTopLayerOverlays": true,
+            "liveRuntimeDensityMultiplier": true,
+            "oklchPerceptualTokens": true,
+            "containerQueryGrid": true,
+            "cssSubgridSupport": true,
+            "zeroExternalRuntimeDeps": true
+          }
+        },
+        {
+          "id": "bootstrap",
+          "name": "Bootstrap 5",
+          "package": "bootstrap@5.3.9",
+          "paradigm": "Monolithic SCSS/CSS components + Flexbox negative-margin grid + Popper.js class instances",
+          "kit": {
+            "css": {
+              "min": 228949,
+              "gzip": 30631,
+              "brotli": 22590
+            },
+            "js": {
+              "min": 74703,
+              "gzip": 21498,
+              "brotli": 19200
+            },
+            "total": {
+              "min": 303652,
+              "gzip": 52129,
+              "brotli": 41790
+            },
+            "componentCount": 12,
+            "gzipPerComponent": 4344
+          },
+          "full": {
+            "css": {
+              "min": 228949,
+              "gzip": 30631,
+              "brotli": 22590
+            },
+            "js": {
+              "min": 80641,
+              "gzip": 23585,
+              "brotli": 21381
+            },
+            "total": {
+              "min": 309590,
+              "gzip": 54216,
+              "brotli": 43971
+            },
+            "componentCount": 24,
+            "gzipPerComponent": 2259
+          },
+          "cssHygiene": {
+            "selectorCount": 2965,
+            "importantCount": 1713,
+            "customPropsCount": 449,
+            "hasCascadeLayers": false,
+            "avgSpecificityScore": 13.8,
+            "maxSpecificityScore": 70,
+            "runtimeCssInJs": false
+          },
+          "htmlPayload": {
+            "rawBytes": 127686,
+            "gzipBytes": 3005,
+            "elementCount": 1992,
+            "totalClassTokens": 4948,
+            "avgClassesPerElement": 2.48
+          },
+          "capabilities": {
+            "zeroFouc": true,
+            "a11yKeyboardBehaviors": true,
+            "nativeTopLayerOverlays": false,
+            "liveRuntimeDensityMultiplier": false,
+            "oklchPerceptualTokens": false,
+            "containerQueryGrid": false,
+            "cssSubgridSupport": false,
+            "zeroExternalRuntimeDeps": false
+          }
+        },
+        {
+          "id": "tailwind",
+          "name": "Tailwind v4 + DaisyUI 5",
+          "package": "tailwindcss@4.3.5 + daisyui@5.8.0",
+          "paradigm": "JIT utility classes + CSS-only component classes (no built-in JS ARIA/focus/anchor behaviors)",
+          "kit": {
+            "css": {
+              "min": 101748,
+              "gzip": 18412,
+              "brotli": 15848
+            },
+            "js": {
+              "min": 0,
+              "gzip": 0,
+              "brotli": 0
+            },
+            "total": {
+              "min": 101748,
+              "gzip": 18412,
+              "brotli": 15848
+            },
+            "componentCount": 12,
+            "gzipPerComponent": 1534
+          },
+          "full": {
+            "css": {
+              "min": 1195862,
+              "gzip": 69894,
+              "brotli": 44570
+            },
+            "js": {
+              "min": 0,
+              "gzip": 0,
+              "brotli": 0
+            },
+            "total": {
+              "min": 1195862,
+              "gzip": 69894,
+              "brotli": 44570
+            },
+            "componentCount": 61,
+            "gzipPerComponent": 1146
+          },
+          "cssHygiene": {
+            "selectorCount": 734,
+            "importantCount": 2,
+            "customPropsCount": 206,
+            "hasCascadeLayers": true,
+            "avgSpecificityScore": 14,
+            "maxSpecificityScore": 80,
+            "runtimeCssInJs": false
+          },
+          "htmlPayload": {
+            "rawBytes": 126499,
+            "gzipBytes": 2969,
+            "elementCount": 1761,
+            "totalClassTokens": 6653,
+            "avgClassesPerElement": 3.78
+          },
+          "capabilities": {
+            "zeroFouc": true,
+            "a11yKeyboardBehaviors": false,
+            "nativeTopLayerOverlays": true,
+            "liveRuntimeDensityMultiplier": false,
+            "oklchPerceptualTokens": true,
+            "containerQueryGrid": false,
+            "cssSubgridSupport": true,
+            "zeroExternalRuntimeDeps": true
+          }
+        },
+        {
+          "id": "shoelace",
+          "name": "Shoelace (Web Components)",
+          "package": "@shoelace-style/shoelace@2.20.1",
+          "paradigm": "Lit CustomElements + per-element ShadowRoot DOM + Floating UI JS positioning",
+          "kit": {
+            "css": {
+              "min": 29552,
+              "gzip": 4835,
+              "brotli": 3407
+            },
+            "js": {
+              "min": 236280,
+              "gzip": 56595,
+              "brotli": 45366
+            },
+            "total": {
+              "min": 265832,
+              "gzip": 61430,
+              "brotli": 48773
+            },
+            "componentCount": 12,
+            "gzipPerComponent": 5119
+          },
+          "full": {
+            "css": {
+              "min": 29552,
+              "gzip": 4835,
+              "brotli": 3407
+            },
+            "js": {
+              "min": 474661,
+              "gzip": 108869,
+              "brotli": 84019
+            },
+            "total": {
+              "min": 504213,
+              "gzip": 113704,
+              "brotli": 87426
+            },
+            "componentCount": 52,
+            "gzipPerComponent": 2187
+          },
+          "cssHygiene": {
+            "selectorCount": 14,
+            "importantCount": 8,
+            "customPropsCount": 390,
+            "hasCascadeLayers": false,
+            "avgSpecificityScore": 10,
+            "maxSpecificityScore": 10,
+            "runtimeCssInJs": false
+          },
+          "htmlPayload": {
+            "rawBytes": 108437,
+            "gzipBytes": 2535,
+            "elementCount": 1720,
+            "totalClassTokens": 0,
+            "avgClassesPerElement": 0
+          },
+          "capabilities": {
+            "zeroFouc": false,
+            "a11yKeyboardBehaviors": true,
+            "nativeTopLayerOverlays": false,
+            "liveRuntimeDensityMultiplier": false,
+            "oklchPerceptualTokens": false,
+            "containerQueryGrid": false,
+            "cssSubgridSupport": false,
+            "zeroExternalRuntimeDeps": false
+          }
+        }
+      ]
+    },
+    "vue": {
+      "id": "vue",
+      "title": "Level 2 · Vue 3",
+      "runtimeBase": {
+        "package": "vue@3.5.45",
+        "min": 86322,
+        "gzip": 27036,
+        "brotli": 24338
+      },
+      "frameworks": [
+        {
+          "id": "jenni",
+          "name": "@jenni/vue",
+          "package": "@jenni/vue@0.0.1",
+          "paradigm": "Zero-<style> Vue 3 SFC primitives over @jenni/core @layer CSS + native <dialog>/[popover]",
+          "kit": {
+            "css": {
+              "min": 77623,
+              "gzip": 13493,
+              "brotli": 11808
+            },
+            "js": {
+              "min": 26081,
+              "gzip": 7140,
+              "brotli": 6332
+            },
+            "total": {
+              "min": 103704,
+              "gzip": 20633,
+              "brotli": 18140
+            },
+            "componentCount": 12,
+            "gzipPerComponent": 1719,
+            "withRuntime": {
+              "min": 199877,
+              "gzip": 49892,
+              "brotli": 44545
+            }
+          },
+          "full": {
+            "css": {
+              "min": 310632,
+              "gzip": 40680,
+              "brotli": 32416
+            },
+            "js": {
+              "min": 332685,
+              "gzip": 74060,
+              "brotli": 60119
+            },
+            "total": {
+              "min": 643317,
+              "gzip": 114740,
+              "brotli": 92535
+            },
+            "componentCount": 96,
+            "gzipPerComponent": 1195
+          },
+          "cssHygiene": {
+            "selectorCount": 2791,
+            "importantCount": 0,
+            "customPropsCount": 284,
+            "hasCascadeLayers": true,
+            "avgSpecificityScore": 11.7,
+            "maxSpecificityScore": 200,
+            "runtimeCssInJs": false
+          },
+          "htmlPayload": {
+            "rawBytes": 156520,
+            "gzipBytes": 1874,
+            "elementCount": 1923,
+            "totalClassTokens": 1898,
+            "avgClassesPerElement": 0.99
+          },
+          "capabilities": {
+            "zeroFouc": true,
+            "a11yKeyboardBehaviors": true,
+            "nativeTopLayerOverlays": true,
+            "liveRuntimeDensityMultiplier": true,
+            "oklchPerceptualTokens": true,
+            "containerQueryGrid": true,
+            "cssSubgridSupport": true,
+            "zeroExternalRuntimeDeps": true
+          }
+        },
+        {
+          "id": "vuetify",
+          "name": "Vuetify 3",
+          "package": "vuetify@3.13.7",
+          "paradigm": "Material Design 3 SFC framework + global VApp provider + Sass/CSS layers + ripple/overlay wrappers",
+          "kit": {
+            "css": {
+              "min": 358216,
+              "gzip": 43929,
+              "brotli": 24903
+            },
+            "js": {
+              "min": 299838,
+              "gzip": 81900,
+              "brotli": 68309
+            },
+            "total": {
+              "min": 658054,
+              "gzip": 125829,
+              "brotli": 93212
+            },
+            "componentCount": 12,
+            "gzipPerComponent": 10486,
+            "withRuntime": {
+              "min": 768882,
+              "gzip": 158197,
+              "brotli": 121357
+            }
+          },
+          "full": {
+            "css": {
+              "min": 509453,
+              "gzip": 64000,
+              "brotli": 39982
+            },
+            "js": {
+              "min": 704648,
+              "gzip": 184974,
+              "brotli": 143754
+            },
+            "total": {
+              "min": 1214101,
+              "gzip": 248974,
+              "brotli": 183736
+            },
+            "componentCount": 105,
+            "gzipPerComponent": 2371
+          },
+          "cssHygiene": {
+            "selectorCount": 7876,
+            "importantCount": 5937,
+            "customPropsCount": 83,
+            "hasCascadeLayers": false,
+            "avgSpecificityScore": 14.4,
+            "maxSpecificityScore": 70,
+            "runtimeCssInJs": false
+          },
+          "htmlPayload": {
+            "rawBytes": 391624,
+            "gzipBytes": 4600,
+            "elementCount": 4963,
+            "totalClassTokens": 9974,
+            "avgClassesPerElement": 2.01
+          },
+          "capabilities": {
+            "zeroFouc": true,
+            "a11yKeyboardBehaviors": true,
+            "nativeTopLayerOverlays": false,
+            "liveRuntimeDensityMultiplier": false,
+            "oklchPerceptualTokens": false,
+            "containerQueryGrid": false,
+            "cssSubgridSupport": false,
+            "zeroExternalRuntimeDeps": true
+          }
+        },
+        {
+          "id": "primevue",
+          "name": "PrimeVue 4 (Aura)",
+          "package": "primevue@4.5.5 + @primeuix/themes@2.0.3",
+          "paradigm": "JS design-token preset (@primeuix/styled) injecting <style> tags into <head> at runtime",
+          "kit": {
+            "css": {
+              "min": 0,
+              "gzip": 0,
+              "brotli": 0
+            },
+            "js": {
+              "min": 478558,
+              "gzip": 87224,
+              "brotli": 65597
+            },
+            "total": {
+              "min": 478558,
+              "gzip": 87224,
+              "brotli": 65597
+            },
+            "componentCount": 12,
+            "gzipPerComponent": 7269,
+            "withRuntime": {
+              "min": 582949,
+              "gzip": 118958,
+              "brotli": 93721
+            }
+          },
+          "full": {
+            "css": {
+              "min": 0,
+              "gzip": 0,
+              "brotli": 0
+            },
+            "js": {
+              "min": 2260360,
+              "gzip": 422461,
+              "brotli": 254853
+            },
+            "total": {
+              "min": 2260360,
+              "gzip": 422461,
+              "brotli": 254853
+            },
+            "componentCount": 95,
+            "gzipPerComponent": 4447
+          },
+          "cssHygiene": {
+            "selectorCount": 0,
+            "importantCount": 0,
+            "customPropsCount": 0,
+            "hasCascadeLayers": false,
+            "avgSpecificityScore": 10,
+            "maxSpecificityScore": 20,
+            "runtimeCssInJs": true
+          },
+          "htmlPayload": {
+            "rawBytes": 304229,
+            "gzipBytes": 5352,
+            "elementCount": 2947,
+            "totalClassTokens": 4068,
+            "avgClassesPerElement": 1.38
+          },
+          "capabilities": {
+            "zeroFouc": false,
+            "a11yKeyboardBehaviors": true,
+            "nativeTopLayerOverlays": false,
+            "liveRuntimeDensityMultiplier": false,
+            "oklchPerceptualTokens": false,
+            "containerQueryGrid": false,
+            "cssSubgridSupport": false,
+            "zeroExternalRuntimeDeps": false
+          }
+        },
+        {
+          "id": "element",
+          "name": "Element Plus",
+          "package": "element-plus@2.14.8",
+          "paradigm": "BEM theme-chalk CSS variables + Floating UI / Popper portals + lodash/async-validator deps",
+          "kit": {
+            "css": {
+              "min": 98343,
+              "gzip": 13754,
+              "brotli": 11917
+            },
+            "js": {
+              "min": 300905,
+              "gzip": 85556,
+              "brotli": 73128
+            },
+            "total": {
+              "min": 399248,
+              "gzip": 99310,
+              "brotli": 85045
+            },
+            "componentCount": 12,
+            "gzipPerComponent": 8276,
+            "withRuntime": {
+              "min": 508523,
+              "gzip": 132124,
+              "brotli": 113344
+            }
+          },
+          "full": {
+            "css": {
+              "min": 362172,
+              "gzip": 47943,
+              "brotli": 37302
+            },
+            "js": {
+              "min": 1233476,
+              "gzip": 332355,
+              "brotli": 262666
+            },
+            "total": {
+              "min": 1595648,
+              "gzip": 380298,
+              "brotli": 299968
+            },
+            "componentCount": 78,
+            "gzipPerComponent": 4876
+          },
+          "cssHygiene": {
+            "selectorCount": 3795,
+            "importantCount": 39,
+            "customPropsCount": 586,
+            "hasCascadeLayers": false,
+            "avgSpecificityScore": 21.5,
+            "maxSpecificityScore": 70,
+            "runtimeCssInJs": false
+          },
+          "htmlPayload": {
+            "rawBytes": 191050,
+            "gzipBytes": 2247,
+            "elementCount": 2947,
+            "totalClassTokens": 3461,
+            "avgClassesPerElement": 1.17
+          },
+          "capabilities": {
+            "zeroFouc": true,
+            "a11yKeyboardBehaviors": true,
+            "nativeTopLayerOverlays": false,
+            "liveRuntimeDensityMultiplier": false,
+            "oklchPerceptualTokens": false,
+            "containerQueryGrid": false,
+            "cssSubgridSupport": false,
+            "zeroExternalRuntimeDeps": false
+          }
+        }
+      ]
+    },
+    "react": {
+      "id": "react",
+      "title": "Level 3 · React 19",
+      "runtimeBase": {
+        "package": "react@19.3.1 + react-dom@19.3.1",
+        "min": 297728,
+        "gzip": 75806,
+        "brotli": 63859
+      },
+      "frameworks": [
+        {
+          "id": "jenni",
+          "name": "@jenni/react",
+          "package": "@jenni/react@0.0.1",
+          "paradigm": "React 19 native-ref TSX primitives over @jenni/core @layer CSS + zero CSS-in-JS",
+          "kit": {
+            "css": {
+              "min": 77623,
+              "gzip": 13493,
+              "brotli": 11808
+            },
+            "js": {
+              "min": 39521,
+              "gzip": 10364,
+              "brotli": 9099
+            },
+            "total": {
+              "min": 117144,
+              "gzip": 23857,
+              "brotli": 20907
+            },
+            "componentCount": 12,
+            "gzipPerComponent": 1988,
+            "withRuntime": {
+              "min": 416694,
+              "gzip": 98987,
+              "brotli": 83955
+            }
+          },
+          "full": {
+            "css": {
+              "min": 310632,
+              "gzip": 40680,
+              "brotli": 32416
+            },
+            "js": {
+              "min": 279692,
+              "gzip": 66607,
+              "brotli": 54114
+            },
+            "total": {
+              "min": 590324,
+              "gzip": 107287,
+              "brotli": 86530
+            },
+            "componentCount": 66,
+            "gzipPerComponent": 1626
+          },
+          "cssHygiene": {
+            "selectorCount": 2791,
+            "importantCount": 0,
+            "customPropsCount": 284,
+            "hasCascadeLayers": true,
+            "avgSpecificityScore": 11.7,
+            "maxSpecificityScore": 200,
+            "runtimeCssInJs": false
+          },
+          "htmlPayload": {
+            "rawBytes": 125475,
+            "gzipBytes": 1777,
+            "elementCount": 1923,
+            "totalClassTokens": 1898,
+            "avgClassesPerElement": 0.99
+          },
+          "capabilities": {
+            "zeroFouc": true,
+            "a11yKeyboardBehaviors": true,
+            "nativeTopLayerOverlays": true,
+            "liveRuntimeDensityMultiplier": true,
+            "oklchPerceptualTokens": true,
+            "containerQueryGrid": true,
+            "cssSubgridSupport": true,
+            "zeroExternalRuntimeDeps": true
+          }
+        },
+        {
+          "id": "mui",
+          "name": "MUI (Material UI)",
+          "package": "@mui/material@9.5.0 + @emotion/react@11.14.0",
+          "paradigm": "Emotion CSS-in-JS runtime style serialization + React TransitionGroup / Portal wrappers",
+          "kit": {
+            "css": {
+              "min": 0,
+              "gzip": 0,
+              "brotli": 0
+            },
+            "js": {
+              "min": 360706,
+              "gzip": 96271,
+              "brotli": 79823
+            },
+            "total": {
+              "min": 360706,
+              "gzip": 96271,
+              "brotli": 79823
+            },
+            "componentCount": 12,
+            "gzipPerComponent": 8023,
+            "withRuntime": {
+              "min": 660665,
+              "gzip": 171406,
+              "brotli": 141478
+            }
+          },
+          "full": {
+            "css": {
+              "min": 0,
+              "gzip": 0,
+              "brotli": 0
+            },
+            "js": {
+              "min": 740656,
+              "gzip": 188075,
+              "brotli": 147876
+            },
+            "total": {
+              "min": 740656,
+              "gzip": 188075,
+              "brotli": 147876
+            },
+            "componentCount": 72,
+            "gzipPerComponent": 2612
+          },
+          "cssHygiene": {
+            "selectorCount": 0,
+            "importantCount": 0,
+            "customPropsCount": 0,
+            "hasCascadeLayers": false,
+            "avgSpecificityScore": 10,
+            "maxSpecificityScore": 20,
+            "runtimeCssInJs": true
+          },
+          "htmlPayload": {
+            "rawBytes": 3670904,
+            "gzipBytes": 32703,
+            "elementCount": 2747,
+            "totalClassTokens": 8209,
+            "avgClassesPerElement": 2.99
+          },
+          "capabilities": {
+            "zeroFouc": false,
+            "a11yKeyboardBehaviors": true,
+            "nativeTopLayerOverlays": false,
+            "liveRuntimeDensityMultiplier": false,
+            "oklchPerceptualTokens": false,
+            "containerQueryGrid": false,
+            "cssSubgridSupport": false,
+            "zeroExternalRuntimeDeps": false
+          }
+        },
+        {
+          "id": "antd",
+          "name": "Ant Design",
+          "package": "antd@6.7.0",
+          "paradigm": "@ant-design/cssinjs runtime token hashing + rc-* component suite + JS wave/motion",
+          "kit": {
+            "css": {
+              "min": 0,
+              "gzip": 0,
+              "brotli": 0
+            },
+            "js": {
+              "min": 704289,
+              "gzip": 198257,
+              "brotli": 159845
+            },
+            "total": {
+              "min": 704289,
+              "gzip": 198257,
+              "brotli": 159845
+            },
+            "componentCount": 12,
+            "gzipPerComponent": 16521,
+            "withRuntime": {
+              "min": 1004453,
+              "gzip": 272513,
+              "brotli": 221049
+            }
+          },
+          "full": {
+            "css": {
+              "min": 0,
+              "gzip": 0,
+              "brotli": 0
+            },
+            "js": {
+              "min": 1926174,
+              "gzip": 531622,
+              "brotli": 409080
+            },
+            "total": {
+              "min": 1926174,
+              "gzip": 531622,
+              "brotli": 409080
+            },
+            "componentCount": 68,
+            "gzipPerComponent": 7818
+          },
+          "cssHygiene": {
+            "selectorCount": 0,
+            "importantCount": 0,
+            "customPropsCount": 0,
+            "hasCascadeLayers": false,
+            "avgSpecificityScore": 10,
+            "maxSpecificityScore": 20,
+            "runtimeCssInJs": true
+          },
+          "htmlPayload": {
+            "rawBytes": 170238,
+            "gzipBytes": 2062,
+            "elementCount": 2923,
+            "totalClassTokens": 5911,
+            "avgClassesPerElement": 2.02
+          },
+          "capabilities": {
+            "zeroFouc": false,
+            "a11yKeyboardBehaviors": true,
+            "nativeTopLayerOverlays": false,
+            "liveRuntimeDensityMultiplier": false,
+            "oklchPerceptualTokens": false,
+            "containerQueryGrid": false,
+            "cssSubgridSupport": false,
+            "zeroExternalRuntimeDeps": false
+          }
+        },
+        {
+          "id": "radix",
+          "name": "Radix Themes",
+          "package": "@radix-ui/themes@3.3.0",
+          "paradigm": "Radix UI Primitives + 30-scale token CSS + Floating UI React Portals",
+          "kit": {
+            "css": {
+              "min": 596995,
+              "gzip": 57736,
+              "brotli": 34868
+            },
+            "js": {
+              "min": 209508,
+              "gzip": 55372,
+              "brotli": 46829
+            },
+            "total": {
+              "min": 806503,
+              "gzip": 113108,
+              "brotli": 81697
+            },
+            "componentCount": 12,
+            "gzipPerComponent": 9426,
+            "withRuntime": {
+              "min": 1105704,
+              "gzip": 188018,
+              "brotli": 143740
+            }
+          },
+          "full": {
+            "css": {
+              "min": 683489,
+              "gzip": 80356,
+              "brotli": 49236
+            },
+            "js": {
+              "min": 373607,
+              "gzip": 89208,
+              "brotli": 71896
+            },
+            "total": {
+              "min": 1057096,
+              "gzip": 169564,
+              "brotli": 121132
+            },
+            "componentCount": 48,
+            "gzipPerComponent": 3533
+          },
+          "cssHygiene": {
+            "selectorCount": 6347,
+            "importantCount": 16,
+            "customPropsCount": 1245,
+            "hasCascadeLayers": false,
+            "avgSpecificityScore": 15.4,
+            "maxSpecificityScore": 40,
+            "runtimeCssInJs": false
+          },
+          "htmlPayload": {
+            "rawBytes": 174220,
+            "gzipBytes": 2318,
+            "elementCount": 2076,
+            "totalClassTokens": 4623,
+            "avgClassesPerElement": 2.23
+          },
+          "capabilities": {
+            "zeroFouc": true,
+            "a11yKeyboardBehaviors": true,
+            "nativeTopLayerOverlays": false,
+            "liveRuntimeDensityMultiplier": false,
+            "oklchPerceptualTokens": true,
+            "containerQueryGrid": false,
+            "cssSubgridSupport": false,
+            "zeroExternalRuntimeDeps": false
+          }
+        }
+      ]
+    }
+  }
+}

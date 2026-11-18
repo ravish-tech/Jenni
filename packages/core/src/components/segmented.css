@@ -1,0 +1,185 @@
+/*
+ * Segmented Control — <div class="j-segmented" role="radiogroup">
+ *   <button type="button" class="j-segmented__item" role="radio" aria-checked="true">Day</button>
+ *   <button type="button" class="j-segmented__item" role="radio" aria-checked="false">Week</button>
+ * </div>
+ * Options:
+ *   data-size:       sm | md (default) | lg
+ *   data-tone:       accent | neutral | danger | success | warning | info
+ *   data-full-width  stretch items equally across container width
+ * Gliding .j-segmented__indicator moves at 300ms var(--j-ease-emphasized) (zero bounce).
+ * Without JS, [aria-checked="true"] / [aria-selected="true"] renders a static elevated capsule.
+ * Public props: --j-segmented-radius
+ */
+@layer jenni.components {
+  :where(.j-segmented) {
+    --_h: var(--j-control-md);
+    --_pad: 2px;
+    --_px: var(--j-space-3);
+    --_fs: var(--j-text-sm);
+    --_icon: 15px;
+    --_radius: var(--j-segmented-radius, var(--j-radius-md));
+    --_item-radius: calc(var(--_radius) - var(--_pad));
+    --_pill-bg: light-dark(var(--j-surface-1), var(--j-surface-3));
+    --_pill-border: light-dark(
+      color-mix(in oklch, var(--j-border-strong) 65%, var(--j-border)),
+      var(--j-border-strong)
+    );
+
+    position: relative;
+    isolation: isolate;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: stretch;
+    block-size: var(--_h);
+    max-inline-size: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    padding: var(--_pad);
+    border-radius: var(--_radius);
+    background-color: var(--j-surface-2);
+    box-shadow: inset 0 0 0 1px var(--j-border);
+    vertical-align: middle;
+    user-select: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &[data-size="sm"] {
+      --_h: max(22px, var(--j-control-sm));
+      --_pad: min(2px, calc(var(--j-space-1) * 0.5));
+      --_px: calc(var(--j-space-2) + 2px);
+      --_fs: var(--j-text-xs);
+      --_icon: 14px;
+      --_radius: var(--j-segmented-radius, var(--j-radius-sm));
+    }
+
+    &[data-size="lg"] {
+      --_h: var(--j-control-lg);
+      --_px: var(--j-space-4);
+      --_fs: var(--j-text-md);
+      --_icon: 16px;
+      --_radius: var(--j-segmented-radius, var(--j-radius-lg));
+    }
+
+    &[data-full-width] {
+      display: flex;
+      inline-size: 100%;
+
+      & > :where(.j-segmented__item) {
+        flex: 1 1 0;
+        min-inline-size: 0;
+      }
+    }
+
+    &[aria-disabled="true"] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  :where(.j-segmented__item) {
+    appearance: none;
+    position: relative;
+    z-index: 1;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-gap-inline);
+    min-block-size: 18px;
+    padding-inline: var(--_px);
+    border: 0;
+    border-radius: var(--_item-radius);
+    background: transparent;
+    color: var(--j-fg-muted);
+    font-family: inherit;
+    font-size: var(--_fs);
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    letter-spacing: var(--j-tracking-tight);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition:
+      color var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out),
+      opacity var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: min(var(--_icon), calc(var(--_h) - 8px));
+      block-size: min(var(--_icon), calc(var(--_h) - 8px));
+      flex-shrink: 0;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled="true"], [aria-checked="true"], [aria-selected="true"]) {
+        color: var(--j-fg);
+      }
+    }
+
+    &:is([aria-checked="true"], [aria-selected="true"]) {
+      color: var(--j-fg);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Optional explicit tone tints active label subtly while preserving architectural calm. */
+  :where(.j-segmented[data-tone]:not([data-tone="neutral"])) > :where(.j-segmented__item:is([aria-checked="true"], [aria-selected="true"])) {
+    color: var(--j-tone-soft-fg);
+  }
+
+  /* Gliding indicator driven by --_ind-x / --_ind-y / --_ind-w / --_ind-h + FLIP translate/scale. */
+  :where(.j-segmented__indicator) {
+    position: absolute;
+    z-index: 0;
+    inset-inline-start: var(--_ind-x, 0px);
+    inset-block-start: var(--_ind-y, 0px);
+    inline-size: var(--_ind-w, 0px);
+    block-size: var(--_ind-h, 0px);
+    box-sizing: border-box;
+    border: 1px solid var(--_pill-border);
+    border-radius: var(--_item-radius);
+    background-color: var(--_pill-bg);
+    box-shadow: var(--j-shadow-xs), var(--j-inset-highlight);
+    pointer-events: none;
+    transform-origin: 0 0;
+    transition:
+      translate var(--j-duration-slow) var(--j-ease-emphasized),
+      scale var(--j-duration-slow) var(--j-ease-emphasized),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  :where(.j-segmented[data-tone]:not([data-tone="neutral"])) > :where(.j-segmented__indicator) {
+    border-color: color-mix(in oklch, var(--j-tone) 36%, var(--_pill-border));
+  }
+
+  :where(.j-segmented:not([data-indicator])) > :where(.j-segmented__indicator) {
+    display: none;
+  }
+
+  /* Graceful static fallback before JS runs. */
+  :where(.j-segmented:not([data-indicator])) > :where(.j-segmented__item:is([aria-checked="true"], [aria-selected="true"])) {
+    background-color: var(--_pill-bg);
+    box-shadow:
+      inset 0 0 0 1px var(--_pill-border),
+      var(--j-shadow-xs),
+      var(--j-inset-highlight);
+  }
+}

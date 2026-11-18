@@ -1,0 +1,61 @@
+/*
+ * Jenni — Tooltip.
+ *   <button data-j-tooltip="tip-1">…</button>
+ *   <div class="j-tooltip" id="tip-1" popover="manual" role="tooltip" data-side="top" data-arrow>
+ *     Copy link <kbd class="j-tooltip__kbd">⌘</kbd><kbd class="j-tooltip__kbd">C</kbd>
+ *   </div>
+ * Inverted surface in light mode, raised surface in dark mode.
+ * Positioning, arrow and motion: floating.css. Behavior: behaviors/tooltip.js.
+ */
+@layer jenni.components {
+  :where(.j-tooltip) {
+    --_bg: light-dark(var(--j-fg), var(--j-surface-3));
+    --_border: light-dark(var(--j-fg), var(--j-border-strong));
+    --_slide: 2px;
+    --_dur: var(--j-duration-fast);
+    --_from: 0 var(--_slide);
+    transform-origin: bottom center;
+
+    position-area: block-start;
+    margin: 0;
+    margin-block-end: var(--_offset);
+
+    display: none;
+    align-items: center;
+    gap: var(--j-gap-inline);
+    max-width: min(var(--j-tooltip-max-width, 18rem), 100vw - 16px);
+    padding: var(--j-space-1) var(--j-space-2);
+    border-radius: var(--j-radius-sm);
+    color: light-dark(var(--j-bg), var(--j-fg));
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+    line-height: 1.45;
+    text-wrap: balance;
+    box-shadow: var(--j-shadow-sm), var(--j-inset-highlight);
+    z-index: var(--j-z-tooltip);
+
+    &:popover-open { display: inline-flex; }
+    &[data-side="bottom"] { position-area: block-end; margin: 0; margin-block-start: var(--_offset); --_from: 0 calc(var(--_slide) * -1); transform-origin: top center; }
+    /* Switching between tooltips: no animation, like OS tooltips. */
+    &[data-instant] { --_dur: 0ms; }
+    &[data-arrow]:not([data-side], [data-placement])::before { top: auto; bottom: -5px; rotate: 45deg; }
+  }
+
+  :where(.j-tooltip__kbd) {
+    display: inline-grid;
+    place-items: center;
+    min-width: 1.4em;
+    height: 1.4em;
+    padding: 0 0.3em;
+    margin-inline-start: -0.125rem;
+    border-radius: var(--j-radius-xs);
+    background: color-mix(in oklch, currentColor 14%, transparent);
+    color: color-mix(in oklch, currentColor 72%, transparent);
+    font-family: var(--j-font-sans);
+    font-size: calc(var(--j-text-xs) * 0.92);
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  :where(.j-tooltip__kbd:first-of-type) { margin-inline-start: var(--j-space-1); }
+}

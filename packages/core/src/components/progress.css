@@ -1,0 +1,66 @@
+/*
+ * Progress — native <progress class="j-progress" value="40" max="100">
+ * Omit `value` for the indeterminate state.
+ *   data-size: sm | md (default) | lg
+ *   data-tone: accent (default) | neutral | danger | success | warning | info
+ * Public props: --j-progress-track
+ */
+@layer jenni.components {
+  :where(.j-progress) {
+    --_h: var(--j-space-1-5);
+    --_track: var(--j-progress-track, color-mix(in oklch, var(--j-fg) 8%, var(--j-bg)));
+
+    appearance: none;
+    -webkit-appearance: none;
+    display: block;
+    inline-size: 100%;
+    min-inline-size: 4rem;
+    block-size: var(--_h);
+    border: 0;
+    border-radius: var(--j-radius-full);
+    background-color: var(--_track);
+    color: var(--j-tone);
+    overflow: hidden;
+    vertical-align: middle;
+  }
+  :where(.j-progress[data-size="sm"]) { --_h: var(--j-space-1); }
+  :where(.j-progress[data-size="lg"]) { --_h: calc(var(--j-space-2) + 2px); }
+
+  /* WebKit / Blink */
+  :where(.j-progress)::-webkit-progress-bar {
+    background-color: transparent;
+    border-radius: var(--j-radius-full);
+  }
+  :where(.j-progress)::-webkit-progress-value {
+    background-color: var(--j-tone);
+    border-radius: var(--j-radius-full);
+    transition: inline-size var(--j-duration-slow) var(--j-ease-emphasized);
+  }
+  /* Firefox */
+  :where(.j-progress)::-moz-progress-bar {
+    background-color: var(--j-tone);
+    border-radius: var(--j-radius-full);
+    transition: inline-size var(--j-duration-slow) var(--j-ease-emphasized);
+  }
+
+  /* Indeterminate: a soft-edged segment that glides across the track. */
+  :where(.j-progress:indeterminate) {
+    background-image: linear-gradient(to right, transparent, var(--j-tone) 25% 75%, transparent);
+    background-size: 40% 100%;
+    background-repeat: no-repeat;
+    background-position: -70% 0;
+    animation: j-progress-indeterminate 2.1s var(--j-ease-in-out) infinite;
+  }
+  :where(.j-progress:indeterminate)::-webkit-progress-bar { background-color: transparent; }
+  :where(.j-progress:indeterminate)::-webkit-progress-value { background-color: transparent; }
+  :where(.j-progress:indeterminate)::-moz-progress-bar { background-color: transparent; }
+
+  @keyframes j-progress-indeterminate {
+    from { background-position: -70% 0; }
+    to   { background-position: 170% 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(.j-progress:indeterminate) { animation-duration: 3.6s; }
+  }
+}

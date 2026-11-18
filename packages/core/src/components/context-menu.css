@@ -1,0 +1,39 @@
+/*
+ * Jenni — Context Menu.
+ * Right-click (`contextmenu` event) or keyboard ContextMenu / Shift+F10 target
+ * region that opens a `.j-menu[data-context-menu]` popover positioned at the
+ * pointer `(clientX, clientY)` clamped within an 8px safe viewport margin.
+ * Reuses `.j-menu`, `.j-menu__item`, `.j-menu__label`, `.j-menu__separator` from menu.css.
+ */
+@layer jenni.components {
+  :where(.j-context-menu-trigger) {
+    display: block;
+    user-select: none;
+  }
+
+  :where(.j-menu[data-context-menu]) {
+    --_slide: 2px;
+    --_from: 0 calc(var(--_slide) * -1);
+
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    position-area: none;
+    position-try-fallbacks: none;
+    position-visibility: always;
+    min-width: var(--j-menu-min-width, 12.5rem);
+    transform-origin: top left;
+
+    &[data-origin="top-right"] {
+      transform-origin: top right;
+    }
+    &[data-origin="bottom-left"] {
+      --_from: 0 var(--_slide);
+      transform-origin: bottom left;
+    }
+    &[data-origin="bottom-right"] {
+      --_from: 0 var(--_slide);
+      transform-origin: bottom right;
+    }
+  }
+}

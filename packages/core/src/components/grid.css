@@ -1,0 +1,265 @@
+/*
+ * Architectural Grid System — .j-grid & .j-col
+ *
+ * Modes:
+ *   1. Intrinsic Auto-Fit (default) — repeat(auto-fit, minmax(--j-grid-min, 1fr))
+ *   2. Intrinsic Auto-Fill          — data-cols="auto-fill" (preserves empty tracks)
+ *   3. 12-Column Architectural Grid — data-cols="12" (or auto-activated when > .j-col is present)
+ *   4. Explicit N-Column Grid       — data-cols="1..12"
+ *
+ * Container-Responsive Spans (@container j-grid):
+ *   - sm: >= 480px   (data-sm="1..12 | full | auto")
+ *   - md: >= 720px   (data-md="1..12 | full | auto")
+ *   - lg: >= 960px   (data-lg="1..12 | full | auto")
+ *
+ * Subgrid Alignment:
+ *   - .j-col[data-subgrid] ("rows" | "cols" | "both") aligns nested card/section tracks across columns.
+ */
+@layer jenni.components {
+  :where(.j-grid) {
+    --_gap: var(--j-grid-gap, var(--j-gap-group));
+    --_col-gap: var(--_gap);
+    --_row-gap: var(--_gap);
+    --_min: var(--j-grid-min, 240px);
+    --_cols: 12;
+    display: grid;
+    inline-size: 100%;
+    min-inline-size: 0;
+    column-gap: var(--_col-gap);
+    row-gap: var(--_row-gap);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--_min)), 1fr));
+  }
+
+  /* Intrinsic auto-fit vs auto-fill */
+  :where(.j-grid[data-cols="auto-fit"]) {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--_min)), 1fr));
+  }
+  :where(.j-grid[data-cols="auto-fill"]) {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--_min)), 1fr));
+  }
+
+  /* Auto-upgrade to 12-column grid whenever .j-col children are used without explicit data-cols */
+  :where(.j-grid:not([data-cols]):has(> .j-col)) {
+    --_cols: 12;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  /* Explicit 1..12 column templates */
+  :where(.j-grid[data-cols="1"])  { --_cols: 1;  grid-template-columns: minmax(0, 1fr); }
+  :where(.j-grid[data-cols="2"])  { --_cols: 2;  grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  :where(.j-grid[data-cols="3"])  { --_cols: 3;  grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  :where(.j-grid[data-cols="4"])  { --_cols: 4;  grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  :where(.j-grid[data-cols="5"])  { --_cols: 5;  grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  :where(.j-grid[data-cols="6"])  { --_cols: 6;  grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  :where(.j-grid[data-cols="7"])  { --_cols: 7;  grid-template-columns: repeat(7, minmax(0, 1fr)); }
+  :where(.j-grid[data-cols="8"])  { --_cols: 8;  grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  :where(.j-grid[data-cols="9"])  { --_cols: 9;  grid-template-columns: repeat(9, minmax(0, 1fr)); }
+  :where(.j-grid[data-cols="10"]) { --_cols: 10; grid-template-columns: repeat(10, minmax(0, 1fr)); }
+  :where(.j-grid[data-cols="11"]) { --_cols: 11; grid-template-columns: repeat(11, minmax(0, 1fr)); }
+  :where(.j-grid[data-cols="12"]) { --_cols: 12; grid-template-columns: repeat(12, minmax(0, 1fr)); }
+
+  /* Enable container queries when responsive spans are present or explicitly requested */
+  :where(.j-grid:has(> .j-col:is([data-sm], [data-md], [data-lg]))),
+  :where(.j-grid[data-container]) {
+    container-type: inline-size;
+    container-name: j-grid;
+  }
+
+  /* Unified gap + independent column/row semantic relationship gaps */
+  :where(.j-grid[data-gap="none"])    { --_gap: 0px; --_col-gap: 0px; --_row-gap: 0px; }
+  :where(.j-grid[data-gap="inline"])  { --_gap: var(--j-gap-inline);  --_col-gap: var(--j-gap-inline);  --_row-gap: var(--j-gap-inline); }
+  :where(.j-grid[data-gap="related"]) { --_gap: var(--j-gap-related); --_col-gap: var(--j-gap-related); --_row-gap: var(--j-gap-related); }
+  :where(.j-grid[data-gap="item"])    { --_gap: var(--j-gap-item);    --_col-gap: var(--j-gap-item);    --_row-gap: var(--j-gap-item); }
+  :where(.j-grid[data-gap="field"])   { --_gap: var(--j-gap-field);   --_col-gap: var(--j-gap-field);   --_row-gap: var(--j-gap-field); }
+  :where(.j-grid[data-gap="group"])   { --_gap: var(--j-gap-group);   --_col-gap: var(--j-gap-group);   --_row-gap: var(--j-gap-group); }
+  :where(.j-grid[data-gap="section"]) { --_gap: var(--j-gap-section); --_col-gap: var(--j-gap-section); --_row-gap: var(--j-gap-section); }
+
+  :where(.j-grid[data-col-gap="none"])    { --_col-gap: 0px; }
+  :where(.j-grid[data-col-gap="inline"])  { --_col-gap: var(--j-gap-inline); }
+  :where(.j-grid[data-col-gap="related"]) { --_col-gap: var(--j-gap-related); }
+  :where(.j-grid[data-col-gap="item"])    { --_col-gap: var(--j-gap-item); }
+  :where(.j-grid[data-col-gap="field"])   { --_col-gap: var(--j-gap-field); }
+  :where(.j-grid[data-col-gap="group"])   { --_col-gap: var(--j-gap-group); }
+  :where(.j-grid[data-col-gap="section"]) { --_col-gap: var(--j-gap-section); }
+
+  :where(.j-grid[data-row-gap="none"])    { --_row-gap: 0px; }
+  :where(.j-grid[data-row-gap="inline"])  { --_row-gap: var(--j-gap-inline); }
+  :where(.j-grid[data-row-gap="related"]) { --_row-gap: var(--j-gap-related); }
+  :where(.j-grid[data-row-gap="item"])    { --_row-gap: var(--j-gap-item); }
+  :where(.j-grid[data-row-gap="field"])   { --_row-gap: var(--j-gap-field); }
+  :where(.j-grid[data-row-gap="group"])   { --_row-gap: var(--j-gap-group); }
+  :where(.j-grid[data-row-gap="section"]) { --_row-gap: var(--j-gap-section); }
+
+  /* Grid auto-flow */
+  :where(.j-grid[data-flow="row"])   { grid-auto-flow: row; }
+  :where(.j-grid[data-flow="dense"]) { grid-auto-flow: row dense; }
+  :where(.j-grid[data-flow="col"])   { grid-auto-flow: column; }
+
+  /* Alignment & justification */
+  :where(.j-grid[data-align="start"])    { align-items: start; }
+  :where(.j-grid[data-align="center"])   { align-items: center; }
+  :where(.j-grid[data-align="end"])      { align-items: end; }
+  :where(.j-grid[data-align="stretch"])  { align-items: stretch; }
+  :where(.j-grid[data-align="baseline"]) { align-items: baseline; }
+
+  :where(.j-grid[data-justify="start"])   { justify-content: start; }
+  :where(.j-grid[data-justify="center"])  { justify-content: center; }
+  :where(.j-grid[data-justify="end"])     { justify-content: end; }
+  :where(.j-grid[data-justify="between"]) { justify-content: space-between; }
+
+  /* Architectural column guide overlay (zero extra DOM nodes, sub-pixel exact) */
+  :where(.j-grid[data-guides]) {
+    --_guide-track: calc((100% - (var(--_cols, 12) - 1) * var(--_col-gap)) / var(--_cols, 12));
+    --_guide-fill: color-mix(in oklch, var(--j-accent) 6.5%, transparent);
+    --_guide-line: color-mix(in oklch, var(--j-accent) 20%, transparent);
+    border-radius: var(--j-radius-sm);
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--_guide-line) 0 1px,
+      var(--_guide-fill) 1px calc(var(--_guide-track) - 1px),
+      var(--_guide-line) calc(var(--_guide-track) - 1px) var(--_guide-track),
+      transparent var(--_guide-track) calc(var(--_guide-track) + var(--_col-gap))
+    );
+  }
+
+  /* ==========================================================================
+   * Grid Column / Cell (.j-col)
+   * ========================================================================== */
+  :where(.j-col) {
+    --_span: 1;
+    --_col-start: auto;
+    grid-column: var(--_col-start) / span var(--_span);
+    min-inline-size: 0;
+  }
+
+  /* Mobile-first stack: responsive columns without an explicit base data-span stack full-width on narrowest container */
+  :where(.j-col:is([data-sm], [data-md], [data-lg]):not([data-span])) {
+    --_span: 12;
+    grid-column: 1 / -1;
+  }
+
+  /* Explicit column start (1..12) */
+  :where(.j-col[data-start="1"])  { --_col-start: 1; }
+  :where(.j-col[data-start="2"])  { --_col-start: 2; }
+  :where(.j-col[data-start="3"])  { --_col-start: 3; }
+  :where(.j-col[data-start="4"])  { --_col-start: 4; }
+  :where(.j-col[data-start="5"])  { --_col-start: 5; }
+  :where(.j-col[data-start="6"])  { --_col-start: 6; }
+  :where(.j-col[data-start="7"])  { --_col-start: 7; }
+  :where(.j-col[data-start="8"])  { --_col-start: 8; }
+  :where(.j-col[data-start="9"])  { --_col-start: 9; }
+  :where(.j-col[data-start="10"]) { --_col-start: 10; }
+  :where(.j-col[data-start="11"]) { --_col-start: 11; }
+  :where(.j-col[data-start="12"]) { --_col-start: 12; }
+
+  /* Base column spans */
+  :where(.j-col[data-span="1"])    { --_span: 1;  grid-column: var(--_col-start) / span 1; }
+  :where(.j-col[data-span="2"])    { --_span: 2;  grid-column: var(--_col-start) / span 2; }
+  :where(.j-col[data-span="3"])    { --_span: 3;  grid-column: var(--_col-start) / span 3; }
+  :where(.j-col[data-span="4"])    { --_span: 4;  grid-column: var(--_col-start) / span 4; }
+  :where(.j-col[data-span="5"])    { --_span: 5;  grid-column: var(--_col-start) / span 5; }
+  :where(.j-col[data-span="6"])    { --_span: 6;  grid-column: var(--_col-start) / span 6; }
+  :where(.j-col[data-span="7"])    { --_span: 7;  grid-column: var(--_col-start) / span 7; }
+  :where(.j-col[data-span="8"])    { --_span: 8;  grid-column: var(--_col-start) / span 8; }
+  :where(.j-col[data-span="9"])    { --_span: 9;  grid-column: var(--_col-start) / span 9; }
+  :where(.j-col[data-span="10"])   { --_span: 10; grid-column: var(--_col-start) / span 10; }
+  :where(.j-col[data-span="11"])   { --_span: 11; grid-column: var(--_col-start) / span 11; }
+  :where(.j-col[data-span="12"])   { --_span: 12; grid-column: 1 / -1; }
+  :where(.j-col[data-span="full"]) { grid-column: 1 / -1; }
+  :where(.j-col[data-span="auto"]) { grid-column: auto; }
+
+  /* Container-query responsive spans — sm (>= 480px) */
+  @container j-grid (width >= 480px) {
+    :where(.j-col[data-sm="1"])    { --_span: 1;  grid-column: var(--_col-start) / span 1; }
+    :where(.j-col[data-sm="2"])    { --_span: 2;  grid-column: var(--_col-start) / span 2; }
+    :where(.j-col[data-sm="3"])    { --_span: 3;  grid-column: var(--_col-start) / span 3; }
+    :where(.j-col[data-sm="4"])    { --_span: 4;  grid-column: var(--_col-start) / span 4; }
+    :where(.j-col[data-sm="5"])    { --_span: 5;  grid-column: var(--_col-start) / span 5; }
+    :where(.j-col[data-sm="6"])    { --_span: 6;  grid-column: var(--_col-start) / span 6; }
+    :where(.j-col[data-sm="7"])    { --_span: 7;  grid-column: var(--_col-start) / span 7; }
+    :where(.j-col[data-sm="8"])    { --_span: 8;  grid-column: var(--_col-start) / span 8; }
+    :where(.j-col[data-sm="9"])    { --_span: 9;  grid-column: var(--_col-start) / span 9; }
+    :where(.j-col[data-sm="10"])   { --_span: 10; grid-column: var(--_col-start) / span 10; }
+    :where(.j-col[data-sm="11"])   { --_span: 11; grid-column: var(--_col-start) / span 11; }
+    :where(.j-col[data-sm="12"]),
+    :where(.j-col[data-sm="full"]) { --_span: 12; grid-column: 1 / -1; }
+    :where(.j-col[data-sm="auto"]) { grid-column: auto; }
+  }
+
+  /* Container-query responsive spans — md (>= 720px) */
+  @container j-grid (width >= 720px) {
+    :where(.j-col[data-md="1"])    { --_span: 1;  grid-column: var(--_col-start) / span 1; }
+    :where(.j-col[data-md="2"])    { --_span: 2;  grid-column: var(--_col-start) / span 2; }
+    :where(.j-col[data-md="3"])    { --_span: 3;  grid-column: var(--_col-start) / span 3; }
+    :where(.j-col[data-md="4"])    { --_span: 4;  grid-column: var(--_col-start) / span 4; }
+    :where(.j-col[data-md="5"])    { --_span: 5;  grid-column: var(--_col-start) / span 5; }
+    :where(.j-col[data-md="6"])    { --_span: 6;  grid-column: var(--_col-start) / span 6; }
+    :where(.j-col[data-md="7"])    { --_span: 7;  grid-column: var(--_col-start) / span 7; }
+    :where(.j-col[data-md="8"])    { --_span: 8;  grid-column: var(--_col-start) / span 8; }
+    :where(.j-col[data-md="9"])    { --_span: 9;  grid-column: var(--_col-start) / span 9; }
+    :where(.j-col[data-md="10"])   { --_span: 10; grid-column: var(--_col-start) / span 10; }
+    :where(.j-col[data-md="11"])   { --_span: 11; grid-column: var(--_col-start) / span 11; }
+    :where(.j-col[data-md="12"]),
+    :where(.j-col[data-md="full"]) { --_span: 12; grid-column: 1 / -1; }
+    :where(.j-col[data-md="auto"]) { grid-column: auto; }
+  }
+
+  /* Container-query responsive spans — lg (>= 960px) */
+  @container j-grid (width >= 960px) {
+    :where(.j-col[data-lg="1"])    { --_span: 1;  grid-column: var(--_col-start) / span 1; }
+    :where(.j-col[data-lg="2"])    { --_span: 2;  grid-column: var(--_col-start) / span 2; }
+    :where(.j-col[data-lg="3"])    { --_span: 3;  grid-column: var(--_col-start) / span 3; }
+    :where(.j-col[data-lg="4"])    { --_span: 4;  grid-column: var(--_col-start) / span 4; }
+    :where(.j-col[data-lg="5"])    { --_span: 5;  grid-column: var(--_col-start) / span 5; }
+    :where(.j-col[data-lg="6"])    { --_span: 6;  grid-column: var(--_col-start) / span 6; }
+    :where(.j-col[data-lg="7"])    { --_span: 7;  grid-column: var(--_col-start) / span 7; }
+    :where(.j-col[data-lg="8"])    { --_span: 8;  grid-column: var(--_col-start) / span 8; }
+    :where(.j-col[data-lg="9"])    { --_span: 9;  grid-column: var(--_col-start) / span 9; }
+    :where(.j-col[data-lg="10"])   { --_span: 10; grid-column: var(--_col-start) / span 10; }
+    :where(.j-col[data-lg="11"])   { --_span: 11; grid-column: var(--_col-start) / span 11; }
+    :where(.j-col[data-lg="12"]),
+    :where(.j-col[data-lg="full"]) { --_span: 12; grid-column: 1 / -1; }
+    :where(.j-col[data-lg="auto"]) { grid-column: auto; }
+  }
+
+  /* Row spanning */
+  :where(.j-col[data-row-span="1"])    { grid-row: span 1 / span 1; }
+  :where(.j-col[data-row-span="2"])    { grid-row: span 2 / span 2; }
+  :where(.j-col[data-row-span="3"])    { grid-row: span 3 / span 3; }
+  :where(.j-col[data-row-span="4"])    { grid-row: span 4 / span 4; }
+  :where(.j-col[data-row-span="5"])    { grid-row: span 5 / span 5; }
+  :where(.j-col[data-row-span="6"])    { grid-row: span 6 / span 6; }
+  :where(.j-col[data-row-span="full"]) { grid-row: 1 / -1; }
+
+  /* Visual order & self-alignment */
+  :where(.j-col[data-order="first"]) { order: -1; }
+  :where(.j-col[data-order="last"])  { order: 99; }
+  :where(.j-col[data-order="1"])     { order: 1; }
+  :where(.j-col[data-order="2"])     { order: 2; }
+  :where(.j-col[data-order="3"])     { order: 3; }
+
+  :where(.j-col[data-align="start"])    { align-self: start; }
+  :where(.j-col[data-align="center"])   { align-self: center; }
+  :where(.j-col[data-align="end"])      { align-self: end; }
+  :where(.j-col[data-align="stretch"])  { align-self: stretch; }
+  :where(.j-col[data-align="baseline"]) { align-self: baseline; }
+
+  /* CSS Subgrid — aligns nested card headers, bodies, and footers across peer columns */
+  :where(.j-col[data-subgrid]),
+  :where(.j-col[data-subgrid="rows"]) {
+    display: grid;
+    grid-template-rows: subgrid;
+    row-gap: var(--j-gap-item);
+  }
+  :where(.j-col[data-subgrid="cols"]) {
+    display: grid;
+    grid-template-columns: subgrid;
+    column-gap: inherit;
+  }
+  :where(.j-col[data-subgrid="both"]) {
+    display: grid;
+    grid-template-rows: subgrid;
+    grid-template-columns: subgrid;
+    gap: inherit;
+  }
+}

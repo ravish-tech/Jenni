@@ -1,0 +1,87 @@
+/*
+ * Input — <input class="j-input">
+ * Adornments: <div class="j-input-group">
+ *               <span class="j-input-group__addon">…</span>
+ *               <input class="j-input">
+ *               <span class="j-input-group__addon">…</span>
+ *             </div>
+ * Shared shell (sizes, focus, invalid, disabled, read-only) lives in control.css.
+ */
+@layer jenni.components {
+  :where(.j-input) {
+    appearance: none;
+
+    &::-webkit-search-cancel-button { appearance: none; }
+    &[type="number"] { font-variant-numeric: tabular-nums; }
+    &[type="file"] {
+      padding-inline-start: var(--j-space-1);
+      line-height: calc(var(--_h) - 2px);
+    }
+    &::file-selector-button {
+      margin-inline-end: var(--j-gap-related);
+      padding: var(--j-space-0-5) var(--j-space-2);
+      border: 1px solid var(--j-border);
+      border-radius: var(--j-radius-sm);
+      background: var(--j-surface-2);
+      color: var(--j-fg);
+      font: inherit;
+      font-size: var(--j-text-sm);
+      font-weight: var(--j-weight-medium);
+      cursor: pointer;
+      transition:
+        background-color var(--j-duration-fast) var(--j-ease-out),
+        border-color var(--j-duration-fast) var(--j-ease-out);
+    }
+  }
+
+  :where(.j-input-group) {
+    display: flex;
+    align-items: center;
+    gap: var(--j-gap-related);
+    cursor: text;
+    --_group-h: var(--_h);
+
+    /* The inner input becomes chrome-less; the group draws the box. */
+    & > :where(.j-input) {
+      flex: 1;
+      block-size: 100%;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      color: inherit;
+      font-size: inherit;
+    }
+    & > :where(.j-input):focus { box-shadow: none; }
+    & > :where(.j-input):disabled { cursor: not-allowed; }
+  }
+
+  :where(.j-input-group__addon) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    flex-shrink: 0;
+    color: var(--j-fg-subtle);
+    font-size: var(--_fs);
+    white-space: nowrap;
+    user-select: none;
+
+    & > svg {
+      inline-size: var(--_icon);
+      block-size: var(--_icon);
+    }
+    /* Nested controls (buttons, kbd…) hug the edge. */
+    &:first-child:has(> .j-button) { margin-inline-start: calc(var(--j-space-1) - var(--_px)); }
+    &:last-child:has(> .j-button) { margin-inline-end: calc(var(--j-space-1) - var(--_px)); }
+    & > .j-button {
+      --_h: max(16px, calc(var(--_group-h) - max(4px, round(calc(8px * var(--j-density)), 1px))));
+      --_px: var(--j-space-2);
+      --_fs: var(--j-text-xs);
+      --_radius: calc(var(--j-control-radius, var(--j-radius-md)) - 3px);
+    }
+  }
+  :where(.j-input-group:focus-within) > :where(.j-input-group__addon) {
+    color: var(--j-fg-muted);
+  }
+}

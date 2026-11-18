@@ -1,0 +1,105 @@
+/*
+ * Radio — <input type="radio" class="j-radio">
+ * Group — <div class="j-radio-group" role="radiogroup" data-orientation="vertical|horizontal">
+ *   data-size: sm | md | lg · data-tone · :disabled · aria-invalid="true"
+ */
+@layer jenni.components {
+  :where(.j-radio) {
+    --_size: 16px;
+    --_dot: 6px;
+    --_border: var(--j-border-strong);
+
+    appearance: none;
+    position: relative;
+    display: inline-grid;
+    place-content: center;
+    flex-shrink: 0;
+    inline-size: var(--_size);
+    block-size: var(--_size);
+    margin: 0;
+    border: 1px solid var(--_border);
+    border-radius: var(--j-radius-full);
+    background-color: var(--j-surface-1);
+    box-shadow: var(--j-inset-highlight), var(--j-shadow-xs);
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    &::before {
+      content: "";
+      inline-size: var(--_dot);
+      block-size: var(--_dot);
+      border-radius: var(--j-radius-full);
+      background-color: var(--j-tone-fg);
+      box-shadow: 0 1px 1.5px oklch(0% 0 0 / 0.16);
+      opacity: 0;
+      transform: scale(0.65);
+      transition:
+        opacity var(--j-duration) var(--j-ease-out),
+        transform var(--j-duration) var(--j-ease-out);
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, :checked) {
+        --_border: color-mix(in oklch, var(--j-border-strong), var(--j-fg) 18%);
+      }
+      &:hover:checked:not(:disabled) {
+        --_border: var(--j-tone-hover);
+        background-color: var(--j-tone-hover);
+      }
+    }
+
+    &:active:not(:disabled, :checked) {
+      background-color: var(--j-surface-2);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+
+    &:checked {
+      --_border: var(--j-tone);
+      background-color: var(--j-tone);
+      box-shadow: inset 0 1px 0 oklch(100% 0 0 / 0.10), var(--j-shadow-xs);
+      &::before { opacity: 1; transform: scale(1); }
+      &:active:not(:disabled) {
+        background-color: color-mix(in oklch, var(--j-tone-hover), black 6%);
+      }
+      &:focus-visible { box-shadow: var(--j-ring); }
+    }
+
+    &[aria-invalid="true"]:not(:checked) {
+      --_border: var(--j-danger);
+      box-shadow: 0 0 0 3px color-mix(in oklch, var(--j-danger) 15%, transparent);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+      box-shadow: none;
+    }
+    &:disabled:not(:checked) { background-color: var(--j-surface-2); }
+
+    &[data-size="sm"] { --_size: 14px; --_dot: 5px; }
+    &[data-size="lg"] { --_size: 20px; --_dot: 8px; }
+  }
+
+  :where(.j-radio-group) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-item);
+    border: 0;
+    padding: 0;
+    min-inline-size: 0;
+  }
+  :where(.j-radio-group[data-orientation="horizontal"]) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    column-gap: var(--j-gap-group);
+  }
+}

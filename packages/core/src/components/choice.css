@@ -1,0 +1,60 @@
+/*
+ * Choice — label layout for checkbox / radio / switch.
+ *   <label class="j-choice">
+ *     <input type="checkbox" class="j-checkbox">
+ *     <span class="j-choice__body">
+ *       <span class="j-choice__label">Email me</span>
+ *       <span class="j-choice__description">Weekly digest, no spam.</span>
+ *     </span>
+ *   </label>
+ * The body wrapper is optional; plain text works too.
+ * data-placement="end" puts the control after the text (settings rows).
+ */
+@layer jenni.components {
+  :where(.j-choice) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-gap-related);
+    color: var(--j-fg);
+    font-size: var(--j-text-md);
+    line-height: var(--j-leading-tight);
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    /* Multi-line choices align control to the first text line without protruding above. */
+    &:has(.j-choice__description) {
+      align-items: flex-start;
+      & > :where(.j-checkbox, .j-radio, .j-switch) {
+        margin-block-start: max(0px, calc((1lh - var(--_ctl-h, 16px)) / 2));
+      }
+    }
+    & > :where(.j-checkbox, .j-radio) { --_ctl-h: var(--_size); }
+    & > :where(.j-switch) { --_ctl-h: var(--_h); }
+
+    &:has(> :disabled) {
+      color: var(--j-fg-subtle);
+      cursor: not-allowed;
+    }
+  }
+
+  :where(.j-choice__body) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-0-5);
+  }
+  :where(.j-choice__label) { font-weight: var(--j-weight-medium); }
+  :where(.j-choice__description) {
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-sm);
+    line-height: var(--j-leading);
+  }
+  :where(.j-choice:has(> :disabled)) :where(.j-choice__description) { color: var(--j-fg-subtle); }
+
+  :where(.j-choice[data-placement="end"]) {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    gap: var(--j-gap-field);
+  }
+}

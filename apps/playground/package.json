@@ -1,0 +1,29 @@
+{
+  "name": "@jenni/playground",
+  "description": "Design lab and specification showcase for Jenni (pronounced 'yenni') — built in loving memory of Jenni.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "vue-tsc --noEmit"
+  },
+  "dependencies": {
+    "@jenni/core": "*",
+    "@jenni/vue": "*",
+    "@jenni/react": "*",
+    "vue": "^3.5.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "*",
+    "@vitejs/plugin-react": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "@types/node": "*",
+    "typescript": "*",
+    "vite": "*",
+    "vue-tsc": "*"
+  }
+}

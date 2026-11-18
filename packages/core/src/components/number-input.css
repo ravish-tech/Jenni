@@ -1,0 +1,244 @@
+/*
+ * Number Input — <div class="j-number-input">
+ *   <span class="j-number-input__addon">$</span>
+ *   <input type="text" inputmode="decimal" class="j-number-input__field" value="42">
+ *   <span class="j-number-input__addon">px</span>
+ *   <div class="j-number-input__controls">
+ *     <button type="button" class="j-number-input__btn" data-step="down" aria-label="Decrease">−</button>
+ *     <button type="button" class="j-number-input__btn" data-step="up" aria-label="Increase">+</button>
+ *   </div>
+ * </div>
+ * Options:
+ *   data-controls: end (default) | split
+ *   data-size:     sm | md (default) | lg
+ *   data-tone:     accent | neutral | danger | success | warning | info
+ *   aria-invalid="true" / :disabled
+ * Public props: --j-control-radius, --j-control-bg
+ */
+@layer jenni.components {
+  :where(.j-number-input) {
+    --_h: var(--j-control-md);
+    --_px: calc(var(--j-space-2) + 2px);
+    --_fs: var(--j-text-md);
+    --_step-w: calc(30px * var(--j-density));
+    --_radius: var(--j-control-radius, var(--j-radius-md));
+    --_border: var(--j-border-strong);
+    --_border-hover: color-mix(in oklch, var(--j-border-strong), var(--j-fg) 14%);
+    --_focus: var(--j-tone);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: stretch;
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--_h);
+    border: 1px solid var(--_border);
+    border-radius: var(--_radius);
+    background-color: var(--j-control-bg, var(--j-surface-1));
+    color: var(--j-fg);
+    box-shadow: var(--j-inset-highlight), var(--j-shadow-xs);
+    font-family: inherit;
+    font-size: var(--_fs);
+    font-variant-numeric: tabular-nums;
+    overflow: hidden;
+    transition:
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    @media (hover: hover) {
+      &:hover:not(:focus-within, [aria-disabled="true"], :has(.j-number-input__field:disabled)) {
+        border-color: var(--_border-hover);
+      }
+    }
+
+    &:focus-within {
+      border-color: var(--_focus);
+      box-shadow:
+        var(--j-inset-highlight),
+        0 0 0 3px color-mix(in oklch, var(--_focus) 15%, transparent);
+    }
+
+    &[aria-invalid="true"],
+    &:has([aria-invalid="true"]) {
+      --_border: color-mix(in oklch, var(--j-danger) 70%, var(--j-border-strong));
+      --_border-hover: var(--j-danger);
+      --_focus: var(--j-danger);
+    }
+
+    &:has(.j-number-input__field:read-only:not(:disabled)) {
+      --_focus: var(--j-fg-subtle);
+      background-color: var(--j-surface-2);
+      box-shadow: none;
+    }
+
+    &[aria-disabled="true"],
+    &:has(.j-number-input__field:disabled) {
+      background-color: var(--j-surface-2);
+      color: var(--j-fg-subtle);
+      border-color: var(--j-border);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    &[data-size="sm"] {
+      --_h: var(--j-control-sm);
+      --_px: var(--j-space-2);
+      --_fs: var(--j-text-sm);
+      --_step-w: calc(26px * var(--j-density));
+      --_radius: var(--j-control-radius, var(--j-radius-sm));
+    }
+
+    &[data-size="lg"] {
+      --_h: var(--j-control-lg);
+      --_px: var(--j-space-3);
+      --_fs: var(--j-text-lg);
+      --_step-w: calc(36px * var(--j-density));
+      --_radius: var(--j-control-radius, var(--j-radius-lg));
+    }
+  }
+
+  :where(.j-number-input__field) {
+    appearance: none;
+    flex: 1 1 0;
+    min-inline-size: 0;
+    block-size: 100%;
+    padding-inline: var(--_px);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: var(--_fs);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--j-leading-tight);
+    outline: none;
+
+    &::placeholder {
+      color: var(--j-fg-subtle);
+      opacity: 1;
+    }
+
+    &::-webkit-inner-spin-button,
+    &::-webkit-outer-spin-button {
+      appearance: none;
+      margin: 0;
+    }
+
+    &[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  :where(.j-number-input__addon) {
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+    color: var(--j-fg-subtle);
+    font-size: var(--_fs);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    user-select: none;
+
+    &:first-child,
+    .j-number-input[data-controls="split"] > .j-number-input__btn + & {
+      padding-inline-start: var(--_px);
+    }
+
+    &:has(+ .j-number-input__field) + .j-number-input__field {
+      padding-inline-start: var(--j-space-1);
+    }
+  }
+
+  :where(.j-number-input__field + .j-number-input__addon) {
+    padding-inline-end: var(--_px);
+  }
+
+  :where(.j-number-input:has(.j-number-input__field + .j-number-input__addon)) :where(.j-number-input__field) {
+    padding-inline-end: var(--j-space-1);
+  }
+
+  :where(.j-number-input:focus-within) :where(.j-number-input__addon) {
+    color: var(--j-fg-muted);
+  }
+
+  /* ---- Stepper buttons ---- */
+  :where(.j-number-input__controls) {
+    display: inline-flex;
+    align-items: stretch;
+    flex-shrink: 0;
+  }
+
+  :where(.j-number-input__btn) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--_step-w);
+    block-size: 100%;
+    padding: 0;
+    border: 0;
+    border-inline-start: 1px solid var(--j-border);
+    background: transparent;
+    color: var(--j-fg-muted);
+    font-family: inherit;
+    font-size: var(--_fs);
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    cursor: pointer;
+    user-select: none;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      opacity var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: 14px;
+      block-size: 14px;
+      flex-shrink: 0;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled="true"]) {
+        background-color: var(--j-surface-2);
+        color: var(--j-fg);
+      }
+    }
+
+    /* Poised press tint — ZERO scale shrink. */
+    &:active:not(:disabled, [aria-disabled="true"]) {
+      background-color: var(--j-surface-3);
+    }
+
+    &:focus-visible {
+      outline: none;
+      background-color: var(--j-surface-2);
+      color: var(--j-fg);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Split layout: [ − |   42   | + ] */
+  :where(.j-number-input[data-controls="split"]) {
+    & > :where(.j-number-input__btn:first-child) {
+      border-inline-start: 0;
+      border-inline-end: 1px solid var(--j-border);
+    }
+
+    & > :where(.j-number-input__field) {
+      text-align: center;
+    }
+  }
+}

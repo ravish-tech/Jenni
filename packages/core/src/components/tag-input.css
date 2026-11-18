@@ -1,0 +1,209 @@
+/*
+ * Tag Input — <div class="j-tag-input">
+ *   <span class="j-tag-input__tag">
+ *     design
+ *     <button type="button" class="j-tag-input__remove" aria-label="Remove design">×</button>
+ *   </span>
+ *   <input type="text" class="j-tag-input__field" placeholder="Add tag…">
+ * </div>
+ * Options:
+ *   data-size: sm | md (default) | lg
+ *   data-tone: accent | neutral | danger | success | warning | info
+ *   aria-invalid="true" / aria-disabled="true"
+ * Public props: --j-control-radius, --j-control-bg
+ */
+@layer jenni.components {
+  :where(.j-tag-input) {
+    --_h: var(--j-control-md);
+    --_py: max(1px, calc(var(--j-space-1) - 1px));
+    --_px: var(--j-space-1-5);
+    --_fs: var(--j-text-md);
+    --_tag-h: max(16px, calc(var(--j-control-md) - max(4px, round(calc(6px * var(--j-density)), 1px))));
+    --_tag-fs: var(--j-text-xs);
+    --_radius: var(--j-control-radius, var(--j-radius-md));
+    --_border: var(--j-border-strong);
+    --_border-hover: color-mix(in oklch, var(--j-border-strong), var(--j-fg) 14%);
+    --_focus: var(--j-tone);
+
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--j-gap-inline);
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: var(--_h);
+    padding: var(--_py) var(--_px);
+    border: 1px solid var(--_border);
+    border-radius: var(--_radius);
+    background-color: var(--j-control-bg, var(--j-surface-1));
+    color: var(--j-fg);
+    box-shadow: var(--j-inset-highlight), var(--j-shadow-xs);
+    font-family: inherit;
+    font-size: var(--_fs);
+    cursor: text;
+    transition:
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    @media (hover: hover) {
+      &:hover:not(:focus-within, [aria-disabled="true"], :has(.j-tag-input__field:disabled)) {
+        border-color: var(--_border-hover);
+      }
+    }
+
+    &:focus-within {
+      border-color: var(--_focus);
+      box-shadow:
+        var(--j-inset-highlight),
+        0 0 0 3px color-mix(in oklch, var(--_focus) 15%, transparent);
+    }
+
+    &[aria-invalid="true"],
+    &:has([aria-invalid="true"]) {
+      --_border: color-mix(in oklch, var(--j-danger) 70%, var(--j-border-strong));
+      --_border-hover: var(--j-danger);
+      --_focus: var(--j-danger);
+    }
+
+    &[aria-disabled="true"],
+    &:has(.j-tag-input__field:disabled) {
+      background-color: var(--j-surface-2);
+      color: var(--j-fg-subtle);
+      border-color: var(--j-border);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    &[data-size="sm"] {
+      --_h: var(--j-control-sm);
+      --_py: max(1px, var(--j-space-0-5));
+      --_px: var(--j-space-1);
+      --_fs: var(--j-text-sm);
+      --_tag-h: max(15px, calc(var(--j-control-sm) - max(4px, round(calc(6px * var(--j-density)), 1px))));
+      --_tag-fs: var(--j-text-xs);
+      --_radius: var(--j-control-radius, var(--j-radius-sm));
+    }
+
+    &[data-size="lg"] {
+      --_h: var(--j-control-lg);
+      --_py: var(--j-space-1);
+      --_px: var(--j-space-2);
+      --_fs: var(--j-text-lg);
+      --_tag-h: max(20px, calc(var(--j-control-lg) - max(6px, round(calc(8px * var(--j-density)), 1px))));
+      --_tag-fs: var(--j-text-sm);
+      --_radius: var(--j-control-radius, var(--j-radius-lg));
+    }
+  }
+
+  :where(.j-tag-input__tag) {
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    block-size: var(--_tag-h);
+    max-inline-size: 100%;
+    padding-inline: var(--j-space-2) var(--j-space-1);
+    border: 1px solid var(--j-border);
+    border-radius: calc(var(--_radius) - 2px);
+    background-color: var(--j-surface-2);
+    color: var(--j-fg);
+    font-size: var(--_tag-fs);
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  :where(.j-tag-input[data-tone]:not([data-tone="neutral"])) > :where(.j-tag-input__tag) {
+    background-color: var(--j-tone-soft);
+    color: var(--j-tone-soft-fg);
+    border-color: color-mix(in oklch, var(--j-tone) 30%, transparent);
+  }
+
+  :where(.j-tag-input__tag-label) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  :where(.j-tag-input__remove) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: max(13px, calc(var(--_tag-h) - 4px));
+    block-size: max(13px, calc(var(--_tag-h) - 4px));
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: transparent;
+    color: var(--j-fg-subtle);
+    font-family: inherit;
+    font-size: var(--j-text-sm);
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: 11px;
+      block-size: 11px;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled) {
+        background-color: var(--j-surface-3);
+        color: var(--j-fg);
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  :where(.j-tag-input[data-tone]:not([data-tone="neutral"])) :where(.j-tag-input__remove) {
+    color: color-mix(in oklch, var(--j-tone-soft-fg) 75%, transparent);
+
+    @media (hover: hover) {
+      &:hover:not(:disabled) {
+        background-color: color-mix(in oklch, var(--j-tone) 16%, transparent);
+        color: var(--j-tone-soft-fg);
+      }
+    }
+  }
+
+  :where(.j-tag-input__field) {
+    appearance: none;
+    flex: 1 1 88px;
+    min-inline-size: 64px;
+    block-size: var(--_tag-h);
+    padding-inline: var(--j-space-1);
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: var(--_fs);
+    line-height: var(--j-leading-tight);
+    outline: none;
+
+    &::placeholder {
+      color: var(--j-fg-subtle);
+      opacity: 1;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+}

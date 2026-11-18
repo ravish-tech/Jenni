@@ -1,0 +1,10 @@
+/* Group index: @import each component file of the "layout" group here. */
+@import "./primitives.css";
+@import "./grid.css";
+@import "./list.css";
+@import "./page.css";
+@import "./bars.css";
+@import "./shell.css";
+@import "./screens.css";
+@import "./scroll-area.css";
+@import "./resizable.css";

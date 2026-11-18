@@ -1,0 +1,404 @@
+/*
+ * Jenni — Time Picker (segmented tabular-nums spinbutton + anchored column popover).
+ *   <div class="j-time-picker" data-format="24h">
+ *     <div class="j-time-picker__segments" role="group" aria-label="Time">
+ *       <span role="spinbutton" tabindex="0" class="j-time-picker__segment" data-segment="hour">14</span>
+ *       <span class="j-time-picker__sep" aria-hidden="true">:</span>
+ *       <span role="spinbutton" tabindex="0" class="j-time-picker__segment" data-segment="minute">30</span>
+ *     </div>
+ *     <div class="j-time-picker__controls">
+ *       <button type="button" class="j-time-picker__trigger" aria-label="Open time picker">…</button>
+ *     </div>
+ *   </div>
+ *   <div class="j-time-picker__popover" popover="auto">…</div>
+ *
+ * Options:
+ *   data-size: sm | md (default) | lg
+ *   data-tone: accent | neutral | danger | success | warning | info
+ */
+@layer jenni.components {
+  :where(.j-time-picker) {
+    --_h: var(--j-control-md);
+    --_px: calc(var(--j-space-2) + 2px);
+    --_fs: var(--j-text-md);
+    --_radius: var(--j-control-radius, var(--j-radius-md));
+    --_border: var(--j-border-strong);
+    --_border-hover: color-mix(in oklch, var(--j-border-strong), var(--j-fg) 14%);
+    --_focus: var(--j-tone);
+
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-related);
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--_h);
+    padding-inline: var(--_px) var(--j-space-1-5);
+    border: 1px solid var(--_border);
+    border-radius: var(--_radius);
+    background-color: var(--j-control-bg, var(--j-surface-1));
+    color: var(--j-fg);
+    box-shadow: var(--j-inset-highlight), var(--j-shadow-xs);
+    font-family: var(--j-font-sans);
+    font-size: var(--_fs);
+    font-variant-numeric: tabular-nums;
+    transition:
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    @media (hover: hover) {
+      &:hover:not(:focus-within, [data-open], [aria-disabled="true"]) {
+        border-color: var(--_border-hover);
+      }
+    }
+
+    &:focus-within,
+    &[data-open] {
+      border-color: var(--_focus);
+      box-shadow:
+        var(--j-inset-highlight),
+        0 0 0 3px color-mix(in oklch, var(--_focus) 15%, transparent);
+    }
+
+    &[aria-invalid="true"],
+    &:has([aria-invalid="true"]) {
+      --_border: color-mix(in oklch, var(--j-danger) 70%, var(--j-border-strong));
+      --_border-hover: var(--j-danger);
+      --_focus: var(--j-danger);
+    }
+
+    &[aria-disabled="true"] {
+      background-color: var(--j-surface-2);
+      color: var(--j-fg-subtle);
+      border-color: var(--j-border);
+      box-shadow: none;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    &[data-size="sm"] {
+      --_h: var(--j-control-sm);
+      --_px: var(--j-space-2);
+      --_fs: var(--j-text-sm);
+      --_radius: var(--j-control-radius, var(--j-radius-sm));
+    }
+
+    &[data-size="lg"] {
+      --_h: var(--j-control-lg);
+      --_px: var(--j-space-3);
+      --_fs: var(--j-text-lg);
+      --_radius: var(--j-control-radius, var(--j-radius-lg));
+    }
+  }
+
+  /* ---- Spinbutton Segments ---- */
+  :where(.j-time-picker__segments) {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    min-inline-size: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  :where(.j-time-picker__segment) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 2.2ch;
+    margin: 0;
+    padding-block: 2px;
+    padding-inline: 3px;
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: transparent;
+    color: var(--j-fg);
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+    text-align: center;
+    cursor: default;
+    user-select: none;
+    outline: none;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    &[data-empty] {
+      color: var(--j-fg-subtle);
+    }
+
+    &[data-segment="period"] {
+      margin-inline-start: var(--j-space-1);
+      padding-inline: var(--j-space-1);
+      font-size: calc(var(--_fs) * 0.88);
+      font-weight: var(--j-weight-medium);
+      letter-spacing: 0.02em;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:focus) {
+        background: var(--j-surface-2);
+      }
+    }
+
+    &:focus {
+      background: var(--j-tone-soft);
+      color: var(--j-tone-soft-fg);
+      font-weight: var(--j-weight-medium);
+    }
+  }
+
+  :where(.j-time-picker__sep) {
+    color: var(--j-fg-subtle);
+    padding-inline: 1px;
+    user-select: none;
+  }
+
+  /* ---- Trailing Controls (Clear + Clock Trigger) ---- */
+  :where(.j-time-picker__controls) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-0-5);
+    margin-inline-start: auto;
+    flex-shrink: 0;
+  }
+
+  :where(.j-time-picker__clear, .j-time-picker__trigger) {
+    appearance: none;
+    display: inline-grid;
+    place-items: center;
+    width: max(18px, calc(var(--_h) - max(6px, round(calc(10px * var(--j-density)), 1px))));
+    height: max(18px, calc(var(--_h) - max(6px, round(calc(10px * var(--j-density)), 1px))));
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: transparent;
+    color: var(--j-fg-subtle);
+    cursor: pointer;
+    outline: none;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    &[hidden] {
+      display: none;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled) {
+        background: var(--j-surface-2);
+        color: var(--j-fg);
+      }
+    }
+
+    &:active:not(:disabled) {
+      background: var(--j-surface-3);
+    }
+
+    &:focus-visible {
+      box-shadow: var(--j-ring);
+    }
+
+    &:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+    }
+
+    & > svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  :where(.j-time-picker[data-open]) :where(.j-time-picker__trigger) {
+    color: var(--j-tone);
+    background: var(--j-tone-soft);
+  }
+
+  /* ==========================================================================
+   * Anchored Column Popover
+   * ========================================================================== */
+  :where(.j-time-picker__popover) {
+    --_offset: var(--j-floating-offset, 6px);
+    --_slide: 2px;
+    --_from: 0 calc(var(--_slide) * -1);
+
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    padding: 0;
+    width: max-content;
+    border: 1px solid var(--j-border);
+    border-radius: var(--j-radius-lg);
+    background: light-dark(var(--j-surface-1), var(--j-surface-2));
+    color: var(--j-fg);
+    box-shadow: var(--j-shadow-md), var(--j-inset-highlight);
+    font-family: var(--j-font-sans);
+    font-variant-numeric: tabular-nums;
+    z-index: var(--j-z-dropdown);
+    user-select: none;
+    overflow: hidden;
+
+    position-area: block-end span-inline-end;
+    margin-block-start: var(--_offset);
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+    position-visibility: anchors-visible;
+    transform-origin: top left;
+
+    opacity: 0;
+    translate: var(--_from);
+    scale: 0.99;
+    transition:
+      opacity var(--j-duration) var(--j-ease-out),
+      translate var(--j-duration) var(--j-ease-out),
+      scale var(--j-duration) var(--j-ease-out),
+      overlay var(--j-duration) allow-discrete,
+      display var(--j-duration) allow-discrete;
+
+    &:popover-open {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+      @starting-style {
+        opacity: 0;
+        translate: var(--_from);
+        scale: 0.99;
+      }
+    }
+
+    &[data-placement="top"] {
+      --_from: 0 var(--_slide);
+      transform-origin: bottom left;
+    }
+  }
+
+  :where(.j-time-picker__columns) {
+    display: flex;
+    align-items: stretch;
+  }
+
+  :where(.j-time-picker__col) {
+    display: flex;
+    flex-direction: column;
+    min-width: max(46px, round(calc(56px * var(--j-density)), 1px));
+
+    & + .j-time-picker__col {
+      border-inline-start: 1px solid var(--j-border);
+    }
+  }
+
+  :where(.j-time-picker__col-label) {
+    padding: var(--j-space-1-5) var(--j-space-2);
+    border-bottom: 1px solid var(--j-border);
+    color: var(--j-fg-subtle);
+    font-size: 10px;
+    font-weight: var(--j-weight-semibold);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  :where(.j-time-picker__col-list) {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: max(148px, round(calc(196px * var(--j-density)), 1px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--j-space-1);
+    scrollbar-width: thin;
+  }
+
+  :where(.j-time-picker__cell) {
+    appearance: none;
+    display: grid;
+    place-items: center;
+    min-height: max(22px, round(calc(28px * var(--j-density)), 1px));
+    padding-inline: var(--j-space-2);
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: transparent;
+    color: var(--j-fg);
+    font-family: inherit;
+    font-size: var(--j-text-xs);
+    font-variant-numeric: tabular-nums;
+    cursor: pointer;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    @media (hover: hover) {
+      &:hover:not([aria-selected="true"]) {
+        background: var(--j-surface-3);
+      }
+    }
+
+    &[aria-selected="true"] {
+      background: var(--j-tone);
+      color: var(--j-tone-fg);
+      font-weight: var(--j-weight-semibold);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+  }
+
+  :where(.j-time-picker__footer) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-space-2);
+    padding: var(--j-space-1-5) var(--j-space-2);
+    border-top: 1px solid var(--j-border);
+    background: light-dark(var(--j-surface-2), var(--j-surface-1));
+  }
+
+  :where(.j-time-picker__action) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: max(20px, round(calc(24px * var(--j-density)), 1px));
+    padding-inline: var(--j-space-2);
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: transparent;
+    color: var(--j-fg-muted);
+    font-family: inherit;
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+    cursor: pointer;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    &[data-primary] {
+      color: var(--j-tone);
+      margin-inline-start: auto;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled) {
+        background: var(--j-surface-3);
+        color: var(--j-fg);
+      }
+      &[data-primary]:hover:not(:disabled) {
+        background: var(--j-tone-soft);
+        color: var(--j-tone-soft-fg);
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+  }
+}

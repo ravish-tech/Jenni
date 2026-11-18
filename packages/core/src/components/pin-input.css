@@ -1,0 +1,133 @@
+/*
+ * Pin / OTP Input — <div class="j-pin-input" role="group" aria-label="Verification code">
+ *   <input class="j-pin-input__cell" type="text" inputmode="numeric" maxlength="1" aria-label="Digit 1">
+ *   …
+ *   <span class="j-pin-input__sep" aria-hidden="true">—</span>
+ *   …
+ * </div>
+ * Options:
+ *   data-size: sm (34px) | md (40px, default) | lg (48px)
+ *   data-tone: accent | neutral | danger | success | warning | info
+ *   aria-invalid="true" / :disabled
+ * Public props: --j-control-radius, --j-control-bg
+ */
+@layer jenni.components {
+  :where(.j-pin-input) {
+    --_cell: max(28px, round(calc(40px * var(--j-density)), 1px));
+    --_fs: var(--j-text-lg);
+    --_radius: var(--j-control-radius, var(--j-radius-md));
+    --_border: var(--j-border-strong);
+    --_border-hover: color-mix(in oklch, var(--j-border-strong), var(--j-fg) 14%);
+    --_focus: var(--j-tone);
+
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-gap-related);
+    max-inline-size: 100%;
+
+    &[data-size="sm"] {
+      --_cell: max(24px, round(calc(34px * var(--j-density)), 1px));
+      --_fs: var(--j-text-md);
+      --_radius: var(--j-control-radius, var(--j-radius-sm));
+      gap: var(--j-gap-inline);
+    }
+
+    &[data-size="lg"] {
+      --_cell: max(34px, round(calc(48px * var(--j-density)), 1px));
+      --_fs: var(--j-text-xl);
+      --_radius: var(--j-control-radius, var(--j-radius-lg));
+      gap: var(--j-gap-related);
+    }
+
+    &[aria-invalid="true"] {
+      --_border: color-mix(in oklch, var(--j-danger) 70%, var(--j-border-strong));
+      --_border-hover: var(--j-danger);
+      --_focus: var(--j-danger);
+    }
+
+    &[aria-disabled="true"] {
+      cursor: not-allowed;
+    }
+  }
+
+  :where(.j-pin-input__group) {
+    display: inline-flex;
+    align-items: center;
+    gap: inherit;
+  }
+
+  :where(.j-pin-input__cell) {
+    appearance: none;
+    box-sizing: border-box;
+    inline-size: var(--_cell);
+    block-size: var(--_cell);
+    min-inline-size: 0;
+    padding: 0;
+    border: 1px solid var(--_border);
+    border-radius: var(--_radius);
+    background-color: var(--j-control-bg, var(--j-surface-1));
+    color: var(--j-fg);
+    box-shadow: var(--j-inset-highlight), var(--j-shadow-xs);
+    font-family: var(--j-font-mono);
+    font-size: var(--_fs);
+    font-weight: var(--j-weight-semibold);
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    line-height: 1;
+    caret-color: var(--_focus);
+    outline: none;
+    transition:
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    &::placeholder {
+      color: var(--j-fg-subtle);
+      font-weight: var(--j-weight-regular);
+      opacity: 0.65;
+    }
+
+    &[data-filled] {
+      border-color: color-mix(in oklch, var(--_border), var(--j-fg) 10%);
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, :focus) {
+        border-color: var(--_border-hover);
+      }
+    }
+
+    &:focus {
+      border-color: var(--_focus);
+      box-shadow:
+        var(--j-inset-highlight),
+        0 0 0 3px color-mix(in oklch, var(--_focus) 15%, transparent);
+    }
+
+    &[aria-invalid="true"] {
+      --_border: color-mix(in oklch, var(--j-danger) 70%, var(--j-border-strong));
+      --_border-hover: var(--j-danger);
+      --_focus: var(--j-danger);
+    }
+
+    &:disabled {
+      background-color: var(--j-surface-2);
+      color: var(--j-fg-subtle);
+      border-color: var(--j-border);
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+  }
+
+  :where(.j-pin-input__sep) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: var(--j-space-0-5);
+    color: var(--j-fg-subtle);
+    font-size: var(--j-text-sm);
+    line-height: 1;
+    user-select: none;
+  }
+}

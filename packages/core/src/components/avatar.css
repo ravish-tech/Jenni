@@ -1,0 +1,150 @@
+/*
+ * Avatar — image with initials fallback.
+ * <span class="j-avatar">
+ *   <img class="j-avatar__image" src="…" alt="Ada Lovelace">
+ *   <span class="j-avatar__fallback">AL</span>
+ *   <span class="j-avatar__status" data-status="online"></span>
+ * </span>
+ *   data-size:  xs | sm | md (default) | lg | xl
+ *   data-shape: circle (default) | square
+ *   data-tone:  colors the fallback (neutral gray when omitted)
+ * Status: data-status = online | busy | away | offline
+ * Broken images: Vue/React handle it; in plain HTML call initAvatars() or
+ * add data-state="error" to the <img>.
+ *
+ * AvatarGroup — <div class="j-avatar-group" data-size="sm"> avatars… </div>
+ *   Overlapping stack. A "+N" chip: <span class="j-avatar j-avatar-group__more">+3</span>
+ * Public props: --j-avatar-ring-color (cut-out ring, defaults to page bg)
+ */
+@layer jenni.components {
+  :where(.j-avatar) {
+    --_s: max(24px, round(calc(36px * var(--j-density)), 1px));
+    --_ring: var(--j-avatar-ring-color, var(--j-bg));
+    --_radius: var(--j-radius-full);
+
+    position: relative;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--_s);
+    block-size: var(--_s);
+    border-radius: var(--_radius);
+    background-color: var(--j-surface-3);
+    color: var(--j-fg-muted);
+    font-size: max(9px, calc(var(--_s) * 0.38));
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    letter-spacing: 0;
+    text-transform: uppercase;
+    vertical-align: middle;
+    user-select: none;
+  }
+  /* Crisp hairline edge, drawn over the image so photos never bleed into the page. */
+  :where(.j-avatar)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--j-fg) 9%, transparent);
+    pointer-events: none;
+  }
+  :where(.j-avatar[data-tone]) {
+    background-color: var(--j-tone-soft);
+    color: var(--j-tone-soft-fg);
+  }
+  :where(.j-avatar[data-shape="square"]) {
+    --_radius: calc(var(--_s) * 0.26 * var(--j-radius-factor));
+  }
+
+  /* Sizes — group sizes first so an avatar's own data-size wins. */
+  :where(.j-avatar-group[data-size="xs"] > .j-avatar) { --_s: max(16px, round(calc(20px * var(--j-density)), 1px)); }
+  :where(.j-avatar-group[data-size="sm"] > .j-avatar) { --_s: max(20px, round(calc(28px * var(--j-density)), 1px)); }
+  :where(.j-avatar-group[data-size="lg"] > .j-avatar) { --_s: max(30px, round(calc(44px * var(--j-density)), 1px)); }
+  :where(.j-avatar-group[data-size="xl"] > .j-avatar) { --_s: max(38px, round(calc(56px * var(--j-density)), 1px)); }
+  :where(.j-avatar[data-size="xs"]) { --_s: max(16px, round(calc(20px * var(--j-density)), 1px)); }
+  :where(.j-avatar[data-size="sm"]) { --_s: max(20px, round(calc(28px * var(--j-density)), 1px)); }
+  :where(.j-avatar[data-size="md"]) { --_s: max(24px, round(calc(36px * var(--j-density)), 1px)); }
+  :where(.j-avatar[data-size="lg"]) { --_s: max(30px, round(calc(44px * var(--j-density)), 1px)); }
+  :where(.j-avatar[data-size="xl"]) { --_s: max(38px, round(calc(56px * var(--j-density)), 1px)); }
+
+  /* Parts */
+  :where(.j-avatar__image) {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    border-radius: inherit;
+    object-fit: cover;
+    color: transparent; /* hide alt text while loading */
+    transition: opacity var(--j-duration) var(--j-ease-out);
+  }
+  :where(.j-avatar__image[data-state="loading"]) { opacity: 0; }
+  :where(.j-avatar__image[data-state="error"], .j-avatar__image:not([src]), .j-avatar__image[src=""]) { display: none; }
+
+  :where(.j-avatar__fallback) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 100%;
+    block-size: 100%;
+    border-radius: inherit;
+    overflow: hidden;
+  }
+  :where(.j-avatar__fallback > svg) {
+    inline-size: 56%;
+    block-size: 56%;
+  }
+
+  :where(.j-avatar__status) {
+    --_d: max(8px, calc(var(--_s) * 0.26));
+    position: absolute;
+    z-index: 1;
+    inset-inline-end: 0;
+    inset-block-end: 0;
+    inline-size: var(--_d);
+    block-size: var(--_d);
+    border-radius: var(--j-radius-full);
+    background-color: var(--j-fg-subtle);
+    box-shadow: 0 0 0 2px var(--_ring);
+  }
+  :where(.j-avatar[data-shape="square"] > .j-avatar__status) {
+    inset-inline-end: calc(var(--_d) * -0.25);
+    inset-block-end: calc(var(--_d) * -0.25);
+  }
+  :where(.j-avatar__status[data-status="online"]) { background-color: var(--j-success); }
+  :where(.j-avatar__status[data-status="busy"])   { background-color: var(--j-danger); }
+  :where(.j-avatar__status[data-status="away"])   { background-color: var(--j-warning); }
+  :where(.j-avatar__status[data-status="offline"]) {
+    background-color: var(--_ring);
+    box-shadow: 0 0 0 2px var(--_ring), inset 0 0 0 calc(var(--_d) * 0.2) var(--j-fg-subtle);
+  }
+
+  /* ---- AvatarGroup ---- */
+  :where(.j-avatar-group) {
+    display: inline-flex;
+    align-items: center;
+    isolation: isolate;
+  }
+  :where(.j-avatar-group > .j-avatar) {
+    box-shadow: 0 0 0 2px var(--_ring);
+    transition: box-shadow var(--j-duration-fast) var(--j-ease-out);
+  }
+  :where(.j-avatar-group > .j-avatar + .j-avatar) {
+    margin-inline-start: calc(var(--_s) * -0.28);
+  }
+  :where(.j-avatar-group > .j-avatar:hover) {
+    z-index: 1;
+  }
+  :where(.j-avatar-group > .j-avatar:hover)::after {
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--j-fg) 22%, transparent);
+  }
+  :where(.j-avatar-group__more) {
+    font-size: calc(var(--_s) * 0.32);
+    font-weight: var(--j-weight-semibold);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+    color: var(--j-fg-muted);
+    background-color: var(--j-surface-2);
+  }
+}

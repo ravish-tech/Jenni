@@ -1,0 +1,160 @@
+/*
+ * Jenni — Dialog / Modal. Native <dialog> opened with showModal().
+ *   <button commandfor="dlg" command="show-modal">Open</button>
+ *   <dialog class="j-dialog" id="dlg" data-size="md" closedby="any" aria-labelledby="dlg-t">
+ *     <header class="j-dialog__header">
+ *       <h2 class="j-dialog__title" id="dlg-t">Title</h2>
+ *       <p class="j-dialog__description">Supporting text.</p>
+ *     </header>
+ *     <div class="j-dialog__body">…</div>
+ *     <footer class="j-dialog__footer">…</footer>
+ *     <button class="j-dialog__close" commandfor="dlg" command="close" aria-label="Close">…</button>
+ *   </dialog>
+ * Options: data-size = sm | md | lg. Public props: --j-dialog-width.
+ * Native: focus trap, Escape, focus restore. CSS: scroll lock, blur backdrop.
+ * Below 40rem the dialog docks to the bottom as a sheet.
+ */
+@layer jenni.components {
+  :where(.j-dialog) {
+    --_w: var(--j-dialog-width, 32rem);
+    --_pad: var(--j-space-5);
+    --_radius: var(--j-radius-xl);
+    --_from: 0 4px;
+
+    position: fixed;
+    inset: 0;
+    margin: auto;
+    width: min(var(--_w), 100vw - var(--j-space-8));
+    max-width: none;
+    max-height: min(100dvh - var(--j-space-12), 52rem);
+    padding: 0;
+    border: 1px solid var(--j-border);
+    border-radius: var(--_radius);
+    background: light-dark(var(--j-surface-1), var(--j-surface-2));
+    color: var(--j-fg);
+    box-shadow: var(--j-shadow-lg), var(--j-inset-highlight);
+    overflow: hidden;
+    overscroll-behavior: contain;
+    z-index: var(--j-z-modal);
+
+    opacity: 0;
+    translate: var(--_from);
+    scale: 0.99;
+    transition:
+      opacity var(--j-duration) var(--j-ease-out),
+      translate var(--j-duration-slow) var(--j-ease-emphasized),
+      scale var(--j-duration-slow) var(--j-ease-emphasized),
+      overlay var(--j-duration-slow) allow-discrete,
+      display var(--j-duration-slow) allow-discrete;
+
+    &[open] {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+      @starting-style {
+        opacity: 0;
+        translate: var(--_from);
+        scale: 0.99;
+      }
+    }
+
+    &::backdrop {
+      background: var(--j-overlay);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      transition:
+        opacity var(--j-duration-slow) var(--j-ease-out),
+        overlay var(--j-duration-slow) allow-discrete,
+        display var(--j-duration-slow) allow-discrete;
+    }
+    &[open]::backdrop {
+      opacity: 1;
+      @starting-style { opacity: 0; }
+    }
+    &:focus-visible { box-shadow: var(--j-shadow-lg), var(--j-inset-highlight); }
+
+    &[data-size="sm"] { --_w: var(--j-dialog-width, 25rem); }
+    &[data-size="lg"] { --_w: var(--j-dialog-width, 44rem); }
+
+    @media (width < 40rem) {
+      --_from: 0 16px;
+      margin: auto 0 0;
+      width: 100%;
+      max-height: calc(100dvh - var(--j-space-8));
+      border-width: 1px 0 0;
+      border-radius: var(--_radius) var(--_radius) 0 0;
+      scale: 1;
+      &[open] { @starting-style { scale: 1; } }
+    }
+  }
+
+  /* Scroll lock while any modal dialog is open. No layout shift. */
+  :where(html:has(.j-dialog:modal)) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+
+  :where(.j-dialog__header) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-1);
+    padding: var(--_pad) var(--_pad) 0;
+    /* keep text clear of the close button */
+    padding-inline-end: calc(var(--_pad) + var(--j-space-8));
+  }
+  :where(.j-dialog__title) {
+    font-size: var(--j-text-lg);
+    font-weight: var(--j-weight-semibold);
+    letter-spacing: var(--j-tracking-tight);
+    line-height: var(--j-leading-tight);
+  }
+  :where(.j-dialog__description) {
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-sm);
+  }
+  :where(.j-dialog__body) {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    padding: var(--_pad);
+    font-size: var(--j-text-md);
+  }
+  :where(.j-dialog__header + .j-dialog__body) { padding-top: var(--j-space-4); }
+  :where(.j-dialog__header:has(+ .j-dialog__footer)) { padding-bottom: var(--_pad); }
+  :where(.j-dialog__footer) {
+    flex: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--j-gap-related);
+    padding: var(--j-space-3) var(--_pad);
+    border-top: 1px solid var(--j-border);
+    background: light-dark(var(--j-surface-2), var(--j-surface-1));
+  }
+  /* Push items before a [data-spacer] to the start (e.g. a "Learn more" link). */
+  :where(.j-dialog__footer > [data-spacer]) { margin-inline-end: auto; }
+
+  :where(.j-dialog__close) {
+    position: absolute;
+    top: var(--j-space-3);
+    right: var(--j-space-3);
+    display: grid;
+    place-items: center;
+    width: var(--j-control-sm);
+    height: var(--j-control-sm);
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-sm);
+    background: transparent;
+    color: var(--j-fg-subtle);
+    cursor: pointer;
+    transition: background-color var(--j-duration-fast) var(--j-ease-out), color var(--j-duration-fast) var(--j-ease-out);
+    &:hover { background: var(--j-surface-3); color: var(--j-fg); }
+    &:active { background: var(--j-border); }
+    & > svg { width: 16px; height: 16px; }
+  }
+}

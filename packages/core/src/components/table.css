@@ -1,0 +1,487 @@
+/*
+ * Table & Data Table —
+ *   <div class="j-table-wrap" data-variant="surface|outline|striped|plain" data-size="sm|md|lg" data-hover data-sticky-header>
+ *     <table class="j-table">…</table>
+ *   </div>
+ *   <div class="j-data-table" data-variant="surface|outline|striped|plain" data-size="sm|md|lg">
+ *     <div class="j-data-table__toolbar">…</div>
+ *     <div class="j-table-wrap"><table class="j-table">…</table></div>
+ *     <div class="j-data-table__footer">…</div>
+ *   </div>
+ * Public props: --j-table-radius, --j-table-max-height
+ */
+@layer jenni.components {
+  :where(.j-table-wrap, .j-data-table) {
+    --_row-h: max(24px, round(calc(36px * var(--j-density)), 1px));
+    --_head-h: max(24px, round(calc(34px * var(--j-density)), 1px));
+    --_px: var(--j-space-3);
+    --_py: max(2px, round(calc(6px * var(--j-density)), 1px));
+    --_fs: var(--j-text-sm);
+    --_head-fs: var(--j-text-xs);
+    --_radius: var(--j-table-radius, var(--j-radius-lg));
+    --_frame-bg: var(--j-surface-1);
+    --_head-bg: var(--j-surface-2);
+  }
+
+  /* ---- Sizes ---- */
+  :where(.j-table-wrap[data-size="sm"], .j-data-table[data-size="sm"]) {
+    --_row-h: max(22px, round(calc(30px * var(--j-density)), 1px));
+    --_head-h: max(22px, round(calc(28px * var(--j-density)), 1px));
+    --_px: var(--j-space-2);
+    --_py: max(2px, round(calc(4px * var(--j-density)), 1px));
+    --_fs: var(--j-text-xs);
+  }
+
+  :where(.j-table-wrap[data-size="lg"], .j-data-table[data-size="lg"]) {
+    --_row-h: max(30px, round(calc(44px * var(--j-density)), 1px));
+    --_head-h: max(28px, round(calc(38px * var(--j-density)), 1px));
+    --_px: var(--j-space-4);
+    --_py: max(4px, round(calc(8px * var(--j-density)), 1px));
+    --_fs: var(--j-text-md);
+  }
+
+  /* ---- Variants ---- */
+  :where(.j-table-wrap[data-variant="outline"], .j-data-table[data-variant="outline"]) {
+    --_frame-bg: var(--j-bg);
+    --_head-bg: color-mix(in oklch, var(--j-surface-2) 72%, var(--j-bg));
+  }
+
+  :where(.j-table-wrap[data-variant="plain"], .j-data-table[data-variant="plain"]) {
+    --_frame-bg: var(--j-bg);
+    --_head-bg: var(--j-bg);
+    --_radius: 0px;
+  }
+
+  /* ---- DataTable outer chrome ---- */
+  :where(.j-data-table) {
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    min-inline-size: 0;
+    background-color: var(--_frame-bg);
+    border: 1px solid var(--j-border);
+    border-radius: var(--_radius);
+    box-shadow: var(--j-shadow-xs);
+    overflow: hidden;
+
+    &[data-variant="outline"] {
+      box-shadow: none;
+    }
+
+    &[data-variant="plain"] {
+      background-color: transparent;
+      border: 0;
+      box-shadow: none;
+      overflow: visible;
+    }
+  }
+
+  :where(.j-data-table__toolbar) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-related);
+    padding: var(--j-space-2) var(--_px);
+    border-block-end: 1px solid var(--j-border);
+    background-color: var(--_frame-bg);
+  }
+
+  :where(.j-data-table[data-variant="plain"]) > :where(.j-data-table__toolbar) {
+    padding-inline: 0;
+    background-color: transparent;
+  }
+
+  :where(.j-data-table__search) {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex: 1 1 200px;
+    max-inline-size: 300px;
+
+    & > svg {
+      position: absolute;
+      inset-inline-start: var(--j-space-2);
+      inline-size: 14px;
+      block-size: 14px;
+      color: var(--j-fg-subtle);
+      pointer-events: none;
+    }
+
+    & > input {
+      inline-size: 100%;
+      block-size: var(--j-control-sm);
+      padding-inline-start: calc(var(--j-space-2) + 18px);
+      padding-inline-end: var(--j-space-2);
+      border: 1px solid var(--j-border);
+      border-radius: var(--j-radius-md);
+      background-color: var(--j-surface-1);
+      color: var(--j-fg);
+      font-family: inherit;
+      font-size: var(--j-text-xs);
+      line-height: 1;
+      transition:
+        border-color var(--j-duration-fast) var(--j-ease-out),
+        box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+      &::placeholder {
+        color: var(--j-fg-subtle);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: var(--j-accent);
+        box-shadow: var(--j-ring);
+      }
+    }
+  }
+
+  :where(.j-data-table__actions) {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--j-gap-related);
+  }
+
+  :where(.j-data-table__footer) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-related);
+    padding: var(--j-space-2) var(--_px);
+    border-block-start: 1px solid var(--j-border);
+    background-color: var(--_frame-bg);
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-xs);
+    font-variant-numeric: tabular-nums;
+  }
+
+  :where(.j-data-table[data-variant="plain"]) > :where(.j-data-table__footer) {
+    padding-inline: 0;
+    background-color: transparent;
+  }
+
+  :where(.j-data-table__meta) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-gap-inline);
+    color: var(--j-fg-muted);
+    font-variant-numeric: tabular-nums;
+
+    & :where(strong, b) {
+      color: var(--j-fg);
+      font-weight: var(--j-weight-medium);
+    }
+  }
+
+  /* ---- Scrollable table wrapper ---- */
+  :where(.j-table-wrap) {
+    position: relative;
+    inline-size: 100%;
+    min-inline-size: 0;
+    overflow-x: auto;
+    background-color: var(--_frame-bg);
+    border: 1px solid var(--j-border);
+    border-radius: var(--_radius);
+    box-shadow: var(--j-shadow-xs);
+
+    &[data-variant="outline"] {
+      box-shadow: none;
+    }
+
+    &[data-variant="plain"] {
+      background-color: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+    }
+
+    &[data-sticky-header] {
+      overflow-y: auto;
+      max-block-size: var(--j-table-max-height, 360px);
+    }
+  }
+
+  /* Dedup frame when nested inside .j-data-table */
+  :where(.j-data-table) > :where(.j-table-wrap) {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  /* ---- Semantic Table ---- */
+  :where(.j-table) {
+    inline-size: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    color: var(--j-fg);
+    font-size: var(--_fs);
+    line-height: var(--j-leading-tight);
+    text-align: start;
+
+    & > :where(caption) {
+      padding: var(--j-space-2) var(--_px);
+      caption-side: bottom;
+      color: var(--j-fg-subtle);
+      font-size: var(--j-text-xs);
+      text-align: start;
+      border-block-start: 1px solid var(--j-border);
+    }
+  }
+
+  /* ---- Header cells ---- */
+  :where(.j-table) :where(thead th) {
+    position: relative;
+    block-size: var(--_head-h);
+    padding: var(--j-space-1) var(--_px);
+    background-color: var(--_head-bg);
+    border-block-end: 1px solid var(--j-border);
+    color: var(--j-fg-muted);
+    font-size: var(--_head-fs);
+    font-weight: var(--j-weight-medium);
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    vertical-align: middle;
+    user-select: none;
+  }
+
+  :where(.j-table-wrap[data-variant="plain"], .j-data-table[data-variant="plain"]) :where(.j-table thead th) {
+    border-block-end-color: var(--j-border-strong);
+  }
+
+  :where(.j-table-wrap[data-sticky-header]) :where(.j-table thead th) {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 3;
+  }
+
+  /* ---- Body & Footer cells ---- */
+  :where(.j-table) :where(tbody tr) {
+    --_cell-bg: var(--_frame-bg);
+    background-color: var(--_cell-bg);
+    transition: background-color var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  :where(.j-table) :where(tbody td, tbody th) {
+    block-size: var(--_row-h);
+    padding: var(--_py) var(--_px);
+    background-color: var(--_cell-bg);
+    border-block-end: 1px solid var(--j-border);
+    vertical-align: middle;
+    transition: background-color var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  :where(.j-table) :where(tbody th) {
+    font-weight: var(--j-weight-medium);
+    color: var(--j-fg);
+  }
+
+  :where(.j-table:not(:has(> tfoot))) :where(tbody tr:last-child) :where(td, th) {
+    border-block-end: 0;
+  }
+
+  :where(.j-table-wrap[data-variant="plain"], .j-data-table[data-variant="plain"])
+    :where(.j-table:not(:has(> tfoot)) tbody tr:last-child)
+    :where(td, th) {
+    border-block-end: 1px solid var(--j-border);
+  }
+
+  :where(.j-table) :where(tfoot td, tfoot th) {
+    block-size: var(--_row-h);
+    padding: var(--_py) var(--_px);
+    background-color: var(--_head-bg);
+    border-block-start: 1px solid var(--j-border-strong);
+    font-weight: var(--j-weight-medium);
+    font-variant-numeric: tabular-nums;
+    vertical-align: middle;
+  }
+
+  /* ---- Striped rows ---- */
+  :where(
+      .j-table-wrap[data-variant="striped"],
+      .j-data-table[data-variant="striped"],
+      .j-table[data-variant="striped"]
+    )
+    :where(tbody tr:nth-child(even):not([data-selected], [aria-selected="true"], [data-empty])) {
+    --_cell-bg: color-mix(in oklch, var(--j-surface-2) 58%, var(--_frame-bg));
+  }
+
+  /* ---- Hoverable rows ---- */
+  @media (hover: hover) {
+    :where(
+        .j-table-wrap[data-hover],
+        .j-data-table[data-hover],
+        .j-table[data-hover]
+      )
+      :where(tbody tr:not([data-selected], [aria-selected="true"], [data-empty]):hover) {
+      --_cell-bg: var(--j-surface-2);
+    }
+  }
+
+  /* ---- Selected rows ---- */
+  :where(.j-table) :where(tbody tr[data-selected], tbody tr[aria-selected="true"]) {
+    --_cell-bg: color-mix(in oklch, var(--j-accent-soft) 68%, var(--_frame-bg));
+  }
+
+  :where(.j-table)
+    :where(tbody tr[data-selected], tbody tr[aria-selected="true"])
+    > :where(td, th):first-child {
+    box-shadow: inset 2px 0 0 var(--j-accent);
+  }
+
+  /* ---- Alignment & Numeric tabular-nums ---- */
+  :where(.j-table) :where([data-align="center"]) {
+    text-align: center;
+  }
+
+  :where(.j-table) :where([data-align="end"], [data-numeric]) {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- Checkbox selection cell ---- */
+  :where(.j-table__check) {
+    inline-size: 36px;
+    min-inline-size: 36px;
+    max-inline-size: 36px;
+    padding-inline: var(--j-space-2);
+    text-align: center;
+    line-height: 0;
+  }
+
+  /* ---- Pinned first / last columns ---- */
+  :where(.j-table) :where([data-pin="start"]),
+  :where(.j-table[data-pin-first]) :where(tr > :first-child:not([colspan])) {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: 2;
+    box-shadow: inset -1px 0 0 var(--j-border);
+  }
+
+  :where(.j-table) :where(tbody tr[data-selected], tbody tr[aria-selected="true"]) :where([data-pin="start"]),
+  :where(.j-table[data-pin-first]) :where(tbody tr[data-selected], tbody tr[aria-selected="true"]) > :first-child:not([colspan]) {
+    box-shadow: inset 2px 0 0 var(--j-accent), inset -1px 0 0 var(--j-border);
+  }
+
+  :where(.j-table) :where([data-pin="end"]),
+  :where(.j-table[data-pin-last]) :where(tr > :last-child:not([colspan])) {
+    position: sticky;
+    inset-inline-end: 0;
+    z-index: 2;
+    box-shadow: inset 1px 0 0 var(--j-border);
+  }
+
+  :where(.j-table) :where(thead [data-pin="start"], thead [data-pin="end"]),
+  :where(.j-table[data-pin-first]) :where(thead tr > :first-child),
+  :where(.j-table[data-pin-last]) :where(thead tr > :last-child) {
+    z-index: 4;
+    background-color: var(--_head-bg);
+  }
+
+  /* ---- Sortable column header button ---- */
+  :where(.j-table__sort) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    margin-inline: calc(var(--j-space-1-5) * -1);
+    padding: var(--j-space-0-5) var(--j-space-1-5);
+    border: 0;
+    border-radius: var(--j-radius-sm);
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    cursor: pointer;
+    user-select: none;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: color-mix(in oklch, var(--j-fg) 6%, transparent);
+        color: var(--j-fg);
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+      color: var(--j-fg);
+    }
+  }
+
+  :where(th[aria-sort="ascending"], th[aria-sort="descending"]) :where(.j-table__sort) {
+    color: var(--j-fg);
+    font-weight: var(--j-weight-semibold);
+  }
+
+  :where(th[data-align="end"]) :where(.j-table__sort) {
+    flex-direction: row-reverse;
+  }
+
+  :where(.j-table__sort-icon) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: 12px;
+    block-size: 12px;
+    flex: none;
+    color: var(--j-fg-subtle);
+    transition:
+      color var(--j-duration-fast) var(--j-ease-out),
+      transform var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: 12px;
+      block-size: 12px;
+    }
+
+    &:empty::before {
+      content: "";
+      inline-size: 12px;
+      block-size: 12px;
+      background-color: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.75 4.5 6 2.25 8.25 4.5M3.75 7.5 6 9.75 8.25 7.5'/%3E%3C/svg%3E") center / contain no-repeat;
+    }
+  }
+
+  :where(th[aria-sort="ascending"]) :where(.j-table__sort-icon) {
+    color: var(--j-accent);
+
+    &:empty::before {
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.25 7.25 6 4.5l2.75 2.75'/%3E%3C/svg%3E");
+    }
+  }
+
+  :where(th[aria-sort="descending"]) :where(.j-table__sort-icon) {
+    color: var(--j-accent);
+
+    &:empty::before {
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.25 4.75 6 7.5l2.75-2.75'/%3E%3C/svg%3E");
+    }
+  }
+
+  /* ---- Empty state row ---- */
+  :where(.j-table__empty) {
+    padding: var(--j-space-8) var(--_px);
+    text-align: center;
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-sm);
+  }
+
+  :where(.j-table__empty-title) {
+    display: block;
+    color: var(--j-fg);
+    font-weight: var(--j-weight-medium);
+    margin-block-end: var(--j-space-1);
+  }
+
+  :where(.j-table__empty-desc) {
+    display: block;
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-xs);
+  }
+}

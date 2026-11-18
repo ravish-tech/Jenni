@@ -1,0 +1,291 @@
+/*
+ * Jenni — Toast & Toaster.
+ * Top-layer notification deck using native `popover="manual"` so toasts float
+ * calmly above everything — including modal `<dialog>` scims — without trapping
+ * focus or triggering accidental light-dismiss.
+ *
+ * Viewport options:
+ *   data-position = bottom-end | bottom-center | top-end | top-center (default: bottom-end)
+ *   data-expanded                                                     (force expanded stack)
+ * Toast options:
+ *   data-tone     = neutral | accent | success | warning | danger | info
+ *   data-state    = entering | open | closing
+ * Public props: --j-toast-width, --j-toaster-offset
+ */
+@layer jenni.components {
+  :where(.j-toaster) {
+    --_edge: var(--j-toaster-offset, var(--j-space-5));
+    --_width: min(var(--j-toast-width, 356px), calc(100vw - var(--j-space-8)));
+    --_gap: var(--j-gap-related);
+    --_peek: var(--j-space-2);
+    --_dir: -1;
+
+    position: fixed;
+    inset: auto var(--_edge) var(--_edge) auto;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--j-fg);
+    width: var(--_width);
+    height: var(--_front-h, 0px);
+    overflow: visible;
+    pointer-events: none;
+    z-index: var(--j-z-toast);
+    outline: none;
+
+    &:not(:popover-open) {
+      display: none;
+    }
+
+    &:is(:hover, :focus-within, [data-expanded]) {
+      height: var(--_stack-h, var(--_front-h, 0px));
+      pointer-events: auto;
+    }
+
+    &[data-position="bottom-center"] {
+      inset: auto 0 var(--_edge) 0;
+      margin-inline: auto;
+    }
+    &[data-position="top-end"] {
+      --_dir: 1;
+      inset: var(--_edge) var(--_edge) auto auto;
+    }
+    &[data-position="top-center"] {
+      --_dir: 1;
+      inset: var(--_edge) 0 auto 0;
+      margin-inline: auto;
+    }
+  }
+
+  :where(.j-toast) {
+    --_index: 0;
+    --_offset-y: 0px;
+    --_enter-y: calc(12px * var(--_dir) * -1);
+    --_dot: var(--j-fg-muted);
+
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--j-border);
+    border-radius: var(--j-radius-lg);
+    background: light-dark(var(--j-surface-1), var(--j-surface-2));
+    color: var(--j-fg);
+    box-shadow: var(--j-shadow-md), var(--j-inset-highlight);
+    pointer-events: auto;
+    overflow: hidden;
+    transform-origin: bottom center;
+    z-index: calc(100 - var(--_index));
+
+    opacity: 1;
+    translate: 0 calc(var(--_index) * var(--_peek) * var(--_dir));
+    scale: calc(1 - var(--_index) * 0.04);
+    transition:
+      translate var(--j-duration-slow) var(--j-ease-emphasized),
+      scale var(--j-duration-slow) var(--j-ease-emphasized),
+      opacity var(--j-duration) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    @starting-style {
+      opacity: 0;
+      translate: 0 var(--_enter-y);
+      scale: 0.99;
+    }
+
+    &[data-state="entering"] {
+      opacity: 0;
+      translate: 0 var(--_enter-y);
+      scale: 0.99;
+    }
+
+    &[data-state="closing"] {
+      opacity: 0;
+      translate: 0 calc(var(--_offset-y) * var(--_dir) + 6px * var(--_dir) * -1);
+      scale: 0.98;
+      pointer-events: none;
+      transition-duration: var(--j-duration);
+      transition-timing-function: var(--j-ease-out);
+    }
+
+    /* Tone dot / icon palette */
+    &[data-tone="accent"]  { --_dot: var(--j-accent); }
+    &[data-tone="success"] { --_dot: var(--j-success); }
+    &[data-tone="warning"] { --_dot: var(--j-warning); }
+    &[data-tone="danger"]  { --_dot: var(--j-danger); }
+    &[data-tone="info"]    { --_dot: var(--j-info); }
+    &[data-tone="neutral"] { --_dot: var(--j-fg-subtle); }
+
+    /* Cards beyond the 3 visible slots stay tucked silently behind slot 2 */
+    &[data-hidden] {
+      opacity: 0;
+      pointer-events: none;
+      translate: 0 calc(2 * var(--_peek) * var(--_dir));
+      scale: 0.92;
+    }
+  }
+
+  /* Top-anchored positions flip vertical origin & anchor edge */
+  :where(.j-toaster[data-position^="top"]) :where(.j-toast) {
+    bottom: auto;
+    top: 0;
+    transform-origin: top center;
+  }
+
+  /* Collapsed behind-cards adopt front-card height & mute text for a clean architectural deck */
+  :where(.j-toaster:not(:hover, :focus-within, [data-expanded]))
+    :where(.j-toast[data-behind]:not([data-state="closing"])) {
+    height: var(--_front-h, auto);
+  }
+  :where(.j-toaster:not(:hover, :focus-within, [data-expanded]))
+    :where(.j-toast[data-behind]) :where(.j-toast__inner) {
+    opacity: 0;
+  }
+
+  /* Expanded fan-out on hover / focus / [data-expanded] — 300ms damped glide, 0% bounce */
+  :where(.j-toaster:is(:hover, :focus-within, [data-expanded]))
+    :where(.j-toast:not([data-hidden], [data-state="closing"])) {
+    translate: 0 calc(var(--_offset-y) * var(--_dir));
+    scale: 1;
+  }
+
+  :where(.j-toast__inner) {
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--j-gap-item);
+    width: 100%;
+    padding: var(--j-space-3) var(--j-space-4);
+    transition: opacity var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  :where(.j-toast__indicator) {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 20px;
+    color: var(--_dot);
+
+    & > svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  :where(.j-toast__dot) {
+    width: 7px;
+    height: 7px;
+    border-radius: var(--j-radius-full);
+    background-color: var(--_dot);
+  }
+
+  :where(.j-toast__body) {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-0-5);
+  }
+
+  :where(.j-toast__title) {
+    margin: 0;
+    color: var(--j-fg);
+    font-size: var(--j-text-sm);
+    font-weight: var(--j-weight-medium);
+    line-height: 1.4;
+    letter-spacing: -0.006em;
+  }
+
+  :where(.j-toast__description) {
+    margin: 0;
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-xs);
+    line-height: 1.45;
+  }
+
+  :where(.j-toast__actions) {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-gap-inline);
+    margin-inline-start: auto;
+    align-self: center;
+  }
+
+  :where(.j-toast__action) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 26px;
+    padding: 0 var(--j-space-2);
+    border: 1px solid var(--j-border-strong);
+    border-radius: var(--j-radius-sm);
+    background: var(--j-surface-2);
+    color: var(--j-fg);
+    font-family: inherit;
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    outline: none;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    &:hover {
+      background: var(--j-surface-3);
+    }
+    &:active {
+      background: var(--j-border);
+    }
+    &:focus-visible {
+      box-shadow: var(--j-ring);
+    }
+  }
+
+  :where(.j-toast__close) {
+    flex: none;
+    appearance: none;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    margin: -2px -6px -2px 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: transparent;
+    color: var(--j-fg-subtle);
+    cursor: pointer;
+    outline: none;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    &:hover {
+      background: var(--j-surface-3);
+      color: var(--j-fg);
+    }
+    &:active {
+      background: var(--j-border);
+    }
+    &:focus-visible {
+      box-shadow: var(--j-ring);
+    }
+    & > svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+}

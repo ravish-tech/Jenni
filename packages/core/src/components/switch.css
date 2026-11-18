@@ -1,0 +1,109 @@
+/*
+ * Switch — <input type="checkbox" role="switch" class="j-switch">
+ *   :checked, :disabled · data-size: sm | md | lg · data-tone
+ * Precision-machined hardware toggle: crisp circular thumb, architectural
+ * hairline track, and weighted damped glide with zero overshoot or stretch.
+ */
+@layer jenni.components {
+  :where(.j-switch) {
+    --_w: 36px;
+    --_h: 20px;
+    --_pad: 2px;
+    --_thumb: calc(var(--_h) - 2 * var(--_pad));
+    --_travel: calc(var(--_w) - var(--_h));
+    --_track: color-mix(in oklch, var(--j-fg) 13%, var(--j-surface-2));
+    --_rim: inset 0 0 0 1px color-mix(in oklch, var(--j-fg) 8%, transparent);
+    --_thumb-bg: oklch(99.5% 0 0);
+
+    appearance: none;
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    inline-size: var(--_w);
+    block-size: var(--_h);
+    margin: 0;
+    border: 0;
+    border-radius: var(--j-radius-full);
+    background-color: var(--_track);
+    box-shadow: var(--_rim);
+    vertical-align: middle;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--j-duration) var(--j-ease-out),
+      box-shadow var(--j-duration) var(--j-ease-out);
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset-block-start: var(--_pad);
+      inset-inline-start: var(--_pad);
+      inline-size: var(--_thumb);
+      block-size: var(--_thumb);
+      border-radius: var(--j-radius-full);
+      background-color: var(--_thumb-bg);
+      box-shadow:
+        0 1px 2.5px oklch(0% 0 0 / 0.18),
+        0 0 0 0.5px oklch(0% 0 0 / 0.06);
+      transition:
+        transform var(--j-duration-slow) var(--j-ease-emphasized),
+        background-color var(--j-duration) var(--j-ease-out);
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, :checked) {
+        --_track: color-mix(in oklch, var(--j-fg) 18%, var(--j-surface-2));
+      }
+      &:hover:checked:not(:disabled) {
+        background-color: var(--j-tone-hover);
+      }
+    }
+
+    &:active:not(:disabled, :checked) {
+      --_track: color-mix(in oklch, var(--j-fg) 22%, var(--j-surface-2));
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--_rim), var(--j-ring);
+    }
+
+    &:checked {
+      --_rim: inset 0 0 0 1px color-mix(in oklch, black 8%, transparent);
+      background-color: var(--j-tone);
+      box-shadow: var(--_rim);
+
+      &::before {
+        transform: translateX(var(--_travel));
+      }
+      &:active:not(:disabled) {
+        background-color: color-mix(in oklch, var(--j-tone-hover), black 6%);
+      }
+      &:focus-visible {
+        box-shadow: var(--_rim), var(--j-ring);
+      }
+    }
+    &:dir(rtl):checked::before {
+      transform: translateX(calc(-1 * var(--_travel)));
+    }
+
+    &[aria-invalid="true"]:not(:checked) {
+      box-shadow:
+        inset 0 0 0 1px var(--j-danger),
+        0 0 0 3px color-mix(in oklch, var(--j-danger) 15%, transparent);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    /* In dark mode, neutral checked track is near-white (--j-fg), so thumb flips cleanly to --j-bg. */
+    &:is([data-tone="neutral"], [data-tone="neutral"] *):checked {
+      --_thumb-bg: light-dark(oklch(99.5% 0 0), var(--j-bg));
+    }
+
+    &[data-size="sm"] { --_w: 28px; --_h: 16px; }
+    &[data-size="lg"] { --_w: 44px; --_h: 24px; }
+  }
+}

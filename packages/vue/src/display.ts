@@ -1,0 +1,72 @@
+// Group index for "display" components.
+export { default as JBadge } from './display/JBadge.vue';
+export { default as JAvatar } from './display/JAvatar.vue';
+export { default as JAvatarGroup } from './display/JAvatarGroup.vue';
+export { default as JCard } from './display/JCard.vue';
+export { default as JAlert } from './display/JAlert.vue';
+export { default as JSpinner } from './display/JSpinner.vue';
+export { default as JProgress } from './display/JProgress.vue';
+export { default as JSkeleton } from './display/JSkeleton.vue';
+export { default as JKbd } from './display/JKbd.vue';
+export { default as JSeparator } from './display/JSeparator.vue';
+export { default as JAccordion } from './display/JAccordion.vue';
+export { default as JAccordionItem } from './display/JAccordionItem.vue';
+export { default as JCollapsible } from './display/JCollapsible.vue';
+export { default as JBreadcrumb } from './display/JBreadcrumb.vue';
+export { default as JBreadcrumbItem } from './display/JBreadcrumbItem.vue';
+export { default as JPagination } from './display/JPagination.vue';
+export { default as JEmptyState } from './display/JEmptyState.vue';
+export { default as JTable } from './display/JTable.vue';
+export { default as JDataTable } from './display/JDataTable.vue';
+export { default as JStepper } from './display/JStepper.vue';
+export { default as JStep } from './display/JStep.vue';
+export { default as JTreeView } from './display/JTreeView.vue';
+export { default as JTreeItem } from './display/JTreeItem.vue';
+export { default as JCarousel } from './display/JCarousel.vue';
+export { default as JCarouselSlide } from './display/JCarouselSlide.vue';
+export type {
+  JDisplayTone,
+  JDisplaySize,
+  JBadgeProps,
+  JAvatarProps,
+  JAvatarSize,
+  JAvatarStatus,
+  JAvatarGroupProps,
+  JCardProps,
+  JAlertProps,
+  JSpinnerProps,
+  JProgressProps,
+  JSkeletonProps,
+  JKbdProps,
+  JSeparatorProps,
+  JAccordionVariant,
+  JAccordionProps,
+  JAccordionItemProps,
+  JCollapsibleVariant,
+  JCollapsibleProps,
+  JBreadcrumbSeparator,
+  JBreadcrumbProps,
+  JBreadcrumbItemProps,
+  JPaginationVariant,
+  JPaginationProps,
+  JEmptyStateVariant,
+  JEmptyStateProps,
+  JTableVariant,
+  JTableAlign,
+  JTableSortDirection,
+  JTableProps,
+  JDataTableColumn,
+  JDataTableProps,
+  JStepStatus,
+  JStepperOrientation,
+  JStepItem,
+  JStepperProps,
+  JStepProps,
+  JTreeNode,
+  JTreeViewProps,
+  JTreeItemProps,
+  JCarouselOrientation,
+  JCarouselArrows,
+  JCarouselProps,
+  JCarouselSlideProps,
+} from './display/types';

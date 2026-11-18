@@ -1,0 +1,65 @@
+/*
+ * Separator — <hr class="j-separator">
+ * Vertical:   <div class="j-separator" role="separator" aria-orientation="vertical"></div>
+ *             (data-orientation="vertical" also works)
+ * With label: <div class="j-separator" role="separator"><span class="j-separator__label">or</span></div>
+ *   data-align: center (default) | start | end   (label position)
+ * Public props: --j-separator-color
+ */
+@layer jenni.components {
+  :where(.j-separator) {
+    --_color: var(--j-separator-color, var(--j-border));
+
+    flex: none;
+    align-self: stretch;
+    inline-size: 100%;
+    block-size: 1px;
+    margin: 0;
+    border: 0;
+    background-color: var(--_color);
+  }
+  :where(.j-separator[aria-orientation="vertical"], .j-separator[data-orientation="vertical"]) {
+    inline-size: 1px;
+    block-size: auto;
+    min-block-size: 1em;
+  }
+
+  /* Labelled */
+  :where(.j-separator:has(> .j-separator__label)) {
+    display: flex;
+    align-items: center;
+    gap: var(--j-gap-item);
+    block-size: auto;
+    background-color: transparent;
+  }
+  :where(.j-separator:has(> .j-separator__label))::before,
+  :where(.j-separator:has(> .j-separator__label))::after {
+    content: "";
+    flex: 1 1 0;
+    block-size: 1px;
+    background-color: var(--_color);
+  }
+  :where(.j-separator[data-align="start"])::before,
+  :where(.j-separator[data-align="end"])::after {
+    flex: 0 0 var(--j-space-4);
+  }
+  :where(.j-separator:has(> .j-separator__label):is([aria-orientation="vertical"], [data-orientation="vertical"])) {
+    flex-direction: column;
+    inline-size: auto;
+  }
+  :where(.j-separator:has(> .j-separator__label):is([aria-orientation="vertical"], [data-orientation="vertical"]))::before,
+  :where(.j-separator:has(> .j-separator__label):is([aria-orientation="vertical"], [data-orientation="vertical"]))::after {
+    inline-size: 1px;
+    block-size: auto;
+  }
+
+  :where(.j-separator__label) {
+    flex: none;
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    letter-spacing: 0.01em;
+    color: var(--j-fg-subtle);
+    white-space: nowrap;
+  }
+}

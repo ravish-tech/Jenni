@@ -1,0 +1,133 @@
+/*
+ * Empty State — <div class="j-empty-state">
+ *   <div class="j-empty-state__icon"><svg …/></div>
+ *   <h3 class="j-empty-state__title">No deployments yet</h3>
+ *   <p class="j-empty-state__description">Connect a repository to trigger builds automatically.</p>
+ *   <div class="j-empty-state__actions"><button class="j-button">Connect repo</button></div>
+ * </div>
+ *   data-variant: surface (default) | dashed | ghost
+ *   data-size:    sm | md (default) | lg
+ *   data-tone:    optional semantic tint for the icon emblem
+ * Public props: --j-empty-state-radius
+ */
+@layer jenni.components {
+  :where(.j-empty-state) {
+    --_py: var(--j-space-10);
+    --_px: var(--j-space-6);
+    --_radius: var(--j-empty-state-radius, var(--j-radius-lg));
+    --_emblem: calc(40px * var(--j-density));
+    --_emblem-radius: var(--j-radius-md);
+    --_icon: 20px;
+    --_title-fs: var(--j-text-lg);
+    --_desc-fs: var(--j-text-sm);
+    --_bg: var(--j-surface-1);
+    --_border: 1px solid var(--j-border);
+    --_shadow: var(--j-shadow-xs), var(--j-inset-highlight);
+    --_emblem-bg: var(--j-surface-2);
+    --_emblem-fg: var(--j-fg-muted);
+    --_emblem-border: var(--j-border);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-space-1);
+    inline-size: 100%;
+    min-inline-size: 0;
+    padding: var(--_py) var(--_px);
+    border: var(--_border);
+    border-radius: var(--_radius);
+    background-color: var(--_bg);
+    color: var(--j-fg);
+    box-shadow: var(--_shadow);
+    text-align: center;
+  }
+
+  /* ---- Variants ---- */
+  :where(.j-empty-state[data-variant="dashed"]) {
+    --_bg: color-mix(in oklch, var(--j-surface-2) 45%, transparent);
+    --_border: 1px dashed var(--j-border-strong);
+    --_shadow: none;
+  }
+  :where(.j-empty-state[data-variant="ghost"]) {
+    --_bg: transparent;
+    --_border: 1px solid transparent;
+    --_shadow: none;
+  }
+
+  /* ---- Optional tone tint on the emblem ---- */
+  :where(.j-empty-state[data-tone]:not([data-tone="neutral"])) {
+    --_emblem-bg: var(--j-tone-soft);
+    --_emblem-fg: var(--j-tone);
+    --_emblem-border: color-mix(in oklch, var(--j-tone) 20%, transparent);
+  }
+
+  /* ---- Sizes ---- */
+  :where(.j-empty-state[data-size="sm"]) {
+    --_py: var(--j-space-6);
+    --_px: var(--j-space-4);
+    --_radius: var(--j-empty-state-radius, var(--j-radius-md));
+    --_emblem: calc(36px * var(--j-density));
+    --_emblem-radius: var(--j-radius-sm);
+    --_icon: 18px;
+    --_title-fs: var(--j-text-md);
+    --_desc-fs: var(--j-text-xs);
+  }
+  :where(.j-empty-state[data-size="lg"]) {
+    --_py: var(--j-space-12);
+    --_px: var(--j-space-8);
+    --_radius: var(--j-empty-state-radius, var(--j-radius-xl));
+    --_emblem: calc(48px * var(--j-density));
+    --_emblem-radius: var(--j-radius-lg);
+    --_icon: 22px;
+    --_title-fs: var(--j-text-xl);
+    --_desc-fs: var(--j-text-md);
+  }
+
+  /* ---- Parts ---- */
+  :where(.j-empty-state__icon) {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--_emblem);
+    block-size: var(--_emblem);
+    margin-block-end: var(--j-space-2);
+    border: 1px solid var(--_emblem-border);
+    border-radius: var(--_emblem-radius);
+    background-color: var(--_emblem-bg);
+    color: var(--_emblem-fg);
+    box-shadow: var(--j-shadow-xs), var(--j-inset-highlight);
+
+    & > svg {
+      inline-size: var(--_icon);
+      block-size: var(--_icon);
+    }
+  }
+
+  :where(.j-empty-state__title) {
+    margin: 0;
+    color: var(--j-fg);
+    font-size: var(--_title-fs);
+    font-weight: var(--j-weight-semibold);
+    line-height: var(--j-leading-tight);
+    letter-spacing: var(--j-tracking-tight);
+  }
+
+  :where(.j-empty-state__description) {
+    max-inline-size: 44ch;
+    margin: 0;
+    color: var(--j-fg-muted);
+    font-size: var(--_desc-fs);
+    line-height: var(--j-leading);
+  }
+
+  :where(.j-empty-state__actions) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-gap-related);
+    margin-block-start: var(--j-space-3);
+  }
+}

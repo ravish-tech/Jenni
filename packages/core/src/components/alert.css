@@ -1,0 +1,94 @@
+/*
+ * Alert / Callout — <div class="j-alert" role="status" data-tone="info">
+ *   <span class="j-alert__icon"><svg …/></span>      (or a bare <svg> as first child)
+ *   <div class="j-alert__content">
+ *     <p class="j-alert__title">…</p>
+ *     <p class="j-alert__description">…</p>
+ *   </div>
+ *   <div class="j-alert__actions">…</div>            (optional, trailing)
+ * </div>
+ *   data-variant: soft (default) | outline
+ *   data-tone:    accent (default) | neutral | danger | success | warning | info
+ * Public props: --j-alert-radius
+ */
+@layer jenni.components {
+  :where(.j-alert) {
+    --_bg: var(--j-tone-soft);
+    --_edge: color-mix(in oklch, var(--j-tone) 18%, transparent);
+    --_shadow: 0 0 0 0 transparent;
+    --_title: var(--j-tone-soft-fg);
+    --_text: color-mix(in oklch, var(--j-tone-soft-fg) 72%, var(--j-fg));
+    --_icon: var(--j-tone);
+
+    display: flex;
+    align-items: flex-start;
+    gap: var(--j-gap-item);
+    padding: var(--j-space-3) var(--j-space-4);
+    border-radius: var(--j-alert-radius, var(--j-radius-md));
+    background-color: var(--_bg);
+    color: var(--_text);
+    box-shadow: inset 0 0 0 1px var(--_edge), var(--_shadow);
+    font-size: var(--j-text-sm);
+    line-height: var(--j-leading);
+  }
+  :where(.j-alert[data-variant="outline"]) {
+    --_bg: var(--j-surface-1);
+    --_edge: var(--j-border);
+    --_shadow: var(--j-shadow-xs);
+    --_title: var(--j-fg);
+    --_text: var(--j-fg-muted);
+  }
+  :where(.j-alert[data-tone="neutral"]) {
+    --_icon: var(--j-fg-muted);
+    --_edge: var(--j-border);
+  }
+
+  /* Icon: one line tall so it centers on the title's first line. */
+  :where(.j-alert__icon) {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    block-size: 1lh;
+    color: var(--_icon);
+  }
+  :where(.j-alert__icon > svg) {
+    inline-size: 16px;
+    block-size: 16px;
+  }
+  :where(.j-alert > svg) {
+    flex: none;
+    inline-size: 16px;
+    block-size: 1lh;
+    color: var(--_icon);
+  }
+
+  :where(.j-alert__content) {
+    display: grid;
+    flex: 1 1 auto;
+    gap: var(--j-space-0-5);
+    min-inline-size: 0;
+  }
+  :where(.j-alert__title) {
+    font-weight: var(--j-weight-semibold);
+    color: var(--_title);
+    letter-spacing: var(--j-tracking-tight);
+  }
+  :where(.j-alert__description) {
+    color: var(--_text);
+  }
+  :where(.j-alert__description a, .j-alert__content a) {
+    color: var(--_title);
+    font-weight: var(--j-weight-medium);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, currentColor 40%, transparent);
+    text-underline-offset: 2px;
+  }
+  :where(.j-alert__actions) {
+    display: flex;
+    flex: none;
+    align-items: center;
+    align-self: center;
+    gap: var(--j-gap-related);
+    margin-inline-start: auto;
+  }
+}

@@ -1,0 +1,225 @@
+/*
+ * Pagination — <nav class="j-pagination" aria-label="Pagination">
+ *   <ul class="j-pagination__list">
+ *     <li><button class="j-pagination__item j-pagination__prev" aria-label="Previous page"></button></li>
+ *     <li><button class="j-pagination__item">1</button></li>
+ *     <li><span class="j-pagination__ellipsis" aria-hidden="true">…</span></li>
+ *     <li><button class="j-pagination__item" aria-current="page">5</button></li>
+ *     <li><button class="j-pagination__item j-pagination__next" aria-label="Next page"></button></li>
+ *   </ul>
+ * </nav>
+ *   data-variant: outline (default) | soft | solid | simple
+ *   data-size:    sm | md (default)
+ *   data-tone:    accent (default) | neutral | danger | success | warning | info
+ * Public props: --j-pagination-radius
+ */
+@layer jenni.components {
+  :where(.j-pagination) {
+    --_h: var(--j-control-md);
+    --_fs: var(--j-text-sm);
+    --_icon: 14px;
+    --_radius: var(--j-pagination-radius, var(--j-radius-md));
+    --_active-bg: var(--j-surface-1);
+    --_active-fg: var(--j-fg);
+    --_active-border: var(--j-border-strong);
+    --_active-shadow: var(--j-shadow-xs), var(--j-inset-highlight);
+
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    max-inline-size: 100%;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- Sizes ---- */
+  :where(.j-pagination[data-size="sm"]) {
+    --_h: var(--j-control-sm);
+    --_fs: var(--j-text-xs);
+    --_icon: 13px;
+    --_radius: var(--j-pagination-radius, var(--j-radius-sm));
+  }
+
+  /* ---- Active state variants ---- */
+  :where(.j-pagination:not([data-variant]), .j-pagination[data-variant="outline"])[data-tone]:not([data-tone="neutral"]) {
+    --_active-fg: var(--j-tone-soft-fg);
+    --_active-border: color-mix(in oklch, var(--j-tone) 45%, var(--j-border));
+  }
+  :where(.j-pagination[data-variant="soft"]) {
+    --_active-bg: var(--j-tone-soft);
+    --_active-fg: var(--j-tone-soft-fg);
+    --_active-border: color-mix(in oklch, var(--j-tone) 18%, transparent);
+    --_active-shadow: 0 0 transparent;
+  }
+  :where(.j-pagination[data-variant="solid"]) {
+    --_active-bg: var(--j-tone);
+    --_active-fg: var(--j-tone-fg);
+    --_active-border: transparent;
+    --_active-shadow: var(--j-shadow-xs), inset 0 1px 0 oklch(100% 0 0 / 0.10);
+  }
+  :where(.j-pagination[data-variant="simple"]) {
+    gap: var(--j-gap-related);
+  }
+
+  :where(.j-pagination__list) {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--j-space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    & > li {
+      display: inline-flex;
+      align-items: center;
+    }
+  }
+
+  /* ---- Page & Nav buttons ---- */
+  :where(.j-pagination__item) {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-gap-inline);
+    block-size: var(--_h);
+    min-inline-size: var(--_h);
+    padding-inline: var(--j-space-2);
+    border: 1px solid transparent;
+    border-radius: var(--_radius);
+    background-color: transparent;
+    color: var(--j-fg-muted);
+    font-family: inherit;
+    font-size: var(--_fs);
+    font-weight: var(--j-weight-medium);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    letter-spacing: var(--j-tracking-tight);
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out),
+      opacity var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      flex: none;
+      inline-size: var(--_icon);
+      block-size: var(--_icon);
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled="true"], [aria-current="page"]) {
+        background-color: var(--j-surface-2);
+        color: var(--j-fg);
+      }
+    }
+
+    &:active:not(:disabled, [aria-disabled="true"], [aria-current="page"]) {
+      background-color: var(--j-surface-3);
+      color: var(--j-fg);
+    }
+
+    &:focus-visible {
+      outline: none;
+      z-index: 1;
+      box-shadow: var(--j-ring);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      opacity: 0.42;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    &[aria-current="page"] {
+      background-color: var(--_active-bg);
+      color: var(--_active-fg);
+      border-color: var(--_active-border);
+      box-shadow: var(--_active-shadow);
+      font-weight: var(--j-weight-semibold);
+      cursor: default;
+
+      &:focus-visible {
+        box-shadow: var(--_active-shadow), var(--j-ring);
+      }
+    }
+  }
+
+  /* Nav chevrons (auto-drawn via CSS mask if empty, or explicit text + svg) */
+  :where(.j-pagination__prev, .j-pagination__next) {
+    color: var(--j-fg);
+
+    &:not(:empty) {
+      padding-inline: calc(var(--j-space-2) + 2px);
+    }
+  }
+  :where(.j-pagination__prev:empty)::before,
+  :where(.j-pagination__next:empty)::before {
+    content: "";
+    inline-size: var(--_icon);
+    block-size: var(--_icon);
+    background-color: currentColor;
+  }
+  :where(.j-pagination__prev:empty)::before {
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.75 4.25 6 8l3.75 3.75'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+  :where(.j-pagination__next:empty)::before {
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.25 4.25 10 8l-3.75 3.75'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  /* Simple variant gives Previous / Next subtle bordered button framing */
+  :where(.j-pagination[data-variant="simple"]) :where(.j-pagination__prev, .j-pagination__next, .j-pagination__item) {
+    background-color: var(--j-surface-1);
+    border-color: var(--j-border);
+    color: var(--j-fg);
+    box-shadow: var(--j-shadow-xs), var(--j-inset-highlight);
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled="true"]) {
+        background-color: var(--j-surface-2);
+        border-color: var(--j-border-strong);
+      }
+    }
+
+    &:active:not(:disabled, [aria-disabled="true"]) {
+      background-color: var(--j-surface-3);
+      box-shadow: none;
+    }
+  }
+
+  :where(.j-pagination__ellipsis) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    block-size: var(--_h);
+    inline-size: var(--_h);
+    color: var(--j-fg-subtle);
+    font-size: var(--_fs);
+    letter-spacing: 0.08em;
+    user-select: none;
+  }
+
+  :where(.j-pagination__status) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    padding-inline: var(--j-space-2);
+    color: var(--j-fg-muted);
+    font-size: var(--_fs);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+
+    & :where(strong, b) {
+      color: var(--j-fg);
+      font-weight: var(--j-weight-medium);
+    }
+  }
+}

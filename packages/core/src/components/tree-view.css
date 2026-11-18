@@ -1,0 +1,263 @@
+/*
+ * Tree View — <ul class="j-tree" role="tree" data-guides data-size="sm|md|lg">
+ *   <li class="j-tree__node" role="none">
+ *     <div class="j-tree__item" role="treeitem" aria-expanded="true" aria-selected="false" tabindex="0">
+ *       <span class="j-tree__chevron" aria-hidden="true"></span>
+ *       <span class="j-tree__icon" aria-hidden="true">…</span>
+ *       <span class="j-tree__label">src</span>
+ *       <span class="j-tree__meta">4</span>
+ *     </div>
+ *     <div class="j-tree__branch" role="none">
+ *       <ul class="j-tree__group" role="group">…</ul>
+ *     </div>
+ *   </li>
+ * </ul>
+ */
+@layer jenni.components {
+  :where(.j-tree) {
+    --_row-h: max(22px, round(calc(30px * var(--j-density)), 1px));
+    --_px: var(--j-space-2);
+    --_fs: var(--j-text-sm);
+    --_icon: 15px;
+    --_chevron: 14px;
+    --_indent: max(12px, round(calc(16px * var(--j-density)), 1px));
+    --_radius: var(--j-radius-sm);
+
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    inline-size: 100%;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    user-select: none;
+  }
+
+  /* ---- Sizes ---- */
+  :where(.j-tree[data-size="sm"]) {
+    --_row-h: max(20px, round(calc(26px * var(--j-density)), 1px));
+    --_px: var(--j-space-1-5);
+    --_fs: var(--j-text-xs);
+    --_icon: 13px;
+    --_chevron: 12px;
+    --_indent: max(10px, round(calc(14px * var(--j-density)), 1px));
+  }
+
+  :where(.j-tree[data-size="lg"]) {
+    --_row-h: max(26px, round(calc(36px * var(--j-density)), 1px));
+    --_px: var(--j-space-3);
+    --_fs: var(--j-text-md);
+    --_icon: 16px;
+    --_chevron: 15px;
+    --_indent: max(14px, round(calc(20px * var(--j-density)), 1px));
+    --_radius: var(--j-radius-md);
+  }
+
+  :where(.j-tree__node) {
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* ---- Focusable Treeitem Row ---- */
+  :where(.j-tree__item) {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--j-space-1-5);
+    min-block-size: var(--_row-h);
+    padding-inline: var(--_px);
+    padding-block: 2px;
+    border-radius: var(--_radius);
+    background-color: transparent;
+    color: var(--j-fg-muted);
+    font-size: var(--_fs);
+    line-height: var(--j-leading-tight);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    @media (hover: hover) {
+      &:hover:not([aria-disabled="true"], [aria-selected="true"]) {
+        background-color: var(--j-surface-2);
+        color: var(--j-fg);
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+      z-index: 1;
+      box-shadow: var(--j-ring);
+    }
+
+    &[aria-selected="true"] {
+      background-color: var(--j-tone-soft);
+      color: var(--j-tone-soft-fg);
+      font-weight: var(--j-weight-medium);
+
+      & :where(.j-tree__icon) {
+        color: var(--j-tone);
+      }
+    }
+
+    &[aria-disabled="true"] {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  /* ---- Chevron & Leaf Spacer ---- */
+  :where(.j-tree__chevron, .j-tree__spacer) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: var(--_chevron);
+    block-size: var(--_chevron);
+  }
+
+  :where(.j-tree__chevron) {
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: transparent;
+    color: var(--j-fg-subtle);
+    cursor: pointer;
+    transform: rotate(0deg);
+    transition:
+      transform var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: var(--_chevron);
+      block-size: var(--_chevron);
+    }
+
+    &:empty::before {
+      content: "";
+      inline-size: var(--_chevron);
+      block-size: var(--_chevron);
+      background-color: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.25 4.25 10 8l-3.75 3.75'/%3E%3C/svg%3E") center / contain no-repeat;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        color: var(--j-fg);
+        background-color: color-mix(in oklch, var(--j-fg) 7%, transparent);
+      }
+    }
+  }
+
+  :where(.j-tree__item[aria-expanded="true"]) > :where(.j-tree__chevron) {
+    transform: rotate(90deg);
+    color: var(--j-fg-muted);
+  }
+
+  /* ---- Leading Folder / File Icon ---- */
+  :where(.j-tree__icon) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: var(--_icon);
+    block-size: var(--_icon);
+    color: var(--j-fg-subtle);
+    transition: color var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: var(--_icon);
+      block-size: var(--_icon);
+    }
+  }
+
+  :where(.j-tree__item[aria-expanded="true"]) > :where(.j-tree__icon) {
+    color: var(--j-fg-muted);
+  }
+
+  :where(.j-tree__item[aria-selected="true"]) > :where(.j-tree__icon) {
+    color: var(--j-tone);
+  }
+
+  /* ---- Label & Trailing Metadata ---- */
+  :where(.j-tree__label) {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :where(.j-tree__meta) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    flex: none;
+    margin-inline-start: auto;
+    padding-inline-start: var(--j-space-2);
+    color: var(--j-fg-subtle);
+    font-size: var(--j-text-xs);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- Collapsible Branch & Indentation Guide Hairlines ---- */
+  :where(.j-tree__branch) {
+    display: grid;
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transition:
+      grid-template-rows var(--j-duration) var(--j-ease-emphasized),
+      opacity var(--j-duration-fast) var(--j-ease-out);
+
+    & > :where(.j-tree__group) {
+      overflow: hidden;
+      min-block-size: 0;
+    }
+  }
+
+  :where(.j-tree__node:has(> .j-tree__item[aria-expanded="false"])) > :where(.j-tree__branch),
+  :where(.j-tree__branch[data-collapsed]) {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      grid-template-rows var(--j-duration) var(--j-ease-emphasized),
+      opacity var(--j-duration-fast) var(--j-ease-out),
+      visibility 0s linear var(--j-duration);
+  }
+
+  :where(.j-tree__group) {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin: 0;
+    margin-inline-start: calc(var(--_px) + (var(--_chevron) / 2));
+    padding: 0;
+    padding-inline-start: calc(var(--_indent) - (var(--_chevron) / 2) + 4px);
+    list-style: none;
+  }
+
+  /* Fallback for plain HTML without .j-tree__branch wrapper */
+  :where(.j-tree__item[aria-expanded="false"]) + :where(.j-tree__group) {
+    display: none;
+  }
+
+  :where(.j-tree[data-guides]) :where(.j-tree__group) {
+    border-inline-start: 1px solid var(--j-border);
+    transition: border-color var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  @media (hover: hover) {
+    :where(.j-tree[data-guides] .j-tree__node:hover) > :where(.j-tree__branch) > :where(.j-tree__group),
+    :where(.j-tree[data-guides] .j-tree__node:hover) > :where(.j-tree__group) {
+      border-inline-start-color: var(--j-border-strong);
+    }
+  }
+}

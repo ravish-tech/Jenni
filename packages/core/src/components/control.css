@@ -1,0 +1,97 @@
+/*
+ * Control — shared shell for text-like fields:
+ *   .j-input, .j-textarea, .j-select, .j-input-group
+ * Sizes via data-size (sm | md | lg). Invalid via aria-invalid="true".
+ * Public props: --j-control-radius, --j-control-bg
+ */
+@layer jenni.components {
+  :where(.j-input, .j-textarea, .j-select, .j-input-group) {
+    --_h: var(--j-control-md);
+    --_px: calc(var(--j-space-2) + 2px);
+    --_fs: var(--j-text-md);
+    --_icon: 16px;
+    --_radius: var(--j-control-radius, var(--j-radius-md));
+    --_border: var(--j-border-strong);
+    --_border-hover: color-mix(in oklch, var(--j-border-strong), var(--j-fg) 14%);
+    --_focus: var(--j-tone);
+
+    box-sizing: border-box;
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--_h);
+    padding-inline: var(--_px);
+    border: 1px solid var(--_border);
+    border-radius: var(--_radius);
+    background-color: var(--j-control-bg, var(--j-surface-1));
+    color: var(--j-fg);
+    box-shadow: var(--j-inset-highlight), var(--j-shadow-xs);
+    font-family: inherit;
+    font-size: var(--_fs);
+    line-height: var(--j-leading-tight);
+    outline: none;
+    transition:
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    &::placeholder { color: var(--j-fg-subtle); opacity: 1; }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, :focus, :focus-within, :has(:disabled)) {
+        border-color: var(--_border-hover);
+      }
+    }
+  }
+
+  /* Focus: crisp tone border + composed optical halo. */
+  :where(.j-input, .j-textarea, .j-select):focus,
+  :where(.j-input-group):focus-within {
+    border-color: var(--_focus);
+    box-shadow:
+      var(--j-inset-highlight),
+      0 0 0 3px color-mix(in oklch, var(--_focus) 15%, transparent);
+  }
+
+  /* Invalid */
+  :where(.j-input, .j-textarea, .j-select)[aria-invalid="true"],
+  :where(.j-input-group):has([aria-invalid="true"]) {
+    --_border: color-mix(in oklch, var(--j-danger) 70%, var(--j-border-strong));
+    --_border-hover: var(--j-danger);
+    --_focus: var(--j-danger);
+  }
+
+  /* Read-only: quieter surface, neutral focus. */
+  :where(.j-input, .j-textarea):read-only:not(:disabled),
+  :where(.j-input-group):has(.j-input:read-only:not(:disabled)) {
+    --_focus: var(--j-fg-subtle);
+    background-color: var(--j-surface-2);
+    box-shadow: none;
+  }
+
+  /* Disabled */
+  :where(.j-input, .j-textarea, .j-select):disabled,
+  :where(.j-input-group):has(:disabled) {
+    background-color: var(--j-surface-2);
+    color: var(--j-fg-subtle);
+    border-color: var(--j-border);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  /* Sizes */
+  :where(.j-input, .j-textarea, .j-select, .j-input-group)[data-size="sm"] {
+    --_h: var(--j-control-sm);
+    --_px: var(--j-space-2);
+    --_fs: var(--j-text-sm);
+    --_icon: 14px;
+    --_radius: var(--j-control-radius, var(--j-radius-sm));
+  }
+  :where(.j-input, .j-textarea, .j-select, .j-input-group)[data-size="lg"] {
+    --_h: var(--j-control-lg);
+    --_px: var(--j-space-3);
+    --_fs: var(--j-text-lg);
+    --_icon: 18px;
+    --_radius: var(--j-control-radius, var(--j-radius-lg));
+  }
+}

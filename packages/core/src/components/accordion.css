@@ -1,0 +1,390 @@
+/*
+ * Accordion — <div class="j-accordion">
+ *   <details class="j-accordion__item" name="faq">
+ *     <summary class="j-accordion__trigger">Question</summary>
+ *     <div class="j-accordion__content">Answer…</div>
+ *   </details>
+ * </div>
+ *   data-variant: divided (default) | card | separated | ghost
+ *   data-size:    sm | md (default) | lg
+ *
+ * Collapsible — <details class="j-collapsible">
+ *   <summary class="j-collapsible__trigger">Toggle section</summary>
+ *   <div class="j-collapsible__content">Expandable content…</div>
+ * </details>
+ *   data-variant: ghost (default) | card | subtle
+ *   data-size:    sm | md (default) | lg
+ *
+ * Motion: 300ms --j-ease-emphasized height glide via ::details-content +
+ * interpolate-size: allow-keywords (0% bounce). 16px chevron rotates 180deg.
+ * Public props: --j-accordion-radius, --j-accordion-px
+ */
+@layer jenni.components {
+  :where(.j-accordion) {
+    --_radius: var(--j-accordion-radius, var(--j-radius-lg));
+    --_px: var(--j-accordion-px, 0px);
+    --_py: var(--j-space-3);
+    --_min-h: var(--j-list-h-1);
+    --_fs: var(--j-text-md);
+    --_body-fs: var(--j-text-sm);
+
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    min-inline-size: 0;
+    color: var(--j-fg);
+  }
+
+  /* ---- Accordion sizes ---- */
+  :where(.j-accordion[data-size="sm"]) {
+    --_py: var(--j-space-2);
+    --_min-h: var(--j-control-md);
+    --_fs: var(--j-text-sm);
+    --_body-fs: var(--j-text-xs);
+    --_radius: var(--j-accordion-radius, var(--j-radius-md));
+  }
+  :where(.j-accordion[data-size="lg"]) {
+    --_py: var(--j-space-4);
+    --_min-h: calc(52px * var(--j-density));
+    --_fs: var(--j-text-lg);
+    --_body-fs: var(--j-text-md);
+    --_radius: var(--j-accordion-radius, var(--j-radius-xl));
+  }
+
+  /* ---- Divided (default) ---- */
+  :where(.j-accordion:not([data-variant]), .j-accordion[data-variant="divided"]) > :where(.j-accordion__item) {
+    border-block-end: 1px solid var(--j-border);
+  }
+
+  /* ---- Card (single bordered surface) ---- */
+  :where(.j-accordion[data-variant="card"]) {
+    --_px: var(--j-accordion-px, var(--j-space-4));
+    border-radius: var(--_radius);
+    background-color: var(--j-surface-1);
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs), var(--j-inset-highlight);
+
+    & > :where(.j-accordion__item + .j-accordion__item) {
+      border-block-start: 1px solid var(--j-border);
+    }
+    & > :where(.j-accordion__item:first-child > .j-accordion__trigger) {
+      border-start-start-radius: var(--_radius);
+      border-start-end-radius: var(--_radius);
+    }
+    & > :where(.j-accordion__item:last-child:not([open]) > .j-accordion__trigger) {
+      border-end-start-radius: var(--_radius);
+      border-end-end-radius: var(--_radius);
+    }
+  }
+
+  /* ---- Separated (stacked cards with --j-gap-related) ---- */
+  :where(.j-accordion[data-variant="separated"]) {
+    --_px: var(--j-accordion-px, var(--j-space-4));
+    gap: var(--j-gap-related);
+
+    & > :where(.j-accordion__item) {
+      border-radius: var(--_radius);
+      background-color: var(--j-surface-1);
+      box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs), var(--j-inset-highlight);
+      transition:
+        box-shadow var(--j-duration) var(--j-ease-out),
+        background-color var(--j-duration-fast) var(--j-ease-out);
+
+      @media (hover: hover) {
+        &:hover:not([data-disabled], [aria-disabled="true"]) {
+          box-shadow: 0 0 0 1px var(--j-border-strong), var(--j-shadow-xs), var(--j-inset-highlight);
+        }
+      }
+
+      & > :where(.j-accordion__trigger) {
+        border-radius: var(--_radius);
+      }
+      &[open] > :where(.j-accordion__trigger) {
+        border-end-start-radius: 0;
+        border-end-end-radius: 0;
+      }
+    }
+  }
+
+  /* ---- Ghost ---- */
+  :where(.j-accordion[data-variant="ghost"]) {
+    --_px: var(--j-accordion-px, var(--j-space-3));
+    gap: var(--j-space-1);
+
+    & > :where(.j-accordion__item > .j-accordion__trigger) {
+      border-radius: var(--j-radius-md);
+    }
+  }
+
+  /* ---- Item & Trigger ---- */
+  :where(.j-accordion__item) {
+    min-inline-size: 0;
+
+    &[data-disabled],
+    &[aria-disabled="true"] {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  :where(.j-accordion__trigger) {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--j-gap-item);
+    inline-size: 100%;
+    min-block-size: var(--_min-h);
+    padding-block: var(--_py);
+    padding-inline: var(--_px);
+    border-radius: var(--j-radius-xs);
+    color: var(--j-fg);
+    font-size: var(--_fs);
+    font-weight: var(--j-weight-medium);
+    line-height: var(--j-leading-tight);
+    letter-spacing: var(--j-tracking-tight);
+    text-align: start;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      color var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    &::-webkit-details-marker { display: none; }
+    &::marker { content: ""; }
+
+    & > svg {
+      flex: none;
+      inline-size: 16px;
+      block-size: 16px;
+      color: var(--j-fg-muted);
+      transition: color var(--j-duration-fast) var(--j-ease-out);
+    }
+
+    /* Crisp 16px trailing chevron */
+    &::after {
+      content: "";
+      flex: none;
+      inline-size: 16px;
+      block-size: 16px;
+      margin-inline-start: auto;
+      background-color: var(--j-fg-muted);
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 6.25 8 9.75l3.5-3.5'/%3E%3C/svg%3E") center / contain no-repeat;
+      transition:
+        transform var(--j-duration) var(--j-ease-out),
+        background-color var(--j-duration-fast) var(--j-ease-out);
+    }
+
+    &:has(> .j-accordion__indicator)::after {
+      display: none;
+    }
+
+    @media (hover: hover) {
+      &:hover:not([aria-disabled="true"]) {
+        color: var(--j-fg);
+        &::after, & > svg { color: var(--j-fg); }
+        &::after { background-color: var(--j-fg); }
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+      z-index: 1;
+      box-shadow: var(--j-ring);
+    }
+
+    &[aria-disabled="true"] {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  @media (hover: hover) {
+    :where(.j-accordion[data-variant="card"], .j-accordion[data-variant="ghost"]) > :where(.j-accordion__item > .j-accordion__trigger:hover:not([aria-disabled="true"])) {
+      background-color: color-mix(in oklch, var(--j-surface-2) 72%, transparent);
+    }
+    :where(.j-accordion:not([data-variant]), .j-accordion[data-variant="divided"]) > :where(.j-accordion__item > .j-accordion__trigger:hover:not([aria-disabled="true"])) {
+      color: var(--j-fg);
+    }
+  }
+
+  :where(.j-accordion__item[open] > .j-accordion__trigger)::after {
+    transform: rotate(180deg);
+    background-color: var(--j-fg);
+  }
+  :where(.j-accordion__item[open] > .j-accordion__trigger > .j-accordion__indicator) {
+    transform: rotate(180deg);
+  }
+
+  :where(.j-accordion__title) {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+  }
+  :where(.j-accordion__subtitle) {
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-regular);
+    letter-spacing: 0;
+    color: var(--j-fg-muted);
+  }
+  :where(.j-accordion__indicator) {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    margin-inline-start: auto;
+    color: var(--j-fg-muted);
+    transition: transform var(--j-duration) var(--j-ease-out);
+  }
+
+  :where(.j-accordion__content) {
+    padding-inline: var(--_px);
+    padding-block-end: calc(var(--_py) + var(--j-space-1));
+    color: var(--j-fg-muted);
+    font-size: var(--_body-fs);
+    line-height: var(--j-leading);
+  }
+  :where(.j-accordion[data-variant="card"], .j-accordion[data-variant="separated"]) :where(.j-accordion__content) {
+    padding-block-start: var(--j-space-0-5);
+  }
+
+  /* ---- Standalone Collapsible ---- */
+  :where(.j-collapsible) {
+    --_px: var(--j-space-3);
+    --_py: var(--j-space-2);
+    --_fs: var(--j-text-sm);
+    --_radius: var(--j-radius-md);
+
+    display: block;
+    min-inline-size: 0;
+    color: var(--j-fg);
+
+    &[data-size="sm"] {
+      --_px: var(--j-space-2);
+      --_py: var(--j-space-1-5);
+      --_fs: var(--j-text-xs);
+      --_radius: var(--j-radius-sm);
+    }
+    &[data-size="lg"] {
+      --_px: var(--j-space-4);
+      --_py: var(--j-space-3);
+      --_fs: var(--j-text-md);
+      --_radius: var(--j-radius-lg);
+    }
+
+    &[data-variant="card"] {
+      border-radius: var(--_radius);
+      background-color: var(--j-surface-1);
+      box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs), var(--j-inset-highlight);
+    }
+    &[data-variant="subtle"] {
+      border-radius: var(--_radius);
+      background-color: var(--j-surface-2);
+      box-shadow: inset 0 0 0 1px var(--j-border);
+    }
+
+    &[data-disabled],
+    &[aria-disabled="true"] {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
+
+  :where(.j-collapsible__trigger) {
+    display: flex;
+    align-items: center;
+    gap: var(--j-gap-related);
+    inline-size: 100%;
+    padding: var(--_py) var(--_px);
+    border-radius: var(--_radius);
+    color: var(--j-fg);
+    font-size: var(--_fs);
+    font-weight: var(--j-weight-medium);
+    line-height: var(--j-leading-tight);
+    letter-spacing: var(--j-tracking-tight);
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    &::-webkit-details-marker { display: none; }
+    &::marker { content: ""; }
+
+    & > svg {
+      flex: none;
+      inline-size: 16px;
+      block-size: 16px;
+      color: var(--j-fg-muted);
+    }
+
+    &::after {
+      content: "";
+      flex: none;
+      inline-size: 16px;
+      block-size: 16px;
+      margin-inline-start: auto;
+      background-color: var(--j-fg-muted);
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 6.25 8 9.75l3.5-3.5'/%3E%3C/svg%3E") center / contain no-repeat;
+      transition:
+        transform var(--j-duration) var(--j-ease-out),
+        background-color var(--j-duration-fast) var(--j-ease-out);
+    }
+
+    @media (hover: hover) {
+      &:hover:not([aria-disabled="true"]) {
+        background-color: color-mix(in oklch, var(--j-surface-3) 65%, transparent);
+        &::after { background-color: var(--j-fg); }
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+  }
+
+  :where(.j-collapsible[open] > .j-collapsible__trigger)::after {
+    transform: rotate(180deg);
+    background-color: var(--j-fg);
+  }
+
+  :where(.j-collapsible__content) {
+    padding: var(--j-space-2) var(--_px) var(--_px);
+    color: var(--j-fg-muted);
+    font-size: var(--_fs);
+    line-height: var(--j-leading);
+  }
+
+  /* ---- Smooth height glide (modern CSS ::details-content + allow-discrete, 0% bounce) ---- */
+  @supports selector(::details-content) {
+    :where(.j-accordion__item, .j-collapsible) {
+      &::details-content {
+        display: block;
+        block-size: 0;
+        opacity: 0;
+        overflow: clip;
+        transition:
+          block-size var(--j-duration-slow) var(--j-ease-emphasized),
+          opacity var(--j-duration) var(--j-ease-out),
+          content-visibility var(--j-duration-slow) allow-discrete,
+          display var(--j-duration-slow) allow-discrete;
+      }
+
+      &[open]::details-content {
+        block-size: auto;
+        opacity: 1;
+      }
+    }
+
+    @starting-style {
+      :where(.j-accordion__item[open], .j-collapsible[open])::details-content {
+        block-size: 0;
+        opacity: 0;
+      }
+    }
+  }
+}

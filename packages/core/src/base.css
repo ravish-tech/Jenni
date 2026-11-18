@@ -1,0 +1,29 @@
+/* Jenni — minimal reset + base typography. */
+@layer jenni.reset {
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; }
+  html { -webkit-text-size-adjust: none; text-size-adjust: none; }
+  img, picture, video, canvas, svg { display: block; max-width: 100%; }
+  input, button, textarea, select { font: inherit; color: inherit; letter-spacing: inherit; }
+  p, h1, h2, h3, h4, h5, h6 { overflow-wrap: break-word; }
+  h1, h2, h3, h4, h5, h6 { text-wrap: balance; }
+  p { text-wrap: pretty; }
+}
+
+@layer jenni.base {
+  html {
+    font-family: var(--j-font-sans);
+    font-size: 100%;
+    line-height: var(--j-leading);
+    color: var(--j-fg);
+    background: var(--j-bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "cv11", "ss01";
+    font-optical-sizing: auto;
+    interpolate-size: allow-keywords;
+  }
+  body { font-size: var(--j-text-md); }
+  ::selection { background: color-mix(in oklch, var(--j-accent) 28%, transparent); }
+  :focus-visible { outline: none; box-shadow: var(--j-ring); }
+}

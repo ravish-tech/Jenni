@@ -1,0 +1,22 @@
+/* Group index: @import each component file of the "forms" group here. */
+@import "./button.css";
+@import "./control.css";
+@import "./input.css";
+@import "./textarea.css";
+@import "./select.css";
+@import "./checkbox.css";
+@import "./radio.css";
+@import "./switch.css";
+@import "./slider.css";
+@import "./choice.css";
+@import "./field.css";
+@import "./segmented.css";
+@import "./toggle.css";
+@import "./number-input.css";
+@import "./pin-input.css";
+@import "./tag-input.css";
+@import "./file-upload.css";
+@import "./date-picker.css";
+@import "./time-picker.css";
+@import "./color-picker.css";
+@import "./rich-text.css";

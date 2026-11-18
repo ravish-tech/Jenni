@@ -1,0 +1,51 @@
+{
+  "name": "@jenni/vue",
+  "version": "0.1.0",
+  "description": "Jenni (pronounced 'yenni') components for Vue 3 — beauty, simplicity, and performance. Built in loving memory of Jenni.",
+  "license": "Apache-2.0",
+  "author": "Ravish Kumar",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ravish-tech/Jenni.git",
+    "directory": "packages/vue"
+  },
+  "homepage": "https://ravish-tech.github.io/Jenni/",
+  "bugs": {
+    "url": "https://github.com/ravish-tech/Jenni/issues"
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "ui",
+    "components",
+    "design-system",
+    "oklch",
+    "accessible"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "peerDependencies": {
+    "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "@jenni/core": "^0.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

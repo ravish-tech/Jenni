@@ -1,0 +1,304 @@
+/*
+ * Stepper — <ol class="j-stepper" data-orientation="horizontal|vertical" data-size="sm|md|lg">
+ *   <li class="j-stepper__step" data-status="complete|current|upcoming|error" aria-current="step">
+ *     <button type="button" class="j-stepper__trigger"> (or <div class="j-stepper__trigger">)
+ *       <span class="j-stepper__indicator" aria-hidden="true">1</span>
+ *       <span class="j-stepper__body">
+ *         <span class="j-stepper__title">Workspace</span>
+ *         <span class="j-stepper__description">Configure region & slug</span>
+ *       </span>
+ *     </button>
+ *     <div class="j-stepper__connector" aria-hidden="true">
+ *       <span class="j-stepper__connector-fill"></span>
+ *     </div>
+ *   </li>
+ * </ol>
+ */
+@layer jenni.components {
+  :where(.j-stepper) {
+    --_ind-size: max(22px, round(calc(28px * var(--j-density)), 2px));
+    --_ind-fs: var(--j-text-xs);
+    --_icon-size: 14px;
+    --_title-fs: var(--j-text-sm);
+    --_desc-fs: var(--j-text-xs);
+    --_rail-thickness: 2px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    inline-size: 100%;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: j-step;
+  }
+
+  /* ---- Sizes ---- */
+  :where(.j-stepper[data-size="sm"]) {
+    --_ind-size: max(20px, round(calc(24px * var(--j-density)), 2px));
+    --_ind-fs: var(--j-text-xs);
+    --_icon-size: 12px;
+    --_title-fs: var(--j-text-xs);
+    --_desc-fs: var(--j-text-xs);
+    --_rail-thickness: 1.5px;
+  }
+
+  :where(.j-stepper[data-size="lg"]) {
+    --_ind-size: max(26px, round(calc(34px * var(--j-density)), 2px));
+    --_ind-fs: var(--j-text-sm);
+    --_icon-size: 16px;
+    --_title-fs: var(--j-text-md);
+    --_desc-fs: var(--j-text-sm);
+    --_rail-thickness: 2px;
+  }
+
+  /* ---- Step item ---- */
+  :where(.j-stepper__step) {
+    position: relative;
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    padding-inline-end: var(--j-space-4);
+    counter-increment: j-step;
+
+    &:last-child {
+      padding-inline-end: 0;
+    }
+  }
+
+  /* ---- Trigger (div when static, button when clickable) ---- */
+  :where(.j-stepper__trigger) {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--j-space-1-5);
+    max-inline-size: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: start;
+  }
+
+  :where(button.j-stepper__trigger) {
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+
+    &:focus-visible :where(.j-stepper__indicator) {
+      box-shadow: var(--j-ring);
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled="true"]) :where(.j-stepper__title) {
+        color: var(--j-fg);
+      }
+      &:hover:not(:disabled, [aria-disabled="true"]) :where(.j-stepper__indicator) {
+        border-color: var(--j-tone);
+      }
+    }
+  }
+
+  /* ---- Circular step indicator ---- */
+  :where(.j-stepper__indicator) {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: var(--_ind-size);
+    block-size: var(--_ind-size);
+    border-radius: var(--j-radius-full);
+    border: 1px solid var(--j-border-strong);
+    background-color: var(--j-surface-1);
+    color: var(--j-fg-muted);
+    font-size: var(--_ind-fs);
+    font-weight: var(--j-weight-semibold);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    transition:
+      background-color var(--j-duration) var(--j-ease-out),
+      border-color var(--j-duration) var(--j-ease-out),
+      color var(--j-duration) var(--j-ease-out),
+      box-shadow var(--j-duration) var(--j-ease-out);
+
+    & > svg {
+      inline-size: var(--_icon-size);
+      block-size: var(--_icon-size);
+      flex: none;
+    }
+
+    /* Auto-render step number when empty and upcoming/current */
+    &:empty::before {
+      content: counter(j-step);
+    }
+  }
+
+  /* ---- Status: Complete ---- */
+  :where(.j-stepper__step[data-status="complete"]) :where(.j-stepper__indicator) {
+    background-color: var(--j-tone);
+    border-color: var(--j-tone);
+    color: var(--j-tone-fg);
+
+    &:empty::before {
+      content: "";
+      inline-size: var(--_icon-size);
+      block-size: var(--_icon-size);
+      background-color: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 8.25 6.5 11.25 12.5 5'/%3E%3C/svg%3E") center / contain no-repeat;
+    }
+  }
+
+  /* ---- Status: Current ---- */
+  :where(.j-stepper__step[data-status="current"], .j-stepper__step[aria-current="step"])
+    :where(.j-stepper__indicator) {
+    background-color: var(--j-surface-1);
+    border-width: 1.5px;
+    border-color: var(--j-tone);
+    color: var(--j-tone);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--j-tone) 15%, transparent);
+  }
+
+  /* ---- Status: Error ---- */
+  :where(.j-stepper__step[data-status="error"]) :where(.j-stepper__indicator) {
+    background-color: var(--j-danger-soft);
+    border-color: var(--j-danger);
+    color: var(--j-danger);
+
+    &:empty::before {
+      content: "";
+      inline-size: var(--_icon-size);
+      block-size: var(--_icon-size);
+      background-color: currentColor;
+      mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M8 4.5v4M8 11.5h.01'/%3E%3C/svg%3E") center / contain no-repeat;
+    }
+  }
+
+  /* ---- Copy ---- */
+  :where(.j-stepper__body) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-0-5);
+    min-inline-size: 0;
+  }
+
+  :where(.j-stepper__title) {
+    color: var(--j-fg-muted);
+    font-size: var(--_title-fs);
+    font-weight: var(--j-weight-medium);
+    line-height: var(--j-leading-tight);
+    letter-spacing: var(--j-tracking-tight);
+    transition: color var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  :where(.j-stepper__step[data-status="complete"]) :where(.j-stepper__title) {
+    color: var(--j-fg);
+  }
+
+  :where(.j-stepper__step[data-status="current"], .j-stepper__step[aria-current="step"])
+    :where(.j-stepper__title) {
+    color: var(--j-fg);
+    font-weight: var(--j-weight-semibold);
+  }
+
+  :where(.j-stepper__step[data-status="error"]) :where(.j-stepper__title) {
+    color: var(--j-danger-soft-fg);
+    font-weight: var(--j-weight-semibold);
+  }
+
+  :where(.j-stepper__description) {
+    color: var(--j-fg-subtle);
+    font-size: var(--_desc-fs);
+    line-height: 1.35;
+  }
+
+  /* ---- Hairline Connector Rail (300ms emphasized glide) ---- */
+  :where(.j-stepper__connector) {
+    position: absolute;
+    inset-block-start: calc(var(--_ind-size) / 2);
+    inset-inline-start: calc(var(--_ind-size) + var(--j-space-2));
+    inset-inline-end: var(--j-space-2);
+    block-size: var(--_rail-thickness);
+    transform: translateY(-50%);
+    background-color: var(--j-border);
+    border-radius: var(--j-radius-full);
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  :where(.j-stepper__step:last-child) > :where(.j-stepper__connector) {
+    display: none;
+  }
+
+  :where(.j-stepper__connector-fill) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    background-color: var(--j-tone);
+    border-radius: inherit;
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform var(--j-duration-slow) var(--j-ease-emphasized);
+  }
+
+  :where(.j-stepper__step[data-status="complete"]) > :where(.j-stepper__connector) > :where(.j-stepper__connector-fill) {
+    transform: scaleX(1);
+  }
+
+  /* ---- Vertical Orientation ---- */
+  :where(.j-stepper[data-orientation="vertical"]) {
+    flex-direction: column;
+
+    & > :where(.j-stepper__step) {
+      flex: none;
+      inline-size: 100%;
+      padding-inline-end: 0;
+      padding-block-end: var(--j-space-5);
+
+      &:last-child {
+        padding-block-end: 0;
+      }
+    }
+
+    & :where(.j-stepper__trigger) {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--j-space-3);
+    }
+
+    & :where(.j-stepper__body) {
+      padding-block-start: max(0px, calc((var(--_ind-size) - (var(--_title-fs) * 1.25)) / 2));
+    }
+
+    & :where(.j-stepper__connector) {
+      inset-inline-start: calc(var(--_ind-size) / 2);
+      inset-inline-end: auto;
+      inset-block-start: calc(var(--_ind-size) + var(--j-space-1-5));
+      inset-block-end: var(--j-space-1-5);
+      inline-size: var(--_rail-thickness);
+      block-size: auto;
+      transform: translateX(-50%);
+    }
+
+    & :where(.j-stepper__connector-fill) {
+      transform-origin: top center;
+      transform: scaleY(0);
+    }
+
+    & :where(.j-stepper__step[data-status="complete"]) > :where(.j-stepper__connector) > :where(.j-stepper__connector-fill) {
+      transform: scaleY(1);
+    }
+  }
+}

@@ -1,0 +1,68 @@
+/*
+ * Field — label + control + hint + error.
+ *   <div class="j-field">
+ *     <label class="j-label" for="email" data-required>Email</label>
+ *     <input class="j-input" id="email" aria-describedby="email-hint email-error" aria-invalid="true">
+ *     <p class="j-field__hint" id="email-hint">We never share it.</p>
+ *     <p class="j-field__error" id="email-error">Enter a valid email.</p>
+ *   </div>
+ * .j-label also works on its own. data-required adds a subtle marker.
+ */
+@layer jenni.components {
+  :where(.j-field) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-inline);
+    min-inline-size: 0;
+  }
+
+  :where(.j-label) {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--j-space-1);
+    color: var(--j-fg);
+    font-size: var(--j-text-sm);
+    font-weight: var(--j-weight-medium);
+    line-height: var(--j-leading-tight);
+
+    &[data-required]::after {
+      content: "*";
+      color: var(--j-danger);
+      font-weight: var(--j-weight-regular);
+    }
+  }
+
+  :where(.j-label__optional) {
+    color: var(--j-fg-subtle);
+    font-weight: var(--j-weight-regular);
+  }
+
+  :where(.j-field__hint, .j-field__error) {
+    font-size: var(--j-text-sm);
+    line-height: var(--j-leading);
+  }
+  :where(.j-field__hint) { color: var(--j-fg-muted); }
+  :where(.j-field__error) {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--j-gap-inline);
+    color: var(--j-danger-soft-fg);
+    --_err-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='black' fill-rule='evenodd' d='M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm-.75-10.25a.75.75 0 0 1 1.5 0v3.5a.75.75 0 0 1-1.5 0v-3.5ZM8 12a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z'/%3E%3C/svg%3E");
+
+    &::before {
+      content: "";
+      flex-shrink: 0;
+      inline-size: 14px;
+      block-size: 14px;
+      margin-block-start: calc((1lh - 14px) / 2);
+      background-color: currentColor;
+      -webkit-mask: var(--_err-icon) center / contain no-repeat;
+      mask: var(--_err-icon) center / contain no-repeat;
+    }
+  }
+
+  /* Hide hint while an error is shown (keeps layout calm). */
+  :where(.j-field:has(.j-field__error)) :where(.j-field__hint) { display: none; }
+
+  :where(.j-field:has(:disabled)) :where(.j-label) { color: var(--j-fg-muted); }
+}

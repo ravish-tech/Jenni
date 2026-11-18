@@ -1,0 +1,18 @@
+/* Group index: @import each component file of the "display" group here. */
+@import "./badge.css";
+@import "./avatar.css";
+@import "./card.css";
+@import "./alert.css";
+@import "./spinner.css";
+@import "./progress.css";
+@import "./skeleton.css";
+@import "./kbd.css";
+@import "./separator.css";
+@import "./accordion.css";
+@import "./breadcrumb.css";
+@import "./pagination.css";
+@import "./empty-state.css";
+@import "./table.css";
+@import "./stepper.css";
+@import "./tree-view.css";
+@import "./carousel.css";

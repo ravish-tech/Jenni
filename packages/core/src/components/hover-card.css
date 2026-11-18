@@ -1,0 +1,160 @@
+/*
+ * Jenni — Hover Card.
+ * Rich interactive preview card opened on pointer hover or keyboard focus after
+ * a calm 320ms delay, kept open across a 180ms pointer bridge.
+ *
+ *   <a href="#ada" data-j-hover-card="hc-ada">@ada</a>
+ *   <div class="j-hover-card" id="hc-ada" popover="manual" data-side="bottom" data-align="start">…</div>
+ *
+ * Options:
+ *   data-side  = top | right | bottom | left (default: bottom)
+ *   data-align = start | center | end        (default: center)
+ *   data-size  = sm | md | lg                (16rem / 20rem / 24rem)
+ *   data-arrow                               (show pointer arrow)
+ * Public props: --j-hover-card-width, --j-floating-offset
+ */
+@layer jenni.components {
+  :where(.j-hover-card) {
+    --_w: var(--j-hover-card-width, 20rem);
+    --_pad: var(--j-space-4);
+    --_offset: var(--j-floating-offset, 8px);
+    --_slide: 2px;
+    --_from: 0 calc(var(--_slide) * -1);
+    --_bg: light-dark(var(--j-surface-1), var(--j-surface-2));
+    --_border: var(--j-border);
+
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    box-sizing: border-box;
+    width: min(var(--_w), calc(100vw - 16px));
+    max-height: calc(100dvh - 16px);
+    padding: var(--_pad);
+    border: 1px solid var(--_border);
+    border-radius: var(--j-radius-lg);
+    background: var(--_bg);
+    color: var(--j-fg);
+    font-size: var(--j-text-sm);
+    line-height: var(--j-leading);
+    box-shadow: var(--j-shadow-lg), var(--j-inset-highlight);
+    overflow: auto;
+    overscroll-behavior: contain;
+    z-index: var(--j-z-dropdown);
+    outline: none;
+
+    /* Native CSS anchor positioning */
+    position-area: block-end;
+    margin-block-start: var(--_offset);
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+    position-visibility: anchors-visible;
+    transform-origin: top center;
+
+    /* Whisper-subtle 2px glide + 0.99 scale over 220ms --j-ease-out (zero bounce) */
+    opacity: 0;
+    translate: var(--_from);
+    scale: 0.99;
+    transition:
+      opacity var(--j-duration) var(--j-ease-out),
+      translate var(--j-duration) var(--j-ease-out),
+      scale var(--j-duration) var(--j-ease-out),
+      overlay var(--j-duration) allow-discrete,
+      display var(--j-duration) allow-discrete;
+
+    &:popover-open {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+      @starting-style {
+        opacity: 0;
+        translate: var(--_from);
+        scale: 0.99;
+      }
+    }
+
+    &[data-size="sm"] { --_w: var(--j-hover-card-width, 16rem); --_pad: var(--j-space-3); }
+    &[data-size="lg"] { --_w: var(--j-hover-card-width, 24rem); --_pad: var(--j-space-5); }
+
+    /* ---- Placement & alignment ---- */
+    &[data-side="top"] {
+      position-area: block-start;
+      margin: 0;
+      margin-block-end: var(--_offset);
+    }
+    &[data-side="right"] {
+      position-area: right;
+      margin: 0;
+      margin-left: var(--_offset);
+      position-try-fallbacks: flip-inline, flip-block, flip-block flip-inline;
+    }
+    &[data-side="left"] {
+      position-area: left;
+      margin: 0;
+      margin-right: var(--_offset);
+      position-try-fallbacks: flip-inline, flip-block, flip-block flip-inline;
+    }
+    &:is(:not([data-side]), [data-side="bottom"])[data-align="start"] { position-area: block-end span-inline-end; }
+    &:is(:not([data-side]), [data-side="bottom"])[data-align="end"]   { position-area: block-end span-inline-start; }
+    &[data-side="top"][data-align="start"]   { position-area: block-start span-inline-end; }
+    &[data-side="top"][data-align="end"]     { position-area: block-start span-inline-start; }
+    &[data-side="right"][data-align="start"] { position-area: right span-bottom; }
+    &[data-side="right"][data-align="end"]   { position-area: right span-top; }
+    &[data-side="left"][data-align="start"]  { position-area: left span-bottom; }
+    &[data-side="left"][data-align="end"]    { position-area: left span-top; }
+
+    /* ---- Directional settle vector ---- */
+    &[data-side="top"]   { --_from: 0 var(--_slide); transform-origin: bottom center; }
+    &[data-side="right"] { --_from: calc(var(--_slide) * -1) 0; transform-origin: center left; }
+    &[data-side="left"]  { --_from: var(--_slide) 0; transform-origin: center right; }
+    &[data-placement="bottom"] { --_from: 0 calc(var(--_slide) * -1); transform-origin: top center; }
+    &[data-placement="top"]    { --_from: 0 var(--_slide); transform-origin: bottom center; }
+    &[data-placement="right"]  { --_from: calc(var(--_slide) * -1) 0; transform-origin: center left; }
+    &[data-placement="left"]   { --_from: var(--_slide) 0; transform-origin: center right; }
+
+    /* ---- Optional arrow ---- */
+    &[data-arrow] {
+      --_offset: var(--j-floating-offset, 10px);
+      overflow: visible;
+    }
+    &[data-arrow]::before {
+      content: "";
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      background: var(--_bg);
+      border: 1px solid var(--_border);
+      border-top-color: transparent;
+      border-left-color: transparent;
+      pointer-events: none;
+      top: -5px;
+      left: calc(var(--_arrow-x, 50%) - 4.5px);
+      rotate: 225deg;
+    }
+    &[data-arrow]:is([data-side="top"]:not([data-placement]), [data-placement="top"])::before {
+      top: auto;
+      bottom: -5px;
+      rotate: 45deg;
+    }
+    &[data-arrow]:is([data-side="right"]:not([data-placement]), [data-placement="right"])::before {
+      top: calc(var(--_arrow-y, 50%) - 4.5px);
+      left: -5px;
+      rotate: 135deg;
+    }
+    &[data-arrow]:is([data-side="left"]:not([data-placement]), [data-placement="left"])::before {
+      top: calc(var(--_arrow-y, 50%) - 4.5px);
+      left: auto;
+      right: -5px;
+      rotate: -45deg;
+    }
+    &[data-arrow]:is([data-placement="bottom"])::before {
+      top: -5px;
+      bottom: auto;
+      left: calc(var(--_arrow-x, 50%) - 4.5px);
+      right: auto;
+      rotate: 225deg;
+    }
+
+    &:focus-visible {
+      box-shadow: var(--j-shadow-lg), var(--j-inset-highlight), var(--j-ring);
+    }
+  }
+}

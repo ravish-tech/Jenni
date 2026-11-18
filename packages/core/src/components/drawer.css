@@ -1,0 +1,243 @@
+/*
+ * Jenni — Drawer / Sheet. Native <dialog class="j-drawer"> opened with showModal().
+ *   <button commandfor="drw" command="show-modal">Open inspector</button>
+ *   <dialog class="j-drawer" id="drw" data-side="right" data-size="md" closedby="any" aria-labelledby="drw-t">
+ *     <header class="j-drawer__header">
+ *       <h2 class="j-drawer__title" id="drw-t">Inspector</h2>
+ *       <p class="j-drawer__description">Configure deployment settings.</p>
+ *     </header>
+ *     <div class="j-drawer__body">…</div>
+ *     <footer class="j-drawer__footer">…</footer>
+ *     <button class="j-drawer__close" commandfor="drw" command="close" aria-label="Close">…</button>
+ *   </dialog>
+ *
+ * Options:
+ *   data-side  = right | left | bottom | top  (default: right)
+ *   data-size  = sm | md | lg | xl            (22rem / 28rem / 36rem / 48rem)
+ *   data-inset                                (floating sheet with 8px margin & 4-corner radius)
+ * Public props: --j-drawer-size
+ */
+@layer jenni.components {
+  :where(.j-drawer) {
+    --_size: var(--j-drawer-size, 28rem);
+    --_pad: var(--j-space-5);
+    --_radius: var(--j-radius-xl);
+    --_inset-gap: var(--j-space-2);
+    --_from: 100% 0;
+
+    position: fixed;
+    inset: 0 0 0 auto;
+    margin: 0;
+    box-sizing: border-box;
+    width: min(var(--_size), 100vw);
+    max-width: none;
+    height: 100dvh;
+    max-height: none;
+    padding: 0;
+    border: 0 solid var(--j-border);
+    border-inline-start-width: 1px;
+    border-radius: var(--_radius) 0 0 var(--_radius);
+    background: light-dark(var(--j-surface-1), var(--j-surface-2));
+    color: var(--j-fg);
+    box-shadow: var(--j-shadow-lg), var(--j-inset-highlight);
+    overflow: hidden;
+    overscroll-behavior: contain;
+    z-index: var(--j-z-modal);
+    outline: none;
+
+    opacity: 0;
+    translate: var(--_from);
+    transition:
+      opacity var(--j-duration) var(--j-ease-out),
+      translate var(--j-duration-slow) var(--j-ease-emphasized),
+      overlay var(--j-duration-slow) allow-discrete,
+      display var(--j-duration-slow) allow-discrete;
+
+    &[open] {
+      display: flex;
+      flex-direction: column;
+      opacity: 1;
+      translate: 0 0;
+      @starting-style {
+        opacity: 0;
+        translate: var(--_from);
+      }
+    }
+
+    &::backdrop {
+      background: var(--j-overlay);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      opacity: 0;
+      transition:
+        opacity var(--j-duration-slow) var(--j-ease-out),
+        overlay var(--j-duration-slow) allow-discrete,
+        display var(--j-duration-slow) allow-discrete;
+    }
+    &[open]::backdrop {
+      opacity: 1;
+      @starting-style {
+        opacity: 0;
+      }
+    }
+    &:focus-visible {
+      box-shadow: var(--j-shadow-lg), var(--j-inset-highlight);
+    }
+
+    /* ---- Sizes ---- */
+    &[data-size="sm"] { --_size: var(--j-drawer-size, 22rem); }
+    &[data-size="md"] { --_size: var(--j-drawer-size, 28rem); }
+    &[data-size="lg"] { --_size: var(--j-drawer-size, 36rem); }
+    &[data-size="xl"] { --_size: var(--j-drawer-size, 48rem); }
+
+    /* ---- Sides ---- */
+    &[data-side="left"] {
+      --_from: -100% 0;
+      inset: 0 auto 0 0;
+      border-inline-start-width: 0;
+      border-inline-end-width: 1px;
+      border-radius: 0 var(--_radius) var(--_radius) 0;
+    }
+
+    &[data-side="bottom"] {
+      --_from: 0 100%;
+      inset: auto 0 0 0;
+      width: 100vw;
+      height: auto;
+      max-height: min(var(--_size), calc(100dvh - var(--j-space-8)));
+      border-inline-start-width: 0;
+      border-block-start-width: 1px;
+      border-radius: var(--_radius) var(--_radius) 0 0;
+    }
+
+    &[data-side="top"] {
+      --_from: 0 -100%;
+      inset: 0 0 auto 0;
+      width: 100vw;
+      height: auto;
+      max-height: min(var(--_size), calc(100dvh - var(--j-space-8)));
+      border-inline-start-width: 0;
+      border-block-end-width: 1px;
+      border-radius: 0 0 var(--_radius) var(--_radius);
+    }
+
+    /* ---- Floating inset sheet (macOS / Linear 8px viewport margin, 4-corner radius) ---- */
+    &[data-inset] {
+      --_from: calc(100% + var(--_inset-gap)) 0;
+      inset: var(--_inset-gap) var(--_inset-gap) var(--_inset-gap) auto;
+      width: min(var(--_size), calc(100vw - var(--_inset-gap) * 2));
+      height: calc(100dvh - var(--_inset-gap) * 2);
+      border-width: 1px;
+      border-radius: var(--_radius);
+    }
+    &[data-inset][data-side="left"] {
+      --_from: calc((100% + var(--_inset-gap)) * -1) 0;
+      inset: var(--_inset-gap) auto var(--_inset-gap) var(--_inset-gap);
+    }
+    &[data-inset][data-side="bottom"] {
+      --_from: 0 calc(100% + var(--_inset-gap));
+      inset: auto var(--_inset-gap) var(--_inset-gap) var(--_inset-gap);
+      width: calc(100vw - var(--_inset-gap) * 2);
+      height: auto;
+      max-height: min(var(--_size), calc(100dvh - var(--_inset-gap) * 2));
+    }
+    &[data-inset][data-side="top"] {
+      --_from: 0 calc((100% + var(--_inset-gap)) * -1);
+      inset: var(--_inset-gap) var(--_inset-gap) auto var(--_inset-gap);
+      width: calc(100vw - var(--_inset-gap) * 2);
+      height: auto;
+      max-height: min(var(--_size), calc(100dvh - var(--_inset-gap) * 2));
+    }
+  }
+
+  /* Scroll lock while any modal drawer is open. Zero layout shift. */
+  :where(html:has(.j-drawer:modal)) {
+    overflow: hidden;
+    scrollbar-gutter: stable;
+  }
+
+  :where(.j-drawer__header) {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-1);
+    padding: var(--_pad) var(--_pad) var(--j-space-4);
+    padding-inline-end: calc(var(--_pad) + var(--j-space-8));
+    border-bottom: 1px solid var(--j-border);
+  }
+
+  :where(.j-drawer__title) {
+    margin: 0;
+    font-size: var(--j-text-lg);
+    font-weight: var(--j-weight-semibold);
+    letter-spacing: var(--j-tracking-tight);
+    line-height: var(--j-leading-tight);
+  }
+
+  :where(.j-drawer__description) {
+    margin: 0;
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-sm);
+    line-height: var(--j-leading);
+  }
+
+  :where(.j-drawer__body) {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: var(--_pad);
+    font-size: var(--j-text-md);
+  }
+
+  :where(.j-drawer__footer) {
+    flex: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--j-gap-related);
+    padding: var(--j-space-3) var(--_pad);
+    border-top: 1px solid var(--j-border);
+    background: light-dark(var(--j-surface-2), var(--j-surface-1));
+  }
+  :where(.j-drawer__footer > [data-spacer]) {
+    margin-inline-end: auto;
+  }
+
+  :where(.j-drawer__close) {
+    position: absolute;
+    top: var(--j-space-3);
+    right: var(--j-space-3);
+    display: grid;
+    place-items: center;
+    width: var(--j-control-sm);
+    height: var(--j-control-sm);
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-sm);
+    background: transparent;
+    color: var(--j-fg-subtle);
+    cursor: pointer;
+    outline: none;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    &:hover {
+      background: var(--j-surface-3);
+      color: var(--j-fg);
+    }
+    &:active {
+      background: var(--j-border);
+    }
+    &:focus-visible {
+      box-shadow: var(--j-ring);
+    }
+    & > svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}

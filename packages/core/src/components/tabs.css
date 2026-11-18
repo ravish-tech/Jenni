@@ -1,0 +1,191 @@
+/*
+ * Jenni — Tabs.
+ *   <div class="j-tabs" data-variant="underline">        (underline | pill)
+ *     <div class="j-tabs__list" role="tablist" aria-label="Settings">
+ *       <button class="j-tabs__tab" role="tab" aria-selected="true" aria-controls="p1">General</button>
+ *       <button class="j-tabs__tab" role="tab" aria-selected="false" aria-controls="p2" tabindex="-1">Billing</button>
+ *     </div>
+ *     <div class="j-tabs__panel" role="tabpanel" id="p1">…</div>
+ *     <div class="j-tabs__panel" role="tabpanel" id="p2" hidden>…</div>
+ *   </div>
+ * Options: data-variant, data-size = sm | md | lg, data-orientation = vertical,
+ *          data-activation = manual (behavior), data-full (tabs share the width).
+ * The behavior draws a sliding .j-tabs__indicator from --_ind-x/--_ind-y/--_ind-w/--_ind-h
+ * (set on the indicator) and marks the list [data-indicator]. Without JS the
+ * selected tab shows a static indicator.
+ * Public props: --j-tabs-indicator (underline colour).
+ */
+@layer jenni.components {
+  :where(.j-tabs) {
+    --_tab-h: var(--j-control-sm);
+    --_tab-px: var(--j-space-3);
+    --_font: var(--j-text-sm);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-gap-field);
+    min-width: 0;
+
+    &[data-size="sm"] { --_tab-h: max(20px, round(calc(24px * var(--j-density)), 1px)); --_tab-px: var(--j-space-2); --_font: var(--j-text-xs); }
+    &[data-size="lg"] { --_tab-h: var(--j-control-md); --_tab-px: var(--j-space-4); --_font: var(--j-text-md); }
+    &[data-orientation="vertical"] { flex-direction: row; gap: var(--j-gap-group); }
+  }
+
+  :where(.j-tabs__list) {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    min-width: 0;
+  }
+
+  :where(.j-tabs__tab) {
+    appearance: none;
+    position: relative;
+    z-index: 1;
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-gap-inline);
+    height: var(--_tab-h);
+    padding: 0 var(--_tab-px);
+    border: 0;
+    border-radius: var(--j-radius-sm);
+    background: transparent;
+    color: var(--j-fg-muted);
+    font: inherit;
+    font-size: var(--_font);
+    font-weight: var(--j-weight-medium);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: color var(--j-duration-fast) var(--j-ease-out), background-color var(--j-duration-fast) var(--j-ease-out);
+
+    &:hover { color: var(--j-fg); }
+    &[aria-selected="true"] { color: var(--j-fg); }
+    &:is(:disabled, [aria-disabled="true"]) { opacity: 0.45; cursor: not-allowed; color: var(--j-fg-muted); }
+    & > svg { width: min(15px, calc(var(--_tab-h) - 6px)); height: min(15px, calc(var(--_tab-h) - 6px)); flex: none; }
+  }
+
+  :where(.j-tabs__indicator) {
+    position: absolute;
+    z-index: 0;
+    left: 0;
+    top: 0;
+    pointer-events: none;
+    transform-origin: 0 0;
+    transition:
+      translate var(--j-duration-slow) var(--j-ease-emphasized),
+      scale var(--j-duration-slow) var(--j-ease-emphasized);
+  }
+  :where(.j-tabs__list:not([data-indicator])) > :where(.j-tabs__indicator) { display: none; }
+
+  :where(.j-tabs__panel) {
+    min-width: 0;
+    border-radius: var(--j-radius-md);
+    outline: none;
+    &:not([hidden]) {
+      transition: opacity calc(var(--j-duration-fast) * 1.2) var(--j-ease-out);
+      @starting-style { opacity: 0; }
+    }
+  }
+  :where([data-orientation="vertical"]) > :where(.j-tabs__panel) { flex: 1; }
+
+  /* ---------- Underline (default) ---------- */
+  :where(.j-tabs:not([data-variant="pill"])) {
+    & > .j-tabs__list {
+      padding-bottom: var(--j-space-1-5);
+      box-shadow: inset 0 -1px 0 var(--j-border);
+    }
+    & .j-tabs__tab:hover:not([aria-selected="true"], :disabled, [aria-disabled="true"]) { background: var(--j-surface-3); }
+    & > .j-tabs__list > .j-tabs__indicator {
+      top: auto;
+      bottom: 0;
+      left: var(--_ind-x, 0px);
+      width: var(--_ind-w, 0px);
+      height: 2px;
+      border-radius: 2px 2px 0 0;
+      background: var(--j-tabs-indicator, var(--j-fg));
+    }
+    /* No-JS fallback */
+    & > .j-tabs__list:not([data-indicator]) > [aria-selected="true"]::after {
+      content: "";
+      position: absolute;
+      left: var(--_tab-px);
+      right: var(--_tab-px);
+      bottom: calc(var(--j-space-1-5) * -1);
+      height: 2px;
+      background: var(--j-tabs-indicator, var(--j-fg));
+    }
+  }
+  :where(.j-tabs[data-orientation="vertical"]:not([data-variant="pill"])) {
+    & > .j-tabs__list {
+      flex-direction: column;
+      align-items: stretch;
+      flex: none;
+      padding: 0 0 0 var(--j-space-1-5);
+      box-shadow: inset 1px 0 0 var(--j-border);
+    }
+    & > .j-tabs__list > .j-tabs__tab { justify-content: flex-start; }
+    & > .j-tabs__list > .j-tabs__indicator {
+      top: var(--_ind-y, 0px);
+      bottom: auto;
+      left: 0;
+      width: 2px;
+      height: var(--_ind-h, 0px);
+      border-radius: 0 2px 2px 0;
+    }
+    & > .j-tabs__list:not([data-indicator]) > [aria-selected="true"]::after {
+      left: calc(var(--j-space-1-5) * -1);
+      right: auto;
+      top: 4px;
+      bottom: 4px;
+      width: 2px;
+      height: auto;
+    }
+  }
+
+  /* ---------- Pill / segmented ---------- */
+  :where(.j-tabs[data-variant="pill"]) {
+    & > .j-tabs__list {
+      align-self: flex-start;
+      gap: 0;
+      padding: 3px;
+      border-radius: var(--j-radius-md);
+      background: var(--j-surface-2);
+      box-shadow: inset 0 0 0 1px light-dark(transparent, var(--j-border));
+      max-width: 100%;
+    }
+    & .j-tabs__tab { border-radius: calc(var(--j-radius-md) - 3px); }
+    & > .j-tabs__list > .j-tabs__indicator {
+      left: var(--_ind-x, 0px);
+      top: var(--_ind-y, 0px);
+      width: var(--_ind-w, 0px);
+      height: var(--_ind-h, 0px);
+      border-radius: calc(var(--j-radius-md) - 3px);
+      background: light-dark(var(--j-surface-1), var(--j-surface-3));
+      box-shadow: 0 0 0 1px light-dark(var(--j-border), transparent), var(--j-shadow-xs), var(--j-inset-highlight);
+    }
+    & > .j-tabs__list:not([data-indicator]) > [aria-selected="true"] {
+      background: light-dark(var(--j-surface-1), var(--j-surface-3));
+      box-shadow: 0 0 0 1px light-dark(var(--j-border), transparent), var(--j-shadow-xs);
+    }
+  }
+  :where(.j-tabs[data-variant="pill"][data-orientation="vertical"]) > .j-tabs__list {
+    flex-direction: column;
+    align-items: stretch;
+    align-self: flex-start;
+    flex: none;
+    & > .j-tabs__tab { justify-content: flex-start; }
+  }
+  :where(.j-tabs[data-full]) {
+    inline-size: 100%;
+    & > .j-tabs__list {
+      align-self: stretch;
+      & > .j-tabs__tab { flex: 1 1 0; }
+    }
+  }
+}

@@ -1,0 +1,126 @@
+/*
+ * Jenni — floating layer (shared by tooltip, popover, menu).
+ * Native `popover` + CSS anchor positioning. The behaviors link a trigger
+ * (anchor-name) to the panel (position-anchor) and report the side the
+ * browser actually used after flips as [data-placement].
+ *
+ * Options on the panel:
+ *   data-side   = top | right | bottom | left   (default: bottom; tooltip: top)
+ *   data-align  = start | center | end           (default: center)
+ *   data-arrow                                   (show an arrow)
+ * Public props: --j-floating-offset (gap to trigger)
+ */
+@layer jenni.components {
+  :where(.j-tooltip, .j-popover, .j-menu) {
+    --_offset: var(--j-floating-offset, 6px);
+    --_slide: 2px;
+    --_from: 0 calc(var(--_slide) * -1);
+    --_bg: light-dark(var(--j-surface-1), var(--j-surface-2));
+    --_border: var(--j-border);
+
+    /* Reset UA popover box (centered, bordered) */
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    padding: 0;
+    border: 1px solid var(--_border);
+    background: var(--_bg);
+    color: var(--j-fg);
+    overflow: visible;
+
+    /* Anchor positioning (ignored where unsupported; JS takes over) */
+    position-area: block-end;
+    margin-block-start: var(--_offset);
+    position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+    position-visibility: anchors-visible;
+    transform-origin: top center;
+
+    /* Exit state + transition (whisper-subtle 2px settle, zero zoomy pop) */
+    opacity: 0;
+    translate: var(--_from);
+    scale: 0.99;
+    transition:
+      opacity var(--_dur, var(--j-duration)) var(--j-ease-out),
+      translate var(--_dur, var(--j-duration)) var(--j-ease-out),
+      scale var(--_dur, var(--j-duration)) var(--j-ease-out),
+      overlay var(--_dur, var(--j-duration)) allow-discrete,
+      display var(--_dur, var(--j-duration)) allow-discrete;
+
+    &:popover-open {
+      opacity: 1;
+      translate: 0 0;
+      scale: 1;
+      @starting-style {
+        opacity: 0;
+        translate: var(--_from);
+        scale: 0.99;
+      }
+    }
+
+    /* ---- Requested side → where the browser places it ---- */
+    &[data-side="top"] {
+      position-area: block-start;
+      margin: 0;
+      margin-block-end: var(--_offset);
+    }
+    &[data-side="right"] {
+      position-area: right;
+      margin: 0;
+      margin-left: var(--_offset);
+      position-try-fallbacks: flip-inline, flip-block, flip-block flip-inline;
+    }
+    &[data-side="left"] {
+      position-area: left;
+      margin: 0;
+      margin-right: var(--_offset);
+      position-try-fallbacks: flip-inline, flip-block, flip-block flip-inline;
+    }
+    &:is(:not([data-side]), [data-side="bottom"])[data-align="start"] { position-area: block-end span-inline-end; }
+    &:is(:not([data-side]), [data-side="bottom"])[data-align="end"]   { position-area: block-end span-inline-start; }
+    &[data-side="top"][data-align="start"]   { position-area: block-start span-inline-end; }
+    &[data-side="top"][data-align="end"]     { position-area: block-start span-inline-start; }
+    &[data-side="right"][data-align="start"] { position-area: right span-bottom; }
+    &[data-side="right"][data-align="end"]   { position-area: right span-top; }
+    &[data-side="left"][data-align="start"]  { position-area: left span-bottom; }
+    &[data-side="left"][data-align="end"]    { position-area: left span-top; }
+
+    /* ---- Motion follows the side actually used (placement beats side) ---- */
+    &[data-side="top"]   { --_from: 0 var(--_slide); transform-origin: bottom center; }
+    &[data-side="right"] { --_from: calc(var(--_slide) * -1) 0; transform-origin: center left; }
+    &[data-side="left"]  { --_from: var(--_slide) 0; transform-origin: center right; }
+    &[data-placement="bottom"] { --_from: 0 calc(var(--_slide) * -1); transform-origin: top center; }
+    &[data-placement="top"]    { --_from: 0 var(--_slide); transform-origin: bottom center; }
+    &[data-placement="right"]  { --_from: calc(var(--_slide) * -1) 0; transform-origin: center left; }
+    &[data-placement="left"]   { --_from: var(--_slide) 0; transform-origin: center right; }
+
+    /* ---- Optional arrow: points at the trigger centre (--_arrow-x/y from JS) ---- */
+    &[data-arrow]::before {
+      content: "";
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      background: var(--_bg);
+      border: 1px solid var(--_border);
+      border-top-color: transparent;
+      border-left-color: transparent;
+      pointer-events: none;
+      /* default: arrow on the top edge (panel below trigger) */
+      top: -5px;
+      left: calc(var(--_arrow-x, 50%) - 4.5px);
+      rotate: 225deg;
+    }
+    &[data-arrow]:is([data-side="top"]:not([data-placement]), [data-placement="top"])::before {
+      top: auto; bottom: -5px; rotate: 45deg;
+    }
+    &[data-arrow]:is([data-side="right"]:not([data-placement]), [data-placement="right"])::before {
+      top: calc(var(--_arrow-y, 50%) - 4.5px); left: -5px; rotate: 135deg;
+    }
+    &[data-arrow]:is([data-side="left"]:not([data-placement]), [data-placement="left"])::before {
+      top: calc(var(--_arrow-y, 50%) - 4.5px); left: auto; right: -5px; rotate: -45deg;
+    }
+    &[data-arrow]:is([data-placement="bottom"])::before {
+      top: -5px; bottom: auto; left: calc(var(--_arrow-x, 50%) - 4.5px); right: auto; rotate: 225deg;
+    }
+    &[data-arrow] { --_offset: var(--j-floating-offset, 9px); }
+  }
+}

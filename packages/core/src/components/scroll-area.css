@@ -1,0 +1,221 @@
+/*
+ * Scroll Area — .j-scroll-area
+ *   Refined cross-browser scroll container with calm 6px thin scrollbars,
+ *   overscroll containment, and optional 20px dynamic edge fade masks.
+ *
+ * Attributes:
+ *   data-orientation: vertical (default) | horizontal | both
+ *   data-scrollbar:   subtle (default) | hover | hidden
+ *   data-fade:        enables 20px CSS mask-image fades driven by scroll state
+ *   data-bordered:    optional crisp 1px hairline surface frame
+ *
+ * State attributes (managed by behaviors/scroll-area.js):
+ *   data-can-scroll-start / data-can-scroll-end
+ *   data-can-scroll-inline-start / data-can-scroll-inline-end
+ *   data-scrolling
+ *
+ * Public custom properties:
+ *   --j-scroll-max-h      max-block-size (e.g. 280px)
+ *   --j-scroll-max-w      max-inline-size (e.g. 100%)
+ *   --j-scroll-h          explicit block-size
+ *   --j-scroll-w          explicit inline-size (default 100%)
+ *   --j-scroll-fade-size  edge mask gradient stop (default 20px)
+ *   --j-scroll-thumb-size scrollbar track/thumb thickness (default 6px)
+ *   --j-scroll-radius     corner radius when bordered or focused
+ */
+@layer jenni.components {
+  :where(.j-scroll-area) {
+    --_thumb-size: var(--j-scroll-thumb-size, 6px);
+    --_fade-size: min(var(--j-scroll-fade-size, 20px), 25%);
+    --_thumb-rest: color-mix(in oklch, var(--j-fg) 18%, transparent);
+    --_thumb-hover: color-mix(in oklch, var(--j-fg) 34%, transparent);
+    --_thumb-active: color-mix(in oklch, var(--j-fg) 48%, transparent);
+
+    position: relative;
+    display: block;
+    inline-size: var(--j-scroll-w, 100%);
+    block-size: var(--j-scroll-h, auto);
+    max-inline-size: var(--j-scroll-max-w, none);
+    max-block-size: var(--j-scroll-max-h, none);
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+
+    /* Standard scrollbar styling (Firefox & modern engines) */
+    scrollbar-width: thin;
+    scrollbar-color: var(--_thumb-rest) transparent;
+  }
+
+  :where(.j-scroll-area[data-orientation="horizontal"]) {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  :where(.j-scroll-area[data-orientation="both"]) {
+    overflow: auto;
+  }
+
+  :where(.j-scroll-area[data-bordered]) {
+    border-radius: var(--j-scroll-radius, var(--j-radius-lg));
+    background-color: var(--j-surface-1);
+    box-shadow: 0 0 0 1px var(--j-border);
+  }
+
+  :where(.j-scroll-area:focus-visible) {
+    outline: none;
+    border-radius: var(--j-scroll-radius, var(--j-radius-md));
+    box-shadow: var(--j-ring);
+  }
+  :where(.j-scroll-area[data-bordered]:focus-visible) {
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-ring);
+  }
+
+  /* ---- Subtle scrollbar (default) ---- */
+  :where(.j-scroll-area:hover, .j-scroll-area:focus-within) {
+    scrollbar-color: var(--_thumb-hover) transparent;
+  }
+
+  .j-scroll-area::-webkit-scrollbar {
+    width: var(--_thumb-size);
+    height: var(--_thumb-size);
+    background: transparent;
+  }
+
+  .j-scroll-area::-webkit-scrollbar-track,
+  .j-scroll-area::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  .j-scroll-area::-webkit-scrollbar-thumb {
+    background-color: var(--_thumb-rest);
+    border-radius: var(--j-radius-full);
+  }
+
+  .j-scroll-area:hover::-webkit-scrollbar-thumb,
+  .j-scroll-area:focus-within::-webkit-scrollbar-thumb {
+    background-color: var(--_thumb-hover);
+  }
+
+  .j-scroll-area::-webkit-scrollbar-thumb:hover {
+    background-color: color-mix(in oklch, var(--j-fg) 42%, transparent);
+  }
+
+  .j-scroll-area::-webkit-scrollbar-thumb:active {
+    background-color: var(--_thumb-active);
+  }
+
+  /* ---- Hover-only scrollbar (reveals calmly on pointer enter, focus, or active scroll) ---- */
+  :where(.j-scroll-area[data-scrollbar="hover"]) {
+    scrollbar-color: transparent transparent;
+  }
+  :where(
+    .j-scroll-area[data-scrollbar="hover"]:hover,
+    .j-scroll-area[data-scrollbar="hover"]:focus-within,
+    .j-scroll-area[data-scrollbar="hover"][data-scrolling]
+  ) {
+    scrollbar-color: var(--_thumb-rest) transparent;
+  }
+
+  .j-scroll-area[data-scrollbar="hover"]::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+  .j-scroll-area[data-scrollbar="hover"]:hover::-webkit-scrollbar-thumb,
+  .j-scroll-area[data-scrollbar="hover"]:focus-within::-webkit-scrollbar-thumb,
+  .j-scroll-area[data-scrollbar="hover"][data-scrolling]::-webkit-scrollbar-thumb {
+    background-color: var(--_thumb-rest);
+  }
+  .j-scroll-area[data-scrollbar="hover"]::-webkit-scrollbar-thumb:hover {
+    background-color: var(--_thumb-hover);
+  }
+  .j-scroll-area[data-scrollbar="hover"]::-webkit-scrollbar-thumb:active {
+    background-color: var(--_thumb-active);
+  }
+
+  /* ---- Hidden scrollbar (scroll remains active via wheel, trackpad, touch, keyboard) ---- */
+  :where(.j-scroll-area[data-scrollbar="hidden"]) {
+    scrollbar-width: none;
+  }
+  .j-scroll-area[data-scrollbar="hidden"]::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+
+  /* ==========================================================================
+   * Dynamic Edge Fade Masks (data-fade)
+   * Zero layout shift; masks are applied only on axes with remaining scroll.
+   * ========================================================================== */
+  :where(.j-scroll-area[data-fade]) {
+    --_fade-top: 0px;
+    --_fade-bottom: 0px;
+    --_fade-left: 0px;
+    --_fade-right: 0px;
+
+    --_mask-v: linear-gradient(
+      to bottom,
+      transparent 0px,
+      #000 var(--_fade-top),
+      #000 calc(100% - var(--_fade-bottom)),
+      transparent 100%
+    );
+    --_mask-h: linear-gradient(
+      to right,
+      transparent 0px,
+      #000 var(--_fade-left),
+      #000 calc(100% - var(--_fade-right)),
+      transparent 100%
+    );
+  }
+
+  :where(.j-scroll-area[data-fade][data-can-scroll-start])        { --_fade-top: var(--_fade-size); }
+  :where(.j-scroll-area[data-fade][data-can-scroll-end])          { --_fade-bottom: var(--_fade-size); }
+  :where(.j-scroll-area[data-fade][data-can-scroll-inline-start]) { --_fade-left: var(--_fade-size); }
+  :where(.j-scroll-area[data-fade][data-can-scroll-inline-end])   { --_fade-right: var(--_fade-size); }
+
+  :where([dir="rtl"]) :where(.j-scroll-area[data-fade]) {
+    --_fade-left: 0px;
+    --_fade-right: 0px;
+  }
+  :where([dir="rtl"]) :where(.j-scroll-area[data-fade][data-can-scroll-inline-start]) {
+    --_fade-right: var(--_fade-size);
+  }
+  :where([dir="rtl"]) :where(.j-scroll-area[data-fade][data-can-scroll-inline-end]) {
+    --_fade-left: var(--_fade-size);
+  }
+
+  /* Block-only fade */
+  :where(
+    .j-scroll-area[data-fade]:is([data-can-scroll-start], [data-can-scroll-end]):not(
+      :is([data-can-scroll-inline-start], [data-can-scroll-inline-end])
+    )
+  ) {
+    -webkit-mask-image: var(--_mask-v);
+    mask-image: var(--_mask-v);
+  }
+
+  /* Inline-only fade */
+  :where(
+    .j-scroll-area[data-fade]:is([data-can-scroll-inline-start], [data-can-scroll-inline-end]):not(
+      :is([data-can-scroll-start], [data-can-scroll-end])
+    )
+  ) {
+    -webkit-mask-image: var(--_mask-h);
+    mask-image: var(--_mask-h);
+  }
+
+  /* Simultaneous 2D fade (intersected vertical + horizontal masks) */
+  :where(
+    .j-scroll-area[data-fade]:is([data-can-scroll-start], [data-can-scroll-end]):is(
+      [data-can-scroll-inline-start],
+      [data-can-scroll-inline-end]
+    )
+  ) {
+    -webkit-mask-image: var(--_mask-v), var(--_mask-h);
+    -webkit-mask-composite: source-in;
+    mask-image: var(--_mask-v), var(--_mask-h);
+    mask-composite: intersect;
+  }
+}

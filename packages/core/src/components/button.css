@@ -1,0 +1,250 @@
+/*
+ * Button — <button class="j-button">
+ *   data-variant: solid (default) | soft | outline | ghost | link
+ *   data-size:    sm | md (default) | lg
+ *   data-tone:    accent (default) | neutral | danger | success | warning | info
+ *   data-icon-only   square button for a single icon (give it aria-label)
+ *   data-full-width  stretch to container width
+ *   data-loading / aria-busy="true"  spinner, content hidden, clicks blocked
+ *   :disabled / aria-disabled="true"
+ * Group: <div class="j-button-group" role="group"> … </div>
+ * Public props: --j-button-radius
+ */
+@layer jenni.components {
+  :where(.j-button) {
+    --_h: var(--j-control-md);
+    --_px: var(--j-space-3);
+    --_fs: var(--j-text-md);
+    --_icon: 16px;
+    --_radius: var(--j-button-radius, var(--j-radius-md));
+    --_bg: var(--j-tone);
+    --_bg-hover: var(--j-tone-hover);
+    --_bg-active: light-dark(
+      color-mix(in oklch, var(--_bg-hover), black 6%),
+      color-mix(in oklch, var(--_bg-hover), black 12%)
+    );
+    --_fg: var(--j-tone-fg);
+    --_border: transparent;
+    --_shadow: var(--j-shadow-xs);
+    --_highlight: inset 0 1px 0 oklch(100% 0 0 / 0.10);
+
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-gap-inline);
+    block-size: var(--_h);
+    min-inline-size: var(--_h);
+    padding-inline: var(--_px);
+    border: 1px solid var(--_border);
+    border-radius: var(--_radius);
+    background-color: var(--_bg);
+    color: var(--_fg);
+    box-shadow: var(--_highlight), var(--_shadow);
+    font-family: inherit;
+    font-size: var(--_fs);
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    letter-spacing: var(--j-tracking-tight);
+    white-space: nowrap;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out),
+      opacity var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: min(var(--_icon), calc(var(--_h) - 6px));
+      block-size: min(var(--_icon), calc(var(--_h) - 6px));
+      flex-shrink: 0;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled="true"], [data-loading], [aria-busy="true"]) {
+        background-color: var(--_bg-hover);
+      }
+    }
+
+    &:active:not(:disabled, [aria-disabled="true"], [data-loading], [aria-busy="true"]) {
+      background-color: var(--_bg-active);
+      --_shadow: 0 0 transparent;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--_highlight), var(--j-ring);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      cursor: not-allowed;
+      opacity: 0.5;
+      box-shadow: none;
+    }
+  }
+
+  /* ---- Variants ---- */
+  :where(.j-button[data-variant="soft"]) {
+    --_bg: var(--j-tone-soft);
+    --_bg-hover: color-mix(in oklch, var(--j-tone-soft), var(--j-tone) 12%);
+    --_fg: var(--j-tone-soft-fg);
+    --_shadow: 0 0 transparent;
+    --_highlight: 0 0 transparent;
+  }
+
+  /* Outline + ghost default to neutral text; an explicit data-tone colors them. */
+  :where(.j-button[data-variant="outline"]) {
+    --_bg: var(--j-surface-1);
+    --_bg-hover: var(--j-surface-2);
+    --_fg: var(--j-fg);
+    --_border: var(--j-border-strong);
+    --_highlight: 0 0 transparent;
+  }
+  :where(.j-button[data-variant="outline"][data-tone]:not([data-tone="neutral"])) {
+    --_bg-hover: color-mix(in oklch, var(--j-tone-soft) 70%, var(--j-surface-1));
+    --_fg: var(--j-tone-soft-fg);
+    --_border: color-mix(in oklch, var(--j-tone) 45%, var(--j-border));
+  }
+
+  :where(.j-button[data-variant="ghost"]) {
+    --_bg: transparent;
+    --_bg-hover: var(--j-surface-3);
+    --_fg: var(--j-fg);
+    --_shadow: 0 0 transparent;
+    --_highlight: 0 0 transparent;
+  }
+  :where(.j-button[data-variant="ghost"][data-tone]:not([data-tone="neutral"])) {
+    --_bg-hover: var(--j-tone-soft);
+    --_fg: var(--j-tone-soft-fg);
+  }
+
+  :where(.j-button[data-variant="link"]) {
+    --_bg: transparent;
+    --_bg-hover: transparent;
+    --_bg-active: transparent;
+    --_fg: var(--j-tone-soft-fg);
+    --_shadow: 0 0 transparent;
+    --_highlight: 0 0 transparent;
+    block-size: auto;
+    min-inline-size: 0;
+    padding: 0;
+    border-radius: var(--j-radius-xs);
+    text-decoration-line: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition-property: color, box-shadow, text-decoration-color, opacity;
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled="true"]) {
+        text-decoration-color: currentColor;
+      }
+    }
+    &:active:not(:disabled, [aria-disabled="true"]) {
+      opacity: 0.78;
+    }
+  }
+
+  /* ---- Sizes ---- */
+  :where(.j-button[data-size="sm"]) {
+    --_h: var(--j-control-sm);
+    --_px: calc(var(--j-space-2) + 2px);
+    --_fs: var(--j-text-sm);
+    --_icon: 14px;
+    --_radius: var(--j-button-radius, var(--j-radius-sm));
+    gap: var(--j-space-1);
+  }
+  :where(.j-button[data-size="lg"]) {
+    --_h: var(--j-control-lg);
+    --_px: var(--j-space-4);
+    --_fs: var(--j-text-lg);
+    --_icon: 18px;
+    --_radius: var(--j-button-radius, var(--j-radius-lg));
+    gap: var(--j-gap-related);
+  }
+
+  /* ---- Modifiers ---- */
+  :where(.j-button[data-icon-only]) {
+    inline-size: var(--_h);
+    padding-inline: 0;
+  }
+  :where(.j-button[data-full-width]) {
+    display: flex;
+    inline-size: 100%;
+  }
+
+  /* ---- Loading ---- */
+  :where(.j-button[data-loading], .j-button[aria-busy="true"]) {
+    color: transparent;
+    cursor: progress;
+    pointer-events: none;
+
+    & > * { opacity: 0; }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      inline-size: calc(var(--_icon) - 1px);
+      block-size: calc(var(--_icon) - 1px);
+      border: 1.5px solid color-mix(in oklch, var(--_fg) 26%, transparent);
+      border-block-start-color: var(--_fg);
+      border-radius: var(--j-radius-full);
+      animation: j-button-spin 0.95s linear infinite;
+    }
+  }
+
+  @keyframes j-button-spin {
+    to { transform: rotate(1turn); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(.j-button[data-loading], .j-button[aria-busy="true"])::before,
+    :where(.j-button[data-loading], .j-button[aria-busy="true"])::after {
+      animation-duration: 2.4s;
+    }
+  }
+
+  /* ---- Group ---- */
+  :where(.j-button-group) {
+    display: inline-flex;
+    align-items: stretch;
+    isolation: isolate;
+    border-radius: var(--j-radius-md);
+
+    & > :where(.j-button) {
+      box-shadow: var(--_highlight);
+    }
+    & > :where(.j-button:not(:first-child)) {
+      margin-inline-start: -1px;
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+    }
+    & > :where(.j-button:not(:last-child)) {
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+    }
+    /* Hairline dividers between solid / soft buttons (they have no visible border). */
+    & > :where(.j-button:not([data-variant]), .j-button[data-variant="solid"], .j-button[data-variant="soft"]):not(:first-child) {
+      border-inline-start-color: color-mix(in oklch, var(--_fg) 18%, transparent);
+    }
+    & > :where(.j-button:hover, .j-button:focus-visible) { z-index: 1; }
+  }
+  :where(.j-button-group:has(> .j-button:not([data-variant]), > .j-button[data-variant="solid"], > .j-button[data-variant="outline"])) {
+    box-shadow: var(--j-shadow-xs);
+  }
+  :where(.j-button-group[data-full-width]) {
+    display: flex;
+    inline-size: 100%;
+    & > .j-button { flex: 1; }
+  }
+}

@@ -1,0 +1,234 @@
+/*
+ * Toggle — <button type="button" class="j-toggle" aria-pressed="false">
+ *   data-variant:   outline (default) | ghost | soft
+ *   data-size:      sm | md (default) | lg
+ *   data-tone:      accent | neutral | danger | success | warning | info
+ *   data-icon-only  square icon toggle (provide aria-label)
+ *   data-full-width stretch to container width
+ *
+ * ToggleGroup — <div class="j-toggle-group" role="group" data-type="single | multiple">
+ *   data-attached   flush shared-border group (e.g. formatting toolbar B / I / U)
+ *   data-full-width stretch items equally
+ * Public props: --j-toggle-radius
+ */
+@layer jenni.components {
+  :where(.j-toggle) {
+    --_h: var(--j-control-md);
+    --_px: var(--j-space-3);
+    --_fs: var(--j-text-md);
+    --_icon: 16px;
+    --_radius: var(--j-toggle-radius, var(--j-radius-md));
+    --_bg: var(--j-surface-1);
+    --_bg-hover: var(--j-surface-2);
+    --_bg-active: var(--j-surface-3);
+    --_fg: var(--j-fg-muted);
+    --_fg-hover: var(--j-fg);
+    --_border: var(--j-border-strong);
+    --_shadow: var(--j-shadow-xs);
+
+    appearance: none;
+    position: relative;
+    isolation: isolate;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-gap-inline);
+    block-size: var(--_h);
+    min-inline-size: var(--_h);
+    padding-inline: var(--_px);
+    border: 1px solid var(--_border);
+    border-radius: var(--_radius);
+    background-color: var(--_bg);
+    color: var(--_fg);
+    box-shadow: var(--j-inset-highlight), var(--_shadow);
+    font-family: inherit;
+    font-size: var(--_fs);
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    letter-spacing: var(--j-tracking-tight);
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out),
+      opacity var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: min(var(--_icon), calc(var(--_h) - 6px));
+      block-size: min(var(--_icon), calc(var(--_h) - 6px));
+      flex-shrink: 0;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled="true"]) {
+        background-color: var(--_bg-hover);
+        color: var(--_fg-hover);
+      }
+    }
+
+    /* Poised surface press — ZERO scale squish. */
+    &:active:not(:disabled, [aria-disabled="true"]) {
+      background-color: var(--_bg-active);
+      --_shadow: 0 0 transparent;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      opacity: 0.5;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+  }
+
+  /* ---- Variants (unpressed) ---- */
+  :where(.j-toggle[data-variant="ghost"]) {
+    --_bg: transparent;
+    --_bg-hover: var(--j-surface-2);
+    --_bg-active: var(--j-surface-3);
+    --_border: transparent;
+    --_shadow: 0 0 transparent;
+  }
+
+  :where(.j-toggle[data-variant="soft"]) {
+    --_bg: var(--j-surface-2);
+    --_bg-hover: var(--j-surface-3);
+    --_bg-active: color-mix(in oklch, var(--j-surface-3), var(--j-fg) 6%);
+    --_border: transparent;
+    --_shadow: 0 0 transparent;
+  }
+
+  /* ---- Pressed state: calm architectural active fill ---- */
+  :where(.j-toggle:is([aria-pressed="true"], [data-state="on"])) {
+    --_bg: var(--j-surface-3);
+    --_bg-hover: color-mix(in oklch, var(--j-surface-3), var(--j-fg) 5%);
+    --_bg-active: color-mix(in oklch, var(--j-surface-3), var(--j-fg) 9%);
+    --_fg: var(--j-fg);
+    --_fg-hover: var(--j-fg);
+    --_border: color-mix(in oklch, var(--j-border-strong), var(--j-fg) 16%);
+    --_shadow: 0 0 transparent;
+  }
+
+  :where(.j-toggle[data-variant="ghost"]:is([aria-pressed="true"], [data-state="on"])) {
+    --_border: var(--j-border);
+  }
+
+  :where(.j-toggle[data-variant="soft"]:is([aria-pressed="true"], [data-state="on"])) {
+    --_bg: var(--j-tone-soft);
+    --_bg-hover: color-mix(in oklch, var(--j-tone-soft), var(--j-tone) 10%);
+    --_bg-active: color-mix(in oklch, var(--j-tone-soft), var(--j-tone) 16%);
+    --_fg: var(--j-tone-soft-fg);
+    --_fg-hover: var(--j-tone-soft-fg);
+    --_border: color-mix(in oklch, var(--j-tone) 32%, transparent);
+  }
+
+  /* Explicit non-neutral tone colors pressed state across all variants. */
+  :where(
+    .j-toggle[data-tone]:not([data-tone="neutral"]),
+    .j-toggle-group[data-tone]:not([data-tone="neutral"]) > .j-toggle
+  ):is([aria-pressed="true"], [data-state="on"]) {
+    --_bg: var(--j-tone-soft);
+    --_bg-hover: color-mix(in oklch, var(--j-tone-soft), var(--j-tone) 10%);
+    --_bg-active: color-mix(in oklch, var(--j-tone-soft), var(--j-tone) 16%);
+    --_fg: var(--j-tone-soft-fg);
+    --_fg-hover: var(--j-tone-soft-fg);
+    --_border: color-mix(in oklch, var(--j-tone) 42%, var(--j-border));
+    --_shadow: 0 0 transparent;
+  }
+
+  /* ---- Sizes ---- */
+  :where(.j-toggle[data-size="sm"]) {
+    --_h: var(--j-control-sm);
+    --_px: calc(var(--j-space-2) + 2px);
+    --_fs: var(--j-text-sm);
+    --_icon: 14px;
+    --_radius: var(--j-toggle-radius, var(--j-radius-sm));
+    gap: var(--j-space-1);
+  }
+
+  :where(.j-toggle[data-size="lg"]) {
+    --_h: var(--j-control-lg);
+    --_px: var(--j-space-4);
+    --_fs: var(--j-text-lg);
+    --_icon: 18px;
+    --_radius: var(--j-toggle-radius, var(--j-radius-lg));
+    gap: var(--j-gap-related);
+  }
+
+  /* ---- Modifiers ---- */
+  :where(.j-toggle[data-icon-only]) {
+    inline-size: var(--_h);
+    padding-inline: 0;
+  }
+
+  :where(.j-toggle[data-full-width]) {
+    display: flex;
+    inline-size: 100%;
+  }
+
+  /* ---- ToggleGroup ---- */
+  :where(.j-toggle-group) {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--j-gap-inline);
+
+    &[data-attached] {
+      flex-wrap: nowrap;
+      gap: 0;
+      isolation: isolate;
+      border-radius: var(--j-radius-md);
+
+      & > :where(.j-toggle) {
+        box-shadow: var(--j-inset-highlight);
+      }
+
+      & > :where(.j-toggle:not(:first-child)) {
+        margin-inline-start: -1px;
+        border-start-start-radius: 0;
+        border-end-start-radius: 0;
+      }
+
+      & > :where(.j-toggle:not(:last-child)) {
+        border-start-end-radius: 0;
+        border-end-end-radius: 0;
+      }
+
+      & > :where(.j-toggle:is([aria-pressed="true"], [data-state="on"])) {
+        z-index: 1;
+      }
+
+      & > :where(.j-toggle:hover) {
+        z-index: 2;
+      }
+
+      & > :where(.j-toggle:focus-visible) {
+        z-index: 3;
+      }
+    }
+
+    &[data-attached]:has(> .j-toggle:not([data-variant]), > .j-toggle[data-variant="outline"]) {
+      box-shadow: var(--j-shadow-xs);
+    }
+
+    &[data-full-width] {
+      display: flex;
+      inline-size: 100%;
+
+      & > :where(.j-toggle) {
+        flex: 1 1 0;
+      }
+    }
+  }
+}

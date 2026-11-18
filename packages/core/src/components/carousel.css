@@ -1,0 +1,270 @@
+/*
+ * Carousel — <section class="j-carousel" aria-roledescription="carousel" aria-label="Featured">
+ *   <div class="j-carousel__stage">
+ *     <div class="j-carousel__viewport">
+ *       <div class="j-carousel__slide" role="group" aria-roledescription="slide" aria-label="1 of 4">…</div>
+ *     </div>
+ *     <button type="button" class="j-carousel__prev" aria-label="Previous slide"></button>
+ *     <button type="button" class="j-carousel__next" aria-label="Next slide"></button>
+ *   </div>
+ *   <div class="j-carousel__footer">
+ *     <span class="j-carousel__counter">1 / 4</span>
+ *     <div class="j-carousel__dots" role="tablist" aria-label="Choose slide">
+ *       <button type="button" class="j-carousel__dot" role="tab" aria-selected="true" aria-label="Slide 1"></button>
+ *     </div>
+ *   </div>
+ * </section>
+ * Public props: --j-carousel-per-view, --j-carousel-gap, --j-carousel-height, --j-carousel-radius
+ */
+@layer jenni.components {
+  :where(.j-carousel) {
+    --_per-view: var(--j-carousel-per-view, 1);
+    --_gap: var(--j-carousel-gap, var(--j-space-4));
+    --_nav-size: max(28px, round(calc(34px * var(--j-density)), 1px));
+    --_radius: var(--j-carousel-radius, var(--j-radius-lg));
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-3);
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  :where(.j-carousel__stage) {
+    position: relative;
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+
+  /* ---- Hardware-accelerated CSS Scroll-Snap Viewport ---- */
+  :where(.j-carousel__viewport) {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    gap: var(--_gap);
+    inline-size: 100%;
+    min-inline-size: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    border-radius: var(--_radius);
+    -webkit-overflow-scrolling: touch;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      scroll-behavior: auto;
+    }
+  }
+
+  :where(.j-carousel__slide) {
+    position: relative;
+    flex: 0 0 calc((100% - (var(--_per-view) - 1) * var(--_gap)) / var(--_per-view));
+    min-inline-size: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  /* ---- Vertical Orientation ---- */
+  :where(.j-carousel[data-orientation="vertical"]) {
+    & :where(.j-carousel__viewport) {
+      flex-direction: column;
+      block-size: var(--j-carousel-height, 320px);
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+    }
+
+    & :where(.j-carousel__slide) {
+      flex: 0 0 calc((100% - (var(--_per-view) - 1) * var(--_gap)) / var(--_per-view));
+      inline-size: 100%;
+      min-block-size: 0;
+    }
+  }
+
+  /* ---- Previous / Next Buttons ---- */
+  :where(.j-carousel__prev, .j-carousel__next) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: var(--_nav-size);
+    block-size: var(--_nav-size);
+    padding: 0;
+    border: 1px solid var(--j-border);
+    border-radius: var(--j-radius-full);
+    background-color: color-mix(in oklch, var(--j-surface-1) 90%, transparent);
+    backdrop-filter: blur(8px);
+    box-shadow: var(--j-shadow-sm), var(--j-inset-highlight);
+    color: var(--j-fg);
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      opacity var(--j-duration-fast) var(--j-ease-out),
+      transform var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: 15px;
+      block-size: 15px;
+      flex: none;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled="true"]) {
+        background-color: var(--j-surface-1);
+        border-color: var(--j-border-strong);
+      }
+    }
+
+    &:active:not(:disabled, [aria-disabled="true"]) {
+      background-color: var(--j-surface-2);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      opacity: 0.36;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+
+  :where(.j-carousel__prev:empty)::before,
+  :where(.j-carousel__next:empty)::before {
+    content: "";
+    inline-size: 15px;
+    block-size: 15px;
+    background-color: currentColor;
+  }
+
+  :where(.j-carousel__prev:empty)::before {
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9.75 4.25 6 8l3.75 3.75'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  :where(.j-carousel__next:empty)::before {
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.7' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.25 4.25 10 8l-3.75 3.75'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  /* Floating arrows inside .j-carousel__stage */
+  :where(.j-carousel__stage) > :where(.j-carousel__prev, .j-carousel__next) {
+    position: absolute;
+    inset-block-start: 50%;
+    z-index: 2;
+    transform: translateY(-50%);
+  }
+
+  :where(.j-carousel__stage) > :where(.j-carousel__prev) {
+    inset-inline-start: var(--j-space-3);
+  }
+
+  :where(.j-carousel__stage) > :where(.j-carousel__next) {
+    inset-inline-end: var(--j-space-3);
+  }
+
+  :where(.j-carousel[data-orientation="vertical"] .j-carousel__stage) > :where(.j-carousel__prev, .j-carousel__next) {
+    inset-inline-start: auto;
+    inset-inline-end: var(--j-space-3);
+    transform: none;
+  }
+
+  :where(.j-carousel[data-orientation="vertical"] .j-carousel__stage) > :where(.j-carousel__prev) {
+    inset-block-start: var(--j-space-3);
+  }
+
+  :where(.j-carousel[data-orientation="vertical"] .j-carousel__stage) > :where(.j-carousel__next) {
+    inset-block-start: auto;
+    inset-block-end: var(--j-space-3);
+  }
+
+  /* ---- Footer Bar (Counter + Elongated Pill Dots + Footer Nav) ---- */
+  :where(.j-carousel__footer) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-item);
+    min-inline-size: 0;
+  }
+
+  :where(.j-carousel__nav) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1-5);
+
+    & > :where(.j-carousel__prev, .j-carousel__next) {
+      --_nav-size: var(--j-control-sm);
+      box-shadow: var(--j-shadow-xs), var(--j-inset-highlight);
+    }
+  }
+
+  :where(.j-carousel__counter) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* ---- Elongated Pill Pagination Dots ---- */
+  :where(.j-carousel__dots) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-space-1-5);
+    padding-block: var(--j-space-1);
+  }
+
+  :where(.j-carousel__dot) {
+    display: inline-block;
+    flex: none;
+    inline-size: 7px;
+    block-size: 7px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-full);
+    background-color: color-mix(in oklch, var(--j-fg) 22%, transparent);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      inline-size var(--j-duration-slow) var(--j-ease-emphasized),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      opacity var(--j-duration-fast) var(--j-ease-out);
+
+    @media (hover: hover) {
+      &:hover:not([aria-selected="true"], [aria-current="true"]) {
+        background-color: color-mix(in oklch, var(--j-fg) 42%, transparent);
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+
+    &[aria-selected="true"],
+    &[aria-current="true"] {
+      inline-size: 22px;
+      background-color: var(--j-tone);
+    }
+  }
+}
