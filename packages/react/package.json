@@ -30,6 +30,7 @@
     "dist",
     "src",
     "manifest.json",
+    "AGENTS.md",
     "README.md",
     "LICENSE"
   ],
@@ -39,7 +40,8 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./manifest.json": "./manifest.json"
+    "./manifest.json": "./manifest.json",
+    "./AGENTS.md": "./AGENTS.md"
   },
   "peerDependencies": {
     "jenni-core": "^0.2.0",

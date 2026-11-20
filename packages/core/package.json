@@ -35,6 +35,7 @@
     "dist",
     "src",
     "manifest.json",
+    "AGENTS.md",
     "README.md",
     "LICENSE"
   ],
@@ -45,6 +46,7 @@
       "default": "./dist/index.js"
     },
     "./manifest.json": "./manifest.json",
+    "./AGENTS.md": "./AGENTS.md",
     "./css": "./src/index.css",
     "./css/*": "./dist/css/*",
     "./dist/jenni.css": "./dist/jenni.css",

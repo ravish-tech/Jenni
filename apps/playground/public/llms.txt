@@ -1,0 +1,16 @@
+# Jenni UI Framework
+
+> Web UI framework driven by beauty, simplicity, and performance (`jenni-core`, `jenni-vue`, `jenni-react`) — built in loving memory of Jenni.
+
+## Key Principles for AI Agents
+- **Never guess props:** Inspect `manifest.json` (`node_modules/jenni-core/manifest.json` or the URL below) before using unfamiliar components.
+- **Spatial precision:** Use `Stack`, `Inline`, `Grid`, and `Page` with semantic `gap` tokens (`inline` 6px, `related` 8px, `item` 12px, `field` 16px, `group` 24px, `section` 40px) — never arbitrary pixel gaps.
+- **Weighted motion, zero bounce:** 0% spring overshoot, 0 `!important`, OKLCH `light-dark()` tokens only (`var(--j-*)`), and `0.65x–1.15x` `--j-density` scaling.
+- **Verified actions:** Use `toast.promise(fn, { loading, verify, success, error })` — never show optimistic success before verifying the result.
+- **Respectful naming:** Keep the name strictly to package identifiers (`jenni-core`, `jenni-vue`, `jenni-react`) and top-level dedication; never use it casually in prose or mock brand text.
+
+## Agent Documentation & Machine-Readable References
+- [Full Agent Guide, Recipes & Component Catalog](https://ravish-tech.github.io/Jenni/llms-full.txt): Philosophy, spatial rules, Vue 3 & React 19 patterns, and all 106 components.
+- [Component & Token AST Manifest (JSON)](https://ravish-tech.github.io/Jenni/COMPONENT_MANIFEST.json): Exact props, types, defaults, v-models, events, slots, CSS slugs, and 194 tokens.
+- [Interactive Design Lab](https://ravish-tech.github.io/Jenni/): Live demos, theme/density controls, and multi-tier benchmarks.
+- [GitHub Repository](https://github.com/ravish-tech/Jenni): Source code, releases, and `.agents/skills/jenni-ui/SKILL.md`.

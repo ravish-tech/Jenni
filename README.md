@@ -73,4 +73,5 @@ npm run build            # Build packages + static Design Lab
 - [LAYOUT.md](./LAYOUT.md) — `4px`/`8px` spatial grid, `0.65×–1.15×` density scaling, 16 app shells × 4 surface variants, and 18 canonical screen architectures.
 - [COMPONENTS.md](./COMPONENTS.md) — complete 65-entry inventory across Layout, Forms, Display, and Overlay.
 - [COMPONENT_MANIFEST.json](./COMPONENT_MANIFEST.json) — machine-readable AST manifest of components, props, events, slots, tokens, and CSS slugs (`jenni-core/manifest.json`).
+- [AI Agent Skill & Guide](./.agents/skills/jenni-ui/SKILL.md) — philosophy, spatial rules, and Vue/React recipes (`jenni-core/AGENTS.md` + [`llms.txt`](https://ravish-tech.github.io/Jenni/llms.txt)).
 - [CHANGELOG.md](./CHANGELOG.md) — versioned release notes.

@@ -739,6 +739,85 @@ export function generateManifests() {
   fs.writeFileSync(path.join(ROOT, 'packages/core/manifest.json'), json, 'utf8');
   fs.writeFileSync(path.join(ROOT, 'packages/vue/manifest.json'), json, 'utf8');
   fs.writeFileSync(path.join(ROOT, 'packages/react/manifest.json'), json, 'utf8');
+
+  // Emit bundled AGENTS.md + public web agent files (llms.txt, llms-full.txt, COMPONENT_MANIFEST.json)
+  const skillMdPath = path.join(ROOT, '.agents/skills/jenni-ui/SKILL.md');
+  const recipesMdPath = path.join(ROOT, '.agents/skills/jenni-ui/references/RECIPES.md');
+  if (fs.existsSync(skillMdPath) && fs.existsSync(recipesMdPath)) {
+    const skillBody = fs.readFileSync(skillMdPath, 'utf8').replace(/^---[\s\S]*?---\s*/, '');
+    const recipesBody = fs.readFileSync(recipesMdPath, 'utf8');
+
+    const compRows = components.map((c) => {
+      const propNames = c.props.map((p) => p.name).join(', ') || '—';
+      const slotNames = c.slots.join(', ') || '—';
+      return `| \`${c.vueName}\` / \`${c.reactName}\` | ${c.group} | \`${c.css.componentImport}\` | ${propNames} | ${slotNames} |`;
+    });
+
+    const catalogTable = [
+      '## Complete Component Index (AST-Generated)',
+      '',
+      '| Vue / React | Group | Granular CSS | Props | Slots |',
+      '|---|---|---|---|---|',
+      ...compRows,
+      '',
+    ].join('\n');
+
+    const bundledAgentsMd = [
+      skillBody.trim(),
+      '',
+      '---',
+      '',
+      recipesBody.trim(),
+      '',
+      '---',
+      '',
+      catalogTable,
+    ].join('\n');
+
+    fs.writeFileSync(path.join(ROOT, 'packages/core/AGENTS.md'), bundledAgentsMd, 'utf8');
+    fs.writeFileSync(path.join(ROOT, 'packages/vue/AGENTS.md'), bundledAgentsMd, 'utf8');
+    fs.writeFileSync(path.join(ROOT, 'packages/react/AGENTS.md'), bundledAgentsMd, 'utf8');
+
+    const publicDir = path.join(ROOT, 'apps/playground/public');
+    fs.mkdirSync(publicDir, { recursive: true });
+    fs.writeFileSync(path.join(publicDir, 'COMPONENT_MANIFEST.json'), json, 'utf8');
+
+    const llmsTxt = [
+      '# Jenni UI Framework',
+      '',
+      '> Web UI framework driven by beauty, simplicity, and performance (`jenni-core`, `jenni-vue`, `jenni-react`) — built in loving memory of Jenni.',
+      '',
+      '## Key Principles for AI Agents',
+      '- **Never guess props:** Inspect `manifest.json` (`node_modules/jenni-core/manifest.json` or the URL below) before using unfamiliar components.',
+      '- **Spatial precision:** Use `Stack`, `Inline`, `Grid`, and `Page` with semantic `gap` tokens (`inline` 6px, `related` 8px, `item` 12px, `field` 16px, `group` 24px, `section` 40px) — never arbitrary pixel gaps.',
+      '- **Weighted motion, zero bounce:** 0% spring overshoot, 0 `!important`, OKLCH `light-dark()` tokens only (`var(--j-*)`), and `0.65x–1.15x` `--j-density` scaling.',
+      '- **Verified actions:** Use `toast.promise(fn, { loading, verify, success, error })` — never show optimistic success before verifying the result.',
+      '- **Respectful naming:** Keep the name strictly to package identifiers (`jenni-core`, `jenni-vue`, `jenni-react`) and top-level dedication; never use it casually in prose or mock brand text.',
+      '',
+      '## Agent Documentation & Machine-Readable References',
+      '- [Full Agent Guide, Recipes & Component Catalog](https://ravish-tech.github.io/Jenni/llms-full.txt): Philosophy, spatial rules, Vue 3 & React 19 patterns, and all 106 components.',
+      '- [Component & Token AST Manifest (JSON)](https://ravish-tech.github.io/Jenni/COMPONENT_MANIFEST.json): Exact props, types, defaults, v-models, events, slots, CSS slugs, and 194 tokens.',
+      '- [Interactive Design Lab](https://ravish-tech.github.io/Jenni/): Live demos, theme/density controls, and multi-tier benchmarks.',
+      '- [GitHub Repository](https://github.com/ravish-tech/Jenni): Source code, releases, and `.agents/skills/jenni-ui/SKILL.md`.',
+      '',
+    ].join('\n');
+
+    const tokenLines = manifest.tokens.map((t) => `- \`${t.name}\`: \`${t.value}\``).join('\n');
+    const llmsFullTxt = [
+      bundledAgentsMd.trim(),
+      '',
+      '---',
+      '',
+      `## Design Tokens (${manifest.tokens.length} CSS Custom Properties)`,
+      '',
+      tokenLines,
+      '',
+    ].join('\n');
+
+    fs.writeFileSync(path.join(publicDir, 'llms.txt'), llmsTxt, 'utf8');
+    fs.writeFileSync(path.join(publicDir, 'llms-full.txt'), llmsFullTxt, 'utf8');
+  }
+
   return manifest;
 }
 
