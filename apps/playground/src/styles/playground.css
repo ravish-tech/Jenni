@@ -60,14 +60,11 @@ body { overflow: hidden; }
   flex: none;
 }
 .pg-brand__mark {
-  width: 20px;
-  height: 20px;
-  border-radius: calc(6px * var(--j-radius-factor));
-  background:
-    radial-gradient(circle at 50% 50%, var(--j-accent-fg) 0 3.5px, transparent 4px),
-    linear-gradient(145deg, color-mix(in oklch, var(--j-accent) 70%, var(--j-bg)), var(--j-accent));
-  box-shadow: var(--j-shadow-xs), inset 0 0 0 1px color-mix(in oklch, var(--j-accent) 60%, transparent);
-  transition: background-color var(--j-duration) var(--j-ease-out);
+  width: 22px;
+  height: 22px;
+  flex: none;
+  color: var(--j-accent);
+  transition: color var(--j-duration) var(--j-ease-out);
 }
 .pg-brand__word {
   font-size: var(--j-text-lg);

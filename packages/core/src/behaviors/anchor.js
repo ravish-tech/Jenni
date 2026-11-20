@@ -1,4 +1,4 @@
-// Jenni — anchor helper shared by tooltip, popover and menu.
+// Anchor positioning helper shared by tooltip, popover, and menu.
 // Native CSS anchor positioning does the real work. This file only:
 //   1. links a trigger and a floating element with unique anchor names,
 //   2. reports the side the browser actually picked (after position-try flips)
@@ -141,14 +141,29 @@ export function trackAnchor(trigger, floating, options = {}) {
   syncPlacement(trigger, floating, fallbackSide);
   update();
 
-  window.addEventListener('scroll', update, { capture: true, passive: true });
+  /** @param {Event} e */
+  const onScroll = (e) => {
+    const t = e?.target;
+    if (
+      t instanceof Node &&
+      t !== document &&
+      t !== document.documentElement &&
+      !t.contains(trigger) &&
+      !floating.contains(t)
+    ) {
+      return;
+    }
+    update();
+  };
+
+  window.addEventListener('scroll', onScroll, { capture: true, passive: true });
   window.addEventListener('resize', update, { passive: true });
   // Measure again once the enter transition settles (transforms skew rects).
   floating.addEventListener('transitionend', update);
   return () => {
     cancelAnimationFrame(frame);
     floating.removeEventListener('transitionend', update);
-    window.removeEventListener('scroll', update, { capture: true });
+    window.removeEventListener('scroll', onScroll, { capture: true });
     window.removeEventListener('resize', update);
   };
 }

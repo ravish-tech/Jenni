@@ -59,6 +59,23 @@ declare module 'jenni-core/behaviors/date-picker.js' {
     today: boolean;
     disabled: boolean;
   }
+  export type CalendarTone = 'accent' | 'neutral' | 'danger' | 'success' | 'warning' | 'info';
+  export interface NormalizedCalendarMarker {
+    tone?: CalendarTone;
+    color?: string;
+    label?: string;
+  }
+  export type CalendarMarkerItem = CalendarTone | NormalizedCalendarMarker;
+  export type CalendarMarkerInput =
+    | boolean
+    | number
+    | CalendarMarkerItem
+    | readonly CalendarMarkerItem[];
+  export type CalendarMarkers =
+    | Record<string, CalendarMarkerInput>
+    | ReadonlySet<string>
+    | readonly string[]
+    | ((isoDate: string) => CalendarMarkerInput | undefined | null);
   export function daysInMonth(year: number, month: number): number;
   export function parseIsoDate(raw: string | null | undefined): DateParts | null;
   export function formatIsoDate(year: number, month: number, day: number): string;
@@ -89,6 +106,15 @@ declare module 'jenni-core/behaviors/date-picker.js' {
   export function formatMonthTitle(year: number, month: number, locale?: string): string;
   export function formatDisplayDate(iso: string | null | undefined, locale?: string): string;
   export function formatDisplayRange(range: DateRange | null | undefined, locale?: string): string;
+  export function normalizeDayMarkers(
+    markers: CalendarMarkers | null | undefined,
+    iso: string,
+  ): NormalizedCalendarMarker[];
+  export function formatDayAriaLabel(
+    iso: string,
+    locale?: string,
+    dayMarkers?: NormalizedCalendarMarker[],
+  ): string;
   export function anchorDatePopover(
     shell: HTMLElement,
     popover: HTMLElement,

@@ -1,10 +1,11 @@
-// Jenni — Date Picker & Calendar behavior.
+// Date Picker & Calendar behavior.
 // Supports standalone `.j-calendar` (`mode="single"` | `mode="range"`) and
 // anchored `.j-date-picker` + `.j-date-picker__popover` (`popover="auto"`).
 
 import { anchorPopover } from './anchor.js';
 
 /**
+ * @typedef {'accent' | 'neutral' | 'danger' | 'success' | 'warning' | 'info'} CalendarTone
  * @typedef {{ year: number, month: number, day: number }} DateParts
  * @typedef {{ start: string | null, end: string | null }} DateRange
  * @typedef {{
@@ -14,7 +15,20 @@ import { anchorPopover } from './anchor.js';
  *   today: boolean,
  *   disabled: boolean
  * }} CalendarCell
+ * @typedef {{ tone?: CalendarTone, color?: string, label?: string }} NormalizedCalendarMarker
+ * @typedef {CalendarTone | NormalizedCalendarMarker} CalendarMarkerItem
+ * @typedef {boolean | number | CalendarMarkerItem | readonly CalendarMarkerItem[]} CalendarMarkerInput
+ * @typedef {Record<string, CalendarMarkerInput> | ReadonlySet<string> | readonly string[] | ((isoDate: string) => CalendarMarkerInput | undefined | null)} CalendarMarkers
  */
+
+const VALID_MARKER_TONES = new Set([
+  'accent',
+  'neutral',
+  'danger',
+  'success',
+  'warning',
+  'info',
+]);
 
 /**
  * Pad a number to 2 digits.
@@ -286,6 +300,79 @@ export function formatDisplayRange(range, locale = 'en-US') {
 }
 
 /**
+ * Normalize day activity markers for `iso` (`YYYY-MM-DD`) into up to 3 `{ tone, color, label }` items.
+ * @param {CalendarMarkers | null | undefined} markers
+ * @param {string} iso
+ * @returns {NormalizedCalendarMarker[]}
+ */
+export function normalizeDayMarkers(markers, iso) {
+  if (!markers || !iso) return [];
+  const raw =
+    typeof markers === 'function'
+      ? markers(iso)
+      : markers instanceof Set
+        ? markers.has(iso)
+        : Array.isArray(markers)
+          ? markers.includes(iso)
+          : markers[iso];
+  if (raw == null || raw === false || raw === 0) return [];
+  if (raw === true) return [{ tone: 'accent' }];
+  if (typeof raw === 'number') {
+    const count = Math.max(0, Math.min(3, Math.floor(raw)));
+    /** @type {NormalizedCalendarMarker[]} */
+    const out = [];
+    for (let i = 0; i < count; i++) out.push({ tone: 'accent' });
+    return out;
+  }
+  const items = Array.isArray(raw) ? raw : [raw];
+  /** @type {NormalizedCalendarMarker[]} */
+  const result = [];
+  for (const item of items) {
+    if (result.length >= 3) break;
+    if (!item) continue;
+    if (typeof item === 'string') {
+      if (VALID_MARKER_TONES.has(item)) {
+        result.push({ tone: /** @type {CalendarTone} */ (item) });
+      } else {
+        result.push({ color: item });
+      }
+    } else if (typeof item === 'object') {
+      /** @type {NormalizedCalendarMarker} */
+      const norm = {};
+      if (typeof item.tone === 'string' && VALID_MARKER_TONES.has(item.tone)) {
+        norm.tone = /** @type {CalendarTone} */ (item.tone);
+      } else if (!item.color) {
+        norm.tone = 'accent';
+      }
+      if (typeof item.color === 'string' && item.color) norm.color = item.color;
+      if (typeof item.label === 'string' && item.label) norm.label = item.label;
+      result.push(norm);
+    }
+  }
+  return result;
+}
+
+/**
+ * Format an accessible label for a calendar day cell, appending marker labels or counts when present.
+ * @param {string} iso
+ * @param {string} [locale]
+ * @param {NormalizedCalendarMarker[]} [dayMarkers]
+ * @returns {string}
+ */
+export function formatDayAriaLabel(iso, locale = 'en-US', dayMarkers = []) {
+  const base = formatDisplayDate(iso, locale);
+  if (!dayMarkers || dayMarkers.length === 0) return base;
+  const labels = dayMarkers.map((m) => m.label).filter(Boolean);
+  if (labels.length === dayMarkers.length) {
+    return `${base}, ${labels.join(', ')}`;
+  }
+  if (labels.length > 0) {
+    return `${base}, ${labels.join(', ')} (${dayMarkers.length} markers)`;
+  }
+  return `${base}, ${dayMarkers.length} ${dayMarkers.length === 1 ? 'marker' : 'markers'}`;
+}
+
+/**
  * Wire anchor positioning for a DatePicker shell and its `[popover]` panel.
  * @param {HTMLElement} shell
  * @param {HTMLElement} popover
@@ -309,6 +396,7 @@ export function anchorDatePopover(shell, popover, options = {}) {
  *   weekStartsOn?: 0 | 1,
  *   showFooter?: boolean,
  *   locale?: string,
+ *   markers?: CalendarMarkers,
  *   onSelect?: (val: string | DateRange | null, complete: boolean) => void
  * }} [options]
  * @returns {{ destroy: () => void, setValue: (v: string | DateRange | null) => void, getValue: () => string | DateRange | null }}
@@ -439,13 +527,14 @@ export function createCalendar(root, options = {}) {
       rowEl.className = 'j-calendar__row';
       rowEl.setAttribute('role', 'row');
       for (const cell of week) {
+        const dayMarkers = normalizeDayMarkers(options.markers, cell.iso);
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'j-calendar__day';
         btn.setAttribute('role', 'gridcell');
         btn.dataset.date = cell.iso;
         btn.tabIndex = cell.iso === focusedIso ? 0 : -1;
-        btn.setAttribute('aria-label', formatDisplayDate(cell.iso, locale));
+        btn.setAttribute('aria-label', formatDayAriaLabel(cell.iso, locale, dayMarkers));
         if (cell.outside) btn.dataset.outside = '';
         if (cell.today) btn.dataset.today = '';
         if (cell.disabled) {
@@ -473,6 +562,21 @@ export function createCalendar(root, options = {}) {
         span.className = 'j-calendar__day-num';
         span.textContent = String(cell.day);
         btn.appendChild(span);
+
+        if (dayMarkers.length > 0) {
+          const dotsWrap = document.createElement('span');
+          dotsWrap.className = 'j-calendar__dots';
+          dotsWrap.setAttribute('aria-hidden', 'true');
+          for (const m of dayMarkers) {
+            const dot = document.createElement('span');
+            dot.className = 'j-calendar__dot';
+            if (m.tone) dot.dataset.tone = m.tone;
+            if (m.color) dot.style.setProperty('--_dot-color', m.color);
+            dotsWrap.appendChild(dot);
+          }
+          btn.appendChild(dotsWrap);
+        }
+
         rowEl.appendChild(btn);
       }
       frag.appendChild(rowEl);

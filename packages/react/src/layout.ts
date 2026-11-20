@@ -15,6 +15,28 @@ export {
 } from './layout/Sidebar';
 export { TopBar, type TopBarProps } from './layout/TopBar';
 export { BottomBar, BottomBarItem, type BottomBarProps, type BottomBarItemProps } from './layout/BottomBar';
+export {
+  StatusBar,
+  StatusBarItem,
+  type StatusBarProps,
+  type StatusBarItemProps,
+  type StatusBarVariant,
+  type StatusBarBorder,
+} from './layout/StatusBar';
+export {
+  Toolbar,
+  ToolbarGroup,
+  ToolbarSeparator,
+  ToolbarSpacer,
+  type ToolbarProps,
+  type ToolbarGroupProps,
+  type ToolbarSeparatorProps,
+  type ToolbarSpacerProps,
+  type ToolbarSize,
+  type ToolbarOrientation,
+  type ToolbarBorder,
+  type ToolbarSurface,
+} from './layout/Toolbar';
 export { AppShell, type AppShellProps, type AppShellHandle } from './layout/AppShell';
 export { Bento, BentoCell, type BentoProps, type BentoCellProps } from './layout/Bento';
 export { Board, BoardColumn, type BoardProps, type BoardColumnProps } from './layout/Board';

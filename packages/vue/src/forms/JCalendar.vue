@@ -3,17 +3,26 @@ import { computed, nextTick, ref, useTemplateRef, watch } from 'vue';
 import {
   addMonthsClamped,
   buildCalendarGrid,
+  formatDayAriaLabel,
   formatDisplayDate,
   formatDisplayRange,
   formatMonthTitle,
   getWeekdayLabels,
   isDateDisabled,
+  normalizeDayMarkers,
   parseIsoDate,
   shiftYearMonth,
   stepFocusedDate,
   todayIso,
 } from 'jenni-core/behaviors/date-picker.js';
-import type { DatePickerMode, DateRange, Tone } from './types';
+import type {
+  CalendarCell,
+  CalendarMarkers,
+  DatePickerMode,
+  DateRange,
+  NormalizedCalendarMarker,
+  Tone,
+} from './types';
 
 const model = defineModel<string | DateRange | null>({ default: null });
 
@@ -27,6 +36,7 @@ const props = withDefaults(
     tone?: Tone;
     disabled?: boolean;
     locale?: string;
+    markers?: CalendarMarkers;
   }>(),
   {
     mode: 'single',
@@ -35,6 +45,10 @@ const props = withDefaults(
     locale: 'en-US',
   },
 );
+
+defineSlots<{
+  day?: (props: { cell: CalendarCell; markers: NormalizedCalendarMarker[] }) => unknown;
+}>();
 
 const emit = defineEmits<{
   change: [value: string | DateRange | null];
@@ -87,6 +101,26 @@ const weeks = computed(() =>
     max: props.max,
   }),
 );
+
+const markersByIso = computed(() => {
+  const map = new Map<string, NormalizedCalendarMarker[]>();
+  if (!props.markers) return map;
+  for (const week of weeks.value) {
+    for (const cell of week) {
+      const list = normalizeDayMarkers(props.markers, cell.iso);
+      if (list.length) map.set(cell.iso, list);
+    }
+  }
+  return map;
+});
+
+function getCellMarkers(iso: string): NormalizedCalendarMarker[] {
+  return markersByIso.value.get(iso) ?? [];
+}
+
+function getCellAriaLabel(iso: string): string {
+  return formatDayAriaLabel(iso, props.locale, markersByIso.value.get(iso));
+}
 
 const singleSelected = computed(() =>
   props.mode === 'single' && typeof model.value === 'string' ? model.value : null,
@@ -313,12 +347,27 @@ function clearSelection() {
           :disabled="disabled || cell.disabled || undefined"
           :aria-disabled="cell.disabled ? 'true' : undefined"
           :aria-selected="isCellSelected(cell.iso) ? 'true' : 'false'"
-          :aria-label="formatDisplayDate(cell.iso, locale)"
+          :aria-label="getCellAriaLabel(cell.iso)"
           @pointerenter="onCellHover(cell.iso, cell.disabled)"
           @focus="focusedIso = cell.iso"
           @click="selectDate(cell.iso)"
         >
-          <span class="j-calendar__day-num">{{ cell.day }}</span>
+          <slot name="day" :cell="cell" :markers="getCellMarkers(cell.iso)">
+            <span class="j-calendar__day-num">{{ cell.day }}</span>
+            <span
+              v-if="getCellMarkers(cell.iso).length"
+              class="j-calendar__dots"
+              aria-hidden="true"
+            >
+              <span
+                v-for="(m, mIdx) in getCellMarkers(cell.iso)"
+                :key="mIdx"
+                class="j-calendar__dot"
+                :data-tone="m.tone"
+                :style="m.color ? { '--_dot-color': m.color } : undefined"
+              />
+            </span>
+          </slot>
         </button>
       </div>
     </div>

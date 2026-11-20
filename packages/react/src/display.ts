@@ -1,4 +1,27 @@
 // Group index for "display" components.
+export {
+  Icon,
+  IconProvider,
+  registerIcons,
+  clearRegisteredIcons,
+  resolveIcon,
+  parseSvgIcon,
+  listBuiltinIcons,
+  BUILTIN_ICONS,
+  type IconProps,
+  type IconProviderProps,
+  type IconSize,
+  type IconPresetSize,
+  type IconTone,
+  type IconResolver,
+  type IconSource,
+} from './display/Icon';
+export {
+  ENTITY_HUE_RING,
+  hashEntitySeed,
+  getEntityHue,
+  getEntityColorVars,
+} from 'jenni-core/behaviors/entity-color.js';
 export { Badge, type BadgeProps } from './display/Badge';
 export { Avatar, AvatarGroup, type AvatarProps, type AvatarGroupProps, type AvatarSize, type AvatarStatus } from './display/Avatar';
 export { Card, type CardProps } from './display/Card';
@@ -46,6 +69,25 @@ export {
   type TableSortDirection,
 } from './display/Table';
 export {
+  VirtualList,
+  type VirtualListProps,
+  type VirtualListHandle,
+  type VirtualScrollAlign,
+  type VirtualizerState,
+} from './display/VirtualList';
+export {
+  DataGrid,
+  type DataGridProps,
+  type DataGridHandle,
+  type DataGridColumn,
+  type DataGridSort,
+  type DataGridSelectable,
+  type DataGridAlign,
+  type DataGridSortDirection,
+  type DataGridCellRenderParams,
+  type DataGridFooterRenderParams,
+} from './display/DataGrid';
+export {
   Stepper,
   Step,
   type StepperProps,
@@ -69,4 +111,4 @@ export {
   type CarouselOrientation,
   type CarouselArrows,
 } from './display/Carousel';
-export type { DisplayTone, DisplaySize } from './display/types';
+export type { DisplayTone, DisplaySize, ProgressSegment } from './display/types';

@@ -1,5 +1,5 @@
 /*
- * Jenni — Toast & Toaster.
+ * Toast & Toaster.
  * Top-layer notification deck using native `popover="manual"` so toasts float
  * calmly above everything — including modal `<dialog>` scims — without trapping
  * focus or triggering accidental light-dismiss.
@@ -8,7 +8,7 @@
  *   data-position = bottom-end | bottom-center | top-end | top-center (default: bottom-end)
  *   data-expanded                                                     (force expanded stack)
  * Toast options:
- *   data-tone     = neutral | accent | success | warning | danger | info
+ *   data-tone     = neutral | accent | success | warning | danger | info | loading
  *   data-state    = entering | open | closing
  * Public props: --j-toast-width, --j-toaster-offset
  */
@@ -114,6 +114,7 @@
 
     /* Tone dot / icon palette */
     &[data-tone="accent"]  { --_dot: var(--j-accent); }
+    &[data-tone="loading"] { --_dot: var(--j-accent); }
     &[data-tone="success"] { --_dot: var(--j-success); }
     &[data-tone="warning"] { --_dot: var(--j-warning); }
     &[data-tone="danger"]  { --_dot: var(--j-danger); }
@@ -183,6 +184,27 @@
     height: 7px;
     border-radius: var(--j-radius-full);
     background-color: var(--_dot);
+  }
+
+  :where(.j-toast__spinner) {
+    box-sizing: border-box;
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: var(--j-radius-full);
+    border: 1.75px solid color-mix(in oklch, currentColor 22%, transparent);
+    border-top-color: currentColor;
+    animation: j-toast-spin 0.8s linear infinite;
+  }
+
+  @keyframes j-toast-spin {
+    to { transform: rotate(1turn); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(.j-toast__spinner) {
+      animation-duration: 2s;
+    }
   }
 
   :where(.j-toast__body) {

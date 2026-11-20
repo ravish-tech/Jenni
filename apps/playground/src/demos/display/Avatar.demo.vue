@@ -79,6 +79,17 @@ const html = `<div class="j-inline" data-gap="item">
     </JInline>
   </DemoSection>
 
+  <DemoSection title="Deterministic Author & Entity Colors" description="Pass auto-color or color-seed on JAvatar and JBadge so every PR author, branch, or owner gets a consistent 12-hue OKLCH color in light and dark mode.">
+    <JStack gap="item">
+      <JInline gap="item" wrap>
+        <JAvatar v-for="p in people" :key="`auto-${p.name}`" :name="p.name" auto-color />
+      </JInline>
+      <JInline gap="related" wrap>
+        <JBadge v-for="p in people" :key="`badge-${p.name}`" :color-seed="p.name" dot>{{ p.name }}</JBadge>
+      </JInline>
+    </JStack>
+  </DemoSection>
+
   <DemoSection title="Status">
     <JInline gap="item">
       <JAvatar v-for="(s, i) in statuses" :key="s" :src="photo(i + 20)" :name="s" :status="s" size="lg" />

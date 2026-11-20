@@ -1,7 +1,7 @@
 <script setup lang="ts">
-// JDrawer — native modal <dialog class="j-drawer"> sheet anchored to any viewport edge.
-// Supports flush docking or `inset` (floating sheet with 8px margin & 4-corner radius).
-import { onBeforeUnmount, onMounted, ref, useId, useSlots, watch } from 'vue';
+// JDrawer — native modal <dialog class="j-drawer"> sheet anchored to any viewport edge,
+// teleported to <body> by default.
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, useSlots, watch } from 'vue';
 import { createDrawer } from 'jenni-core/behaviors/drawer.js';
 import type { DrawerSide, DrawerSize } from './types';
 
@@ -19,8 +19,10 @@ const props = withDefaults(
     closable?: boolean;
     /** Close on backdrop click and Escape. */
     dismissible?: boolean;
+    /** Teleport <dialog> to `<body>` (or a selector / element); pass `false` to keep inline. */
+    teleport?: boolean | string | HTMLElement;
   }>(),
-  { side: 'right', size: 'md', closable: true, dismissible: true },
+  { side: 'right', size: 'md', closable: true, dismissible: true, teleport: true },
 );
 
 const open = defineModel<boolean>('open', { default: false });
@@ -32,9 +34,26 @@ const descId = `${id}-desc`;
 const el = ref<HTMLDialogElement | null>(null);
 let stopDismiss: (() => void) | null = null;
 
+const teleportTo = computed(() =>
+  typeof props.teleport === 'string' ||
+  (typeof HTMLElement !== 'undefined' && props.teleport instanceof HTMLElement)
+    ? props.teleport
+    : 'body',
+);
+
+const teleportDisabled = computed(
+  () => props.teleport === false || typeof document === 'undefined',
+);
+
 function show() {
-  if (el.value && !el.value.open) el.value.showModal();
   open.value = true;
+  if (el.value) {
+    if (!el.value.open) el.value.showModal();
+  } else {
+    nextTick(() => {
+      if (open.value && el.value && !el.value.open) el.value.showModal();
+    });
+  }
 }
 
 function close() {
@@ -57,10 +76,21 @@ function bindDismiss() {
 }
 
 onMounted(() => {
-  bindDismiss();
-  if (open.value) show();
+  if (el.value) {
+    bindDismiss();
+    if (open.value) show();
+  } else {
+    nextTick(() => {
+      bindDismiss();
+      if (open.value) show();
+    });
+  }
 });
 
+watch(el, () => {
+  bindDismiss();
+  if (open.value && el.value && !el.value.open) el.value.showModal();
+});
 watch(open, (v) => (v ? show() : close()));
 watch(() => props.dismissible, bindDismiss);
 
@@ -74,47 +104,49 @@ defineExpose({ show, close });
 
 <template>
   <slot name="trigger" :open="show" />
-  <dialog
-    ref="el"
-    class="j-drawer"
-    :data-side="side === 'right' ? undefined : side"
-    :data-size="size === 'md' ? undefined : size"
-    :data-inset="inset ? '' : undefined"
-    :aria-labelledby="title || slots.header ? titleId : undefined"
-    :aria-describedby="description ? descId : undefined"
-    v-bind="$attrs"
-    @close="onClose"
-    @cancel="onCancel"
-  >
-    <header v-if="title || description || slots.header" class="j-drawer__header">
-      <slot name="header" :title-id="titleId">
-        <h2 v-if="title" :id="titleId" class="j-drawer__title">{{ title }}</h2>
-        <p v-if="description" :id="descId" class="j-drawer__description">{{ description }}</p>
-      </slot>
-    </header>
-    <div v-if="slots.default" class="j-drawer__body">
-      <slot :close="close" />
-    </div>
-    <footer v-if="slots.footer" class="j-drawer__footer">
-      <slot name="footer" :close="close" />
-    </footer>
-    <button
-      v-if="closable"
-      type="button"
-      class="j-drawer__close"
-      aria-label="Close"
-      @click="close"
+  <Teleport :to="teleportTo" :disabled="teleportDisabled">
+    <dialog
+      ref="el"
+      class="j-drawer"
+      :data-side="side === 'right' ? undefined : side"
+      :data-size="size === 'md' ? undefined : size"
+      :data-inset="inset ? '' : undefined"
+      :aria-labelledby="title || slots.header ? titleId : undefined"
+      :aria-describedby="description ? descId : undefined"
+      v-bind="$attrs"
+      @close="onClose"
+      @cancel="onCancel"
     >
-      <svg
-        viewBox="0 0 16 16"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        aria-hidden="true"
+      <header v-if="title || description || slots.header" class="j-drawer__header">
+        <slot name="header" :title-id="titleId">
+          <h2 v-if="title" :id="titleId" class="j-drawer__title">{{ title }}</h2>
+          <p v-if="description" :id="descId" class="j-drawer__description">{{ description }}</p>
+        </slot>
+      </header>
+      <div v-if="slots.default" class="j-drawer__body">
+        <slot :close="close" />
+      </div>
+      <footer v-if="slots.footer" class="j-drawer__footer">
+        <slot name="footer" :close="close" />
+      </footer>
+      <button
+        v-if="closable"
+        type="button"
+        class="j-drawer__close"
+        aria-label="Close"
+        @click="close"
       >
-        <path d="M4 4l8 8M12 4l-8 8" />
-      </svg>
-    </button>
-  </dialog>
+        <svg
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M4 4l8 8M12 4l-8 8" />
+        </svg>
+      </button>
+    </dialog>
+  </Teleport>
 </template>

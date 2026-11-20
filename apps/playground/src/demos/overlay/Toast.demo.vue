@@ -66,6 +66,34 @@ function triggerUndo() {
   });
 }
 
+function triggerVerifiedSuccess() {
+  toast.promise(
+    () => new Promise<{ ok: boolean; rows: number }>((resolve) => setTimeout(() => resolve({ ok: true, rows: 48 }), 900)),
+    {
+      loading: 'Committing migration…',
+      verify: (res) => (res.ok && res.rows > 0 ? true : 'Zero rows affected — migration rolled back'),
+      success: (res) => ({ title: 'Migration verified', description: `${res.rows} rows committed and checksummed.` }),
+      error: (err) => ({ title: 'Verification failed', description: String(err instanceof Error ? err.message : err) }),
+      throwOnError: false,
+    },
+  );
+}
+
+function triggerUnverifiedFailure() {
+  toast.promise(
+    () =>
+      new Promise<{ ok: boolean; error: string }>((resolve) =>
+        setTimeout(() => resolve({ ok: false, error: 'Replica lag exceeded 500ms gate (HTTP 200 payload rejected)' }), 900),
+      ),
+    {
+      loading: 'Promoting canary release…',
+      success: 'Canary promoted',
+      error: (err) => ({ title: 'Blocked unverified success', description: String(err instanceof Error ? err.message : err) }),
+      throwOnError: false,
+    },
+  );
+}
+
 const html = `<div class="j-inline" data-gap="related">
   <button
     class="j-button"
@@ -136,6 +164,20 @@ const html = `<div class="j-inline" data-gap="related">
         </JButton>
       </JInline>
     </JStack>
+  </DemoSection>
+
+  <DemoSection
+    title="Verified Action Toasts (toast.promise + verify)"
+    description="Never show success you didn't verify: shows a non-expiring spinner while in flight, inspects the actual returned payload, and rejects HTTP-200 { ok: false } responses as danger."
+  >
+    <JInline gap="related" wrap>
+      <JButton variant="soft" tone="success" @click="triggerVerifiedSuccess">
+        Run Verified Action (Passes)
+      </JButton>
+      <JButton variant="soft" tone="danger" @click="triggerUnverifiedFailure">
+        Simulate HTTP 200 { ok: false } (Blocked!)
+      </JButton>
+    </JInline>
   </DemoSection>
 
   <DemoSection

@@ -26,6 +26,15 @@ const sprintWindow = ref<DateRange | null>({ start: '2026-11-09', end: '2026-11-
 const inlineSingle = ref<string | null>('2026-11-12');
 const inlineRange = ref<DateRange | null>({ start: '2026-11-04', end: '2026-11-14' });
 const boundedDate = ref<string | null>('2026-11-15');
+const notebookDate = ref<string | null>('2026-11-18');
+const notebookMarkers = {
+  '2026-11-03': 'info',
+  '2026-11-06': ['accent', 'success'],
+  '2026-11-12': [{ tone: 'accent', label: 'Architecture note' }, { tone: 'warning', label: 'Review' }],
+  '2026-11-18': ['success', 'accent', 'info'],
+  '2026-11-21': 'danger',
+  '2026-11-25': 2,
+} as const;
 
 const sizeDates = reactive<{
   sm: string | null;
@@ -90,6 +99,16 @@ const html = `<div class="j-date-picker" data-mode="single" data-placeholder="Se
           </span>
         </JInline>
         <JCalendar v-model="inlineRange" mode="range" :week-starts-on="1" tone="success" />
+      </JStack>
+
+      <JStack gap="related">
+        <JInline gap="related">
+          <JBadge variant="soft" tone="info">Notebook Activity Dots</JBadge>
+          <span style="font-size: var(--j-text-xs); color: var(--j-fg-muted); font-variant-numeric: tabular-nums">
+            {{ notebookDate ?? 'None' }}
+          </span>
+        </JInline>
+        <JCalendar v-model="notebookDate" :markers="notebookMarkers" />
       </JStack>
     </JInline>
   </DemoSection>

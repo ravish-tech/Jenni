@@ -49,7 +49,15 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onKey));
 <template>
   <nav class="pg-sidebar" aria-label="Components">
     <a class="pg-brand" :href="href('')">
-      <span class="pg-brand__mark" aria-hidden="true" />
+      <svg class="pg-brand__mark" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <g stroke="currentColor" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 36.2V22C22 14.5 19.5 9.5 10.5 10.5C9.78 16.98 12.17 20.09 16.37 21.33" />
+          <path d="M22 36.2V22C22 14.5 19.5 9.5 10.5 10.5C9.78 16.98 12.17 20.09 16.37 21.33" transform="rotate(90 32 32)" />
+          <path d="M22 36.2V22C22 14.5 19.5 9.5 10.5 10.5C9.78 16.98 12.17 20.09 16.37 21.33" transform="rotate(180 32 32)" />
+          <path d="M22 36.2V22C22 14.5 19.5 9.5 10.5 10.5C9.78 16.98 12.17 20.09 16.37 21.33" transform="rotate(270 32 32)" />
+        </g>
+        <circle cx="32" cy="32" r="3.8" fill="currentColor" />
+      </svg>
       <span class="pg-brand__word">jenni</span>
       <span class="pg-brand__tag">lab</span>
     </a>

@@ -1,4 +1,26 @@
 // Group index for "display" components.
+export { default as JIcon, type JIconProps } from './display/JIcon.vue';
+export {
+  JIconKey,
+  provideIcons,
+  registerIcons,
+  clearRegisteredIcons,
+  resolveIcon,
+  parseSvgIcon,
+  listBuiltinIcons,
+  BUILTIN_ICONS,
+  type JIconSize,
+  type JIconPresetSize,
+  type JIconTone,
+  type JIconResolver,
+  type JIconSource,
+} from './display/icon-context';
+export {
+  ENTITY_HUE_RING,
+  hashEntitySeed,
+  getEntityHue,
+  getEntityColorVars,
+} from 'jenni-core/behaviors/entity-color.js';
 export { default as JBadge } from './display/JBadge.vue';
 export { default as JAvatar } from './display/JAvatar.vue';
 export { default as JAvatarGroup } from './display/JAvatarGroup.vue';
@@ -18,6 +40,25 @@ export { default as JPagination } from './display/JPagination.vue';
 export { default as JEmptyState } from './display/JEmptyState.vue';
 export { default as JTable } from './display/JTable.vue';
 export { default as JDataTable } from './display/JDataTable.vue';
+export {
+  default as JVirtualList,
+  type JVirtualListProps,
+  type JVirtualListHandle,
+  type VirtualScrollAlign,
+  type VirtualizerState,
+} from './display/JVirtualList.vue';
+export {
+  default as JDataGrid,
+  type JDataGridProps,
+  type JDataGridHandle,
+  type JDataGridColumn,
+  type JDataGridSort,
+  type DataGridColumn,
+  type DataGridSort,
+  type DataGridSelectable,
+  type DataGridAlign,
+  type DataGridSortDirection,
+} from './display/JDataGrid.vue';
 export { default as JStepper } from './display/JStepper.vue';
 export { default as JStep } from './display/JStep.vue';
 export { default as JTreeView } from './display/JTreeView.vue';
@@ -35,6 +76,7 @@ export type {
   JCardProps,
   JAlertProps,
   JSpinnerProps,
+  ProgressSegment,
   JProgressProps,
   JSkeletonProps,
   JKbdProps,

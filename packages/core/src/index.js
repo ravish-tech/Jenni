@@ -1,5 +1,5 @@
 // Jenni — vanilla behaviors (optional; only needed for interactive components in plain HTML).
-import { initShells, initScrollAreas, initResizableGroups } from './behaviors/layout.js';
+import { initShells, initScrollAreas, initResizableGroups, initToolbars } from './behaviors/layout.js';
 import {
   initSliders,
   initSegmented,
@@ -27,6 +27,8 @@ export * from './behaviors/layout.js';
 export * from './behaviors/forms.js';
 export * from './behaviors/display.js';
 export * from './behaviors/overlay.js';
+export * from './behaviors/theme.js';
+export * from './behaviors/shortcuts.js';
 
 /**
  * Initialize all vanilla jenni-core behaviors inside `root` (idempotent, returns cleanup).
@@ -38,6 +40,7 @@ export function initJenni(root = document) {
     initShells(root),
     initScrollAreas(root),
     initResizableGroups(root),
+    initToolbars(root),
     initSliders(root),
     initSegmented(root),
     initNumberInputs(root),

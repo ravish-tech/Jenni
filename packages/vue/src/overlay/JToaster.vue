@@ -90,11 +90,13 @@ onBeforeUnmount(() => {
       :aria-live="item.tone === 'danger' ? 'assertive' : 'polite'"
       :data-tone="item.tone"
       :data-state="item.state"
+      :data-loading="item.loading ? '' : undefined"
     >
       <div class="j-toast__inner">
         <span class="j-toast__indicator" aria-hidden="true">
+          <span v-if="item.loading || item.tone === 'loading'" class="j-toast__spinner" />
           <svg
-            v-if="item.tone === 'success'"
+            v-else-if="item.tone === 'success'"
             viewBox="0 0 16 16"
             fill="none"
             stroke="currentColor"

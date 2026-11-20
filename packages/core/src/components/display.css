@@ -1,4 +1,5 @@
 /* Group index: @import each component file of the "display" group here. */
+@import "./icon.css";
 @import "./badge.css";
 @import "./avatar.css";
 @import "./card.css";
@@ -13,6 +14,8 @@
 @import "./pagination.css";
 @import "./empty-state.css";
 @import "./table.css";
+@import "./virtual-list.css";
+@import "./data-grid.css";
 @import "./stepper.css";
 @import "./tree-view.css";
 @import "./carousel.css";

@@ -22,7 +22,16 @@ export {
   type TabProps,
   type TabPanelProps,
 } from './overlay/Tabs';
+export {
+  DocTabs,
+  type DocTabItem,
+  type DocTabsProps,
+  type DocTabsHandle,
+  type DocTabsVariant,
+  type DocTabsSize,
+} from './overlay/DocTabs';
 export { Toaster, toast, type ToasterProps } from './overlay/Toaster';
+export { dismissToast, updateToast, promiseToast, toastFromResult } from 'jenni-core/behaviors/toast.js';
 export { Drawer, type DrawerProps } from './overlay/Drawer';
 export {
   Combobox,
@@ -46,6 +55,16 @@ export type {
   ToastAction,
   ToastOptions,
   ToastItem,
+  ToastVerifyOutcome,
+  ToastPromiseMessages,
+  ResultLike,
+  ToastResultOptions,
+  ContextMenuOptions,
+  ContextMenuOpenAtOptions,
+  ContextMenuOpenForOptions,
+  ContextMenuEventLike,
+  ContextMenuController,
+  ContextMenuHandle,
   MenuItemRole,
   MenuItemTone,
   TabsVariant,

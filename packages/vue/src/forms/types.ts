@@ -14,6 +14,33 @@ export interface DateRange {
   end: string | null;
 }
 
+export interface CalendarCell {
+  iso: string;
+  day: number;
+  outside: boolean;
+  today: boolean;
+  disabled: boolean;
+}
+
+export interface NormalizedCalendarMarker {
+  tone?: Tone;
+  color?: string;
+  label?: string;
+}
+
+export type CalendarMarkerItem = Tone | { tone?: Tone; color?: string; label?: string };
+export type CalendarDayMarker = CalendarMarkerItem;
+export type CalendarMarkerInput =
+  | boolean
+  | number
+  | CalendarMarkerItem
+  | readonly CalendarMarkerItem[];
+export type CalendarMarkers =
+  | Record<string, CalendarMarkerInput>
+  | ReadonlySet<string>
+  | readonly string[]
+  | ((isoDate: string) => CalendarMarkerInput | undefined | null);
+
 export type TimeFormat = '24h' | '12h';
 
 export type ColorFormat = 'hex' | 'oklch' | 'rgb';

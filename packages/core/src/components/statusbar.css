@@ -1,0 +1,167 @@
+/*
+ * StatusBar — <div class="j-statusbar" role="region" aria-label="Status bar">
+ *   data-variant: subtle (default) | contrast | accent
+ *   data-border:  top (default) | bottom | none
+ * Parts:
+ *   .j-statusbar__section  — start | center | end groups
+ *   .j-statusbar__item     — compact status readout or interactive button/link
+ *   .j-statusbar__dot      — 6px status indicator dot
+ */
+@layer jenni.components {
+  :where(.j-statusbar) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-space-3);
+    block-size: max(18px, round(calc(24px * var(--j-density)), 1px));
+    inline-size: 100%;
+    flex-shrink: 0;
+    padding-inline: var(--j-space-2-5, 10px);
+    background-color: var(--j-surface-2);
+    border-block-start: 1px solid var(--j-border);
+    font-size: 11px;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--j-fg-muted);
+    user-select: none;
+    min-inline-size: 0;
+    overflow: hidden;
+  }
+
+  /* Border placement */
+  :where(.j-statusbar[data-border="bottom"]) {
+    border-block-start: 0;
+    border-block-end: 1px solid var(--j-border);
+  }
+  :where(.j-statusbar[data-border="none"]) {
+    border-block-start: 0;
+    border-block-end: 0;
+  }
+
+  /* Variant: contrast (obsidian dark chrome regardless of page theme) */
+  :where(.j-statusbar[data-variant="contrast"]) {
+    color-scheme: dark;
+    --j-fg: oklch(95.5% 0.003 var(--j-hue-neutral));
+    --j-fg-muted: oklch(74% 0.008 var(--j-hue-neutral));
+    --j-border: oklch(26% 0.007 var(--j-hue-neutral));
+    background-color: oklch(16% var(--j-chroma-neutral) var(--j-hue-neutral));
+    color: var(--j-fg-muted);
+    border-color: var(--j-border);
+  }
+
+  /* Variant: accent */
+  :where(.j-statusbar[data-variant="accent"]) {
+    background-color: var(--j-accent);
+    color: var(--j-accent-fg);
+    border-color: color-mix(in oklch, var(--j-accent-fg) 16%, transparent);
+  }
+
+  /* Sections */
+  :where(.j-statusbar__section) {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    min-inline-size: 0;
+    height: 100%;
+  }
+  :where(.j-statusbar__section[data-section="start"], .j-statusbar__section[data-section="center"]) {
+    overflow: hidden;
+  }
+  :where(.j-statusbar__section[data-section="center"]) {
+    margin-inline: auto;
+  }
+  :where(.j-statusbar__section[data-section="end"]) {
+    margin-inline-start: auto;
+    flex-shrink: 0;
+  }
+  :where(.j-statusbar:has(> .j-statusbar__section[data-section="center"]) > .j-statusbar__section[data-section="end"]) {
+    margin-inline-start: 0;
+  }
+
+  /* Items */
+  :where(.j-statusbar__item) {
+    --_dot-bg: currentColor;
+
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 100%;
+    padding-inline: 6px;
+    color: inherit;
+    background: transparent;
+    border: 0;
+    font: inherit;
+    white-space: nowrap;
+    text-decoration: none;
+    outline: none;
+
+    & > svg {
+      inline-size: 12px;
+      block-size: 12px;
+      flex-shrink: 0;
+    }
+  }
+
+  /* Tone coloring on status items */
+  :where(.j-statusbar:not([data-variant="accent"]))
+    :where(.j-statusbar__item[data-tone]:not([data-tone="neutral"])) {
+    color: var(--j-tone-soft-fg);
+    --_dot-bg: var(--j-tone);
+  }
+  :where(.j-statusbar__item[data-tone="neutral"]) {
+    --_dot-bg: var(--j-fg-subtle);
+  }
+  :where(.j-statusbar[data-variant="accent"])
+    :where(.j-statusbar__item[data-tone]) {
+    --_dot-bg: currentColor;
+  }
+
+  /* Interactive status items */
+  :where(
+    button.j-statusbar__item,
+    a.j-statusbar__item,
+    .j-statusbar__item[data-interactive]
+  ) {
+    cursor: pointer;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    &:hover:not(:disabled, [aria-disabled="true"]) {
+      background-color: color-mix(in oklch, var(--j-fg) 8%, transparent);
+      color: var(--j-fg);
+    }
+
+    &:active:not(:disabled, [aria-disabled="true"]) {
+      background-color: color-mix(in oklch, var(--j-fg) 12%, transparent);
+    }
+
+    &:focus-visible {
+      box-shadow: inset 0 0 0 1.5px var(--j-ring-color);
+    }
+
+    &:is(:disabled, [aria-disabled="true"]) {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+  }
+
+  :where(.j-statusbar[data-variant="accent"])
+    :where(
+      button.j-statusbar__item,
+      a.j-statusbar__item,
+      .j-statusbar__item[data-interactive]
+    ):hover:not(:disabled, [aria-disabled="true"]) {
+    background-color: color-mix(in oklch, var(--j-accent-fg) 14%, transparent);
+    color: var(--j-accent-fg);
+  }
+
+  :where(.j-statusbar__dot) {
+    flex-shrink: 0;
+    inline-size: 6px;
+    block-size: 6px;
+    border-radius: 50%;
+    background-color: var(--_dot-bg);
+  }
+}

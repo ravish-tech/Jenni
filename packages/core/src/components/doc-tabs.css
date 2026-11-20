@@ -1,0 +1,455 @@
+/*
+ * Document Tabs — <div class="j-doc-tabs" data-variant="workbench">
+ *   data-variant: workbench (default) | island | minimal
+ *   data-size:    sm | md (default)
+ * Parts:
+ *   .j-doc-tabs__scroller       — horizontal tablist viewport
+ *   .j-doc-tabs__tab            — individual document tab ([aria-selected], [data-pinned], [data-dirty])
+ *   .j-doc-tabs__icon           — leading file/document icon
+ *   .j-doc-tabs__label          — truncated document title
+ *   .j-doc-tabs__badge          — optional diagnostic/count chip
+ *   .j-doc-tabs__pin            — subtle pin glyph for pinned tabs
+ *   .j-doc-tabs__tail           — fixed-width slot swapping .j-doc-tabs__dirty and .j-doc-tabs__close
+ *   .j-doc-tabs__dirty          — 6px unsaved indicator dot
+ *   .j-doc-tabs__close          — 18px (15px compact) close button
+ *   .j-doc-tabs__actions        — pinned right-side cluster (+ add, overflow menu, custom actions)
+ *   .j-doc-tabs__add            — new tab button
+ *   .j-doc-tabs__overflow-btn   — overflow menu button with clipped tab count
+ */
+@layer jenni.components {
+  :where(.j-doc-tabs) {
+    --_h: max(26px, round(calc(36px * var(--j-density)), 1px));
+    --_close-sz: max(15px, round(calc(18px * var(--j-density)), 1px));
+    --_action-sz: max(20px, round(calc(26px * var(--j-density)), 1px));
+
+    block-size: var(--_h);
+    display: flex;
+    align-items: stretch;
+    background-color: var(--j-surface-2);
+    border-block-end: 1px solid var(--j-border);
+    user-select: none;
+    min-inline-size: 0;
+    position: relative;
+  }
+
+  :where(.j-doc-tabs[data-size="sm"]) {
+    --_h: max(22px, round(calc(30px * var(--j-density)), 1px));
+    --_close-sz: max(14px, round(calc(16px * var(--j-density)), 1px));
+    --_action-sz: max(18px, round(calc(22px * var(--j-density)), 1px));
+  }
+
+  :where(.j-doc-tabs__scroller) {
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    display: flex;
+    align-items: stretch;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  /* Subtle scroll-overflow edge indicators on the scroller */
+  :where(.j-doc-tabs[data-overflow-start]) > :where(.j-doc-tabs__scroller) {
+    box-shadow: inset 8px 0 8px -8px light-dark(oklch(18% 0.01 var(--j-hue-neutral) / 0.12), oklch(0% 0 0 / 0.45));
+  }
+  :where(.j-doc-tabs[data-overflow-end]) > :where(.j-doc-tabs__scroller) {
+    box-shadow: inset -8px 0 8px -8px light-dark(oklch(18% 0.01 var(--j-hue-neutral) / 0.12), oklch(0% 0 0 / 0.45));
+  }
+  :where(.j-doc-tabs[data-overflow-start][data-overflow-end]) > :where(.j-doc-tabs__scroller) {
+    box-shadow:
+      inset 8px 0 8px -8px light-dark(oklch(18% 0.01 var(--j-hue-neutral) / 0.12), oklch(0% 0 0 / 0.45)),
+      inset -8px 0 8px -8px light-dark(oklch(18% 0.01 var(--j-hue-neutral) / 0.12), oklch(0% 0 0 / 0.45));
+  }
+
+  :where(.j-doc-tabs__tab) {
+    appearance: none;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1-5);
+    padding-inline: var(--j-space-3);
+    min-inline-size: 0;
+    max-inline-size: 220px;
+    flex-shrink: 0;
+    font-family: inherit;
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-regular);
+    line-height: 1;
+    color: var(--j-fg-muted);
+    background: transparent;
+    border: 0;
+    border-inline-end: 1px solid var(--j-border);
+    cursor: pointer;
+    text-align: start;
+    white-space: nowrap;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  @media (hover: hover) {
+    :where(.j-doc-tabs__tab):hover:not([aria-selected="true"], [data-active], :disabled, [aria-disabled="true"]) {
+      background-color: color-mix(in oklch, var(--j-fg) 4.5%, transparent);
+      color: var(--j-fg);
+    }
+  }
+
+  :where(.j-doc-tabs__tab):focus-visible {
+    box-shadow: inset 0 0 0 2px var(--j-ring-color);
+    z-index: 2;
+  }
+
+  :where(.j-doc-tabs__tab:is([aria-selected="true"], [data-active])) {
+    background-color: var(--j-surface-1);
+    color: var(--j-fg);
+    font-weight: var(--j-weight-medium);
+  }
+
+  :where(.j-doc-tabs__tab:is(:disabled, [aria-disabled="true"])) {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* Pinned tabs: compact footprint + subtle pin affordance */
+  :where(.j-doc-tabs__tab[data-pinned]) {
+    max-inline-size: 192px;
+    padding-inline: var(--j-space-2-5, 10px);
+  }
+
+  /* Drag & drop reorder states (uses ::after so ::before stays free for active bar) */
+  :where(.j-doc-tabs__tab[data-dragging]) {
+    opacity: 0.42;
+  }
+  :where(.j-doc-tabs__tab:is([data-drop-before], [data-drop-after]))::after {
+    content: "";
+    position: absolute;
+    inset-block: 2px;
+    inline-size: 2px;
+    border-radius: 1px;
+    background-color: var(--j-accent);
+    pointer-events: none;
+    z-index: 3;
+  }
+  :where(.j-doc-tabs__tab[data-drop-before])::after {
+    inset-inline-start: 0;
+  }
+  :where(.j-doc-tabs__tab[data-drop-after])::after {
+    inset-inline-end: -1px;
+  }
+
+  /* ---- Variant: workbench (default) ---- */
+  :where(.j-doc-tabs:not([data-variant="island"], [data-variant="minimal"])) {
+    border-block-end: 0;
+    box-shadow: inset 0 -1px 0 var(--j-border);
+  }
+  :where(.j-doc-tabs:not([data-variant="island"], [data-variant="minimal"]))
+    :where(.j-doc-tabs__tab:not([aria-selected="true"], [data-active])) {
+    box-shadow: inset 0 -1px 0 var(--j-border);
+  }
+  :where(.j-doc-tabs:not([data-variant="island"], [data-variant="minimal"]))
+    :where(.j-doc-tabs__tab:not([aria-selected="true"], [data-active])):focus-visible {
+    box-shadow: inset 0 0 0 2px var(--j-ring-color), inset 0 -1px 0 var(--j-border);
+  }
+  :where(.j-doc-tabs:not([data-variant="island"], [data-variant="minimal"]))
+    :where(.j-doc-tabs__tab:is([aria-selected="true"], [data-active]))::before {
+    content: "";
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    block-size: 2px;
+    background-color: var(--j-accent);
+    pointer-events: none;
+  }
+
+  /* ---- Variant: island (detached browser/notebook pills) ---- */
+  :where(.j-doc-tabs[data-variant="island"]) > :where(.j-doc-tabs__scroller) {
+    align-items: center;
+    gap: var(--j-space-1);
+    padding-inline: var(--j-space-1-5);
+  }
+  :where(.j-doc-tabs[data-variant="island"]) :where(.j-doc-tabs__tab) {
+    block-size: calc(var(--_h) - 6px);
+    padding-inline: var(--j-space-2-5, 10px) var(--j-space-1-5);
+    border-inline-end: 0;
+    border-radius: var(--j-radius-sm);
+  }
+  :where(.j-doc-tabs[data-variant="island"])
+    :where(.j-doc-tabs__tab:is([aria-selected="true"], [data-active])) {
+    background-color: light-dark(var(--j-surface-1), var(--j-surface-3));
+    box-shadow:
+      0 0 0 1px light-dark(var(--j-border), transparent),
+      var(--j-shadow-xs),
+      var(--j-inset-highlight);
+  }
+
+  /* ---- Variant: minimal (clean bottom indicator) ---- */
+  :where(.j-doc-tabs[data-variant="minimal"]) {
+    background-color: var(--j-surface-1);
+  }
+  :where(.j-doc-tabs[data-variant="minimal"]) :where(.j-doc-tabs__tab) {
+    border-inline-end: 0;
+    background: transparent;
+  }
+  :where(.j-doc-tabs[data-variant="minimal"])
+    :where(.j-doc-tabs__tab:is([aria-selected="true"], [data-active])) {
+    background: transparent;
+  }
+  :where(.j-doc-tabs[data-variant="minimal"])
+    :where(.j-doc-tabs__tab:is([aria-selected="true"], [data-active]))::before {
+    content: "";
+    position: absolute;
+    inset-block-end: 0;
+    inset-inline: var(--j-space-2);
+    block-size: 2px;
+    border-radius: 2px 2px 0 0;
+    background-color: var(--j-accent);
+    pointer-events: none;
+  }
+
+  /* ---- Inner tab elements ---- */
+  :where(.j-doc-tabs__icon) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    inline-size: 14px;
+    block-size: 14px;
+    color: var(--j-fg-muted);
+  }
+  :where(.j-doc-tabs__tab:is([aria-selected="true"], [data-active])) :where(.j-doc-tabs__icon) {
+    color: currentColor;
+  }
+  :where(.j-doc-tabs__icon > svg) {
+    inline-size: 14px;
+    block-size: 14px;
+    flex-shrink: 0;
+  }
+
+  :where(.j-doc-tabs__label) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-inline-size: 0;
+  }
+
+  :where(.j-doc-tabs__badge) {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 15px;
+    block-size: 15px;
+    padding-inline: 4px;
+    border-radius: var(--j-radius-full);
+    background-color: var(--j-surface-3);
+    color: var(--j-fg-muted);
+    font-size: 10px;
+    font-weight: var(--j-weight-medium);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  :where(.j-doc-tabs__pin) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    inline-size: 12px;
+    block-size: 12px;
+    color: var(--j-fg-subtle);
+
+    & > svg {
+      inline-size: 12px;
+      block-size: 12px;
+    }
+  }
+
+  :where(.j-doc-tabs__tail) {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--_close-sz);
+    block-size: var(--_close-sz);
+    flex-shrink: 0;
+    margin-inline-end: calc(var(--j-space-1) * -0.5);
+  }
+
+  :where(.j-doc-tabs__dirty) {
+    inline-size: 6px;
+    block-size: 6px;
+    border-radius: 50%;
+    background-color: var(--j-accent);
+    flex-shrink: 0;
+    transition: opacity var(--j-duration-fast) var(--j-ease-out);
+  }
+  :where(.j-doc-tabs__dirty[data-tone="warning"]) {
+    background-color: var(--j-warning);
+  }
+
+  :where(.j-doc-tabs__close) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--_close-sz);
+    block-size: var(--_close-sz);
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: transparent;
+    color: currentColor;
+    cursor: pointer;
+    flex-shrink: 0;
+    opacity: 0;
+    outline: none;
+    transition:
+      opacity var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: 12px;
+      block-size: 12px;
+      flex-shrink: 0;
+    }
+  }
+
+  /* Active non-dirty tab shows subtle close button; hover/focus reveals on any tab */
+  :where(.j-doc-tabs__tab:is([aria-selected="true"], [data-active]):not([data-dirty]))
+    :where(.j-doc-tabs__close) {
+    opacity: 0.72;
+  }
+  :where(.j-doc-tabs__tab:is(:hover, :focus-visible, :focus-within))
+    :where(.j-doc-tabs__close) {
+    opacity: 0.72;
+  }
+  :where(.j-doc-tabs__close:is(:hover, :focus-visible)) {
+    opacity: 1;
+    background-color: var(--j-surface-3);
+    color: var(--j-fg);
+  }
+  :where(.j-doc-tabs__close):focus-visible {
+    box-shadow: inset 0 0 0 1.5px var(--j-ring-color);
+  }
+
+  /* VS Code / Cursor dirty-dot <-> close-button swap with zero layout shift */
+  :where(.j-doc-tabs__tail:has(.j-doc-tabs__dirty):has(.j-doc-tabs__close))
+    > :where(.j-doc-tabs__dirty) {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    pointer-events: none;
+    opacity: 1;
+  }
+  :where(.j-doc-tabs__tail:has(.j-doc-tabs__dirty):has(.j-doc-tabs__close))
+    > :where(.j-doc-tabs__close) {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  :where(.j-doc-tabs__tab:is(:hover, :focus-visible, :focus-within))
+    :where(.j-doc-tabs__tail:has(.j-doc-tabs__dirty):has(.j-doc-tabs__close))
+    > :where(.j-doc-tabs__dirty) {
+    opacity: 0;
+  }
+  :where(.j-doc-tabs__tab:is(:hover, :focus-visible, :focus-within))
+    :where(.j-doc-tabs__tail:has(.j-doc-tabs__dirty):has(.j-doc-tabs__close))
+    > :where(.j-doc-tabs__close) {
+    opacity: 0.82;
+  }
+  :where(.j-doc-tabs__tab:is(:hover, :focus-visible, :focus-within))
+    :where(.j-doc-tabs__tail:has(.j-doc-tabs__dirty):has(.j-doc-tabs__close))
+    > :where(.j-doc-tabs__close:is(:hover, :focus-visible)) {
+    opacity: 1;
+  }
+
+  /* ---- Trailing action cluster (+ new tab, overflow dropdown, custom actions) ---- */
+  :where(.j-doc-tabs__actions) {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding-inline: var(--j-space-1);
+    flex-shrink: 0;
+    border-inline-start: 1px solid var(--j-border);
+  }
+  :where(.j-doc-tabs:not([data-variant="island"], [data-variant="minimal"]))
+    > :where(.j-doc-tabs__actions) {
+    box-shadow: inset 0 -1px 0 var(--j-border);
+  }
+
+  :where(.j-doc-tabs__add, .j-doc-tabs__overflow-btn) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    min-inline-size: var(--_action-sz);
+    block-size: var(--_action-sz);
+    padding-inline: 4px;
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: transparent;
+    color: var(--j-fg-muted);
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: var(--j-weight-medium);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    cursor: pointer;
+    outline: none;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: 14px;
+      block-size: 14px;
+      flex-shrink: 0;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: var(--j-surface-3);
+      color: var(--j-fg);
+    }
+
+    &:focus-visible {
+      box-shadow: inset 0 0 0 1.5px var(--j-ring-color);
+    }
+
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  :where(.j-doc-tabs__overflow-count) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-inline-size: 14px;
+    block-size: 14px;
+    padding-inline: 3px;
+    border-radius: var(--j-radius-full);
+    background-color: var(--j-surface-3);
+    color: var(--j-fg);
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  :where(.j-doc-tabs__empty) {
+    display: inline-flex;
+    align-items: center;
+    padding-inline: var(--j-space-3);
+    font-size: var(--j-text-xs);
+    color: var(--j-fg-subtle);
+    white-space: nowrap;
+  }
+}

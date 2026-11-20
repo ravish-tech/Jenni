@@ -63,4 +63,56 @@
   @media (prefers-reduced-motion: reduce) {
     :where(.j-progress:indeterminate) { animation-duration: 3.6s; }
   }
+
+  /* ---- Segmented & Stepped Progress ---- */
+  :where(.j-progress-segmented) {
+    --_h: max(5px, round(calc(8px * var(--j-density)), 1px));
+
+    display: flex;
+    align-items: stretch;
+    gap: 2px;
+    inline-size: 100%;
+    min-inline-size: 4rem;
+    block-size: var(--_h);
+    border-radius: var(--j-radius-full);
+    background-color: var(--j-progress-track, var(--j-surface-3));
+    overflow: hidden;
+    vertical-align: middle;
+  }
+  :where(.j-progress-segmented[data-size="sm"]) {
+    --_h: max(3px, round(calc(4px * var(--j-density)), 1px));
+  }
+  :where(.j-progress-segmented[data-size="lg"]) {
+    --_h: max(8px, round(calc(12px * var(--j-density)), 1px));
+  }
+
+  :where(.j-progress-segmented__bar) {
+    flex: 0 1 auto;
+    block-size: 100%;
+    min-inline-size: 2px;
+    background-color: var(--_seg-bg, var(--j-tone, var(--j-accent)));
+    transition:
+      width var(--j-duration-slow) var(--j-ease-emphasized),
+      flex-basis var(--j-duration-slow) var(--j-ease-emphasized);
+  }
+  :where(.j-progress-segmented__bar[data-entity-color]:not([data-tone])) {
+    --_eh: var(--j-entity-hue, 258);
+    --j-tone: light-dark(oklch(48% 0.15 var(--_eh)), oklch(72% 0.14 var(--_eh)));
+  }
+
+  :where(.j-progress-segmented[data-steps]) {
+    background: transparent;
+    overflow: visible;
+  }
+  :where(.j-progress-segmented__step) {
+    flex: 1 1 0%;
+    block-size: 100%;
+    border-radius: var(--j-radius-full);
+    background-color: var(--j-progress-track, var(--j-surface-3));
+    transition: background-color var(--j-duration-slow) var(--j-ease-emphasized);
+
+    &[data-filled] {
+      background-color: var(--j-tone, var(--j-accent));
+    }
+  }
 }

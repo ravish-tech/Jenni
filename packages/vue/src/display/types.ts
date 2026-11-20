@@ -1,4 +1,5 @@
 /// <reference path="./core.d.ts" />
+/// <reference path="./entity-color-core.d.ts" />
 // Shared prop types for the display group.
 import type { InjectionKey } from 'vue';
 
@@ -11,6 +12,10 @@ export interface JBadgeProps {
   tone?: JDisplayTone;
   /** Show a leading status dot. */
   dot?: boolean;
+  /** Deterministic per-entity color seed (`true` hashes badge text). */
+  colorSeed?: string | boolean;
+  /** Alias for `colorSeed={true}`. */
+  autoColor?: boolean;
 }
 
 export type JAvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -27,6 +32,10 @@ export interface JAvatarProps {
   shape?: 'circle' | 'square';
   tone?: JDisplayTone;
   status?: JAvatarStatus;
+  /** Deterministic per-author/entity color seed (`true` hashes `name || initials || alt`). */
+  colorSeed?: string | boolean;
+  /** Alias for `colorSeed={true}`. */
+  autoColor?: boolean;
 }
 
 export interface JAvatarGroupProps {
@@ -65,6 +74,16 @@ export interface JSpinnerProps {
   label?: string;
 }
 
+export interface ProgressSegment {
+  value: number;
+  tone?: JDisplayTone;
+  color?: string;
+  colorSeed?: string;
+  label?: string;
+}
+
+export type JProgressSegment = ProgressSegment;
+
 export interface JProgressProps {
   /** Omit (or null) for indeterminate. */
   value?: number | null;
@@ -72,6 +91,10 @@ export interface JProgressProps {
   size?: JDisplaySize;
   tone?: JDisplayTone;
   label?: string;
+  /** Multi-segment stacked progress items. */
+  segments?: ProgressSegment[];
+  /** Discrete stepped progress cells. */
+  steps?: number;
 }
 
 export interface JSkeletonProps {

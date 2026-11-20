@@ -10,13 +10,21 @@ export { default as JTabs } from './overlay/JTabs.vue';
 export { default as JTabList } from './overlay/JTabList.vue';
 export { default as JTab } from './overlay/JTab.vue';
 export { default as JTabPanel } from './overlay/JTabPanel.vue';
+export {
+  default as JDocTabs,
+  type DocTabItem,
+  type DocTabsVariant,
+  type DocTabsSize,
+  type JDocTabsProps,
+  type JDocTabsHandle,
+} from './overlay/JDocTabs.vue';
 export { default as JToaster } from './overlay/JToaster.vue';
 export { default as JDrawer } from './overlay/JDrawer.vue';
 export { default as JCombobox } from './overlay/JCombobox.vue';
 export { default as JContextMenu } from './overlay/JContextMenu.vue';
 export { default as JHoverCard } from './overlay/JHoverCard.vue';
 export { default as JCommandPalette } from './overlay/JCommandPalette.vue';
-export { toast } from 'jenni-core/behaviors/toast.js';
+export { toast, dismissToast, updateToast, promiseToast, toastFromResult } from 'jenni-core/behaviors/toast.js';
 export type {
   FloatingSide,
   FloatingAlign,
@@ -30,6 +38,16 @@ export type {
   ToastAction,
   ToastOptions,
   ToastItem,
+  ToastVerifyOutcome,
+  ToastPromiseMessages,
+  ResultLike,
+  ToastResultOptions,
+  ContextMenuOptions,
+  ContextMenuOpenAtOptions,
+  ContextMenuOpenForOptions,
+  ContextMenuEventLike,
+  ContextMenuController,
+  JContextMenuExpose,
   MenuItemRole,
   MenuItemTone,
   TabsVariant,

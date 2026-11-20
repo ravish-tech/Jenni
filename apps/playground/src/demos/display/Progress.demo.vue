@@ -69,6 +69,34 @@ const html = `<div class="j-stack" data-gap="field" style="width:100%;max-width:
     </JStack>
   </DemoSection>
 
+  <DemoSection title="Segmented & Stepped Bars" description="Multi-segment proportional breakdowns (e.g. test suites, language mix, storage) and discrete multi-step bars.">
+    <JStack gap="field" style="width:100%;max-width:420px">
+      <JStack gap="inline">
+        <JInline justify="between" style="font-size:var(--j-text-xs);color:var(--j-fg-muted)">
+          <span>CI Verification Suite (148 checks)</span>
+          <span style="font-variant-numeric:tabular-nums">132 passed · 11 flaky · 5 failed</span>
+        </JInline>
+        <JProgress
+          label="CI suite breakdown"
+          :max="148"
+          :segments="[
+            { value: 132, tone: 'success', label: '132 passed' },
+            { value: 11, tone: 'warning', label: '11 flaky' },
+            { value: 5, tone: 'danger', label: '5 failed' },
+          ]"
+        />
+      </JStack>
+
+      <JStack gap="inline">
+        <JInline justify="between" style="font-size:var(--j-text-xs);color:var(--j-fg-muted)">
+          <span>Deployment pipeline</span>
+          <span style="font-variant-numeric:tabular-nums">Step 4 of 6</span>
+        </JInline>
+        <JProgress :value="4" :steps="6" tone="accent" label="Step 4 of 6" />
+      </JStack>
+    </JStack>
+  </DemoSection>
+
   <DemoSection title="Storage card" description="Composition pairing progress, tabular counters and a tone badge.">
     <JCard size="sm" style="width:100%;max-width:360px">
       <JInline justify="between">

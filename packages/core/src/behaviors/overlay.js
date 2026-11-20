@@ -5,6 +5,7 @@ import { initPopovers } from './popover.js';
 import { initMenus } from './menu.js';
 import { initDialogs } from './dialog.js';
 import { initTabs } from './tabs.js';
+import { initDocTabs } from './doc-tabs.js';
 import { initToasts } from './toast.js';
 import { initDrawers } from './drawer.js';
 import { initComboboxes } from './combobox.js';
@@ -18,8 +19,12 @@ export { createPopover, initPopovers } from './popover.js';
 export { createMenu, initMenus } from './menu.js';
 export { initDialogs, lightDismiss, requestClose, supportsCommands, supportsClosedBy } from './dialog.js';
 export { createTabs, initTabs, syncTabIndicator, tabsKeydown, getTabs } from './tabs.js';
+export { createDocTabs, initDocTabs, getDocTabElements } from './doc-tabs.js';
 export {
   toast,
+  updateToast,
+  promiseToast,
+  toastFromResult,
   dismissToast,
   pauseToasts,
   resumeToasts,
@@ -49,6 +54,7 @@ export function initOverlay(root = document) {
     initMenus(root),
     initDialogs(root),
     initTabs(root),
+    initDocTabs(root),
     initToasts(root),
     initDrawers(root),
     initComboboxes(root),

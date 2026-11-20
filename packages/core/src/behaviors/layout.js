@@ -2,3 +2,4 @@
 export * from './shell.js';
 export * from './scroll-area.js';
 export * from './resizable.js';
+export * from './toolbar.js';

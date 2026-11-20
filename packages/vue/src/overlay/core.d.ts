@@ -55,7 +55,14 @@ declare module 'jenni-core/behaviors/tabs.js' {
 }
 
 declare module 'jenni-core/behaviors/toast.js' {
-  export type ToastTone = 'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info';
+  export type ToastTone =
+    | 'neutral'
+    | 'accent'
+    | 'success'
+    | 'warning'
+    | 'danger'
+    | 'info'
+    | 'loading';
   export type ToasterPosition = 'bottom-end' | 'bottom-center' | 'top-end' | 'top-center';
   export interface ToastAction {
     label: string;
@@ -66,6 +73,7 @@ declare module 'jenni-core/behaviors/toast.js' {
     title: string;
     description?: string;
     tone?: ToastTone;
+    loading?: boolean;
     duration?: number;
     action?: ToastAction;
     closable?: boolean;
@@ -75,11 +83,51 @@ declare module 'jenni-core/behaviors/toast.js' {
     title: string;
     description?: string;
     tone: ToastTone;
+    loading: boolean;
     duration: number;
     action?: ToastAction;
     closable: boolean;
     state: 'open' | 'closing';
     createdAt: number;
+  }
+  export type ToastVerifyOutcome =
+    | boolean
+    | void
+    | undefined
+    | null
+    | string
+    | { ok: boolean; error?: string; message?: string };
+  export interface ToastPromiseMessages<T = unknown> {
+    id?: string;
+    loading: string | Omit<ToastOptions, 'tone' | 'loading'>;
+    success: string | Partial<ToastOptions> | ((data: T) => string | Partial<ToastOptions>);
+    error?: string | Partial<ToastOptions> | ((err: unknown) => string | Partial<ToastOptions>);
+    verify?: (data: T) => ToastVerifyOutcome | Promise<ToastVerifyOutcome>;
+    autoVerifyResult?: boolean;
+    throwOnError?: boolean;
+    duration?: number;
+  }
+  export interface ResultLike<T = unknown> {
+    ok: boolean;
+    data?: T;
+    error?: string | Error;
+    message?: string;
+  }
+  export interface ToastResultOptions<T = unknown> {
+    id?: string;
+    success?:
+      | string
+      | Partial<ToastOptions>
+      | ((data: T | undefined, result: ResultLike<T>) => string | Partial<ToastOptions>);
+    error?:
+      | string
+      | Partial<ToastOptions>
+      | ((
+          errorMessage: string,
+          result: ResultLike<T> | null | undefined,
+        ) => string | Partial<ToastOptions>);
+    verify?: (data: T | undefined, result: ResultLike<T>) => ToastVerifyOutcome;
+    duration?: number;
   }
   export interface ToastCallable {
     (input: string | ToastOptions, extra?: Partial<ToastOptions>): string;
@@ -89,6 +137,19 @@ declare module 'jenni-core/behaviors/toast.js' {
     warning: (input: string | Omit<ToastOptions, 'tone'>, extra?: Partial<ToastOptions>) => string;
     info: (input: string | Omit<ToastOptions, 'tone'>, extra?: Partial<ToastOptions>) => string;
     accent: (input: string | Omit<ToastOptions, 'tone'>, extra?: Partial<ToastOptions>) => string;
+    loading: (
+      input: string | Omit<ToastOptions, 'loading'>,
+      extra?: Partial<ToastOptions>,
+    ) => string;
+    update: (id: string, patch: string | Partial<ToastOptions>) => string;
+    promise: <T = unknown>(
+      promiseOrFn: Promise<T> | (() => Promise<T>),
+      messages: ToastPromiseMessages<T>,
+    ) => Promise<T>;
+    fromResult: <T = unknown>(
+      result: ResultLike<T> | null | undefined,
+      options?: ToastResultOptions<T>,
+    ) => string;
     dismiss: (id?: string) => void;
     pause: () => void;
     resume: () => void;
@@ -96,15 +157,31 @@ declare module 'jenni-core/behaviors/toast.js' {
     getToasts: () => ToastItem[];
   }
   export const toast: ToastCallable;
+  export function updateToast(id: string, patch: string | Partial<ToastOptions>): string;
+  export function promiseToast<T = unknown>(
+    promiseOrFn: Promise<T> | (() => Promise<T>),
+    messages: ToastPromiseMessages<T>,
+  ): Promise<T>;
+  export function toastFromResult<T = unknown>(
+    result: ResultLike<T> | null | undefined,
+    options?: ToastResultOptions<T>,
+  ): string;
   export function dismissToast(id?: string): void;
   export function pauseToasts(): void;
   export function resumeToasts(): void;
   export function subscribeToasts(listener: (list: ToastItem[]) => void): () => void;
   export function getToasts(): ToastItem[];
   export function registerToastHost(): () => void;
-  export function promoteToaster(toaster: HTMLElement, hasToasts: boolean, repromote?: boolean): void;
+  export function promoteToaster(
+    toaster: HTMLElement,
+    hasToasts: boolean,
+    repromote?: boolean,
+  ): void;
   export function syncToasterLayout(toaster: HTMLElement, maxVisible?: number): void;
-  export function bindToasterInteractions(toaster: HTMLElement, options?: { max?: number }): () => void;
+  export function bindToasterInteractions(
+    toaster: HTMLElement,
+    options?: { max?: number },
+  ): () => void;
   export function initToasts(root?: ParentNode): () => void;
 }
 
@@ -133,11 +210,38 @@ declare module 'jenni-core/behaviors/context-menu.js' {
     loop?: boolean;
     manageChecked?: boolean;
   }
+  export interface ContextMenuOpenAtOptions {
+    keyboard?: boolean;
+    anchor?: HTMLElement | null;
+    returnFocusTo?: HTMLElement | null;
+  }
+  export interface ContextMenuOpenForOptions {
+    keyboard?: boolean;
+    align?: 'point' | 'bottom-start';
+    returnFocusTo?: HTMLElement | null;
+  }
+  export interface ContextMenuEventLike {
+    nativeEvent?: Event;
+    preventDefault: () => void;
+    currentTarget?: EventTarget | null;
+    target?: EventTarget | null;
+    clientX?: number;
+    clientY?: number;
+  }
+  export interface ContextMenuMethods {
+    openAt: (x: number, y: number, opts?: ContextMenuOpenAtOptions | boolean) => void;
+    openFor: (anchorEl: HTMLElement, opts?: ContextMenuOpenForOptions) => void;
+    openFromEvent: (e: MouseEvent | KeyboardEvent | ContextMenuEventLike) => void;
+    close: () => void;
+    isOpen: () => boolean;
+    destroy: () => void;
+  }
+  export type ContextMenuController = (() => void) & ContextMenuMethods;
   export function createContextMenu(
-    target: HTMLElement,
+    target: HTMLElement | null | undefined,
     menu: HTMLElement,
     options?: ContextMenuOptions,
-  ): () => void;
+  ): ContextMenuController;
   export function initContextMenus(root?: ParentNode): () => void;
 }
 
@@ -194,4 +298,144 @@ declare module 'jenni-core/behaviors/command-palette.js' {
     opts?: CommandPaletteOptions,
   ): CommandPaletteController;
   export function initCommandPalettes(root?: ParentNode): () => void;
+}
+
+declare module 'jenni-core/behaviors/theme.js' {
+  export interface ChartPalette {
+    series: [string, string, string, string, string, string, string, string];
+    grid: string;
+    axis: string;
+    crosshair: string;
+    tooltipBg: string;
+    tooltipBorder: string;
+  }
+  export interface SyntaxTheme {
+    isDark: boolean;
+    bg: string;
+    fg: string;
+    gutterBg: string;
+    gutterFg: string;
+    lineActive: string;
+    selection: string;
+    cursor: string;
+    keyword: string;
+    string: string;
+    number: string;
+    function: string;
+    type: string;
+    variable: string;
+    property: string;
+    operator: string;
+    punctuation: string;
+    comment: string;
+    constant: string;
+    tag: string;
+    attr: string;
+    regexp: string;
+    added: string;
+    deleted: string;
+  }
+  export interface TerminalTheme {
+    background: string;
+    foreground: string;
+    cursor: string;
+    cursorAccent: string;
+    selectionBackground: string;
+    black: string;
+    red: string;
+    green: string;
+    yellow: string;
+    blue: string;
+    magenta: string;
+    cyan: string;
+    white: string;
+    brightBlack: string;
+    brightRed: string;
+    brightGreen: string;
+    brightYellow: string;
+    brightBlue: string;
+    brightMagenta: string;
+    brightCyan: string;
+    brightWhite: string;
+  }
+  export type ThemeDensity = 'compact' | 'default' | 'comfortable';
+  export interface ThemeTokens {
+    isDark: boolean;
+    density: ThemeDensity;
+    bg: string;
+    fg: string;
+    fgMuted: string;
+    fgSubtle: string;
+    surface1: string;
+    surface2: string;
+    surface3: string;
+    border: string;
+    borderStrong: string;
+    accent: string;
+    accentHover: string;
+    accentSoft: string;
+    danger: string;
+    success: string;
+    warning: string;
+    info: string;
+    charts: ChartPalette;
+    syntax: SyntaxTheme;
+    terminal: TerminalTheme;
+  }
+  export interface OnThemeChangeOptions {
+    root?: HTMLElement;
+    immediate?: boolean;
+  }
+  export function resolveCssColor(cssValueOrVarName: string, root?: HTMLElement): string;
+  export function getChartPalette(root?: HTMLElement): ChartPalette;
+  export function getSyntaxTheme(root?: HTMLElement): SyntaxTheme;
+  export function getTerminalTheme(root?: HTMLElement): TerminalTheme;
+  export const getXtermTheme: typeof getTerminalTheme;
+  export function getThemeTokens(root?: HTMLElement): ThemeTokens;
+  export function onThemeChange(
+    callback: (tokens: ThemeTokens) => void,
+    options?: OnThemeChangeOptions,
+  ): () => void;
+}
+
+declare module 'jenni-core/behaviors/shortcuts.js' {
+  export type ShortcutHandler = (e: KeyboardEvent) => void;
+  export interface ShortcutOptions {
+    scope?: HTMLElement | null | (() => HTMLElement | null | undefined);
+    priority?: number;
+    enabled?: boolean | (() => boolean);
+    preventDefault?: boolean;
+    stopPropagation?: boolean;
+    allowInInputs?: boolean;
+    allowModInInputs?: boolean;
+    allowInTerminal?: boolean;
+    globalModal?: boolean;
+    allowRepeat?: boolean;
+    sequenceTimeout?: number;
+    description?: string;
+  }
+  export interface FormatShortcutOptions {
+    mac?: boolean;
+  }
+  export interface ShortcutRegistry {
+    register: (
+      combo: string | readonly string[],
+      handler: ShortcutHandler,
+      options?: ShortcutOptions,
+    ) => () => void;
+    unregisterAll: () => void;
+    clear: () => void;
+    destroy: () => void;
+    format: (combo: string, options?: FormatShortcutOptions) => string[];
+    isElementActiveAndVisible: (el: HTMLElement | null | undefined) => boolean;
+  }
+  export function isElementActiveAndVisible(el: HTMLElement | null | undefined): boolean;
+  export function formatShortcut(combo: string, options?: FormatShortcutOptions): string[];
+  export function createShortcutRegistry(root?: Document | HTMLElement | null): ShortcutRegistry;
+  export const shortcuts: ShortcutRegistry;
+  export function registerShortcut(
+    combo: string | readonly string[],
+    handler: ShortcutHandler,
+    options?: ShortcutOptions,
+  ): () => void;
 }

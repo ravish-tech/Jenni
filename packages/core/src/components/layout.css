@@ -4,6 +4,8 @@
 @import "./list.css";
 @import "./page.css";
 @import "./bars.css";
+@import "./statusbar.css";
+@import "./toolbar.css";
 @import "./shell.css";
 @import "./screens.css";
 @import "./scroll-area.css";

@@ -16,6 +16,30 @@ export { default as JSidebarItem } from './layout/JSidebarItem.vue';
 export { default as JTopBar } from './layout/JTopBar.vue';
 export { default as JBottomBar } from './layout/JBottomBar.vue';
 export { default as JBottomBarItem } from './layout/JBottomBarItem.vue';
+export {
+  default as JStatusBar,
+  type JStatusBarProps,
+  type JStatusBarVariant,
+  type JStatusBarBorder,
+} from './layout/JStatusBar.vue';
+export { default as JStatusBarItem, type JStatusBarItemProps } from './layout/JStatusBarItem.vue';
+export {
+  default as JToolbar,
+  type JToolbarProps,
+  type JToolbarSize,
+  type JToolbarOrientation,
+  type JToolbarBorder,
+  type JToolbarSurface,
+} from './layout/JToolbar.vue';
+export { default as JToolbarGroup, type JToolbarGroupProps } from './layout/JToolbarGroup.vue';
+export {
+  default as JToolbarSeparator,
+  type JToolbarSeparatorProps,
+} from './layout/JToolbarSeparator.vue';
+export {
+  default as JToolbarSpacer,
+  type JToolbarSpacerProps,
+} from './layout/JToolbarSpacer.vue';
 export { default as JAppShell } from './layout/JAppShell.vue';
 export { default as JBento } from './layout/JBento.vue';
 export { default as JBentoCell } from './layout/JBentoCell.vue';

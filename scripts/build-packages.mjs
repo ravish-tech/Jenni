@@ -1,7 +1,10 @@
 /**
  * Production package builder for jenni-core, jenni-vue, and jenni-react.
- * Emits ESM bundles, standalone CSS/IIFE CDN bundles, TypeScript declarations (.d.ts),
- * and copies LICENSE into each publishable package.
+ * Emits:
+ *   - Standalone minified full CSS (`dist/jenni.css`) + granular per-component CSS (`dist/css/*.css`)
+ *   - ESM & CDN IIFE JS bundles + TypeScript declarations (`.d.ts`)
+ *   - Machine-readable Component & Token API manifests (`manifest.json`)
+ *   - LICENSE in each publishable package
  */
 import fs from 'node:fs/promises';
 import fsSync from 'node:fs';
@@ -10,6 +13,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { build as viteBuild } from 'vite';
 import vuePlugin from '@vitejs/plugin-vue';
+import { COMPONENT_CSS_DEPS, generateManifests } from './generate-manifest.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PLAYGROUND_MODULES = path.join(ROOT, 'apps/playground/node_modules');
@@ -35,46 +39,93 @@ async function copyLicense(pkgDir) {
   }
 }
 
-async function buildCore() {
-  console.log('📦 [1/3] Building jenni-core...');
-  const pkgDir = path.join(ROOT, 'packages/core');
-  const distDir = path.join(pkgDir, 'dist');
-  await fs.rm(distDir, { recursive: true, force: true });
-  await fs.mkdir(distDir, { recursive: true });
+/**
+ * Compile a CSS entry file with Vite (resolving @import and minifying via LightningCSS).
+ * @param {string} pkgDir
+ * @param {string} cssImportBody
+ * @param {string} outFile
+ */
+async function compileMinifiedCss(pkgDir, cssImportBody, outFile) {
+  const tmpDir = path.join(pkgDir, 'dist/.tmp-css');
+  await fs.mkdir(tmpDir, { recursive: true });
+  const entryJs = path.join(tmpDir, 'entry.js');
+  const entryCss = path.join(tmpDir, 'entry.css');
+  await fs.writeFile(entryCss, cssImportBody, 'utf8');
+  await fs.writeFile(entryJs, `import './entry.css';\n`, 'utf8');
 
-  // 1. Standalone flattened & minified CSS bundle (dist/jenni.css)
-  const tmpCssEntry = path.join(distDir, '__css_entry.js');
-  await fs.writeFile(tmpCssEntry, `import '../src/index.css';\n`, 'utf8');
-  await viteBuild({
+  const res = await viteBuild({
     root: pkgDir,
     configFile: false,
-    logLevel: 'warn',
+    logLevel: 'silent',
+    css: { transformer: 'lightningcss' },
     build: {
-      outDir: distDir,
-      emptyOutDir: false,
+      write: false,
       minify: true,
-      cssMinify: true,
+      cssMinify: 'lightningcss',
       cssCodeSplit: false,
       lib: {
-        entry: tmpCssEntry,
+        entry: entryJs,
         formats: ['es'],
-        fileName: () => '__css_entry.out.js',
-      },
-      rollupOptions: {
-        output: {
-          assetFileNames: (assetInfo) =>
-            assetInfo.name?.endsWith('.css') ? 'jenni.css' : '[name][extname]',
-        },
+        fileName: () => 'out.js',
       },
     },
   });
-  await fs.rm(tmpCssEntry, { force: true });
-  await fs.rm(path.join(distDir, '__css_entry.out.js'), { force: true });
-  // Rename default Vite CSS output if emitted as core.css or style.css
-  for (const f of await fs.readdir(distDir)) {
-    if (f.endsWith('.css') && f !== 'jenni.css') {
-      await fs.rename(path.join(distDir, f), path.join(distDir, 'jenni.css'));
-    }
+
+  const outs = Array.isArray(res) ? res[0].output : res.output;
+  const cssAsset = outs.find((o) => o.type === 'asset' && o.fileName.endsWith('.css'));
+  if (cssAsset) {
+    const buf = Buffer.isBuffer(cssAsset.source)
+      ? cssAsset.source
+      : Buffer.from(String(cssAsset.source), 'utf8');
+    await fs.mkdir(path.dirname(outFile), { recursive: true });
+    await fs.writeFile(outFile, buf);
+  }
+  await fs.rm(tmpDir, { recursive: true, force: true });
+}
+
+async function buildCore() {
+  console.log('📦 [1/3] Building jenni-core (full + granular CSS + ESM/IIFE + .d.ts)...');
+  const pkgDir = path.join(ROOT, 'packages/core');
+  const distDir = path.join(pkgDir, 'dist');
+  const distCssDir = path.join(distDir, 'css');
+  await fs.rm(distDir, { recursive: true, force: true });
+  await fs.mkdir(distCssDir, { recursive: true });
+
+  // 1A. Full standalone minified CSS bundle (dist/jenni.css)
+  await compileMinifiedCss(
+    pkgDir,
+    `@layer jenni.tokens, jenni.base, jenni.components;\n@import "../../src/index.css";\n`,
+    path.join(distDir, 'jenni.css'),
+  );
+
+  // 1B. Granular foundation CSS (tokens + base) & individual standalone component CSS bundles
+  await compileMinifiedCss(
+    pkgDir,
+    `@layer jenni.tokens, jenni.base, jenni.components;\n@import "../../src/tokens.css";\n@import "../../src/base.css";\n`,
+    path.join(distCssDir, 'foundation.css'),
+  );
+  await compileMinifiedCss(
+    pkgDir,
+    `@layer jenni.tokens;\n@import "../../src/tokens.css";\n`,
+    path.join(distCssDir, 'tokens.css'),
+  );
+  await compileMinifiedCss(
+    pkgDir,
+    `@layer jenni.base;\n@import "../../src/base.css";\n`,
+    path.join(distCssDir, 'base.css'),
+  );
+
+  const compSrcDir = path.join(pkgDir, 'src/components');
+  const compFiles = (await fs.readdir(compSrcDir)).filter((f) => f.endsWith('.css')).sort();
+  for (const file of compFiles) {
+    const slug = file.replace(/\.css$/, '');
+    const deps = COMPONENT_CSS_DEPS[slug] || [file];
+    const imports = deps.map((d) => `@import "../../src/components/${d}";`).join('\n');
+    await compileMinifiedCss(
+      pkgDir,
+      `@layer jenni.tokens, jenni.base, jenni.components;\n${imports}\n`,
+      path.join(distCssDir, file),
+    );
   }
 
   // 2. ESM + IIFE JS bundles (dist/index.js + dist/jenni.iife.js)
@@ -125,7 +176,6 @@ async function buildVue() {
   await fs.rm(distDir, { recursive: true, force: true });
   await fs.mkdir(distDir, { recursive: true });
 
-  // 1. ESM bundle preserving tree-shakable structure (externalizing vue & jenni-core)
   await viteBuild({
     root: pkgDir,
     configFile: false,
@@ -146,7 +196,6 @@ async function buildVue() {
     },
   });
 
-  // 2. TypeScript .d.ts declarations via vue-tsc
   const tmpTsconfig = path.join(pkgDir, 'tsconfig.build.json');
   await fs.writeFile(
     tmpTsconfig,
@@ -176,12 +225,14 @@ async function buildVue() {
     await fs.rm(tmpTsconfig, { force: true });
   }
 
-  // Copy ambient core.d.ts references into dist subdirectories so relative /// <reference path="./core.d.ts" /> resolves
   for (const sub of ['layout', 'forms', 'display', 'overlay']) {
-    const srcCoreDts = path.join(pkgDir, 'src', sub, 'core.d.ts');
-    const dstSubDir = path.join(distDir, sub);
-    if (fsSync.existsSync(srcCoreDts) && fsSync.existsSync(dstSubDir)) {
-      await fs.copyFile(srcCoreDts, path.join(dstSubDir, 'core.d.ts'));
+    const srcSub = path.join(pkgDir, 'src', sub);
+    const dstSub = path.join(distDir, sub);
+    if (!fsSync.existsSync(srcSub) || !fsSync.existsSync(dstSub)) continue;
+    for (const f of await fs.readdir(srcSub)) {
+      if (f.endsWith('.d.ts')) {
+        await fs.copyFile(path.join(srcSub, f), path.join(dstSub, f));
+      }
     }
   }
 
@@ -195,7 +246,6 @@ async function buildReact() {
   await fs.rm(distDir, { recursive: true, force: true });
   await fs.mkdir(distDir, { recursive: true });
 
-  // 1. ESM bundle externalizing react, react-dom, and jenni-core
   await viteBuild({
     root: pkgDir,
     configFile: false,
@@ -221,7 +271,6 @@ async function buildReact() {
     },
   });
 
-  // 2. TypeScript .d.ts declarations via tsc
   execFileSync(
     tscBin,
     [
@@ -249,10 +298,13 @@ async function buildReact() {
   );
 
   for (const sub of ['layout', 'forms', 'display', 'overlay']) {
-    const srcCoreDts = path.join(pkgDir, 'src', sub, 'core.d.ts');
-    const dstSubDir = path.join(distDir, sub);
-    if (fsSync.existsSync(srcCoreDts) && fsSync.existsSync(dstSubDir)) {
-      await fs.copyFile(srcCoreDts, path.join(dstSubDir, 'core.d.ts'));
+    const srcSub = path.join(pkgDir, 'src', sub);
+    const dstSub = path.join(distDir, sub);
+    if (!fsSync.existsSync(srcSub) || !fsSync.existsSync(dstSub)) continue;
+    for (const f of await fs.readdir(srcSub)) {
+      if (f.endsWith('.d.ts')) {
+        await fs.copyFile(path.join(srcSub, f), path.join(dstSub, f));
+      }
     }
   }
 
@@ -262,4 +314,7 @@ async function buildReact() {
 await buildCore();
 await buildVue();
 await buildReact();
-console.log('✅ All 3 publishable packages (jenni-core, jenni-vue, jenni-react) built in packages/*/dist.');
+const manifest = generateManifests();
+console.log(
+  `✅ Built jenni-core, jenni-vue, jenni-react + manifest (${manifest.componentCount} components, ${manifest.tokens.length} CSS tokens).`,
+);

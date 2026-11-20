@@ -2,12 +2,23 @@
 // Shared types + helpers for the React overlay group.
 import { createContext, useCallback, useState, type ReactNode, type Ref } from 'react';
 import type {
+  ResultLike,
   ToastAction,
   ToastItem,
   ToastOptions,
+  ToastPromiseMessages,
+  ToastResultOptions,
   ToasterPosition,
   ToastTone,
+  ToastVerifyOutcome,
 } from 'jenni-core/behaviors/toast.js';
+import type {
+  ContextMenuController,
+  ContextMenuEventLike,
+  ContextMenuOpenAtOptions,
+  ContextMenuOpenForOptions,
+  ContextMenuOptions,
+} from 'jenni-core/behaviors/context-menu.js';
 
 export type FloatingSide = 'top' | 'right' | 'bottom' | 'left';
 export type FloatingAlign = 'start' | 'center' | 'end';
@@ -21,7 +32,32 @@ export type TabsVariant = 'underline' | 'pill';
 export type TabsOrientation = 'horizontal' | 'vertical';
 export type TabsActivation = 'automatic' | 'manual';
 
-export type { ToastTone, ToasterPosition, ToastAction, ToastOptions, ToastItem };
+export type {
+  ToastTone,
+  ToasterPosition,
+  ToastAction,
+  ToastOptions,
+  ToastItem,
+  ToastVerifyOutcome,
+  ToastPromiseMessages,
+  ResultLike,
+  ToastResultOptions,
+  ContextMenuOptions,
+  ContextMenuOpenAtOptions,
+  ContextMenuOpenForOptions,
+  ContextMenuEventLike,
+  ContextMenuController,
+};
+
+export interface ContextMenuHandle {
+  openAt: (x: number, y: number, opts?: ContextMenuOpenAtOptions | boolean) => void;
+  openFor: (anchorEl: HTMLElement, opts?: ContextMenuOpenForOptions) => void;
+  openFromEvent: (e: MouseEvent | KeyboardEvent | ContextMenuEventLike) => void;
+  show: (x: number, y: number, opts?: ContextMenuOpenAtOptions | boolean) => void;
+  hide: () => void;
+  close: () => void;
+  isOpen: () => boolean;
+}
 
 export interface ComboboxOption {
   value: string;
@@ -52,8 +88,10 @@ export interface CommandGroup {
   items: CommandItem[];
 }
 
-export const sizeAttr = (size?: OverlaySize | DrawerSize) => (size && size !== 'md' ? size : undefined);
-export const alignAttr = (align?: FloatingAlign) => (align && align !== 'center' ? align : undefined);
+export const sizeAttr = (size?: OverlaySize | DrawerSize) =>
+  size && size !== 'md' ? size : undefined;
+export const alignAttr = (align?: FloatingAlign) =>
+  align && align !== 'center' ? align : undefined;
 export const flag = (on?: boolean) => (on ? '' : undefined);
 
 export function cx(...parts: Array<string | false | null | undefined>) {
@@ -69,7 +107,11 @@ export function mergeRefs<T>(...refs: Array<Ref<T> | undefined>) {
   };
 }
 
-export function useControllable<T>(value: T | undefined, defaultValue: T, onChange?: (v: T) => void) {
+export function useControllable<T>(
+  value: T | undefined,
+  defaultValue: T,
+  onChange?: (v: T) => void,
+) {
   const [inner, setInner] = useState(defaultValue);
   const controlled = value !== undefined;
   const current = controlled ? value : inner;

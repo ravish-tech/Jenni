@@ -22,7 +22,10 @@ export interface ToasterProps extends ComponentProps<'div'> {
   expanded?: boolean;
 }
 
-function ToneIcon({ tone }: { tone: ToastItem['tone'] }) {
+function ToneIcon({ tone, loading }: { tone: ToastItem['tone']; loading?: boolean }) {
+  if (loading || tone === 'loading') {
+    return <span className="j-toast__spinner" />;
+  }
   if (tone === 'success') {
     return (
       <svg
@@ -147,10 +150,11 @@ export function Toaster({
           aria-live={item.tone === 'danger' ? 'assertive' : 'polite'}
           data-tone={item.tone}
           data-state={item.state}
+          data-loading={flag(item.loading)}
         >
           <div className="j-toast__inner">
             <span className="j-toast__indicator" aria-hidden="true">
-              <ToneIcon tone={item.tone} />
+              <ToneIcon tone={item.tone} loading={item.loading} />
             </span>
 
             <div className="j-toast__body">

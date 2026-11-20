@@ -10,8 +10,11 @@ import {
   sizeAttr,
   splitAttrs,
   useFieldAttrs,
+  type CalendarCell,
+  type CalendarMarkers,
   type DatePickerMode,
   type DateRange,
+  type NormalizedCalendarMarker,
   type Size,
   type Tone,
 } from './types';
@@ -35,6 +38,7 @@ const props = withDefaults(
     invalid?: boolean;
     name?: string;
     locale?: string;
+    markers?: CalendarMarkers;
   }>(),
   {
     mode: 'single',
@@ -44,6 +48,10 @@ const props = withDefaults(
     locale: 'en-US',
   },
 );
+
+defineSlots<{
+  day?: (props: { cell: CalendarCell; markers: NormalizedCalendarMarker[] }) => unknown;
+}>();
 
 const emit = defineEmits<{
   change: [value: string | DateRange | null];
@@ -125,8 +133,7 @@ function onToggle(e: Event) {
   open.value = (e as ToggleEvent).newState === 'open';
 }
 
-function onComplete(val: string | DateRange | null) {
-  emit('change', val);
+function onComplete() {
   hidePopover();
   triggerEl.value?.focus();
 }
@@ -242,8 +249,13 @@ defineExpose({ focus: () => triggerEl.value?.focus(), show: showPopover, hide: h
       :tone="tone"
       :disabled="isDisabled"
       :locale="locale"
+      :markers="markers"
       @change="onChange"
       @complete="onComplete"
-    />
+    >
+      <template v-if="$slots.day" #day="slotProps">
+        <slot name="day" v-bind="slotProps" />
+      </template>
+    </JCalendar>
   </div>
 </template>

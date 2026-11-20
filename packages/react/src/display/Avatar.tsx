@@ -1,4 +1,13 @@
-import { Children, useEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react';
+import {
+  Children,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ComponentProps,
+  type ReactNode,
+} from 'react';
+import { getEntityHue } from 'jenni-core/behaviors/entity-color.js';
 import { attr, type DisplayTone } from './types';
 
 export type AvatarSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -15,6 +24,10 @@ export interface AvatarProps extends Omit<ComponentProps<'span'>, 'children'> {
   shape?: 'circle' | 'square';
   tone?: DisplayTone;
   status?: AvatarStatus;
+  /** Deterministic per-author/entity color seed (`true` hashes `name || initials || alt`). */
+  colorSeed?: string | boolean;
+  /** Alias for `colorSeed={true}`. */
+  autoColor?: boolean;
   /** Custom fallback content (e.g. an icon). */
   fallback?: ReactNode;
 }
@@ -31,7 +44,20 @@ function getInitials(name?: string, initials?: string) {
 }
 
 export function Avatar({
-  src, alt, name, initials, size = 'md', shape = 'circle', tone, status, fallback, className, ...rest
+  src,
+  alt,
+  name,
+  initials,
+  size = 'md',
+  shape = 'circle',
+  tone,
+  status,
+  colorSeed,
+  autoColor,
+  fallback,
+  className,
+  style,
+  ...rest
 }: AvatarProps) {
   const [state, setState] = useState<LoadState>('loading');
   const img = useRef<HTMLImageElement>(null);
@@ -45,13 +71,30 @@ export function Avatar({
   const showImage = !!src && state !== 'error';
   const text = getInitials(name, initials);
 
+  let entityHue: number | undefined;
+  if (!tone) {
+    if (typeof colorSeed === 'string' && colorSeed.trim()) {
+      entityHue = getEntityHue(colorSeed.trim());
+    } else if (colorSeed === true || autoColor === true) {
+      const seed = (name || initials || alt || '').trim();
+      if (seed) entityHue = getEntityHue(seed);
+    }
+  }
+
+  const mergedStyle =
+    entityHue !== undefined
+      ? ({ '--j-entity-hue': String(entityHue), ...style } as CSSProperties)
+      : style;
+
   return (
     <span
       {...rest}
+      style={mergedStyle}
       className={className ? `j-avatar ${className}` : 'j-avatar'}
       data-size={attr(size, 'md')}
       data-shape={attr(shape, 'circle')}
       data-tone={tone}
+      data-entity-color={entityHue !== undefined ? '' : undefined}
       role={showImage ? undefined : 'img'}
       aria-label={showImage ? undefined : (alt ?? name)}
     >

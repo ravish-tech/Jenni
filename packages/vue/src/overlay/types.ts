@@ -1,12 +1,23 @@
 /// <reference path="./core.d.ts" />
 import type { ComputedRef, InjectionKey, Ref } from 'vue';
 import type {
+  ResultLike,
   ToastAction,
   ToastItem,
   ToastOptions,
+  ToastPromiseMessages,
+  ToastResultOptions,
   ToasterPosition,
   ToastTone,
+  ToastVerifyOutcome,
 } from 'jenni-core/behaviors/toast.js';
+import type {
+  ContextMenuController,
+  ContextMenuEventLike,
+  ContextMenuOpenAtOptions,
+  ContextMenuOpenForOptions,
+  ContextMenuOptions,
+} from 'jenni-core/behaviors/context-menu.js';
 
 export type FloatingSide = 'top' | 'right' | 'bottom' | 'left';
 export type FloatingAlign = 'start' | 'center' | 'end';
@@ -20,7 +31,32 @@ export type TabsVariant = 'underline' | 'pill';
 export type TabsOrientation = 'horizontal' | 'vertical';
 export type TabsActivation = 'automatic' | 'manual';
 
-export type { ToastTone, ToasterPosition, ToastAction, ToastOptions, ToastItem };
+export type {
+  ToastTone,
+  ToasterPosition,
+  ToastAction,
+  ToastOptions,
+  ToastItem,
+  ToastVerifyOutcome,
+  ToastPromiseMessages,
+  ResultLike,
+  ToastResultOptions,
+  ContextMenuOptions,
+  ContextMenuOpenAtOptions,
+  ContextMenuOpenForOptions,
+  ContextMenuEventLike,
+  ContextMenuController,
+};
+
+export interface JContextMenuExpose {
+  openAt: (x: number, y: number, opts?: ContextMenuOpenAtOptions | boolean) => void;
+  openFor: (anchorEl: HTMLElement, opts?: ContextMenuOpenForOptions) => void;
+  openFromEvent: (e: MouseEvent | KeyboardEvent | ContextMenuEventLike) => void;
+  show: (x: number, y: number, opts?: ContextMenuOpenAtOptions | boolean) => void;
+  hide: () => void;
+  close: () => void;
+  isOpen: () => boolean;
+}
 
 export interface ComboboxOption {
   value: string;

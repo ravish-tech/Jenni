@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
+import { getEntityHue } from 'jenni-core/behaviors/entity-color.js';
 import type { JAvatarProps } from './types';
 
 const props = withDefaults(defineProps<JAvatarProps>(), { size: 'md', shape: 'circle' });
@@ -24,6 +25,18 @@ const initials = computed(() => {
   return (first + last).toUpperCase();
 });
 
+const entityHue = computed<number | undefined>(() => {
+  if (props.tone) return undefined;
+  if (typeof props.colorSeed === 'string' && props.colorSeed.trim()) {
+    return getEntityHue(props.colorSeed.trim());
+  }
+  if (props.colorSeed === true || props.autoColor === true) {
+    const seed = (props.name || props.initials || props.alt || '').trim();
+    if (seed) return getEntityHue(seed);
+  }
+  return undefined;
+});
+
 const showImage = computed(() => !!props.src && state.value !== 'error');
 </script>
 
@@ -33,6 +46,8 @@ const showImage = computed(() => !!props.src && state.value !== 'error');
     :data-size="size === 'md' ? undefined : size"
     :data-shape="shape === 'circle' ? undefined : shape"
     :data-tone="tone"
+    :data-entity-color="entityHue !== undefined ? '' : undefined"
+    :style="entityHue !== undefined ? { '--j-entity-hue': String(entityHue) } : undefined"
     :role="showImage ? undefined : 'img'"
     :aria-label="showImage ? undefined : (alt ?? name)"
   >

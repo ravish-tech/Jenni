@@ -1,3 +1,7 @@
+<p>
+  <img src="./assets/jenni-logo.svg" alt="Jenni — Finnish Hannunvaakuna petal logo" width="52" height="52" />
+</p>
+
 # Jenni
 
 **Jenni** *(pronounced “yenni”, `/ˈjɛni/`)* is a web UI framework driven by **beauty, simplicity, and performance** — built in loving memory of Jenni, as a tribute to her grace and elegance.
@@ -9,9 +13,9 @@
 
 | Package | Description | 12-Component Kit (gzip) |
 |---|---|---:|
-| [`jenni-core`](./packages/core) | OKLCH design tokens, `@layer` CSS primitives (`0 !important`), 16 container-query app shells, and delegated WAI-ARIA behaviors | **17.7 kB** |
-| [`jenni-vue`](./packages/vue) | Zero-`<style>` Vue 3 SFC components over `jenni-core` markup | **20.1 kB** |
-| [`jenni-react`](./packages/react) | Zero-CSS-in-JS React 19 native-ref TSX components over `jenni-core` markup | **23.3 kB** |
+| [`jenni-core`](./packages/core) | OKLCH design tokens, `@layer` CSS primitives (`0 !important`), 16 container-query app shells, and delegated WAI-ARIA behaviors | **18.9 kB** |
+| [`jenni-vue`](./packages/vue) | Zero-`<style>` Vue 3 SFC components over `jenni-core` markup | **22.5 kB** |
+| [`jenni-react`](./packages/react) | Zero-CSS-in-JS React 19 native-ref TSX components over `jenni-core` markup | **28.1 kB** |
 
 ## Quick Start
 
@@ -40,8 +44,13 @@ npm install \
 ```
 
 ```ts
-// Import styles once at your application root
+// Import full minified stylesheet once at your application root:
 import 'jenni-core/css';
+
+// Or import granular per-component minified CSS:
+import 'jenni-core/css/foundation.css';
+import 'jenni-core/css/button.css';
+import 'jenni-core/css/data-grid.css';
 ```
 
 ## Monorepo Commands
@@ -49,8 +58,11 @@ import 'jenni-core/css';
 ```sh
 npm install
 npm run dev              # Interactive Design Lab at http://localhost:5173
+npm test                 # Run unit & manifest verification suite (node:test)
 npm run typecheck        # Type-check Vue 3, React 19, and Design Lab
-npm run build:packages   # Build ESM + .d.ts + CDN bundles for core, vue, and react
+npm run build:packages   # Build ESM + .d.ts + minified CSS + component manifest
+npm run generate:manifest # Regenerate COMPONENT_MANIFEST.json & packages/*/manifest.json
+npm run version:bump     # Synchronize workspace versions (major | minor | patch | x.y.z)
 npm run bench            # Compile & measure Level 1 (Core), Level 2 (Vue), Level 3 (React)
 npm run build            # Build packages + static Design Lab
 ```
@@ -59,4 +71,6 @@ npm run build            # Build packages + static Design Lab
 
 - [ARCHITECTURE.md](./ARCHITECTURE.md) — aesthetic principles, weighted motion, and markup conventions.
 - [LAYOUT.md](./LAYOUT.md) — `4px`/`8px` spatial grid, `0.65×–1.15×` density scaling, 16 app shells × 4 surface variants, and 18 canonical screen architectures.
-- [COMPONENTS.md](./COMPONENTS.md) — complete 57-component inventory across Layout, Forms, Display, and Overlay.
+- [COMPONENTS.md](./COMPONENTS.md) — complete 65-entry inventory across Layout, Forms, Display, and Overlay.
+- [COMPONENT_MANIFEST.json](./COMPONENT_MANIFEST.json) — machine-readable AST manifest of components, props, events, slots, tokens, and CSS slugs (`jenni-core/manifest.json`).
+- [CHANGELOG.md](./CHANGELOG.md) — versioned release notes.

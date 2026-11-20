@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <style>
+    .jenni-stroke { stroke: #5246b5; }
+    .jenni-fill { fill: #5246b5; }
+    @media (prefers-color-scheme: dark) {
+      .jenni-stroke { stroke: #8f84e6; }
+      .jenni-fill { fill: #8f84e6; }
+    }
+  </style>
+  <g class="jenni-stroke" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 36.2V22C22 14.5 19.5 9.5 10.5 10.5C9.78 16.98 12.17 20.09 16.37 21.33"/>
+    <path d="M22 36.2V22C22 14.5 19.5 9.5 10.5 10.5C9.78 16.98 12.17 20.09 16.37 21.33" transform="rotate(90 32 32)"/>
+    <path d="M22 36.2V22C22 14.5 19.5 9.5 10.5 10.5C9.78 16.98 12.17 20.09 16.37 21.33" transform="rotate(180 32 32)"/>
+    <path d="M22 36.2V22C22 14.5 19.5 9.5 10.5 10.5C9.78 16.98 12.17 20.09 16.37 21.33" transform="rotate(270 32 32)"/>
+  </g>
+  <circle class="jenni-fill" cx="32" cy="32" r="3.6"/>
+</svg>

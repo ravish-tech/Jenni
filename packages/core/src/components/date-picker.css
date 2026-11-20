@@ -271,6 +271,33 @@
     }
   }
 
+  :where(.j-calendar__day[data-today]:has(.j-calendar__dots)) :where(.j-calendar__day-num)::after {
+    display: none;
+  }
+
+  :where(.j-calendar__day:has(.j-calendar__dots)) :where(.j-calendar__day-num) {
+    padding-block-end: 2px;
+  }
+
+  /* Activity / event day dots */
+  :where(.j-calendar__dots) {
+    position: absolute;
+    inset-block-end: max(2px, round(calc(3px * var(--j-density)), 1px));
+    inset-inline: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    pointer-events: none;
+  }
+
+  :where(.j-calendar__dot) {
+    inline-size: 4px;
+    block-size: 4px;
+    border-radius: var(--j-radius-full);
+    background-color: var(--_dot-color, var(--j-tone, var(--j-accent)));
+  }
+
   /* Selected single day or range start/end caps */
   :where(.j-calendar__day:is([data-selected], [data-range-start], [data-range-end]))
     :where(.j-calendar__day-num) {
@@ -278,6 +305,21 @@
     color: var(--j-tone-fg);
     font-weight: var(--j-weight-semibold);
     box-shadow: var(--j-shadow-xs);
+  }
+
+  :where(
+      .j-calendar__day:is(
+        [aria-selected="true"]:not([data-in-range]),
+        [data-selected],
+        [data-range-start],
+        [data-range-end]
+      )
+    )
+    :where(.j-calendar__dot:not([data-tone]), .j-calendar__dot[data-tone="accent"]) {
+    background-color: var(
+      --_dot-color,
+      color-mix(in oklch, var(--j-accent-fg) 90%, transparent)
+    );
   }
 
   :where(.j-calendar__day:focus-visible) :where(.j-calendar__day-num) {

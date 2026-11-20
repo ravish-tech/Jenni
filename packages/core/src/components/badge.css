@@ -38,6 +38,16 @@
     user-select: none;
   }
 
+  /* Deterministic per-entity OKLCH color slots via --j-entity-hue */
+  :where(.j-badge[data-entity-color]:not([data-tone])) {
+    --_eh: var(--j-entity-hue, 258);
+    --j-tone: light-dark(oklch(48% 0.15 var(--_eh)), oklch(72% 0.14 var(--_eh)));
+    --j-tone-hover: light-dark(oklch(43.5% 0.15 var(--_eh)), oklch(76% 0.135 var(--_eh)));
+    --j-tone-fg: light-dark(oklch(99% 0.006 var(--_eh)), oklch(15% 0.025 var(--_eh)));
+    --j-tone-soft: light-dark(oklch(93.5% 0.032 var(--_eh)), oklch(25% 0.055 var(--_eh)));
+    --j-tone-soft-fg: light-dark(oklch(34% 0.12 var(--_eh)), oklch(88% 0.07 var(--_eh)));
+  }
+
   /* Variants */
   :where(.j-badge[data-tone="neutral"]:not([data-variant="solid"])) {
     --_bg: var(--j-surface-2);

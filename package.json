@@ -1,6 +1,6 @@
 {
   "name": "jenni-monorepo",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Jenni (pronounced 'yenni') — a web UI framework driven by beauty, simplicity, and performance. Built in loving memory of Jenni.",
   "private": true,
   "license": "Apache-2.0",
@@ -17,6 +17,9 @@
   ],
   "scripts": {
     "dev": "npm run dev -w @jenni/playground",
+    "test": "node --test tests/*.test.mjs",
+    "manifest": "node ./scripts/generate-manifest.mjs",
+    "version:bump": "node ./scripts/version.mjs",
     "build:packages": "node ./scripts/build-packages.mjs",
     "build": "npm run build:packages && npm run build -w @jenni/playground",
     "typecheck": "npm run typecheck -w @jenni/playground",

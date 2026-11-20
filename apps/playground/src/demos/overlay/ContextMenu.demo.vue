@@ -9,7 +9,7 @@ export const meta = {
 </script>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onBeforeUnmount, onMounted, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
 import {
   JContextMenu,
@@ -17,11 +17,37 @@ import {
   JDropdownLabel,
   JDropdownSeparator,
   JBadge,
+  JButton,
   JCard,
   JStack,
   JInline,
   JGrid,
+  type JContextMenuExpose,
 } from 'jenni-vue';
+
+const imperativeMenu = ref<JContextMenuExpose | null>(null);
+const anchorBtn = ref<{ $el?: HTMLElement } | HTMLElement | null>(null);
+const streamEl = ref<HTMLElement | null>(null);
+const streamLines = ref<string[]>([
+  '[09:40:01] build worker connected (pid 4182)',
+  '[09:40:02] watching 62 component modules…',
+]);
+let streamTimer: ReturnType<typeof setInterval> | undefined;
+
+onMounted(() => {
+  streamTimer = setInterval(() => {
+    const now = new Date().toISOString().slice(11, 19);
+    streamLines.value = [...streamLines.value.slice(-24), `[${now}] tick heartbeat — sibling scroll active`];
+    if (streamEl.value) streamEl.value.scrollTop = streamEl.value.scrollHeight;
+  }, 700);
+});
+onBeforeUnmount(() => clearInterval(streamTimer));
+
+function openMenuForButton() {
+  const raw = anchorBtn.value;
+  const el = raw instanceof HTMLElement ? raw : raw?.$el;
+  if (el) imperativeMenu.value?.openFor(el, { keyboard: true });
+}
 
 const lastAction = ref('Right-click the canvas card');
 const snapToGrid = ref(true);
@@ -156,6 +182,54 @@ const html = `<div
     <div style="margin-top:var(--j-space-3)">
       <JBadge variant="soft" tone="neutral">Status: {{ activeAsset }}</JBadge>
     </div>
+  </DemoSection>
+
+  <DemoSection
+    title="Imperative / Keyboard Open & Streaming Log Isolation (R01 + R02)"
+    description="Open a headless JContextMenu from code via openAt(x, y) or openFor(el, { keyboard: true }) — notice the auto-scrolling log pane beside it never closes an open context menu!"
+  >
+    <JInline gap="group" wrap style="width: 100%; align-items: stretch">
+      <JStack gap="related" style="flex: 1; min-width: 240px">
+        <JInline gap="related" wrap>
+          <JButton ref="anchorBtn" variant="outline" @click="openMenuForButton">
+            Open via openFor(button)
+          </JButton>
+          <JButton variant="ghost" @click="imperativeMenu?.openAt(260, 240, { keyboard: true })">
+            openAt(260, 240)
+          </JButton>
+        </JInline>
+        <span style="font-size: var(--j-text-xs); color: var(--j-fg-muted)">
+          Press Escape inside the menu to restore focus cleanly back to the button.
+        </span>
+      </JStack>
+
+      <div
+        ref="streamEl"
+        style="
+          flex: 1;
+          min-width: 260px;
+          height: 96px;
+          overflow-y: auto;
+          padding: var(--j-space-2) var(--j-space-3);
+          border-radius: var(--j-radius-sm);
+          background: var(--j-surface-2);
+          box-shadow: inset 0 0 0 1px var(--j-border);
+          font-family: var(--j-font-mono);
+          font-size: 11px;
+          color: var(--j-fg-muted);
+        "
+      >
+        <div v-for="(ln, idx) in streamLines" :key="idx">{{ ln }}</div>
+      </div>
+
+      <JContextMenu ref="imperativeMenu">
+        <JDropdownLabel>Imperative Tab Menu</JDropdownLabel>
+        <JDropdownItem shortcut="⌘W" @select="lastAction = 'Closed active tab'">Close tab</JDropdownItem>
+        <JDropdownItem @select="lastAction = 'Split pane right'">Split right</JDropdownItem>
+        <JDropdownSeparator />
+        <JDropdownItem tone="danger" @select="lastAction = 'Killed terminal session'">Kill process</JDropdownItem>
+      </JContextMenu>
+    </JInline>
   </DemoSection>
 
   <DemoSection title="Plain HTML" description="[data-j-context-menu] + .j-menu[data-context-menu] + initContextMenus().">

@@ -1,0 +1,73 @@
+/*
+ * Virtual List —
+ *   <div class="j-virtual-list" role="list" data-divided>
+ *     <div class="j-virtual-list__spacer" style="--_total-h: 18000px">
+ *       <div class="j-virtual-list__items" style="--_offset-y: 360px">
+ *         <div class="j-virtual-list__item" role="listitem">…</div>
+ *       </div>
+ *     </div>
+ *   </div>
+ * Public props: --j-virtual-h
+ */
+@layer jenni.components {
+  :where(.j-virtual-list) {
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+    contain: strict;
+    will-change: scroll-position;
+    inline-size: 100%;
+    min-inline-size: 0;
+    block-size: var(--j-virtual-h, 400px);
+    box-sizing: border-box;
+    color: var(--j-fg);
+    scrollbar-width: thin;
+    scrollbar-color: var(--j-border-strong) transparent;
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+  }
+
+  :where(.j-virtual-list__spacer) {
+    position: relative;
+    inline-size: 100%;
+    min-block-size: 100%;
+    block-size: var(--_total-h, 0px);
+    pointer-events: none;
+  }
+
+  :where(.j-virtual-list__items) {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    transform: translate3d(0, var(--_offset-y, 0px), 0);
+    pointer-events: auto;
+  }
+
+  :where(.j-virtual-list__item) {
+    box-sizing: border-box;
+    inline-size: 100%;
+  }
+
+  :where(.j-virtual-list[data-divided]) :where(.j-virtual-list__item),
+  :where(.j-virtual-list__item[data-divided]) {
+    border-block-end: 1px solid var(--j-border);
+  }
+
+  :where(.j-virtual-list__empty) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-space-1);
+    min-block-size: 100%;
+    padding: var(--j-space-6) var(--j-space-4);
+    box-sizing: border-box;
+    color: var(--j-fg-muted);
+    font-size: var(--j-text-sm);
+    text-align: center;
+    pointer-events: auto;
+  }
+}

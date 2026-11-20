@@ -1,6 +1,6 @@
 {
   "name": "jenni-core",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Jenni (pronounced 'yenni') core layer: OKLCH design tokens, spatial layout, @layer component CSS, and delegated WAI-ARIA behaviors. Built in loving memory of Jenni.",
   "license": "Apache-2.0",
   "author": "Ravish Kumar",
@@ -34,6 +34,7 @@
   "files": [
     "dist",
     "src",
+    "manifest.json",
     "README.md",
     "LICENSE"
   ],
@@ -43,7 +44,9 @@
       "import": "./src/index.js",
       "default": "./dist/index.js"
     },
+    "./manifest.json": "./manifest.json",
     "./css": "./src/index.css",
+    "./css/*": "./dist/css/*",
     "./dist/jenni.css": "./dist/jenni.css",
     "./dist/jenni.iife.js": "./dist/jenni.iife.js",
     "./tokens.css": "./src/tokens.css",

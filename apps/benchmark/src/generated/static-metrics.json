@@ -1,56 +1,56 @@
 {
-  "generatedAt": "2026-11-18T12:04:16.550Z",
+  "generatedAt": "2026-11-20T11:12:30.358Z",
   "level": "core",
   "frameworks": [
     {
       "id": "jenni",
       "name": "jenni-core",
-      "package": "jenni-core@0.1.0",
+      "package": "jenni-core@0.2.0",
       "paradigm": "Zero-specificity @layer CSS + OKLCH tokens + native <dialog>/[popover] + O(1) delegated JS",
       "kit": {
         "css": {
-          "min": 77623,
-          "gzip": 13493,
-          "brotli": 11808
+          "min": 84715,
+          "gzip": 14701,
+          "brotli": 12820
         },
         "js": {
-          "min": 14284,
-          "gzip": 4641,
-          "brotli": 4143
+          "min": 14410,
+          "gzip": 4687,
+          "brotli": 4183
         },
         "total": {
-          "min": 91907,
-          "gzip": 18134,
-          "brotli": 15951
+          "min": 99125,
+          "gzip": 19388,
+          "brotli": 17003
         },
         "componentCount": 12,
-        "gzipPerComponent": 1511
+        "gzipPerComponent": 1616
       },
       "full": {
         "css": {
-          "min": 310632,
-          "gzip": 40680,
-          "brotli": 32416
+          "min": 349113,
+          "gzip": 46172,
+          "brotli": 36343
         },
         "js": {
-          "min": 136996,
-          "gzip": 36999,
-          "brotli": 31892
+          "min": 201313,
+          "gzip": 57320,
+          "brotli": 48510
         },
         "total": {
-          "min": 447628,
-          "gzip": 77679,
-          "brotli": 64308
+          "min": 550426,
+          "gzip": 103492,
+          "brotli": 84853
         },
-        "componentCount": 63,
-        "gzipPerComponent": 1233
+        "componentCount": 69,
+        "gzipPerComponent": 1500
       },
       "cssHygiene": {
-        "selectorCount": 2791,
+        "selectorCount": 3076,
         "importantCount": 0,
-        "customPropsCount": 284,
+        "customPropsCount": 346,
         "hasCascadeLayers": true,
-        "avgSpecificityScore": 11.7,
+        "avgSpecificityScore": 11.3,
         "maxSpecificityScore": 200,
         "runtimeCssInJs": false
       },
@@ -149,9 +149,9 @@
       "paradigm": "JIT utility classes + CSS-only component classes (no built-in JS ARIA/focus/anchor behaviors)",
       "kit": {
         "css": {
-          "min": 101748,
-          "gzip": 18412,
-          "brotli": 15848
+          "min": 108655,
+          "gzip": 19167,
+          "brotli": 16460
         },
         "js": {
           "min": 0,
@@ -159,18 +159,18 @@
           "brotli": 0
         },
         "total": {
-          "min": 101748,
-          "gzip": 18412,
-          "brotli": 15848
+          "min": 108655,
+          "gzip": 19167,
+          "brotli": 16460
         },
         "componentCount": 12,
-        "gzipPerComponent": 1534
+        "gzipPerComponent": 1597
       },
       "full": {
         "css": {
-          "min": 1195862,
-          "gzip": 69894,
-          "brotli": 44570
+          "min": 1196155,
+          "gzip": 69931,
+          "brotli": 44709
         },
         "js": {
           "min": 0,
@@ -178,19 +178,19 @@
           "brotli": 0
         },
         "total": {
-          "min": 1195862,
-          "gzip": 69894,
-          "brotli": 44570
+          "min": 1196155,
+          "gzip": 69931,
+          "brotli": 44709
         },
         "componentCount": 61,
         "gzipPerComponent": 1146
       },
       "cssHygiene": {
-        "selectorCount": 734,
-        "importantCount": 2,
+        "selectorCount": 798,
+        "importantCount": 108,
         "customPropsCount": 206,
         "hasCascadeLayers": true,
-        "avgSpecificityScore": 14,
+        "avgSpecificityScore": 13.8,
         "maxSpecificityScore": 80,
         "runtimeCssInJs": false
       },
@@ -292,52 +292,52 @@
         {
           "id": "jenni",
           "name": "jenni-core",
-          "package": "jenni-core@0.1.0",
+          "package": "jenni-core@0.2.0",
           "paradigm": "Zero-specificity @layer CSS + OKLCH tokens + native <dialog>/[popover] + O(1) delegated JS",
           "kit": {
             "css": {
-              "min": 77623,
-              "gzip": 13493,
-              "brotli": 11808
+              "min": 84715,
+              "gzip": 14701,
+              "brotli": 12820
             },
             "js": {
-              "min": 14284,
-              "gzip": 4641,
-              "brotli": 4143
+              "min": 14410,
+              "gzip": 4687,
+              "brotli": 4183
             },
             "total": {
-              "min": 91907,
-              "gzip": 18134,
-              "brotli": 15951
+              "min": 99125,
+              "gzip": 19388,
+              "brotli": 17003
             },
             "componentCount": 12,
-            "gzipPerComponent": 1511
+            "gzipPerComponent": 1616
           },
           "full": {
             "css": {
-              "min": 310632,
-              "gzip": 40680,
-              "brotli": 32416
+              "min": 349113,
+              "gzip": 46172,
+              "brotli": 36343
             },
             "js": {
-              "min": 136996,
-              "gzip": 36999,
-              "brotli": 31892
+              "min": 201313,
+              "gzip": 57320,
+              "brotli": 48510
             },
             "total": {
-              "min": 447628,
-              "gzip": 77679,
-              "brotli": 64308
+              "min": 550426,
+              "gzip": 103492,
+              "brotli": 84853
             },
-            "componentCount": 63,
-            "gzipPerComponent": 1233
+            "componentCount": 69,
+            "gzipPerComponent": 1500
           },
           "cssHygiene": {
-            "selectorCount": 2791,
+            "selectorCount": 3076,
             "importantCount": 0,
-            "customPropsCount": 284,
+            "customPropsCount": 346,
             "hasCascadeLayers": true,
-            "avgSpecificityScore": 11.7,
+            "avgSpecificityScore": 11.3,
             "maxSpecificityScore": 200,
             "runtimeCssInJs": false
           },
@@ -436,9 +436,9 @@
           "paradigm": "JIT utility classes + CSS-only component classes (no built-in JS ARIA/focus/anchor behaviors)",
           "kit": {
             "css": {
-              "min": 101748,
-              "gzip": 18412,
-              "brotli": 15848
+              "min": 108655,
+              "gzip": 19167,
+              "brotli": 16460
             },
             "js": {
               "min": 0,
@@ -446,18 +446,18 @@
               "brotli": 0
             },
             "total": {
-              "min": 101748,
-              "gzip": 18412,
-              "brotli": 15848
+              "min": 108655,
+              "gzip": 19167,
+              "brotli": 16460
             },
             "componentCount": 12,
-            "gzipPerComponent": 1534
+            "gzipPerComponent": 1597
           },
           "full": {
             "css": {
-              "min": 1195862,
-              "gzip": 69894,
-              "brotli": 44570
+              "min": 1196155,
+              "gzip": 69931,
+              "brotli": 44709
             },
             "js": {
               "min": 0,
@@ -465,19 +465,19 @@
               "brotli": 0
             },
             "total": {
-              "min": 1195862,
-              "gzip": 69894,
-              "brotli": 44570
+              "min": 1196155,
+              "gzip": 69931,
+              "brotli": 44709
             },
             "componentCount": 61,
             "gzipPerComponent": 1146
           },
           "cssHygiene": {
-            "selectorCount": 734,
-            "importantCount": 2,
+            "selectorCount": 798,
+            "importantCount": 108,
             "customPropsCount": 206,
             "hasCascadeLayers": true,
-            "avgSpecificityScore": 14,
+            "avgSpecificityScore": 13.8,
             "maxSpecificityScore": 80,
             "runtimeCssInJs": false
           },
@@ -584,63 +584,63 @@
         {
           "id": "jenni",
           "name": "jenni-vue",
-          "package": "jenni-vue@0.1.0",
+          "package": "jenni-vue@0.2.0",
           "paradigm": "Zero-<style> Vue 3 SFC primitives over jenni-core @layer CSS + native <dialog>/[popover]",
           "kit": {
             "css": {
-              "min": 77623,
-              "gzip": 13493,
-              "brotli": 11808
+              "min": 84715,
+              "gzip": 14701,
+              "brotli": 12820
             },
             "js": {
-              "min": 25910,
-              "gzip": 7062,
-              "brotli": 6261
+              "min": 30818,
+              "gzip": 8314,
+              "brotli": 7373
             },
             "total": {
-              "min": 103533,
-              "gzip": 20555,
-              "brotli": 18069
+              "min": 115533,
+              "gzip": 23015,
+              "brotli": 20193
             },
             "componentCount": 12,
-            "gzipPerComponent": 1713,
+            "gzipPerComponent": 1918,
             "withRuntime": {
-              "min": 199706,
-              "gzip": 49779,
-              "brotli": 44408
+              "min": 216015,
+              "gzip": 53540,
+              "brotli": 47644
             }
           },
           "full": {
             "css": {
-              "min": 310632,
-              "gzip": 40680,
-              "brotli": 32416
+              "min": 349113,
+              "gzip": 46172,
+              "brotli": 36343
             },
             "js": {
-              "min": 331482,
-              "gzip": 71967,
-              "brotli": 59590
+              "min": 463033,
+              "gzip": 105796,
+              "brotli": 86017
             },
             "total": {
-              "min": 642114,
-              "gzip": 112647,
-              "brotli": 92006
+              "min": 812146,
+              "gzip": 151968,
+              "brotli": 122360
             },
-            "componentCount": 96,
-            "gzipPerComponent": 1173
+            "componentCount": 106,
+            "gzipPerComponent": 1434
           },
           "cssHygiene": {
-            "selectorCount": 2791,
+            "selectorCount": 3076,
             "importantCount": 0,
-            "customPropsCount": 284,
+            "customPropsCount": 346,
             "hasCascadeLayers": true,
-            "avgSpecificityScore": 11.7,
+            "avgSpecificityScore": 11.3,
             "maxSpecificityScore": 200,
             "runtimeCssInJs": false
           },
           "htmlPayload": {
-            "rawBytes": 157416,
-            "gzipBytes": 1867,
+            "rawBytes": 159432,
+            "gzipBytes": 1850,
             "elementCount": 1923,
             "totalClassTokens": 1898,
             "avgClassesPerElement": 0.99
@@ -896,57 +896,57 @@
         {
           "id": "jenni",
           "name": "jenni-react",
-          "package": "jenni-react@0.1.0",
+          "package": "jenni-react@0.2.0",
           "paradigm": "React 19 native-ref TSX primitives over jenni-core @layer CSS + zero CSS-in-JS",
           "kit": {
             "css": {
-              "min": 77623,
-              "gzip": 13493,
-              "brotli": 11808
+              "min": 84715,
+              "gzip": 14701,
+              "brotli": 12820
             },
             "js": {
-              "min": 38733,
-              "gzip": 10200,
-              "brotli": 8952
+              "min": 52719,
+              "gzip": 14049,
+              "brotli": 12295
             },
             "total": {
-              "min": 116356,
-              "gzip": 23693,
-              "brotli": 20760
+              "min": 137434,
+              "gzip": 28750,
+              "brotli": 25115
             },
             "componentCount": 12,
-            "gzipPerComponent": 1974,
+            "gzipPerComponent": 2396,
             "withRuntime": {
-              "min": 415896,
-              "gzip": 98759,
-              "brotli": 83898
+              "min": 437406,
+              "gzip": 103791,
+              "brotli": 88011
             }
           },
           "full": {
             "css": {
-              "min": 310632,
-              "gzip": 40680,
-              "brotli": 32416
+              "min": 349113,
+              "gzip": 46172,
+              "brotli": 36343
             },
             "js": {
-              "min": 276308,
-              "gzip": 64673,
-              "brotli": 53464
+              "min": 400624,
+              "gzip": 98078,
+              "brotli": 79896
             },
             "total": {
-              "min": 586940,
-              "gzip": 105353,
-              "brotli": 85880
+              "min": 749737,
+              "gzip": 144250,
+              "brotli": 116239
             },
-            "componentCount": 66,
-            "gzipPerComponent": 1596
+            "componentCount": 72,
+            "gzipPerComponent": 2003
           },
           "cssHygiene": {
-            "selectorCount": 2791,
+            "selectorCount": 3076,
             "importantCount": 0,
-            "customPropsCount": 284,
+            "customPropsCount": 346,
             "hasCascadeLayers": true,
-            "avgSpecificityScore": 11.7,
+            "avgSpecificityScore": 11.3,
             "maxSpecificityScore": 200,
             "runtimeCssInJs": false
           },

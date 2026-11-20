@@ -1,5 +1,5 @@
 /*
- * Jenni — design tokens.
+ * Design tokens.
  * Driven by mature elegance, architectural calm, and spatial precision.
  * Every visual decision lives here. Components only read tokens.
  * Colors use OKLCH + light-dark(); theme follows the OS unless
@@ -96,6 +96,7 @@
     --j-space-1: calc(4px * var(--j-density));
     --j-space-1-5: calc(6px * var(--j-density));
     --j-space-2: calc(8px * var(--j-density));
+    --j-space-2-5: calc(10px * var(--j-density));
     --j-space-3: calc(12px * var(--j-density));
     --j-space-4: calc(16px * var(--j-density));
     --j-space-5: calc(20px * var(--j-density));
@@ -190,6 +191,69 @@
     --j-tone-fg: var(--j-accent-fg);
     --j-tone-soft: var(--j-accent-soft);
     --j-tone-soft-fg: var(--j-accent-soft-fg);
+
+    /* ---- Chart palette (8 perceptually balanced categorical series + chrome) ---- */
+    --j-chart-1:              var(--j-accent);
+    --j-chart-2:              light-dark(oklch(54% 0.125 192), oklch(71% 0.12 192));
+    --j-chart-3:              light-dark(oklch(53% 0.15 295),  oklch(71% 0.135 295));
+    --j-chart-4:              light-dark(oklch(66% 0.14 72),   oklch(77% 0.135 72));
+    --j-chart-5:              light-dark(oklch(54% 0.135 152), oklch(70% 0.13 152));
+    --j-chart-6:              light-dark(oklch(55% 0.165 12),  oklch(69% 0.15 12));
+    --j-chart-7:              light-dark(oklch(54% 0.135 235), oklch(70% 0.12 235));
+    --j-chart-8:              light-dark(oklch(59% 0.155 42),  oklch(73% 0.145 42));
+    --j-chart-grid:           light-dark(oklch(92.5% 0.004 var(--j-hue-neutral)), oklch(24.5% 0.006 var(--j-hue-neutral)));
+    --j-chart-axis:           light-dark(oklch(76% 0.007 var(--j-hue-neutral)),   oklch(38% 0.008 var(--j-hue-neutral)));
+    --j-chart-crosshair:      light-dark(oklch(55% 0.01 var(--j-hue-neutral) / 0.45), oklch(70% 0.008 var(--j-hue-neutral) / 0.45));
+    --j-chart-tooltip-bg:     light-dark(oklch(100% 0 0 / 0.96), oklch(20.5% var(--j-chroma-neutral) var(--j-hue-neutral) / 0.96));
+    --j-chart-tooltip-border: var(--j-border);
+
+    /* ---- Code & syntax highlighting (CodeMirror / Shiki / Monaco) ---- */
+    --j-code-bg:            light-dark(oklch(97.8% 0.004 var(--j-hue-neutral)), oklch(16.2% 0.005 var(--j-hue-neutral)));
+    --j-code-fg:            light-dark(oklch(22% 0.009 var(--j-hue-neutral)),   oklch(92% 0.005 var(--j-hue-neutral)));
+    --j-code-gutter-bg:     light-dark(oklch(96.4% 0.005 var(--j-hue-neutral)), oklch(15.2% 0.005 var(--j-hue-neutral)));
+    --j-code-gutter-fg:     light-dark(oklch(62% 0.008 var(--j-hue-neutral)),   oklch(48% 0.008 var(--j-hue-neutral)));
+    --j-code-line-active:   light-dark(oklch(94.2% 0.008 var(--j-hue-neutral) / 0.65), oklch(23% 0.008 var(--j-hue-neutral) / 0.65));
+    --j-code-selection:     light-dark(oklch(88% 0.045 var(--j-hue) / 0.55),    oklch(34% 0.065 var(--j-hue) / 0.55));
+    --j-code-cursor:        var(--j-accent);
+    --j-syntax-keyword:     light-dark(oklch(48% 0.165 295), oklch(74% 0.135 295));
+    --j-syntax-string:      light-dark(oklch(46% 0.125 155), oklch(74% 0.12 155));
+    --j-syntax-number:      light-dark(oklch(52% 0.145 50),  oklch(76% 0.13 55));
+    --j-syntax-function:    light-dark(oklch(47% 0.145 250), oklch(75% 0.12 245));
+    --j-syntax-type:        light-dark(oklch(48% 0.12 195),  oklch(75% 0.11 195));
+    --j-syntax-variable:    light-dark(oklch(26% 0.012 var(--j-hue-neutral)), oklch(90% 0.008 var(--j-hue-neutral)));
+    --j-syntax-property:    light-dark(oklch(45% 0.12 230),  oklch(77% 0.1 225));
+    --j-syntax-operator:    light-dark(oklch(44% 0.09 210),  oklch(73% 0.085 210));
+    --j-syntax-punctuation: light-dark(oklch(48% 0.01 var(--j-hue-neutral)),  oklch(68% 0.008 var(--j-hue-neutral)));
+    --j-syntax-comment:     light-dark(oklch(58% 0.008 var(--j-hue-neutral)), oklch(54% 0.008 var(--j-hue-neutral)));
+    --j-syntax-constant:    light-dark(oklch(49% 0.15 32),   oklch(75% 0.135 38));
+    --j-syntax-tag:         light-dark(oklch(49% 0.155 18),  oklch(72% 0.14 20));
+    --j-syntax-attr:        light-dark(oklch(50% 0.13 75),   oklch(78% 0.115 78));
+    --j-syntax-regexp:      light-dark(oklch(48% 0.135 175), oklch(74% 0.12 175));
+    --j-syntax-added:       light-dark(oklch(47% 0.13 155),  oklch(72% 0.125 155));
+    --j-syntax-deleted:     light-dark(oklch(50% 0.165 25),  oklch(68% 0.15 25));
+
+    /* ---- Terminal ANSI 16 palette (xterm.js ready) ---- */
+    --j-term-bg:            light-dark(oklch(98.2% 0.003 var(--j-hue-neutral)), oklch(14.2% 0.005 var(--j-hue-neutral)));
+    --j-term-fg:            light-dark(oklch(21% 0.008 var(--j-hue-neutral)),   oklch(92.5% 0.004 var(--j-hue-neutral)));
+    --j-term-cursor:        var(--j-accent);
+    --j-term-cursor-accent: light-dark(oklch(99% 0.002 var(--j-hue-neutral)),   oklch(14.2% 0.005 var(--j-hue-neutral)));
+    --j-term-selection:     light-dark(oklch(86% 0.045 var(--j-hue) / 0.45),    oklch(36% 0.065 var(--j-hue) / 0.48));
+    --j-ansi-black:          light-dark(oklch(22% 0.008 var(--j-hue-neutral)), oklch(23% 0.007 var(--j-hue-neutral)));
+    --j-ansi-red:            light-dark(oklch(51% 0.17 25),   oklch(66% 0.155 25));
+    --j-ansi-green:          light-dark(oklch(50% 0.13 152),  oklch(69% 0.125 152));
+    --j-ansi-yellow:         light-dark(oklch(62% 0.135 78),  oklch(77% 0.13 80));
+    --j-ansi-blue:           light-dark(oklch(50% 0.145 252), oklch(68% 0.13 252));
+    --j-ansi-magenta:        light-dark(oklch(51% 0.155 308), oklch(70% 0.14 308));
+    --j-ansi-cyan:           light-dark(oklch(51% 0.115 196), oklch(71% 0.11 196));
+    --j-ansi-white:          light-dark(oklch(86% 0.005 var(--j-hue-neutral)), oklch(87% 0.005 var(--j-hue-neutral)));
+    --j-ansi-bright-black:   light-dark(oklch(50% 0.009 var(--j-hue-neutral)), oklch(52% 0.009 var(--j-hue-neutral)));
+    --j-ansi-bright-red:     light-dark(oklch(57% 0.175 25),  oklch(73% 0.15 25));
+    --j-ansi-bright-green:   light-dark(oklch(56% 0.135 152), oklch(76% 0.125 152));
+    --j-ansi-bright-yellow:  light-dark(oklch(68% 0.14 80),   oklch(83% 0.125 82));
+    --j-ansi-bright-blue:    light-dark(oklch(56% 0.145 252), oklch(75% 0.125 252));
+    --j-ansi-bright-magenta: light-dark(oklch(57% 0.155 308), oklch(77% 0.135 308));
+    --j-ansi-bright-cyan:    light-dark(oklch(57% 0.12 196),  oklch(78% 0.105 196));
+    --j-ansi-bright-white:   light-dark(oklch(96% 0.003 var(--j-hue-neutral)), oklch(96.5% 0.003 var(--j-hue-neutral)));
   }
 
   [data-theme="light"] { color-scheme: light; }
@@ -210,6 +274,7 @@
     --j-space-1:   calc(4px * var(--j-density));
     --j-space-1-5: calc(6px * var(--j-density));
     --j-space-2:   calc(8px * var(--j-density));
+    --j-space-2-5: calc(10px * var(--j-density));
     --j-space-3:   calc(12px * var(--j-density));
     --j-space-4:   calc(16px * var(--j-density));
     --j-space-5:   calc(20px * var(--j-density));

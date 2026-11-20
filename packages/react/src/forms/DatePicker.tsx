@@ -3,18 +3,22 @@ import {
   useId,
   useRef,
   useState,
+  type CSSProperties,
   type ComponentProps,
   type KeyboardEvent as ReactKeyboardEvent,
+  type ReactNode,
 } from 'react';
 import {
   addMonthsClamped,
   anchorDatePopover,
   buildCalendarGrid,
+  formatDayAriaLabel,
   formatDisplayDate,
   formatDisplayRange,
   formatMonthTitle,
   getWeekdayLabels,
   isDateDisabled,
+  normalizeDayMarkers,
   parseIsoDate,
   shiftYearMonth,
   stepFocusedDate,
@@ -26,14 +30,29 @@ import {
   mergeRefs,
   sizeAttr,
   useControllable,
+  type CalendarCell,
+  type CalendarDayMarker,
+  type CalendarMarkerInput,
+  type CalendarMarkerItem,
+  type CalendarMarkers,
   type DatePickerMode,
   type DateRange,
+  type NormalizedCalendarMarker,
   type Size,
   type Tone,
 } from './types';
 import { useFieldProps } from './useFieldProps';
 
-export type { DatePickerMode, DateRange };
+export type {
+  CalendarCell,
+  CalendarDayMarker,
+  CalendarMarkerInput,
+  CalendarMarkerItem,
+  CalendarMarkers,
+  DatePickerMode,
+  DateRange,
+  NormalizedCalendarMarker,
+};
 
 export interface CalendarProps extends Omit<ComponentProps<'div'>, 'defaultValue' | 'onChange'> {
   mode?: DatePickerMode;
@@ -48,6 +67,8 @@ export interface CalendarProps extends Omit<ComponentProps<'div'>, 'defaultValue
   tone?: Tone;
   disabled?: boolean;
   locale?: string;
+  markers?: CalendarMarkers;
+  renderDay?: (cell: CalendarCell, markers: NormalizedCalendarMarker[]) => ReactNode;
 }
 
 function resolveSeedIso(val: string | DateRange | null | undefined): string {
@@ -72,6 +93,8 @@ export function Calendar({
   tone,
   disabled = false,
   locale = 'en-US',
+  markers,
+  renderDay,
   className,
   ...rest
 }: CalendarProps) {
@@ -288,6 +311,7 @@ export function Calendar({
               );
               const isSelected =
                 mode === 'single' ? singleSelected === cell.iso : isStart || isEnd || inRange;
+              const dayMarkers = markers ? normalizeDayMarkers(markers, cell.iso) : [];
 
               return (
                 <button
@@ -306,7 +330,7 @@ export function Calendar({
                   disabled={disabled || cell.disabled || undefined}
                   aria-disabled={cell.disabled ? 'true' : undefined}
                   aria-selected={isSelected ? 'true' : 'false'}
-                  aria-label={formatDisplayDate(cell.iso, locale)}
+                  aria-label={formatDayAriaLabel(cell.iso, locale, dayMarkers)}
                   onPointerEnter={() => {
                     if (
                       mode === 'range' &&
@@ -320,7 +344,29 @@ export function Calendar({
                   onFocus={() => setFocusedIso(cell.iso)}
                   onClick={() => selectDate(cell.iso)}
                 >
-                  <span className="j-calendar__day-num">{cell.day}</span>
+                  {renderDay ? (
+                    renderDay(cell, dayMarkers)
+                  ) : (
+                    <>
+                      <span className="j-calendar__day-num">{cell.day}</span>
+                      {dayMarkers.length > 0 && (
+                        <span className="j-calendar__dots" aria-hidden="true">
+                          {dayMarkers.map((m, mIdx) => (
+                            <span
+                              key={mIdx}
+                              className="j-calendar__dot"
+                              data-tone={m.tone}
+                              style={
+                                m.color
+                                  ? ({ '--_dot-color': m.color } as CSSProperties)
+                                  : undefined
+                              }
+                            />
+                          ))}
+                        </span>
+                      )}
+                    </>
+                  )}
                 </button>
               );
             })}
@@ -373,6 +419,8 @@ export interface DatePickerProps
   invalid?: boolean;
   name?: string;
   locale?: string;
+  markers?: CalendarMarkers;
+  renderDay?: (cell: CalendarCell, markers: NormalizedCalendarMarker[]) => ReactNode;
 }
 
 export function DatePicker({
@@ -392,6 +440,8 @@ export function DatePicker({
   disabled,
   name,
   locale = 'en-US',
+  markers,
+  renderDay,
   className,
   style,
   ref,
@@ -568,6 +618,8 @@ export function DatePicker({
           tone={tone}
           disabled={isDisabled}
           locale={locale}
+          markers={markers}
+          renderDay={renderDay}
         />
       </div>
     </>

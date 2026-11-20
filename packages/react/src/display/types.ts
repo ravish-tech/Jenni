@@ -1,7 +1,16 @@
 /// <reference path="./core.d.ts" />
+/// <reference path="./entity-color-core.d.ts" />
 // Shared prop types for the display group.
 export type DisplayTone = 'accent' | 'neutral' | 'danger' | 'success' | 'warning' | 'info';
 export type DisplaySize = 'sm' | 'md' | 'lg';
+
+export interface ProgressSegment {
+  value: number;
+  tone?: DisplayTone;
+  color?: string;
+  colorSeed?: string;
+  label?: string;
+}
 
 export type TableVariant = 'surface' | 'outline' | 'striped' | 'plain';
 export type TableAlign = 'start' | 'center' | 'end';

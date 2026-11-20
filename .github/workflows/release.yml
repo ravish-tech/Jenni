@@ -32,10 +32,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Typecheck & build packages
+      - name: Build packages, test & typecheck
         run: |
-          npm run typecheck
           npm run build:packages
+          npm test
+          npm run typecheck
 
       - name: Pack release tarballs & CDN assets
         run: |
@@ -45,6 +46,7 @@ jobs:
           npm pack -w jenni-react --pack-destination ./release-assets
           cp packages/core/dist/jenni.css ./release-assets/jenni.css
           cp packages/core/dist/jenni.iife.js ./release-assets/jenni.iife.js
+          cp COMPONENT_MANIFEST.json ./release-assets/COMPONENT_MANIFEST.json
           # Stable versionless aliases so latest/download URLs never change
           cp ./release-assets/jenni-core-*.tgz ./release-assets/jenni-core.tgz
           cp ./release-assets/jenni-vue-*.tgz ./release-assets/jenni-vue.tgz
@@ -80,6 +82,7 @@ jobs:
             release-assets/*.tgz
             release-assets/jenni.css
             release-assets/jenni.iife.js
+            release-assets/COMPONENT_MANIFEST.json
 
   npm-publish:
     name: Publish to npm (when NPM_TOKEN is set)

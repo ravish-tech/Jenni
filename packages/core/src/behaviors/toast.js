@@ -1,4 +1,4 @@
-// Jenni — Toast & Toaster behavior.
+// Toast & Toaster behavior.
 // Shared reactive toast store + stacked-deck layout engine + optional vanilla DOM
 // host so `toast(...)` works identically in plain HTML, Vue (`JToaster`), and
 // React (`Toaster`).
@@ -12,7 +12,7 @@ let paused = false;
 let managedHosts = 0;
 
 /**
- * @typedef {'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info'} ToastTone
+ * @typedef {'neutral' | 'accent' | 'success' | 'warning' | 'danger' | 'info' | 'loading'} ToastTone
  * @typedef {'bottom-end' | 'bottom-center' | 'top-end' | 'top-center'} ToasterPosition
  * @typedef {{ label: string, onClick?: () => void }} ToastAction
  * @typedef {{
@@ -20,6 +20,7 @@ let managedHosts = 0;
  *   title: string,
  *   description?: string,
  *   tone?: ToastTone,
+ *   loading?: boolean,
  *   duration?: number,
  *   action?: ToastAction,
  *   closable?: boolean,
@@ -29,12 +30,49 @@ let managedHosts = 0;
  *   title: string,
  *   description?: string,
  *   tone: ToastTone,
+ *   loading: boolean,
  *   duration: number,
  *   action?: ToastAction,
  *   closable: boolean,
  *   state: 'open' | 'closing',
  *   createdAt: number,
  * }} ToastItem
+ * @typedef {boolean | void | undefined | null | string | { ok: boolean, error?: string, message?: string }} ToastVerifyOutcome
+ */
+
+/**
+ * @template T
+ * @typedef {{
+ *   id?: string,
+ *   loading: string | Omit<ToastOptions, 'tone' | 'loading'>,
+ *   success: string | Partial<ToastOptions> | ((data: T) => string | Partial<ToastOptions>),
+ *   error?: string | Partial<ToastOptions> | ((err: unknown) => string | Partial<ToastOptions>),
+ *   verify?: (data: T) => ToastVerifyOutcome | Promise<ToastVerifyOutcome>,
+ *   autoVerifyResult?: boolean,
+ *   throwOnError?: boolean,
+ *   duration?: number,
+ * }} ToastPromiseMessages
+ */
+
+/**
+ * @template T
+ * @typedef {{
+ *   ok: boolean,
+ *   data?: T,
+ *   error?: string | Error,
+ *   message?: string,
+ * }} ResultLike
+ */
+
+/**
+ * @template T
+ * @typedef {{
+ *   id?: string,
+ *   success?: string | Partial<ToastOptions> | ((data: T | undefined, result: ResultLike<T>) => string | Partial<ToastOptions>),
+ *   error?: string | Partial<ToastOptions> | ((errorMessage: string, result: ResultLike<T> | null | undefined) => string | Partial<ToastOptions>),
+ *   verify?: (data: T | undefined, result: ResultLike<T>) => ToastVerifyOutcome,
+ *   duration?: number,
+ * }} ToastResultOptions
  */
 
 /** @type {ToastItem[]} newest first (index 0 = front of deck) */
@@ -42,6 +80,9 @@ let items = [];
 
 /** @type {Map<string, { timer?: ReturnType<typeof setTimeout>, remaining: number, startedAt: number }>} */
 const timers = new Map();
+
+/** @type {Map<string, ReturnType<typeof setTimeout>>} */
+const exitTimers = new Map();
 
 /** @type {Set<(list: ToastItem[]) => void>} */
 const listeners = new Set();
@@ -57,8 +98,15 @@ function emit() {
  * @param {number} ms
  */
 function armTimer(item, ms) {
-  if (!Number.isFinite(ms) || ms <= 0 || item.state === 'closing') return;
-  const entry = timers.get(item.id) || { remaining: ms, startedAt: Date.now() };
+  const existing = timers.get(item.id);
+  if (!Number.isFinite(ms) || ms <= 0 || item.loading || item.state === 'closing') {
+    if (existing) {
+      clearTimeout(existing.timer);
+      timers.delete(item.id);
+    }
+    return;
+  }
+  const entry = existing || { remaining: ms, startedAt: Date.now() };
   clearTimeout(entry.timer);
   entry.remaining = ms;
   entry.startedAt = Date.now();
@@ -90,7 +138,7 @@ export function resumeToasts() {
   paused = false;
   items.forEach((item) => {
     const entry = timers.get(item.id);
-    if (entry && item.state === 'open') armTimer(item, entry.remaining);
+    if (entry && item.state === 'open' && !item.loading) armTimer(item, entry.remaining);
   });
 }
 
@@ -108,15 +156,21 @@ export function dismissToast(id) {
       clearTimeout(entry.timer);
       timers.delete(t.id);
     }
+    if (exitTimers.has(t.id)) {
+      clearTimeout(exitTimers.get(t.id));
+      exitTimers.delete(t.id);
+    }
     if (t.state !== 'closing') {
       t.state = 'closing';
       changed = true;
-      setTimeout(() => {
-        const before = items.length;
-        items = items.filter((x) => x.id !== t.id);
-        if (items.length !== before) emit();
-      }, EXIT_DURATION);
     }
+    const exitHandle = setTimeout(() => {
+      exitTimers.delete(t.id);
+      const before = items.length;
+      items = items.filter((x) => !(x.id === t.id && x.state === 'closing'));
+      if (items.length !== before) emit();
+    }, EXIT_DURATION);
+    exitTimers.set(t.id, exitHandle);
   });
   if (changed) emit();
 }
@@ -133,7 +187,58 @@ function normalizeOptions(input, extra = {}) {
 }
 
 /**
- * Push (or update) a toast notification.
+ * Normalize string or partial options object into partial ToastOptions.
+ * @param {string | Partial<ToastOptions>} input
+ * @returns {Partial<ToastOptions>}
+ */
+function normalizePatch(input) {
+  return typeof input === 'string' ? { title: input } : { ...input };
+}
+
+/**
+ * Extract a clean error string from an arbitrary error or failed result value.
+ * @param {unknown} err
+ * @returns {string}
+ */
+function extractErrorMessage(err) {
+  if (typeof err === 'string' && err.trim()) return err.trim();
+  if (err instanceof Error && err.message) return err.message;
+  if (err && typeof err === 'object') {
+    const rec = /** @type {Record<string, unknown>} */ (err);
+    if (typeof rec.error === 'string' && rec.error.trim()) return rec.error.trim();
+    if (rec.error instanceof Error && rec.error.message) return rec.error.message;
+    if (typeof rec.message === 'string' && rec.message.trim()) return rec.message.trim();
+  }
+  return '';
+}
+
+/**
+ * Interpret a `verify(...)` return value into `{ ok: true }` or `{ ok: false, message }`.
+ * @param {ToastVerifyOutcome} outcome
+ * @returns {{ ok: true } | { ok: false, message: string }}
+ */
+function evaluateVerification(outcome) {
+  if (outcome === false) {
+    return { ok: false, message: 'Verification failed' };
+  }
+  if (typeof outcome === 'string') {
+    const trimmed = outcome.trim();
+    return trimmed ? { ok: false, message: trimmed } : { ok: true };
+  }
+  if (outcome && typeof outcome === 'object' && 'ok' in outcome) {
+    if (outcome.ok === false) {
+      return {
+        ok: false,
+        message: outcome.error || outcome.message || 'Verification failed',
+      };
+    }
+    return { ok: true };
+  }
+  return { ok: true };
+}
+
+/**
+ * Push a toast notification to the front of the deck.
  * @param {string | ToastOptions} input
  * @param {Partial<ToastOptions>} [extra]
  * @returns {string} toast id
@@ -141,12 +246,19 @@ function normalizeOptions(input, extra = {}) {
 function pushToast(input, extra) {
   const opts = normalizeOptions(input, extra);
   const id = opts.id || `j-toast-${++uid}`;
-  const duration = opts.duration ?? DEFAULT_DURATION;
+  if (exitTimers.has(id)) {
+    clearTimeout(exitTimers.get(id));
+    exitTimers.delete(id);
+  }
+  const isLoading = Boolean(opts.loading || opts.tone === 'loading');
+  const tone = opts.tone || (isLoading ? 'loading' : 'neutral');
+  const duration = opts.duration ?? (isLoading ? 0 : DEFAULT_DURATION);
   const next = /** @type {ToastItem} */ ({
     id,
     title: opts.title,
     description: opts.description,
-    tone: opts.tone || 'neutral',
+    tone,
+    loading: isLoading,
     duration,
     action: opts.action,
     closable: opts.closable ?? true,
@@ -168,6 +280,267 @@ function pushToast(input, extra) {
   armTimer(next, duration);
   emit();
   return id;
+}
+
+/**
+ * Update an existing toast in-place without resetting its deck position.
+ * Transitions out of `loading` and arms `duration ?? DEFAULT_DURATION` automatically.
+ * @param {string} id
+ * @param {string | Partial<ToastOptions>} patch
+ * @returns {string} toast id
+ */
+export function updateToast(id, patch) {
+  if (exitTimers.has(id)) {
+    clearTimeout(exitTimers.get(id));
+    exitTimers.delete(id);
+  }
+  const p = normalizePatch(patch);
+  const idx = items.findIndex((t) => t.id === id);
+  if (idx < 0) {
+    return pushToast({
+      id,
+      title: p.title || 'Notification',
+      description: p.description,
+      tone: p.tone,
+      loading: p.loading ?? false,
+      duration: p.duration,
+      action: p.action,
+      closable: p.closable,
+    });
+  }
+
+  const prev = items[idx];
+  const nextLoading = p.loading !== undefined ? p.loading : p.tone === 'loading';
+  const nextTone =
+    p.tone !== undefined
+      ? p.tone
+      : nextLoading
+        ? prev.tone
+        : prev.tone === 'loading'
+          ? 'neutral'
+          : prev.tone;
+  const nextDuration =
+    p.duration !== undefined
+      ? p.duration
+      : nextLoading
+        ? 0
+        : prev.loading || prev.duration <= 0
+          ? DEFAULT_DURATION
+          : prev.duration;
+
+  const updated = /** @type {ToastItem} */ ({
+    ...prev,
+    title: p.title !== undefined ? p.title : prev.title,
+    description: 'description' in p ? p.description : prev.description,
+    tone: nextTone,
+    loading: nextLoading,
+    duration: nextDuration,
+    action: 'action' in p ? p.action : prev.action,
+    closable: p.closable !== undefined ? p.closable : prev.closable,
+    state: 'open',
+  });
+
+  items = items.map((t, i) => (i === idx ? updated : t));
+
+  if (managedHosts === 0 && typeof document !== 'undefined') {
+    ensureVanillaToaster();
+  }
+
+  armTimer(updated, nextDuration);
+  emit();
+  return id;
+}
+
+/**
+ * Track an async operation with verified result handling:
+ * starts in `loading` (`duration: 0`), verifies the resolved value via `verify` / `{ ok: false }`,
+ * and transitions in-place to `success` only when verified or `danger` on rejection/verification failure.
+ * @template T
+ * @param {Promise<T> | (() => Promise<T>)} promiseOrFn
+ * @param {ToastPromiseMessages<T>} messages
+ * @returns {Promise<T>}
+ */
+export async function promiseToast(promiseOrFn, messages) {
+  const loadingBase =
+    typeof messages.loading === 'string' ? { title: messages.loading } : messages.loading;
+  const id = pushToast(loadingBase, {
+    id: messages.id,
+    tone: 'loading',
+    loading: true,
+    duration: 0,
+  });
+
+  /** @param {unknown} err */
+  const buildErrorPatch = (err) => {
+    const detail = extractErrorMessage(err);
+    /** @type {Partial<ToastOptions>} */
+    let resolved;
+    if (typeof messages.error === 'function') {
+      resolved = normalizePatch(messages.error(err));
+    } else if (typeof messages.error === 'string') {
+      resolved = {
+        title: messages.error,
+        description: detail && detail !== messages.error ? detail : undefined,
+      };
+    } else if (messages.error) {
+      resolved = { ...messages.error };
+    } else {
+      resolved = { title: detail || 'Operation failed' };
+    }
+    return {
+      description: undefined,
+      action: undefined,
+      ...resolved,
+      tone: resolved.tone || 'danger',
+      loading: false,
+      duration: resolved.duration ?? messages.duration,
+    };
+  };
+
+  /** @type {T} */
+  let result;
+  try {
+    const pending = typeof promiseOrFn === 'function' ? promiseOrFn() : promiseOrFn;
+    result = await pending;
+  } catch (err) {
+    updateToast(id, buildErrorPatch(err));
+    if (messages.throwOnError !== false) throw err;
+    return /** @type {T} */ (undefined);
+  }
+
+  // Auto-verify `{ ok: false, error?, message? }` result envelopes unless opted out
+  if (
+    messages.autoVerifyResult !== false &&
+    result &&
+    typeof result === 'object' &&
+    'ok' in result &&
+    /** @type {{ ok?: unknown }} */ (result).ok === false
+  ) {
+    const reason = extractErrorMessage(result) || 'Operation reported failure';
+    const verifyErr = new Error(reason, { cause: result });
+    updateToast(id, buildErrorPatch(verifyErr));
+    if (messages.throwOnError === true) throw verifyErr;
+    return result;
+  }
+
+  // Explicit `verify(result)` hook
+  if (typeof messages.verify === 'function') {
+    /** @type {ToastVerifyOutcome} */
+    let outcome;
+    try {
+      outcome = await messages.verify(result);
+    } catch (verifyThrown) {
+      updateToast(id, buildErrorPatch(verifyThrown));
+      if (messages.throwOnError !== false) throw verifyThrown;
+      return result;
+    }
+    const check = evaluateVerification(outcome);
+    if (!check.ok) {
+      const verifyErr = new Error(check.message);
+      updateToast(id, buildErrorPatch(verifyErr));
+      if (messages.throwOnError === true) throw verifyErr;
+      return result;
+    }
+  }
+
+  const rawSuccess =
+    typeof messages.success === 'function' ? messages.success(result) : messages.success;
+  const sOpts = normalizePatch(rawSuccess);
+  updateToast(id, {
+    description: undefined,
+    action: undefined,
+    ...sOpts,
+    tone: sOpts.tone || 'success',
+    loading: false,
+    duration: sOpts.duration ?? messages.duration,
+  });
+
+  return result;
+}
+
+/**
+ * Synchronously render a verified `{ ok: boolean, data?, error? }` result object as a toast.
+ * Never shows unverified success when `ok` is `false` or `verify` fails.
+ * @template T
+ * @param {ResultLike<T> | null | undefined} result
+ * @param {ToastResultOptions<T>} [options]
+ * @returns {string} toast id
+ */
+export function toastFromResult(result, options = {}) {
+  /**
+   * @param {string} reason
+   * @returns {string}
+   */
+  const showFailure = (reason) => {
+    /** @type {Partial<ToastOptions>} */
+    let resolved;
+    if (typeof options.error === 'function') {
+      resolved = normalizePatch(options.error(reason, result));
+    } else if (typeof options.error === 'string') {
+      resolved = {
+        title: options.error,
+        description: reason && reason !== options.error ? reason : undefined,
+      };
+    } else if (options.error) {
+      resolved = { ...options.error };
+    } else {
+      resolved = { title: reason || 'Operation failed' };
+    }
+    const payload = /** @type {ToastOptions} */ ({
+      id: options.id,
+      title: resolved.title || reason || 'Operation failed',
+      description: resolved.description,
+      tone: resolved.tone || 'danger',
+      loading: false,
+      duration: resolved.duration ?? options.duration,
+      action: resolved.action,
+      closable: resolved.closable,
+    });
+    return options.id && items.some((t) => t.id === options.id)
+      ? updateToast(options.id, payload)
+      : pushToast(payload);
+  };
+
+  if (!result || result.ok !== true) {
+    const reason = extractErrorMessage(result) || 'Operation failed';
+    return showFailure(reason);
+  }
+
+  if (typeof options.verify === 'function') {
+    try {
+      const check = evaluateVerification(options.verify(result.data, result));
+      if (!check.ok) return showFailure(check.message);
+    } catch (err) {
+      return showFailure(extractErrorMessage(err) || 'Verification failed');
+    }
+  }
+
+  /** @type {Partial<ToastOptions>} */
+  let sOpts;
+  if (typeof options.success === 'function') {
+    sOpts = normalizePatch(options.success(result.data, result));
+  } else if (typeof options.success === 'string') {
+    sOpts = { title: options.success };
+  } else if (options.success) {
+    sOpts = { ...options.success };
+  } else {
+    sOpts = { title: result.message || 'Completed' };
+  }
+
+  const payload = /** @type {ToastOptions} */ ({
+    id: options.id,
+    title: sOpts.title || 'Completed',
+    description: sOpts.description,
+    tone: sOpts.tone || 'success',
+    loading: false,
+    duration: sOpts.duration ?? options.duration,
+    action: sOpts.action,
+    closable: sOpts.closable,
+  });
+
+  return options.id && items.some((t) => t.id === options.id)
+    ? updateToast(options.id, payload)
+    : pushToast(payload);
 }
 
 /**
@@ -209,17 +582,28 @@ export const toast = Object.assign(
   (input, extra) => pushToast(input, extra),
   {
     /** @param {string | Omit<ToastOptions, 'tone'>} input @param {Partial<ToastOptions>} [extra] */
-    success: (input, extra) => pushToast(input, { ...extra, tone: 'success' }),
+    success: (input, extra) => pushToast(input, { ...extra, tone: 'success', loading: false }),
     /** @param {string | Omit<ToastOptions, 'tone'>} input @param {Partial<ToastOptions>} [extra] */
-    error: (input, extra) => pushToast(input, { ...extra, tone: 'danger' }),
+    error: (input, extra) => pushToast(input, { ...extra, tone: 'danger', loading: false }),
     /** @param {string | Omit<ToastOptions, 'tone'>} input @param {Partial<ToastOptions>} [extra] */
-    danger: (input, extra) => pushToast(input, { ...extra, tone: 'danger' }),
+    danger: (input, extra) => pushToast(input, { ...extra, tone: 'danger', loading: false }),
     /** @param {string | Omit<ToastOptions, 'tone'>} input @param {Partial<ToastOptions>} [extra] */
-    warning: (input, extra) => pushToast(input, { ...extra, tone: 'warning' }),
+    warning: (input, extra) => pushToast(input, { ...extra, tone: 'warning', loading: false }),
     /** @param {string | Omit<ToastOptions, 'tone'>} input @param {Partial<ToastOptions>} [extra] */
-    info: (input, extra) => pushToast(input, { ...extra, tone: 'info' }),
+    info: (input, extra) => pushToast(input, { ...extra, tone: 'info', loading: false }),
     /** @param {string | Omit<ToastOptions, 'tone'>} input @param {Partial<ToastOptions>} [extra] */
-    accent: (input, extra) => pushToast(input, { ...extra, tone: 'accent' }),
+    accent: (input, extra) => pushToast(input, { ...extra, tone: 'accent', loading: false }),
+    /** @param {string | Omit<ToastOptions, 'loading'>} input @param {Partial<ToastOptions>} [extra] */
+    loading: (input, extra) =>
+      pushToast(input, {
+        ...extra,
+        tone: extra?.tone || 'loading',
+        loading: true,
+        duration: extra?.duration ?? 0,
+      }),
+    update: updateToast,
+    promise: promiseToast,
+    fromResult: toastFromResult,
     dismiss: dismissToast,
     pause: pauseToasts,
     resume: resumeToasts,
@@ -240,17 +624,27 @@ export function promoteToaster(toaster, hasToasts, repromote = false) {
   const isOpen = toaster.matches(':popover-open');
   if (!hasToasts) {
     if (isOpen) {
-      try { toaster.hidePopover(); } catch { /* ignore */ }
+      try {
+        toaster.hidePopover();
+      } catch {
+        /* ignore */
+      }
     }
     return;
   }
   if (!isOpen) {
-    try { toaster.showPopover(); } catch { /* ignore */ }
+    try {
+      toaster.showPopover();
+    } catch {
+      /* ignore */
+    }
   } else if (repromote && typeof document !== 'undefined' && document.querySelector('dialog[open]')) {
     try {
       toaster.hidePopover();
       toaster.showPopover();
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
   }
 }
 
@@ -385,12 +779,13 @@ function ensureVanillaToaster(existing) {
       if (!card) {
         card = document.createElement('div');
         card.className = 'j-toast';
-        card.setAttribute('role', item.tone === 'danger' ? 'alert' : 'status');
-        card.setAttribute('aria-live', item.tone === 'danger' ? 'assertive' : 'polite');
         nodes.set(item.id, card);
       }
+      card.setAttribute('role', item.tone === 'danger' ? 'alert' : 'status');
+      card.setAttribute('aria-live', item.tone === 'danger' ? 'assertive' : 'polite');
       card.dataset.tone = item.tone;
       card.dataset.state = item.state;
+      card.toggleAttribute('data-loading', Boolean(item.loading));
       card.innerHTML = '';
 
       const inner = document.createElement('div');
@@ -398,9 +793,13 @@ function ensureVanillaToaster(existing) {
 
       const ind = document.createElement('span');
       ind.className = 'j-toast__indicator';
-      const svg = TONE_ICONS[/** @type {keyof typeof TONE_ICONS} */ (item.tone)];
-      if (svg) ind.innerHTML = svg;
-      else ind.innerHTML = '<span class="j-toast__dot" aria-hidden="true"></span>';
+      if (item.loading || item.tone === 'loading') {
+        ind.innerHTML = '<span class="j-toast__spinner" aria-hidden="true"></span>';
+      } else {
+        const svg = TONE_ICONS[/** @type {keyof typeof TONE_ICONS} */ (item.tone)];
+        if (svg) ind.innerHTML = svg;
+        else ind.innerHTML = '<span class="j-toast__dot" aria-hidden="true"></span>';
+      }
       inner.appendChild(ind);
 
       const body = document.createElement('div');
