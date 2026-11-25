@@ -68,13 +68,17 @@ import 'jenni-core/css/data-grid.css';
 
 ## 4. Choosing the Right Component
 
-- **Application Chrome:** Use `JAppShell` / `AppShell` (`16` layouts: `sidebar`, `header-sidebar`, `ide`, `workspace`, `copilot`, `split`, `three-pane`, `command-center`, etc. × `4` variants: `flat`, `inset`, `floating`, `contrast`) paired with `JToolbar`/`Toolbar` and `JStatusBar`/`StatusBar` (`#statusbar` slot).
-- **Navigation vs. Open Documents:** Use `JTabs` / `Tabs` (`underline` | `pill`) for static view switching; use `JDocTabs` / `DocTabs` for closable, pinnable, reorderable IDE/notebook/browser document strips (`dirty` dot, middle-click close, overflow menu, `@tab-contextmenu`).
-- **Tables vs. High-Density Grids & Large Lists:**
+- **Application Chrome:** Use `JAppShell` / `AppShell` (`16` layouts: `sidebar`, `header-sidebar`, `ide`, `workspace`, `copilot`, `split`, `three-pane`, `command-center`, etc. × `4` variants: `flat`, `inset`, `floating`, `contrast`) paired with `JToolbar`/`Toolbar` (`JToolbarSpacer`) and `JStatusBar`/`StatusBar` (`JStatusBarSeparator`, `#statusbar` slot).
+- **Navigation vs. Open Documents:** Use `JTabs` / `Tabs` (`underline` | `pill`) for static view switching; use `JDocTabs` / `DocTabs` for closable, pinnable, reorderable IDE/notebook/browser document strips (`#tab="{ tab, active, index, closable, close }"` preserves the trailing `dirty` dot + `×` close button automatically unless `hideTabTail` is set).
+- **Tables, Grids, Trees & Micro-Charts:**
   - `< 200` editorial rows: `JTable` / `JDataTable` (`Table` / `DataTable`).
   - `500–50,000+` custom rows or feeds: `JVirtualList` / `VirtualList` (`itemHeight` number or function, or `variableHeight` via `ResizeObserver`).
   - Dense multi-column workbenches: `JDataGrid` / `DataGrid` (virtualized `role="grid"`, `pinned: 'left' | 'right'`, resizable columns, `Shift+Click` / `Shift+Enter` multi-sort, `Shift`-range multi-select, 2D arrow + header keyboard navigation, `@row-contextmenu`).
-- **Dialogs & Drawers:** `JDialog`/`Dialog` and `JDrawer`/`Drawer` teleport to `<body>` by default (`teleport` defaults to `true`; pass `:teleport="false"` / `teleport={false}` only for inline container previews). Do **not** wrap them in custom portal components.
+  - Remote / large hierarchies: `JTreeView` / `TreeView` with `lazy: true` + `:load-children="fn"` (`loadChildren`).
+  - Inline KPI & table trends: `JSparkline` / `Sparkline` (`variant="line" | "area" | "bar"`, `smooth` monotone cubic, `showEndDot`, `showMinMax`).
+- **Forms, Menus & Badges:**
+  - Use `clearable` on `JInput` / `Input`, `JSplitButton` / `SplitButton` for primary action + secondary menu, `JDropdownSub` / `DropdownSub` for cascading submenus inside both `DropdownMenu` and `ContextMenu`, `allowCustomValue` + `creatable` + `loading` + `:filter="false"` + `debounce` on `JCombobox` / `Combobox`, and `removable` (`@remove` / `onRemove`) on `JBadge` / `Badge`.
+- **Dialogs, Drawers & Flush Containers:** `JDialog`/`Dialog` and `JDrawer`/`Drawer` teleport to `<body>` by default (`teleport` defaults to `true`; pass `:teleport="false"` / `teleport={false}` only for inline container previews). Pass `flush` on `Card`, `Dialog`, or `Drawer` to remove body padding for edge-to-edge grids, lists, editors, or terminals.
 - **Context Menus:** `JContextMenu` / `ContextMenu` only closes when an ancestor of its trigger scrolls (streaming sibling logs/terminals never dismiss open menus) and exposes `openAt(x, y)`, `openFor(el)`, and `openFromEvent(e)` on its template `ref`.
 - **Icons:** Use `JIcon` / `Icon` (`65` built-in 16×16 stroke icons) and connect app icon libraries once via `provideIcons(resolver)` (Vue), `<IconProvider icons={...}>` (React), or `registerIcons(map)`.
 - **Charts, Editors & Terminals:** Use `useThemeTokens()` (Vue/React) or `getThemeTokens()` / `onThemeChange()` (`jenni-core`) to feed live `#rrggbb` colors for `--j-chart-1..8`, `--j-syntax-*` (CodeMirror/Monaco), and 16-color ANSI `xterm.js` `ITheme` (`tokens.terminal`).

@@ -1,4 +1,9 @@
-import type { CSSProperties, ComponentProps, ReactNode } from 'react';
+import type {
+  CSSProperties,
+  ComponentProps,
+  MouseEvent as ReactMouseEvent,
+  ReactNode,
+} from 'react';
 import { getEntityHue } from 'jenni-core/behaviors/entity-color.js';
 import { attr, type DisplaySize, type DisplayTone } from './types';
 
@@ -9,6 +14,14 @@ export interface BadgeProps extends ComponentProps<'span'> {
   /** Show a leading status dot. */
   dot?: boolean;
   icon?: ReactNode;
+  /** Render a trailing `×` remove button and invoke `onRemove`. */
+  removable?: boolean;
+  /** Alias for `removable`. */
+  closable?: boolean;
+  /** Accessible label for the remove button (default: 'Remove'). */
+  removeLabel?: string;
+  /** Fired when the trailing remove button is clicked. */
+  onRemove?: (event: ReactMouseEvent<HTMLButtonElement>) => void;
   /** Deterministic per-entity color seed (`true` hashes badge text). */
   colorSeed?: string | boolean;
   /** Alias for `colorSeed={true}`. */
@@ -31,6 +44,10 @@ export function Badge({
   tone,
   dot,
   icon,
+  removable,
+  closable,
+  removeLabel = 'Remove',
+  onRemove,
   colorSeed,
   autoColor,
   className,
@@ -66,6 +83,30 @@ export function Badge({
       {dot && <span className="j-badge__dot" aria-hidden="true" />}
       {icon}
       {children}
+      {(removable || closable) && (
+        <button
+          type="button"
+          className="j-badge__remove"
+          aria-label={removeLabel}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove?.(e);
+          }}
+        >
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={1.75}
+            strokeLinecap="round"
+            aria-hidden="true"
+          >
+            <path d="M2.5 2.5l5 5M7.5 2.5l-5 5" />
+          </svg>
+        </button>
+      )}
     </span>
   );
 }

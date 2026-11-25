@@ -29,6 +29,10 @@ export interface DialogProps extends Omit<ComponentProps<'dialog'>, 'title' | 'c
   closable?: boolean;
   /** Close on backdrop click and Escape (default true). */
   dismissible?: boolean;
+  /** Remove `.j-dialog__body` padding for edge-to-edge lists, tables, or editors. */
+  flush?: boolean;
+  /** Alias for `flush`. */
+  bodyFlush?: boolean;
   /** Portal `<dialog>` into `document.body` (or selector / element); pass `false` to keep inline. */
   teleport?: boolean | string | HTMLElement;
   /** Alias for `teleport`. */
@@ -48,6 +52,8 @@ export function Dialog({
   size = 'md',
   closable = true,
   dismissible = true,
+  flush,
+  bodyFlush,
   teleport,
   portal,
   className,
@@ -146,6 +152,7 @@ export function Dialog({
       ref={mergeRefs(dialogRef, ref)}
       className={cx('j-dialog', className)}
       data-size={sizeAttr(size)}
+      data-flush={flush || bodyFlush ? '' : undefined}
       aria-labelledby={title != null || header != null ? titleId : undefined}
       aria-describedby={description != null ? descId : undefined}
       onClose={handleClose}

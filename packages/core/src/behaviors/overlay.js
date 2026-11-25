@@ -16,7 +16,7 @@ import { initCommandPalettes } from './command-palette.js';
 export { supportsAnchor, linkAnchor, trackAnchor, anchorPopover } from './anchor.js';
 export { createTooltip, initTooltips } from './tooltip.js';
 export { createPopover, initPopovers } from './popover.js';
-export { createMenu, initMenus } from './menu.js';
+export { createMenu, createSubmenu, getDirectItems, initMenus } from './menu.js';
 export { initDialogs, lightDismiss, requestClose, supportsCommands, supportsClosedBy } from './dialog.js';
 export { createTabs, initTabs, syncTabIndicator, tabsKeydown, getTabs } from './tabs.js';
 export { createDocTabs, initDocTabs, getDocTabElements } from './doc-tabs.js';

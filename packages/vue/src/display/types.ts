@@ -12,6 +12,12 @@ export interface JBadgeProps {
   tone?: JDisplayTone;
   /** Show a leading status dot. */
   dot?: boolean;
+  /** Render a trailing `×` remove button and emit `remove`. */
+  removable?: boolean;
+  /** Alias for `removable`. */
+  closable?: boolean;
+  /** Accessible label for the remove button (default: 'Remove'). */
+  removeLabel?: string;
   /** Deterministic per-entity color seed (`true` hashes badge text). */
   colorSeed?: string | boolean;
   /** Alias for `colorSeed={true}`. */
@@ -57,6 +63,10 @@ export interface JCardProps {
   interactive?: boolean;
   /** Footer on a tinted band with a top border. */
   footerDivider?: boolean;
+  /** Remove `.j-card__body` padding for edge-to-edge grids, lists, editors, or terminals. */
+  flush?: boolean;
+  /** Alias for `flush`. */
+  bodyFlush?: boolean;
 }
 
 export interface JAlertProps {
@@ -318,6 +328,12 @@ export interface JTreeNode {
   icon?: 'folder' | 'file' | string;
   meta?: string;
   disabled?: boolean;
+  /** Marks a node whose children are loaded asynchronously on first expand. */
+  lazy?: boolean;
+  /** Alias indicating this node has expandable children even before `children` are loaded. */
+  hasChildren?: boolean;
+  /** Explicit loading spinner override for this node. */
+  loading?: boolean;
   children?: JTreeNode[];
 }
 
@@ -331,6 +347,8 @@ export interface JTreeViewProps {
   defaultValue?: string | string[];
   defaultExpanded?: string[];
   expandOnClick?: boolean;
+  /** Async loader invoked when expanding a `lazy` / `hasChildren` node whose children haven't loaded yet. */
+  loadChildren?: (node: JTreeNode) => Promise<JTreeNode[] | void>;
 }
 
 export interface JTreeItemProps {
@@ -340,6 +358,9 @@ export interface JTreeItemProps {
   meta?: string;
   disabled?: boolean;
   defaultExpanded?: boolean;
+  lazy?: boolean;
+  hasChildren?: boolean;
+  loading?: boolean;
   node?: JTreeNode;
 }
 
@@ -347,9 +368,14 @@ export interface JTreeViewContext {
   isSelected: (value: string) => boolean;
   isExpanded: (value: string) => boolean;
   isFocusable: (value: string) => boolean;
+  isLoading: (value: string) => boolean;
+  getLoadedChildren: (value: string) => JTreeNode[] | undefined;
+  hasLazyLoader: () => boolean;
   expandOnClick: () => boolean;
+  registerNode: (value: string, node: JTreeNode) => void;
+  unregisterNode: (value: string) => void;
   select: (value: string) => void;
-  toggleExpand: (value: string, force?: boolean) => void;
+  toggleExpand: (value: string, force?: boolean, node?: JTreeNode) => void | Promise<void>;
   registerDefaultExpanded: (value: string) => void;
   setFocused: (value: string) => void;
   ensureInitialFocus: (value: string) => void;

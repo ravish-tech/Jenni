@@ -1,0 +1,62 @@
+/*
+ * Sparkline — <span class="j-sparkline" data-tone="accent|neutral|success|warning|danger|info">
+ *   <svg class="j-sparkline__svg" viewBox="0 0 88 24" aria-hidden="true">
+ *     <path class="j-sparkline__area" />
+ *     <path class="j-sparkline__line" />
+ *     <circle class="j-sparkline__dot" />
+ *   </svg>
+ * </span>
+ */
+@layer jenni.components {
+  :where(.j-sparkline) {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    flex: none;
+    color: var(--j-sparkline-color, var(--j-tone, var(--j-accent)));
+    line-height: 0;
+  }
+
+  :where(.j-sparkline[data-tone="accent"])  { --j-tone: var(--j-accent); }
+  :where(.j-sparkline[data-tone="neutral"]) { --j-tone: var(--j-fg-muted); }
+  :where(.j-sparkline[data-tone="success"]) { --j-tone: var(--j-success); }
+  :where(.j-sparkline[data-tone="warning"]) { --j-tone: var(--j-warning); }
+  :where(.j-sparkline[data-tone="danger"])  { --j-tone: var(--j-danger); }
+  :where(.j-sparkline[data-tone="info"])    { --j-tone: var(--j-info); }
+
+  :where(.j-sparkline__svg) {
+    overflow: visible;
+    display: block;
+    flex: none;
+  }
+
+  :where(.j-sparkline__line) {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  :where(.j-sparkline__area) {
+    stroke: none;
+  }
+
+  :where(.j-sparkline__bar) {
+    fill: currentColor;
+    opacity: 0.82;
+    transition: opacity var(--j-duration-fast) var(--j-ease-out);
+
+    &[data-last] {
+      opacity: 1;
+    }
+  }
+
+  :where(.j-sparkline__dot) {
+    fill: currentColor;
+
+    &[data-min] {
+      opacity: 0.72;
+    }
+  }
+}

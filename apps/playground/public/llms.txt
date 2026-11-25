@@ -10,7 +10,7 @@
 - **Respectful naming:** Keep the name strictly to package identifiers (`jenni-core`, `jenni-vue`, `jenni-react`) and top-level dedication; never use it casually in prose or mock brand text.
 
 ## Agent Documentation & Machine-Readable References
-- [Full Agent Guide, Recipes & Component Catalog](https://ravish-tech.github.io/Jenni/llms-full.txt): Philosophy, spatial rules, Vue 3 & React 19 patterns, and all 106 components.
+- [Full Agent Guide, Recipes & Component Catalog](https://ravish-tech.github.io/Jenni/llms-full.txt): Philosophy, spatial rules, Vue 3 & React 19 patterns, and all 110 components.
 - [Component & Token AST Manifest (JSON)](https://ravish-tech.github.io/Jenni/COMPONENT_MANIFEST.json): Exact props, types, defaults, v-models, events, slots, CSS slugs, and 194 tokens.
 - [Interactive Design Lab](https://ravish-tech.github.io/Jenni/): Live demos, theme/density controls, and multi-tier benchmarks.
 - [GitHub Repository](https://github.com/ravish-tech/Jenni): Source code, releases, and `.agents/skills/jenni-ui/SKILL.md`.

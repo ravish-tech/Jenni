@@ -20,6 +20,7 @@ import {
   JDropdownSeparator,
   JBadge,
   JButton,
+  JIcon,
   JSegmentedControl,
   JInline,
   JStack,
@@ -75,6 +76,19 @@ function onTabContext(tab: DocTabItem, event: MouseEvent) {
   (ctxRef.value as any)?.openFromEvent?.(event);
 }
 
+const initialCustomTabs: DocTabItem[] = [
+  { id: 'router', label: 'router.ts', icon: 'code', meta: 'src/app' },
+  { id: 'schema', label: 'schema.sql', icon: 'file-code', dirty: true, meta: 'db' },
+  { id: 'deploy', label: 'release.yml', icon: 'settings', meta: 'ci' },
+];
+const customActiveId = ref('schema');
+const customTabs = ref<DocTabItem[]>([...initialCustomTabs]);
+
+function resetCustomTabs() {
+  customTabs.value = [...initialCustomTabs];
+  customActiveId.value = 'schema';
+}
+
 const code = `<JDocTabs
   v-model="activeId"
   v-model:tabs="tabs"
@@ -83,7 +97,12 @@ const code = `<JDocTabs
   reorderable
   @add="addNewTab"
   @tab-contextmenu="onTabContext"
-/>`;
+>
+  <template #tab="{ tab }">
+    <JIcon v-if="tab.icon" :name="tab.icon" size="sm" />
+    <span class="j-doc-tabs__label">{{ tab.label }}</span>
+  </template>
+</JDocTabs>`;
 </script>
 
 <template>
@@ -142,6 +161,40 @@ const code = `<JDocTabs
           Close other tabs
         </JDropdownItem>
       </JContextMenu>
+    </JStack>
+  </DemoSection>
+
+  <DemoSection
+    title="Custom #tab Slot & Programmatic Close"
+    description="Custom #tab content preserves the trailing dirty indicator and × close button automatically, while also exposing { tab, active, index, closable, close } for custom controls."
+  >
+    <JStack gap="item" style="width: 100%">
+      <div style="border: 1px solid var(--j-border); border-radius: var(--j-radius-md); overflow: clip; background: var(--j-surface-1)">
+        <JDocTabs v-model="customActiveId" v-model:tabs="customTabs" variant="workbench">
+          <template #tab="{ tab, close }">
+            <span class="j-doc-tabs__icon" aria-hidden="true">
+              <JIcon v-if="tab.icon" :name="tab.icon" size="sm" />
+            </span>
+            <span class="j-doc-tabs__label">
+              <span style="color: var(--j-fg-subtle); margin-inline-end: 4px">{{ tab.meta }}/</span>{{ tab.label }}
+            </span>
+            <button
+              v-if="tab.dirty"
+              type="button"
+              style="padding: 1px 5px; border: 1px solid var(--j-border); border-radius: var(--j-radius-xs); background: var(--j-surface-2); color: var(--j-fg-muted); font: inherit; font-size: 10px; cursor: pointer"
+              @click.stop="close($event)"
+            >
+              Discard
+            </button>
+          </template>
+          <template #empty>
+            All custom tabs closed.
+          </template>
+        </JDocTabs>
+      </div>
+      <JInline v-if="customTabs.length < initialCustomTabs.length" gap="related">
+        <JButton size="sm" variant="outline" @click="resetCustomTabs">Restore tabs</JButton>
+      </JInline>
     </JStack>
   </DemoSection>
 

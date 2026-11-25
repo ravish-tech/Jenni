@@ -15,6 +15,10 @@ const props = withDefaults(
     closable?: boolean;
     /** Close on backdrop click and Escape. */
     dismissible?: boolean;
+    /** Remove `.j-dialog__body` padding for edge-to-edge lists, tables, or editors. */
+    flush?: boolean;
+    /** Alias for `flush`. */
+    bodyFlush?: boolean;
     /** Teleport <dialog> to `<body>` (or a selector / element); pass `false` to keep inline. */
     teleport?: boolean | string | HTMLElement;
   }>(),
@@ -105,6 +109,7 @@ defineExpose({ show, close });
       ref="el"
       class="j-dialog"
       :data-size="size === 'md' ? undefined : size"
+      :data-flush="flush || bodyFlush ? '' : undefined"
       :aria-labelledby="title || slots.header ? titleId : undefined"
       :aria-describedby="description ? descId : undefined"
       v-bind="$attrs"

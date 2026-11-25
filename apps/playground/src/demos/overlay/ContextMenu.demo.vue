@@ -14,6 +14,7 @@ import { DemoSection, DemoCode } from '@/kit';
 import {
   JContextMenu,
   JDropdownItem,
+  JDropdownSub,
   JDropdownLabel,
   JDropdownSeparator,
   JBadge,
@@ -114,6 +115,15 @@ const html = `<div
         <JDropdownItem inset shortcut="⇧⌘E" @select="lastAction = 'Exported SVG'">
           Export as SVG
         </JDropdownItem>
+        <JDropdownSub inset label="Share">
+          <JDropdownItem @select="lastAction = 'Copied permalink'">Copy permalink</JDropdownItem>
+          <JDropdownItem @select="lastAction = 'Sent to channel'">Send to channel</JDropdownItem>
+          <JDropdownSeparator />
+          <JDropdownSub label="Export preset">
+            <JDropdownItem @select="lastAction = 'Exported 2x PNG'">2x Retina PNG</JDropdownItem>
+            <JDropdownItem @select="lastAction = 'Exported print PDF'">Print-ready PDF</JDropdownItem>
+          </JDropdownSub>
+        </JDropdownSub>
 
         <JDropdownSeparator />
 
@@ -175,6 +185,10 @@ const html = `<div
         <JDropdownLabel>{{ file.name }}</JDropdownLabel>
         <JDropdownItem shortcut="⏎" @select="activeAsset = `Opened ${file.name}`">Open specification</JDropdownItem>
         <JDropdownItem shortcut="⌥⌘C" @select="activeAsset = `Copied path: ${file.name}`">Copy relative path</JDropdownItem>
+        <JDropdownSub label="Share">
+          <JDropdownItem @select="activeAsset = `Copied permalink: ${file.name}`">Copy permalink</JDropdownItem>
+          <JDropdownItem @select="activeAsset = `Sent ${file.name} to channel`">Send to channel</JDropdownItem>
+        </JDropdownSub>
         <JDropdownSeparator />
         <JDropdownItem tone="danger" @select="activeAsset = `Archived ${file.name}`">Move to archive</JDropdownItem>
       </JContextMenu>

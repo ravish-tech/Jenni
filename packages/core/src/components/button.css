@@ -247,4 +247,64 @@
     inline-size: 100%;
     & > .j-button { flex: 1; }
   }
+
+  /* ---- Split button ---- */
+  :where(.j-split-button) {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: stretch;
+    vertical-align: middle;
+    border-radius: var(--j-button-radius, var(--j-radius-md));
+
+    &[data-size="sm"] { border-radius: var(--j-button-radius, var(--j-radius-sm)); }
+    &[data-size="lg"] { border-radius: var(--j-button-radius, var(--j-radius-lg)); }
+
+    & > :where(.j-button) {
+      box-shadow: var(--_highlight);
+    }
+    & > :where(.j-button:focus-visible) {
+      box-shadow: var(--_highlight), var(--j-ring);
+    }
+  }
+
+  :where(.j-split-button:not([data-variant]), .j-split-button[data-variant="solid"], .j-split-button[data-variant="outline"]):not(:has(> .j-split-button__primary:disabled)) {
+    box-shadow: var(--j-shadow-xs);
+  }
+
+  :where(.j-split-button__primary) {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+
+  :where(.j-split-button__trigger) {
+    padding-inline: var(--j-space-2);
+    min-inline-size: calc(var(--_h, 36px) * 0.82);
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
+
+    &[aria-expanded="true"]:not(:disabled, [aria-disabled="true"]) {
+      background-color: var(--_bg-hover);
+    }
+  }
+
+  :where(.j-split-button:not([data-variant]), .j-split-button[data-variant="solid"]) > :where(.j-split-button__trigger) {
+    border-inline-start: 1px solid color-mix(in oklch, var(--j-tone-fg) 24%, transparent);
+  }
+
+  :where(.j-split-button[data-variant="soft"]) > :where(.j-split-button__trigger) {
+    border-inline-start: 1px solid color-mix(in oklch, var(--j-tone, var(--j-accent)) 22%, transparent);
+  }
+
+  :where(.j-split-button[data-variant="outline"]) > :where(.j-split-button__trigger) {
+    margin-inline-start: -1px;
+  }
+
+  :where(.j-split-button__primary, .j-split-button__trigger):hover {
+    z-index: 1;
+  }
+
+  :where(.j-split-button__primary, .j-split-button__trigger):focus-visible {
+    z-index: 2;
+  }
 }

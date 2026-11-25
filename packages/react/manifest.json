@@ -1,7 +1,7 @@
 {
   "$schema": "https://ravish-tech.github.io/Jenni/schema/component-manifest-v1.json",
   "name": "Jenni UI Component & Token Manifest",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "packages": {
     "core": "jenni-core",
     "vue": "jenni-vue",
@@ -56,7 +56,7 @@
       "createVirtualizer"
     ]
   },
-  "componentCount": 106,
+  "componentCount": 110,
   "tokens": [
     "--j-accent",
     "--j-accent-fg",
@@ -288,7 +288,7 @@
       "standaloneImport": "jenni-core/css/badge.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/badge.css",
-      "bytesSource": 4205
+      "bytesSource": 5164
     },
     {
       "slug": "bars",
@@ -315,7 +315,7 @@
       "standaloneImport": "jenni-core/css/button.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/button.css",
-      "bytesSource": 7828
+      "bytesSource": 9784
     },
     {
       "slug": "card",
@@ -324,7 +324,7 @@
       "standaloneImport": "jenni-core/css/card.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/card.css",
-      "bytesSource": 5733
+      "bytesSource": 6669
     },
     {
       "slug": "carousel",
@@ -369,7 +369,7 @@
       "standaloneImport": "jenni-core/css/combobox.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/combobox.css",
-      "bytesSource": 11432
+      "bytesSource": 13620
     },
     {
       "slug": "command-palette",
@@ -423,7 +423,7 @@
       "standaloneImport": "jenni-core/css/dialog.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/dialog.css",
-      "bytesSource": 5242
+      "bytesSource": 5493
     },
     {
       "slug": "display",
@@ -432,7 +432,7 @@
       "standaloneImport": "jenni-core/css/display.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/display.css",
-      "bytesSource": 585
+      "bytesSource": 612
     },
     {
       "slug": "doc-tabs",
@@ -450,7 +450,7 @@
       "standaloneImport": "jenni-core/css/drawer.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/drawer.css",
-      "bytesSource": 7459
+      "bytesSource": 7529
     },
     {
       "slug": "empty-state",
@@ -531,7 +531,7 @@
       "standaloneImport": "jenni-core/css/input.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/input.css",
-      "bytesSource": 2736
+      "bytesSource": 3912
     },
     {
       "slug": "kbd",
@@ -567,7 +567,7 @@
       "standaloneImport": "jenni-core/css/menu.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/menu.css",
-      "bytesSource": 5352
+      "bytesSource": 6226
     },
     {
       "slug": "number-input",
@@ -741,6 +741,15 @@
       "bytesSource": 3845
     },
     {
+      "slug": "sparkline",
+      "foundationImport": "jenni-core/css/foundation.css",
+      "componentImport": "jenni-core/css/sparkline.css",
+      "standaloneImport": "jenni-core/css/sparkline.css",
+      "requiresFoundation": true,
+      "sourceImport": "jenni-core/components/sparkline.css",
+      "bytesSource": 1638
+    },
+    {
       "slug": "spinner",
       "foundationImport": "jenni-core/css/foundation.css",
       "componentImport": "jenni-core/css/spinner.css",
@@ -756,7 +765,7 @@
       "standaloneImport": "jenni-core/css/statusbar.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/statusbar.css",
-      "bytesSource": 4768
+      "bytesSource": 5434
     },
     {
       "slug": "stepper",
@@ -864,7 +873,7 @@
       "standaloneImport": "jenni-core/css/tree-view.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/tree-view.css",
-      "bytesSource": 7450
+      "bytesSource": 8344
     },
     {
       "slug": "virtual-list",
@@ -997,6 +1006,9 @@
       "listBuiltinIcons"
     ],
     "jenni-core/behaviors/menu.js": [
+      "getDirectItems",
+      "isSubmenuBound",
+      "createSubmenu",
       "createMenu",
       "initMenus"
     ],
@@ -1063,6 +1075,11 @@
     "jenni-core/behaviors/slider.js": [
       "syncSlider",
       "initSliders"
+    ],
+    "jenni-core/behaviors/sparkline.js": [
+      "computeSparkline",
+      "createSparkline",
+      "initSparklines"
     ],
     "jenni-core/behaviors/stepper.js": [
       "createStepper",
@@ -5634,7 +5651,8 @@
         ],
         "classes": [
           "j-statusbar__item",
-          "j-statusbar__dot"
+          "j-statusbar__dot",
+          "j-statusbar__sep"
         ]
       },
       "models": [],
@@ -5676,6 +5694,11 @@
         },
         {
           "name": "disabled",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "separator",
           "type": "boolean",
           "required": false
         }
@@ -5726,6 +5749,11 @@
           },
           {
             "name": "disabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "separator",
             "type": "boolean",
             "required": false
           }
@@ -5783,11 +5811,53 @@
             "required": false
           },
           {
+            "name": "separator",
+            "type": "boolean",
+            "required": false
+          },
+          {
             "name": "children",
             "type": "ReactNode",
             "required": false
           }
         ]
+      }
+    },
+    {
+      "vueName": "JStatusBarSeparator",
+      "reactName": "StatusBarSeparator",
+      "group": "layout",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/statusbar.css",
+        "standaloneImport": "jenni-core/css/statusbar.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/statusbar.css"
+        ],
+        "classes": [
+          "j-statusbar__sep"
+        ]
+      },
+      "models": [],
+      "props": [],
+      "events": [],
+      "slots": [],
+      "exposed": [],
+      "vue": {
+        "name": "JStatusBarSeparator",
+        "props": [],
+        "models": [],
+        "events": [],
+        "slots": [],
+        "exposed": []
+      },
+      "react": {
+        "name": "StatusBarSeparator",
+        "propsInterface": "StatusBarSeparatorProps",
+        "props": []
       }
     },
     {
@@ -8061,7 +8131,8 @@
         "classes": [
           "j-input-group",
           "j-input-group__addon",
-          "j-input"
+          "j-input",
+          "j-input-group__clear"
         ]
       },
       "models": [
@@ -8091,10 +8162,22 @@
           "name": "invalid",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "clearable",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "clearLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Clear input'"
         }
       ],
       "events": [
-        "update:modelValue"
+        "update:modelValue",
+        "clear"
       ],
       "slots": [
         "prefix",
@@ -8126,6 +8209,17 @@
             "name": "invalid",
             "type": "boolean",
             "required": false
+          },
+          {
+            "name": "clearable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "clearLabel",
+            "type": "string",
+            "required": false,
+            "default": "'Clear input'"
           }
         ],
         "models": [
@@ -8136,7 +8230,8 @@
           }
         ],
         "events": [
-          "update:modelValue"
+          "update:modelValue",
+          "clear"
         ],
         "slots": [
           "prefix",
@@ -8167,6 +8262,11 @@
             "required": false
           },
           {
+            "name": "onClear",
+            "type": "() => void",
+            "required": false
+          },
+          {
             "name": "size",
             "type": "Size",
             "required": false
@@ -8179,6 +8279,16 @@
           {
             "name": "invalid",
             "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "clearable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "clearLabel",
+            "type": "string",
             "required": false
           },
           {
@@ -9963,6 +10073,308 @@
           {
             "name": "invalid",
             "type": "boolean",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JSplitButton",
+      "reactName": "SplitButton",
+      "group": "forms",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/button.css",
+        "standaloneImport": "jenni-core/css/button.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/button.css"
+        ],
+        "classes": [
+          "j-split-button",
+          "j-button",
+          "j-split-button__primary",
+          "j-split-button__trigger",
+          "j-menu"
+        ]
+      },
+      "models": [
+        {
+          "name": "v-model:open",
+          "modelProp": "open",
+          "type": "boolean"
+        }
+      ],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "SplitButtonVariant",
+          "required": false,
+          "default": "'solid'"
+        },
+        {
+          "name": "size",
+          "type": "Size",
+          "required": false,
+          "default": "'md'"
+        },
+        {
+          "name": "tone",
+          "type": "Tone",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "menuDisabled",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "menuLabel",
+          "type": "string",
+          "required": false,
+          "default": "'More actions'"
+        },
+        {
+          "name": "side",
+          "type": "FloatingSide",
+          "required": false,
+          "default": "'bottom'"
+        },
+        {
+          "name": "align",
+          "type": "FloatingAlign",
+          "required": false,
+          "default": "'end'"
+        },
+        {
+          "name": "type",
+          "type": "'button' | 'submit' | 'reset'",
+          "required": false,
+          "default": "'button'"
+        }
+      ],
+      "events": [
+        "update:open",
+        "click",
+        "select"
+      ],
+      "slots": [
+        "default",
+        "menu"
+      ],
+      "exposed": [
+        "show",
+        "hide",
+        "primary",
+        "trigger"
+      ],
+      "vue": {
+        "name": "JSplitButton",
+        "props": [
+          {
+            "name": "open",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "SplitButtonVariant",
+            "required": false,
+            "default": "'solid'"
+          },
+          {
+            "name": "size",
+            "type": "Size",
+            "required": false,
+            "default": "'md'"
+          },
+          {
+            "name": "tone",
+            "type": "Tone",
+            "required": false
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "loading",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "menuDisabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "menuLabel",
+            "type": "string",
+            "required": false,
+            "default": "'More actions'"
+          },
+          {
+            "name": "side",
+            "type": "FloatingSide",
+            "required": false,
+            "default": "'bottom'"
+          },
+          {
+            "name": "align",
+            "type": "FloatingAlign",
+            "required": false,
+            "default": "'end'"
+          },
+          {
+            "name": "type",
+            "type": "'button' | 'submit' | 'reset'",
+            "required": false,
+            "default": "'button'"
+          }
+        ],
+        "models": [
+          {
+            "name": "v-model:open",
+            "modelProp": "open",
+            "type": "boolean"
+          }
+        ],
+        "events": [
+          "update:open",
+          "click",
+          "select"
+        ],
+        "slots": [
+          "default",
+          "menu"
+        ],
+        "exposed": [
+          "show",
+          "hide",
+          "primary",
+          "trigger"
+        ]
+      },
+      "react": {
+        "name": "SplitButton",
+        "propsInterface": "SplitButtonProps",
+        "props": [
+          {
+            "name": "label",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "menu",
+            "type": "ReactNode | ((api: { close: () => void }) => ReactNode)",
+            "required": false
+          },
+          {
+            "name": "children",
+            "type": "ReactNode | ((api: { close: () => void }) => ReactNode)",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "SplitButtonVariant",
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "Size",
+            "required": false
+          },
+          {
+            "name": "tone",
+            "type": "Tone",
+            "required": false
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "loading",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "menuDisabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "menuLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "side",
+            "type": "FloatingSide",
+            "required": false
+          },
+          {
+            "name": "align",
+            "type": "FloatingAlign",
+            "required": false
+          },
+          {
+            "name": "type",
+            "type": "'button' | 'submit' | 'reset'",
+            "required": false
+          },
+          {
+            "name": "open",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "defaultOpen",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "onOpenChange",
+            "type": "(open: boolean) => void",
+            "required": false
+          },
+          {
+            "name": "onClick",
+            "type": "(event: MouseEvent<HTMLButtonElement>) => void",
+            "required": false
+          },
+          {
+            "name": "onSelect",
+            "type": "(event: CustomEvent) => void",
             "required": false
           }
         ]
@@ -11927,7 +12339,8 @@
         "classes": [
           "j-badge",
           "j-entity-hue",
-          "j-badge__dot"
+          "j-badge__dot",
+          "j-badge__remove"
         ]
       },
       "models": [],
@@ -11955,6 +12368,22 @@
           "required": false
         },
         {
+          "name": "removable",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "closable",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "removeLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Remove'"
+        },
+        {
           "name": "colorSeed",
           "type": "string | boolean",
           "required": false
@@ -11965,7 +12394,9 @@
           "required": false
         }
       ],
-      "events": [],
+      "events": [
+        "remove"
+      ],
       "slots": [
         "icon",
         "default"
@@ -11997,6 +12428,22 @@
             "required": false
           },
           {
+            "name": "removable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "closable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "removeLabel",
+            "type": "string",
+            "required": false,
+            "default": "'Remove'"
+          },
+          {
             "name": "colorSeed",
             "type": "string | boolean",
             "required": false
@@ -12008,7 +12455,9 @@
           }
         ],
         "models": [],
-        "events": [],
+        "events": [
+          "remove"
+        ],
         "slots": [
           "icon",
           "default"
@@ -12042,6 +12491,26 @@
           {
             "name": "icon",
             "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "removable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "closable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "removeLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "onRemove",
+            "type": "(event: ReactMouseEvent<HTMLButtonElement>) => void",
             "required": false
           },
           {
@@ -12409,6 +12878,16 @@
           "name": "footerDivider",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "flush",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "bodyFlush",
+          "type": "boolean",
+          "required": false
         }
       ],
       "events": [],
@@ -12458,6 +12937,16 @@
           },
           {
             "name": "footerDivider",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "flush",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "bodyFlush",
             "type": "boolean",
             "required": false
           }
@@ -12524,6 +13013,16 @@
           },
           {
             "name": "interactive",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "flush",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "bodyFlush",
             "type": "boolean",
             "required": false
           }
@@ -15270,6 +15769,278 @@
       }
     },
     {
+      "vueName": "JSparkline",
+      "reactName": "Sparkline",
+      "group": "display",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/sparkline.css",
+        "standaloneImport": "jenni-core/css/sparkline.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/sparkline.css"
+        ],
+        "classes": [
+          "j-sparkline",
+          "j-managed",
+          "j-sparkline__svg",
+          "j-sparkline__bar",
+          "j-sparkline__area",
+          "j-sparkline__line",
+          "j-sparkline__dot"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "data",
+          "type": "readonly number[]",
+          "required": true
+        },
+        {
+          "name": "variant",
+          "type": "JSparklineVariant",
+          "required": false,
+          "default": "'line'"
+        },
+        {
+          "name": "width",
+          "type": "number | string",
+          "required": false,
+          "default": "88"
+        },
+        {
+          "name": "height",
+          "type": "number | string",
+          "required": false,
+          "default": "24"
+        },
+        {
+          "name": "tone",
+          "type": "JSparklineTone",
+          "required": false
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "smooth",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "strokeWidth",
+          "type": "number",
+          "required": false,
+          "default": "1.5"
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "showEndDot",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "showMinMax",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "fillOpacity",
+          "type": "number",
+          "required": false,
+          "default": "0.16"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "events": [],
+      "slots": [],
+      "exposed": [],
+      "vue": {
+        "name": "JSparkline",
+        "props": [
+          {
+            "name": "data",
+            "type": "readonly number[]",
+            "required": true
+          },
+          {
+            "name": "variant",
+            "type": "JSparklineVariant",
+            "required": false,
+            "default": "'line'"
+          },
+          {
+            "name": "width",
+            "type": "number | string",
+            "required": false,
+            "default": "88"
+          },
+          {
+            "name": "height",
+            "type": "number | string",
+            "required": false,
+            "default": "24"
+          },
+          {
+            "name": "tone",
+            "type": "JSparklineTone",
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "smooth",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "required": false,
+            "default": "1.5"
+          },
+          {
+            "name": "min",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "max",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "showEndDot",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "showMinMax",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "fillOpacity",
+            "type": "number",
+            "required": false,
+            "default": "0.16"
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "models": [],
+        "events": [],
+        "slots": [],
+        "exposed": []
+      },
+      "react": {
+        "name": "Sparkline",
+        "propsInterface": "SparklineProps",
+        "props": [
+          {
+            "name": "data",
+            "type": "readonly number[]",
+            "required": true
+          },
+          {
+            "name": "variant",
+            "type": "SparklineVariant",
+            "required": false
+          },
+          {
+            "name": "width",
+            "type": "number | string",
+            "required": false
+          },
+          {
+            "name": "height",
+            "type": "number | string",
+            "required": false
+          },
+          {
+            "name": "tone",
+            "type": "SparklineTone",
+            "required": false
+          },
+          {
+            "name": "color",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "smooth",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "strokeWidth",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "min",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "max",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "showEndDot",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "showMinMax",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "fillOpacity",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
       "vueName": "JSpinner",
       "reactName": "Spinner",
       "group": "display",
@@ -15895,6 +16666,8 @@
           "j-tree__node",
           "j-tree__item",
           "j-tree__chevron",
+          "j-tree__toggle",
+          "j-tree__spinner",
           "j-tree__spacer",
           "j-tree__icon",
           "j-tree__label",
@@ -15938,6 +16711,24 @@
           "default": "false"
         },
         {
+          "name": "lazy",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "hasChildren",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
           "name": "node",
           "type": "JTreeNode",
           "required": false
@@ -15948,6 +16739,7 @@
         "icon",
         "label",
         "meta",
+        "children",
         "default"
       ],
       "exposed": [],
@@ -15987,6 +16779,24 @@
             "default": "false"
           },
           {
+            "name": "lazy",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "hasChildren",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "loading",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
             "name": "node",
             "type": "JTreeNode",
             "required": false
@@ -15998,6 +16808,7 @@
           "icon",
           "label",
           "meta",
+          "children",
           "default"
         ],
         "exposed": []
@@ -16033,6 +16844,21 @@
           },
           {
             "name": "defaultExpanded",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "lazy",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "hasChildren",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "loading",
             "type": "boolean",
             "required": false
           },
@@ -16140,11 +16966,18 @@
           "type": "boolean",
           "required": false,
           "default": "true"
+        },
+        {
+          "name": "loadChildren",
+          "type": "(node: JTreeNode) => Promise<JTreeNode[] | void>",
+          "required": false
         }
       ],
       "events": [
         "update:expanded",
-        "update:modelValue"
+        "update:modelValue",
+        "load",
+        "load-error"
       ],
       "slots": [
         "default"
@@ -16212,6 +17045,11 @@
             "type": "boolean",
             "required": false,
             "default": "true"
+          },
+          {
+            "name": "loadChildren",
+            "type": "(node: JTreeNode) => Promise<JTreeNode[] | void>",
+            "required": false
           }
         ],
         "models": [
@@ -16228,7 +17066,9 @@
         ],
         "events": [
           "update:expanded",
-          "update:modelValue"
+          "update:modelValue",
+          "load",
+          "load-error"
         ],
         "slots": [
           "default"
@@ -16302,6 +17142,21 @@
           {
             "name": "expandOnClick",
             "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "loadChildren",
+            "type": "(node: TreeNode) => Promise<TreeNode[] | void>",
+            "required": false
+          },
+          {
+            "name": "onLoadChildren",
+            "type": "(node: TreeNode, children?: TreeNode[]) => void",
+            "required": false
+          },
+          {
+            "name": "onLoadError",
+            "type": "(error: unknown, node: TreeNode) => void",
             "required": false
           }
         ]
@@ -16552,15 +17407,18 @@
           "j-combobox__chip-remove",
           "j-combobox__input",
           "j-combobox__controls",
+          "j-combobox__spinner",
           "j-combobox__clear",
           "j-combobox__chevron",
           "j-combobox__listbox",
+          "j-combobox__loading",
           "j-combobox__group",
           "j-combobox__group-label",
           "j-combobox__option",
           "j-combobox__option-body",
           "j-combobox__option-label",
           "j-combobox__option-description",
+          "j-combobox__create",
           "j-combobox__empty"
         ]
       },
@@ -16622,13 +17480,61 @@
         },
         {
           "name": "filter",
-          "type": "(option: ComboboxOption, query: string) => boolean",
+          "type": "boolean | ((option: ComboboxOption, query: string) => boolean)",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "allowCustomValue",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "freeSolo",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "commitOnBlur",
+          "type": "boolean",
+          "required": false,
+          "default": "undefined"
+        },
+        {
+          "name": "creatable",
+          "type": "boolean | ((query: string) => string)",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "loadingText",
+          "type": "string",
+          "required": false,
+          "default": "'Searching…'"
+        },
+        {
+          "name": "debounce",
+          "type": "number",
+          "required": false,
+          "default": "0"
+        },
+        {
+          "name": "search",
+          "type": "string",
           "required": false
         }
       ],
       "events": [
         "update:modelValue",
-        "change"
+        "change",
+        "update:search",
+        "search",
+        "create"
       ],
       "slots": [],
       "exposed": [],
@@ -16691,14 +17597,62 @@
           },
           {
             "name": "filter",
-            "type": "(option: ComboboxOption, query: string) => boolean",
+            "type": "boolean | ((option: ComboboxOption, query: string) => boolean)",
+            "required": false,
+            "default": "true"
+          },
+          {
+            "name": "allowCustomValue",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "freeSolo",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "commitOnBlur",
+            "type": "boolean",
+            "required": false,
+            "default": "undefined"
+          },
+          {
+            "name": "creatable",
+            "type": "boolean | ((query: string) => string)",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "loading",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "loadingText",
+            "type": "string",
+            "required": false,
+            "default": "'Searching…'"
+          },
+          {
+            "name": "debounce",
+            "type": "number",
+            "required": false,
+            "default": "0"
+          },
+          {
+            "name": "search",
+            "type": "string",
             "required": false
           }
         ],
         "models": [],
         "events": [
           "update:modelValue",
-          "change"
+          "change",
+          "update:search",
+          "search",
+          "create"
         ],
         "slots": [],
         "exposed": []
@@ -16749,7 +17703,67 @@
           },
           {
             "name": "filter",
-            "type": "(option: ComboboxOption, query: string) => boolean",
+            "type": "boolean | ((option: ComboboxOption, query: string) => boolean)",
+            "required": false
+          },
+          {
+            "name": "allowCustomValue",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "freeSolo",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "commitOnBlur",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "creatable",
+            "type": "boolean | ((query: string) => string)",
+            "required": false
+          },
+          {
+            "name": "onCreate",
+            "type": "(value: string) => void",
+            "required": false
+          },
+          {
+            "name": "loading",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "loadingText",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "debounce",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "searchValue",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "defaultSearchValue",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "onSearchChange",
+            "type": "(query: string) => void",
+            "required": false
+          },
+          {
+            "name": "onSearch",
+            "type": "(query: string) => void",
             "required": false
           },
           {
@@ -17430,6 +18444,16 @@
           "default": "true"
         },
         {
+          "name": "flush",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "bodyFlush",
+          "type": "boolean",
+          "required": false
+        },
+        {
           "name": "teleport",
           "type": "boolean | string | HTMLElement",
           "required": false,
@@ -17485,6 +18509,16 @@
             "type": "boolean",
             "required": false,
             "default": "true"
+          },
+          {
+            "name": "flush",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "bodyFlush",
+            "type": "boolean",
+            "required": false
           },
           {
             "name": "teleport",
@@ -17571,6 +18605,16 @@
           },
           {
             "name": "dismissible",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "flush",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "bodyFlush",
             "type": "boolean",
             "required": false
           },
@@ -17701,6 +18745,12 @@
           "default": "true"
         },
         {
+          "name": "hideTabTail",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
           "name": "ariaLabel",
           "type": "string",
           "required": false,
@@ -17731,6 +18781,7 @@
       "slots": [
         "tab",
         "icon",
+        "label",
         "empty",
         "actions"
       ],
@@ -17808,6 +18859,12 @@
             "default": "true"
           },
           {
+            "name": "hideTabTail",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
             "name": "ariaLabel",
             "type": "string",
             "required": false,
@@ -17845,6 +18902,7 @@
         "slots": [
           "tab",
           "icon",
+          "label",
           "empty",
           "actions"
         ],
@@ -17946,6 +19004,11 @@
             "required": false
           },
           {
+            "name": "hideTabTail",
+            "type": "boolean",
+            "required": false
+          },
+          {
             "name": "addLabel",
             "type": "string",
             "required": false
@@ -17961,8 +19024,13 @@
             "required": false
           },
           {
+            "name": "renderLabel",
+            "type": "(tab: DocTabItem, state: DocTabRenderState) => ReactNode",
+            "required": false
+          },
+          {
             "name": "renderTab",
-            "type": "(tab: DocTabItem, active: boolean) => ReactNode",
+            "type": "(tab: DocTabItem, state: DocTabRenderState) => ReactNode",
             "required": false
           },
           {
@@ -18065,6 +19133,16 @@
           "default": "true"
         },
         {
+          "name": "flush",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "bodyFlush",
+          "type": "boolean",
+          "required": false
+        },
+        {
           "name": "teleport",
           "type": "boolean | string | HTMLElement",
           "required": false,
@@ -18131,6 +19209,16 @@
             "type": "boolean",
             "required": false,
             "default": "true"
+          },
+          {
+            "name": "flush",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "bodyFlush",
+            "type": "boolean",
+            "required": false
           },
           {
             "name": "teleport",
@@ -18227,6 +19315,16 @@
           },
           {
             "name": "dismissible",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "flush",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "bodyFlush",
             "type": "boolean",
             "required": false
           },
@@ -18792,6 +19890,177 @@
         "name": "DropdownSeparator",
         "propsInterface": "DropdownSeparatorProps",
         "props": []
+      }
+    },
+    {
+      "vueName": "JDropdownSub",
+      "reactName": "DropdownSub",
+      "group": "overlay",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/menu.css",
+        "standaloneImport": "jenni-core/css/menu.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/floating.css",
+          "jenni-core/components/menu.css"
+        ],
+        "classes": [
+          "j-menu__sub",
+          "j-menu__item",
+          "j-menu__sub-trigger",
+          "j-menu__sub-chevron",
+          "j-menu",
+          "j-menu__sub-content"
+        ]
+      },
+      "models": [
+        {
+          "name": "v-model:open",
+          "modelProp": "open",
+          "type": "boolean"
+        }
+      ],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "inset",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "textValue",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "events": [
+        "update:open"
+      ],
+      "slots": [
+        "icon",
+        "trigger",
+        "default"
+      ],
+      "exposed": [
+        "show",
+        "hide"
+      ],
+      "vue": {
+        "name": "JDropdownSub",
+        "props": [
+          {
+            "name": "open",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "inset",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "textValue",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "models": [
+          {
+            "name": "v-model:open",
+            "modelProp": "open",
+            "type": "boolean"
+          }
+        ],
+        "events": [
+          "update:open"
+        ],
+        "slots": [
+          "icon",
+          "trigger",
+          "default"
+        ],
+        "exposed": [
+          "show",
+          "hide"
+        ]
+      },
+      "react": {
+        "name": "DropdownSub",
+        "propsInterface": "DropdownSubProps",
+        "props": [
+          {
+            "name": "label",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "icon",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "inset",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "textValue",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "open",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "defaultOpen",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "onOpenChange",
+            "type": "(open: boolean) => void",
+            "required": false
+          },
+          {
+            "name": "children",
+            "type": "ReactNode",
+            "required": false
+          }
+        ]
       }
     },
     {
@@ -20129,6 +21398,26 @@
         "required": false
       },
       {
+        "name": "removable",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "closable",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "removeLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "onRemove",
+        "type": "(event: ReactMouseEvent<HTMLButtonElement>) => void",
+        "required": false
+      },
+      {
         "name": "colorSeed",
         "type": "string | boolean",
         "required": false
@@ -20258,6 +21547,16 @@
         "name": "interactive",
         "type": "boolean",
         "required": false
+      },
+      {
+        "name": "flush",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "bodyFlush",
+        "type": "boolean",
+        "required": false
       }
     ],
     "CardProps": [
@@ -20308,6 +21607,16 @@
       },
       {
         "name": "interactive",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "flush",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "bodyFlush",
         "type": "boolean",
         "required": false
       }
@@ -21105,6 +22414,100 @@
         "required": false
       }
     ],
+    "SparklineProps": [
+      {
+        "name": "data",
+        "type": "readonly number[]",
+        "required": true
+      },
+      {
+        "name": "variant",
+        "type": "SparklineVariant",
+        "required": false
+      },
+      {
+        "name": "width",
+        "type": "number | string",
+        "required": false
+      },
+      {
+        "name": "height",
+        "type": "number | string",
+        "required": false
+      },
+      {
+        "name": "tone",
+        "type": "SparklineTone",
+        "required": false
+      },
+      {
+        "name": "color",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "smooth",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "strokeWidth",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "showEndDot",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "showMinMax",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "fillOpacity",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false
+      }
+    ],
+    "MarkerDot": [
+      {
+        "name": "key",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "kind",
+        "type": "'end' | 'min' | 'max'",
+        "required": true
+      },
+      {
+        "name": "x",
+        "type": "number",
+        "required": true
+      },
+      {
+        "name": "y",
+        "type": "number",
+        "required": true
+      }
+    ],
     "SpinnerProps": [
       {
         "name": "size",
@@ -21558,6 +22961,21 @@
         "required": false
       },
       {
+        "name": "lazy",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "hasChildren",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false
+      },
+      {
         "name": "children",
         "type": "TreeNode[]",
         "required": false
@@ -21575,6 +22993,11 @@
         "required": true
       },
       {
+        "name": "loadingSet",
+        "type": "Set<string>",
+        "required": true
+      },
+      {
         "name": "focusedValue",
         "type": "string | undefined",
         "required": true
@@ -21585,13 +23008,38 @@
         "required": true
       },
       {
+        "name": "hasLazyLoader",
+        "type": "boolean",
+        "required": true
+      },
+      {
+        "name": "getLoadedChildren",
+        "type": "(value: string) => TreeNode[] | undefined",
+        "required": true
+      },
+      {
+        "name": "isExpandedNow",
+        "type": "(value: string) => boolean",
+        "required": true
+      },
+      {
+        "name": "registerNode",
+        "type": "(value: string, node: TreeNode) => void",
+        "required": true
+      },
+      {
+        "name": "unregisterNode",
+        "type": "(value: string) => void",
+        "required": true
+      },
+      {
         "name": "select",
         "type": "(value: string) => void",
         "required": true
       },
       {
         "name": "toggleExpand",
-        "type": "(value: string, force?: boolean) => void",
+        "type": "( value: string, force?: boolean, node?: TreeNode, itemEl?: HTMLElement | null, ) => void | Promise<void>",
         "required": true
       },
       {
@@ -21675,6 +23123,21 @@
         "name": "expandOnClick",
         "type": "boolean",
         "required": false
+      },
+      {
+        "name": "loadChildren",
+        "type": "(node: TreeNode) => Promise<TreeNode[] | void>",
+        "required": false
+      },
+      {
+        "name": "onLoadChildren",
+        "type": "(node: TreeNode, children?: TreeNode[]) => void",
+        "required": false
+      },
+      {
+        "name": "onLoadError",
+        "type": "(error: unknown, node: TreeNode) => void",
+        "required": false
       }
     ],
     "TreeItemProps": [
@@ -21705,6 +23168,21 @@
       },
       {
         "name": "defaultExpanded",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "lazy",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "hasChildren",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "loading",
         "type": "boolean",
         "required": false
       },
@@ -22314,6 +23792,11 @@
         "required": false
       },
       {
+        "name": "onClear",
+        "type": "() => void",
+        "required": false
+      },
+      {
         "name": "size",
         "type": "Size",
         "required": false
@@ -22326,6 +23809,16 @@
       {
         "name": "invalid",
         "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "clearable",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "clearLabel",
+        "type": "string",
         "required": false
       },
       {
@@ -22766,6 +24259,98 @@
       {
         "name": "invalid",
         "type": "boolean",
+        "required": false
+      }
+    ],
+    "SplitButtonProps": [
+      {
+        "name": "label",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "menu",
+        "type": "ReactNode | ((api: { close: () => void }) => ReactNode)",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode | ((api: { close: () => void }) => ReactNode)",
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "SplitButtonVariant",
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "Size",
+        "required": false
+      },
+      {
+        "name": "tone",
+        "type": "Tone",
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "menuDisabled",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "menuLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "side",
+        "type": "FloatingSide",
+        "required": false
+      },
+      {
+        "name": "align",
+        "type": "FloatingAlign",
+        "required": false
+      },
+      {
+        "name": "type",
+        "type": "'button' | 'submit' | 'reset'",
+        "required": false
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": false
+      },
+      {
+        "name": "onClick",
+        "type": "(event: MouseEvent<HTMLButtonElement>) => void",
+        "required": false
+      },
+      {
+        "name": "onSelect",
+        "type": "(event: CustomEvent) => void",
         "required": false
       }
     ],
@@ -25713,6 +27298,11 @@
         "required": false
       },
       {
+        "name": "separator",
+        "type": "boolean",
+        "required": false
+      },
+      {
         "name": "children",
         "type": "ReactNode",
         "required": false
@@ -25760,11 +27350,17 @@
         "required": false
       },
       {
+        "name": "separator",
+        "type": "boolean",
+        "required": false
+      },
+      {
         "name": "children",
         "type": "ReactNode",
         "required": false
       }
     ],
+    "StatusBarSeparatorProps": [],
     "ToolbarOwnProps": [
       {
         "name": "as",
@@ -26051,7 +27647,67 @@
       },
       {
         "name": "filter",
-        "type": "(option: ComboboxOption, query: string) => boolean",
+        "type": "boolean | ((option: ComboboxOption, query: string) => boolean)",
+        "required": false
+      },
+      {
+        "name": "allowCustomValue",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "freeSolo",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "commitOnBlur",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "creatable",
+        "type": "boolean | ((query: string) => string)",
+        "required": false
+      },
+      {
+        "name": "onCreate",
+        "type": "(value: string) => void",
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "loadingText",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "debounce",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "searchValue",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "defaultSearchValue",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "onSearchChange",
+        "type": "(query: string) => void",
+        "required": false
+      },
+      {
+        "name": "onSearch",
+        "type": "(query: string) => void",
         "required": false
       }
     ],
@@ -26098,7 +27754,67 @@
       },
       {
         "name": "filter",
-        "type": "(option: ComboboxOption, query: string) => boolean",
+        "type": "boolean | ((option: ComboboxOption, query: string) => boolean)",
+        "required": false
+      },
+      {
+        "name": "allowCustomValue",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "freeSolo",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "commitOnBlur",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "creatable",
+        "type": "boolean | ((query: string) => string)",
+        "required": false
+      },
+      {
+        "name": "onCreate",
+        "type": "(value: string) => void",
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "loadingText",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "debounce",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "searchValue",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "defaultSearchValue",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "onSearchChange",
+        "type": "(query: string) => void",
+        "required": false
+      },
+      {
+        "name": "onSearch",
+        "type": "(query: string) => void",
         "required": false
       },
       {
@@ -26165,7 +27881,67 @@
       },
       {
         "name": "filter",
-        "type": "(option: ComboboxOption, query: string) => boolean",
+        "type": "boolean | ((option: ComboboxOption, query: string) => boolean)",
+        "required": false
+      },
+      {
+        "name": "allowCustomValue",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "freeSolo",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "commitOnBlur",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "creatable",
+        "type": "boolean | ((query: string) => string)",
+        "required": false
+      },
+      {
+        "name": "onCreate",
+        "type": "(value: string) => void",
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "loadingText",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "debounce",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "searchValue",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "defaultSearchValue",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "onSearchChange",
+        "type": "(query: string) => void",
+        "required": false
+      },
+      {
+        "name": "onSearch",
+        "type": "(query: string) => void",
         "required": false
       },
       {
@@ -26232,7 +28008,67 @@
       },
       {
         "name": "filter",
-        "type": "(option: ComboboxOption, query: string) => boolean",
+        "type": "boolean | ((option: ComboboxOption, query: string) => boolean)",
+        "required": false
+      },
+      {
+        "name": "allowCustomValue",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "freeSolo",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "commitOnBlur",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "creatable",
+        "type": "boolean | ((query: string) => string)",
+        "required": false
+      },
+      {
+        "name": "onCreate",
+        "type": "(value: string) => void",
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "loadingText",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "debounce",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "searchValue",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "defaultSearchValue",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "onSearchChange",
+        "type": "(query: string) => void",
+        "required": false
+      },
+      {
+        "name": "onSearch",
+        "type": "(query: string) => void",
         "required": false
       },
       {
@@ -26538,6 +28374,16 @@
         "required": false
       },
       {
+        "name": "flush",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "bodyFlush",
+        "type": "boolean",
+        "required": false
+      },
+      {
         "name": "teleport",
         "type": "boolean | string | HTMLElement",
         "required": false
@@ -26603,6 +28449,28 @@
         "name": "meta",
         "type": "unknown",
         "required": false
+      }
+    ],
+    "DocTabRenderState": [
+      {
+        "name": "active",
+        "type": "boolean",
+        "required": true
+      },
+      {
+        "name": "index",
+        "type": "number",
+        "required": true
+      },
+      {
+        "name": "closable",
+        "type": "boolean",
+        "required": true
+      },
+      {
+        "name": "close",
+        "type": "(event?: ReactMouseEvent) => void",
+        "required": true
       }
     ],
     "DocTabsHandle": [
@@ -26719,6 +28587,11 @@
         "required": false
       },
       {
+        "name": "hideTabTail",
+        "type": "boolean",
+        "required": false
+      },
+      {
         "name": "addLabel",
         "type": "string",
         "required": false
@@ -26734,8 +28607,13 @@
         "required": false
       },
       {
+        "name": "renderLabel",
+        "type": "(tab: DocTabItem, state: DocTabRenderState) => ReactNode",
+        "required": false
+      },
+      {
         "name": "renderTab",
-        "type": "(tab: DocTabItem, active: boolean) => ReactNode",
+        "type": "(tab: DocTabItem, state: DocTabRenderState) => ReactNode",
         "required": false
       },
       {
@@ -26822,6 +28700,16 @@
       },
       {
         "name": "dismissible",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "flush",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "bodyFlush",
         "type": "boolean",
         "required": false
       },
@@ -27049,6 +28937,53 @@
       {
         "name": "textValue",
         "type": "string",
+        "required": false
+      }
+    ],
+    "DropdownSubProps": [
+      {
+        "name": "label",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "icon",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "inset",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "textValue",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
         "required": false
       }
     ],

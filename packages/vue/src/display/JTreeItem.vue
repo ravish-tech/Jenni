@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { computed, inject, ref, useId, useSlots } from 'vue';
-import { TREE_VIEW_KEY, type JTreeItemProps } from './types';
+import { computed, inject, onBeforeUnmount, onMounted, ref, useId, useSlots, watch } from 'vue';
+import { TREE_VIEW_KEY, type JTreeItemProps, type JTreeNode } from './types';
 
 defineOptions({ name: 'JTreeItem' });
 
 const props = withDefaults(defineProps<JTreeItemProps>(), {
   disabled: false,
   defaultExpanded: false,
+  lazy: false,
+  hasChildren: false,
+  loading: false,
 });
 
 const slots = useSlots();
@@ -18,14 +21,56 @@ const itemKey = computed(() => props.node?.id ?? props.value ?? autoId);
 const itemLabel = computed(() => props.node?.label ?? props.label ?? '');
 const itemMeta = computed(() => props.node?.meta ?? props.meta);
 const itemDisabled = computed(() => Boolean(props.node?.disabled ?? props.disabled));
-const childNodes = computed(() => props.node?.children);
-const hasChildren = computed(() =>
-  Boolean((childNodes.value && childNodes.value.length > 0) || slots.default),
+
+const isLazy = computed(() =>
+  Boolean(props.node?.lazy || props.node?.hasChildren || props.lazy || props.hasChildren),
 );
+const staticChildren = computed(() => props.node?.children);
+const loadedChildren = computed(() => tree?.getLoadedChildren(itemKey.value));
+const effectiveChildren = computed(() =>
+  staticChildren.value && staticChildren.value.length > 0
+    ? staticChildren.value
+    : loadedChildren.value,
+);
+const hasLoadedEmpty = computed(
+  () =>
+    loadedChildren.value !== undefined &&
+    loadedChildren.value.length === 0 &&
+    (!staticChildren.value || staticChildren.value.length === 0),
+);
+const hasSlotChildren = computed(() => Boolean(slots.default || slots.children));
+const hasBranch = computed(() =>
+  Boolean(
+    (effectiveChildren.value && effectiveChildren.value.length > 0) ||
+      hasSlotChildren.value ||
+      (isLazy.value && !hasLoadedEmpty.value),
+  ),
+);
+const hasRenderedChildren = computed(() =>
+  Boolean((effectiveChildren.value && effectiveChildren.value.length > 0) || hasSlotChildren.value),
+);
+const isLoading = computed(() =>
+  Boolean(props.node?.loading || props.loading || tree?.isLoading(itemKey.value)),
+);
+
+const effectiveNode = computed<JTreeNode>(
+  () =>
+    props.node ?? {
+      id: itemKey.value,
+      label: itemLabel.value,
+      icon: props.icon,
+      meta: props.meta,
+      disabled: itemDisabled.value,
+      lazy: isLazy.value,
+      hasChildren: props.hasChildren,
+      loading: props.loading,
+    },
+);
+
 const resolvedIcon = computed(() => {
   const raw = props.node?.icon ?? props.icon;
   if (raw) return raw;
-  return hasChildren.value ? 'folder' : 'file';
+  return hasBranch.value || isLazy.value ? 'folder' : 'file';
 });
 
 if (props.defaultExpanded && tree) {
@@ -34,6 +79,35 @@ if (props.defaultExpanded && tree) {
 if (!itemDisabled.value && tree) {
   tree.ensureInitialFocus(itemKey.value);
 }
+
+watch(
+  [itemKey, effectiveNode],
+  ([key, node], [prevKey]) => {
+    if (!tree) return;
+    if (prevKey !== undefined && prevKey !== key) {
+      tree.unregisterNode(prevKey);
+    }
+    tree.registerNode(key, node);
+  },
+  { immediate: true },
+);
+
+onMounted(() => {
+  if (
+    tree &&
+    tree.hasLazyLoader() &&
+    isLazy.value &&
+    (!staticChildren.value || staticChildren.value.length === 0) &&
+    loadedChildren.value === undefined &&
+    tree.isExpanded(itemKey.value)
+  ) {
+    void tree.toggleExpand(itemKey.value, true, effectiveNode.value);
+  }
+});
+
+onBeforeUnmount(() => {
+  tree?.unregisterNode(itemKey.value);
+});
 
 const localExpanded = ref(props.defaultExpanded);
 const localSelected = ref(false);
@@ -52,10 +126,10 @@ const tabIndex = computed(() => {
 
 function onChevronClick(event: MouseEvent) {
   event.stopPropagation();
-  if (itemDisabled.value || !hasChildren.value) return;
+  if (itemDisabled.value || !hasBranch.value || isLoading.value) return;
   if (tree) {
     tree.setFocused(itemKey.value);
-    tree.toggleExpand(itemKey.value);
+    void tree.toggleExpand(itemKey.value, undefined, effectiveNode.value);
   } else {
     localExpanded.value = !localExpanded.value;
   }
@@ -65,12 +139,12 @@ function onRowClick() {
   if (itemDisabled.value) return;
   if (tree) {
     tree.setFocused(itemKey.value);
-    if (hasChildren.value && tree.expandOnClick()) {
-      tree.toggleExpand(itemKey.value);
+    if (hasBranch.value && tree.expandOnClick() && !isLoading.value) {
+      void tree.toggleExpand(itemKey.value, undefined, effectiveNode.value);
     }
     tree.select(itemKey.value);
   } else {
-    if (hasChildren.value) localExpanded.value = !localExpanded.value;
+    if (hasBranch.value) localExpanded.value = !localExpanded.value;
     localSelected.value = !localSelected.value;
   }
 }
@@ -82,8 +156,11 @@ function onRowClick() {
       class="j-tree__item"
       role="treeitem"
       :data-value="itemKey"
-      :aria-expanded="hasChildren ? (isExpanded ? 'true' : 'false') : undefined"
-      :aria-owns="hasChildren ? groupId : undefined"
+      :data-lazy="isLazy ? '' : undefined"
+      :data-loaded-empty="hasLoadedEmpty ? '' : undefined"
+      :aria-expanded="hasBranch ? (isExpanded ? 'true' : 'false') : undefined"
+      :aria-busy="isLoading ? 'true' : undefined"
+      :aria-owns="hasRenderedChildren ? groupId : undefined"
       :aria-selected="isSelected ? 'true' : 'false'"
       :aria-disabled="itemDisabled ? 'true' : undefined"
       :tabindex="tabIndex"
@@ -91,14 +168,16 @@ function onRowClick() {
       @focus="!itemDisabled && tree?.setFocused(itemKey)"
     >
       <button
-        v-if="hasChildren"
+        v-if="hasBranch || isLoading"
         type="button"
-        class="j-tree__chevron"
+        class="j-tree__chevron j-tree__toggle"
+        :data-loading="isLoading ? '' : undefined"
         tabindex="-1"
         aria-hidden="true"
         @click="onChevronClick"
       >
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+        <span v-if="isLoading" class="j-tree__spinner" aria-hidden="true" />
+        <svg v-else viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
           <path d="M6.25 4.25 10 8l-3.75 3.75" />
         </svg>
       </button>
@@ -141,12 +220,14 @@ function onRowClick() {
       </span>
     </div>
 
-    <div v-if="hasChildren" class="j-tree__branch" role="none">
+    <div v-if="hasRenderedChildren" class="j-tree__branch" role="none">
       <ul :id="groupId" class="j-tree__group" role="group">
-        <template v-if="childNodes && childNodes.length">
-          <JTreeItem v-for="child in childNodes" :key="child.id" :node="child" />
+        <template v-if="effectiveChildren && effectiveChildren.length">
+          <JTreeItem v-for="child in effectiveChildren" :key="child.id" :node="child" />
         </template>
-        <slot v-else />
+        <slot v-else name="children">
+          <slot />
+        </slot>
       </ul>
     </div>
   </li>

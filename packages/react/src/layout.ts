@@ -18,8 +18,10 @@ export { BottomBar, BottomBarItem, type BottomBarProps, type BottomBarItemProps 
 export {
   StatusBar,
   StatusBarItem,
+  StatusBarSeparator,
   type StatusBarProps,
   type StatusBarItemProps,
+  type StatusBarSeparatorProps,
   type StatusBarVariant,
   type StatusBarBorder,
 } from './layout/StatusBar';

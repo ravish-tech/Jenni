@@ -4,6 +4,7 @@ export { default as JPopover } from './overlay/JPopover.vue';
 export { default as JDialog } from './overlay/JDialog.vue';
 export { default as JDropdownMenu } from './overlay/JDropdownMenu.vue';
 export { default as JDropdownItem } from './overlay/JDropdownItem.vue';
+export { default as JDropdownSub, type JDropdownSubProps } from './overlay/JDropdownSub.vue';
 export { default as JDropdownLabel } from './overlay/JDropdownLabel.vue';
 export { default as JDropdownSeparator } from './overlay/JDropdownSeparator.vue';
 export { default as JTabs } from './overlay/JTabs.vue';
@@ -13,6 +14,7 @@ export { default as JTabPanel } from './overlay/JTabPanel.vue';
 export {
   default as JDocTabs,
   type DocTabItem,
+  type DocTabRenderState,
   type DocTabsVariant,
   type DocTabsSize,
   type JDocTabsProps,
@@ -33,6 +35,8 @@ export type {
   DrawerSize,
   ComboboxSize,
   ComboboxOption,
+  ComboboxFilter,
+  ComboboxCreatable,
   ToastTone,
   ToasterPosition,
   ToastAction,

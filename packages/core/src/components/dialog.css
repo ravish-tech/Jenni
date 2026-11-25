@@ -124,6 +124,11 @@
   }
   :where(.j-dialog__header + .j-dialog__body) { padding-top: var(--j-space-4); }
   :where(.j-dialog__header:has(+ .j-dialog__footer)) { padding-bottom: var(--_pad); }
+  :where(.j-dialog[data-flush] .j-dialog__header:has(+ .j-dialog__body)) {
+    padding-bottom: var(--j-space-4);
+    border-bottom: 1px solid var(--j-border-subtle, var(--j-border));
+  }
+  :where(.j-dialog[data-flush] .j-dialog__body) { padding: 0; }
   :where(.j-dialog__footer) {
     flex: none;
     display: flex;

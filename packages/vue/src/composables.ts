@@ -1,4 +1,3 @@
-/// <reference path="./overlay/core.d.ts" />
 import {
   getCurrentInstance,
   getCurrentScope,

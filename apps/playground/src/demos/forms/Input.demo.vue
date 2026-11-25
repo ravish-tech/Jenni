@@ -14,6 +14,8 @@ import { DemoSection, DemoCode } from '@/kit';
 import { JButton, JInline, JInput, JKbd, JStack } from 'jenni-vue';
 
 const query = ref('');
+const filterText = ref('status:open assignee:ada');
+const clearCount = ref(0);
 const domain = ref('meridian');
 const protocol = 'https://';
 const copied = ref(false);
@@ -70,6 +72,19 @@ const html = `<div class="j-stack" data-gap="item" style="width:100%;max-width:3
         <template #prefix>$</template>
         <template #suffix>USD</template>
       </JInput>
+    </JStack>
+  </DemoSection>
+
+  <DemoSection title="Clearable inputs" description="Renders inside .j-input-group with zero layout shift; clicking clear resets the value and restores focus.">
+    <JStack gap="item" style="width: 100%; max-width: 360px">
+      <JInput v-model="filterText" clearable placeholder="Filter issues…" @clear="clearCount++" />
+      <JInput v-model="query" clearable placeholder="Search symbols…">
+        <template #prefix>
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="7" cy="7" r="4.5" /><path d="m10.5 10.5 3 3" /></svg>
+        </template>
+        <template #suffix><JKbd size="sm">⌘K</JKbd></template>
+      </JInput>
+      <span style="color: var(--j-fg-muted); font-size: var(--j-text-sm)">Cleared {{ clearCount }} time(s)</span>
     </JStack>
   </DemoSection>
 

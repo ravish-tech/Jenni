@@ -18,6 +18,7 @@ const hasHeader = computed(() => !!(props.title || props.description || slots.ac
     :data-variant="variant === 'surface' ? undefined : variant"
     :data-size="size === 'md' ? undefined : size"
     :data-interactive="interactive ? '' : undefined"
+    :data-flush="flush || bodyFlush ? '' : undefined"
   >
     <component :is="partTag" v-if="$slots.media" class="j-card__media"><slot name="media" /></component>
     <slot name="header">

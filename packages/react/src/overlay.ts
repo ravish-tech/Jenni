@@ -5,10 +5,12 @@ export { Dialog, type DialogProps } from './overlay/Dialog';
 export {
   DropdownMenu,
   DropdownItem,
+  DropdownSub,
   DropdownLabel,
   DropdownSeparator,
   type DropdownMenuProps,
   type DropdownItemProps,
+  type DropdownSubProps,
   type DropdownLabelProps,
   type DropdownSeparatorProps,
 } from './overlay/DropdownMenu';
@@ -25,6 +27,7 @@ export {
 export {
   DocTabs,
   type DocTabItem,
+  type DocTabRenderState,
   type DocTabsProps,
   type DocTabsHandle,
   type DocTabsVariant,
@@ -50,6 +53,8 @@ export type {
   DrawerSize,
   ComboboxSize,
   ComboboxOption,
+  ComboboxFilter,
+  ComboboxCreatable,
   ToastTone,
   ToasterPosition,
   ToastAction,

@@ -44,6 +44,7 @@
     /* The inner input becomes chrome-less; the group draws the box. */
     & > :where(.j-input) {
       flex: 1;
+      min-inline-size: 0;
       block-size: 100%;
       padding: 0;
       border: 0;
@@ -55,6 +56,49 @@
     }
     & > :where(.j-input):focus { box-shadow: none; }
     & > :where(.j-input):disabled { cursor: not-allowed; }
+    &:has(> .j-input-group__clear:last-child) { padding-inline-end: 0; }
+  }
+
+  :where(.j-input-group__clear) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: calc(20px * var(--j-density));
+    height: calc(20px * var(--j-density));
+    margin-inline-end: var(--j-space-1-5);
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: transparent;
+    color: var(--j-fg-muted);
+    cursor: pointer;
+    outline: none;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    &:not(:last-child) { margin-inline-end: 0; }
+
+    & > svg {
+      width: calc(12px * var(--j-density));
+      height: calc(12px * var(--j-density));
+      pointer-events: none;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: var(--j-bg-subtle, var(--j-surface-3));
+        color: var(--j-fg);
+      }
+    }
+
+    &:focus-visible {
+      color: var(--j-fg);
+      box-shadow: var(--j-ring);
+    }
   }
 
   :where(.j-input-group__addon) {

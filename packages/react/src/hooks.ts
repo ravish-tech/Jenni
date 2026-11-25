@@ -1,4 +1,3 @@
-/// <reference path="./overlay/core.d.ts" />
 import { useEffect, useRef, useState, type RefObject } from 'react';
 import {
   getChartPalette,

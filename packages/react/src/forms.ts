@@ -1,5 +1,6 @@
 // Group index for "forms" components.
 export { Button, ButtonGroup, type ButtonProps, type ButtonGroupProps } from './forms/Button';
+export { SplitButton, type SplitButtonProps, type SplitButtonVariant } from './forms/SplitButton';
 export { Input, type InputProps } from './forms/Input';
 export { Textarea, type TextareaProps } from './forms/Textarea';
 export { Checkbox, type CheckboxProps } from './forms/Checkbox';

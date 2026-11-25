@@ -3,7 +3,12 @@ import { computed, useSlots, type VNode } from 'vue';
 import { getEntityHue } from 'jenni-core/behaviors/entity-color.js';
 import type { JBadgeProps } from './types';
 
-const props = withDefaults(defineProps<JBadgeProps>(), { variant: 'soft', size: 'md' });
+const props = withDefaults(defineProps<JBadgeProps>(), {
+  variant: 'soft',
+  size: 'md',
+  removeLabel: 'Remove',
+});
+const emit = defineEmits<{ remove: [event: MouseEvent] }>();
 const slots = useSlots();
 
 function extractVNodeText(nodes: VNode[] | undefined): string {
@@ -41,5 +46,25 @@ const entityHue = computed<number | undefined>(() => {
     <span v-if="dot" class="j-badge__dot" aria-hidden="true" />
     <slot name="icon" />
     <slot />
+    <button
+      v-if="removable || closable"
+      type="button"
+      class="j-badge__remove"
+      :aria-label="removeLabel"
+      @click.stop="emit('remove', $event)"
+    >
+      <svg
+        width="10"
+        height="10"
+        viewBox="0 0 10 10"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.75"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M2.5 2.5l5 5M7.5 2.5l-5 5" />
+      </svg>
+    </button>
   </span>
 </template>

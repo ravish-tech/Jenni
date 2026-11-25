@@ -1,4 +1,10 @@
-import type { AriaRole, ComponentPropsWithoutRef, ElementType, ReactNode } from 'react';
+import type {
+  AriaRole,
+  ComponentProps,
+  ComponentPropsWithoutRef,
+  ElementType,
+  ReactNode,
+} from 'react';
 import { Icon } from '../display/Icon';
 import { attr, cx, type LayoutTone } from './types';
 
@@ -75,6 +81,8 @@ type StatusBarItemOwnProps<T extends ElementType> = {
   href?: string;
   title?: string;
   disabled?: boolean;
+  /** Render a trailing vertical separator rule after this item. */
+  separator?: boolean;
   children?: ReactNode;
 };
 
@@ -90,6 +98,7 @@ export function StatusBarItem<T extends ElementType = 'span'>({
   href,
   title,
   disabled,
+  separator,
   className,
   children,
   ...rest
@@ -97,7 +106,7 @@ export function StatusBarItem<T extends ElementType = 'span'>({
   const Tag: ElementType = as ?? (href ? 'a' : interactive ? 'button' : 'span');
   const isButton = Tag === 'button';
 
-  return (
+  const node = (
     <Tag
       {...rest}
       type={isButton ? 'button' : undefined}
@@ -113,5 +122,28 @@ export function StatusBarItem<T extends ElementType = 'span'>({
       {typeof icon === 'string' ? <Icon name={icon} size="xs" /> : icon}
       {children}
     </Tag>
+  );
+
+  if (!separator) return node;
+
+  return (
+    <>
+      {node}
+      <StatusBarSeparator />
+    </>
+  );
+}
+
+export interface StatusBarSeparatorProps extends ComponentProps<'span'> {}
+
+export function StatusBarSeparator({ className, ...rest }: StatusBarSeparatorProps) {
+  return (
+    <span
+      {...rest}
+      role="separator"
+      aria-orientation="vertical"
+      aria-hidden="true"
+      className={cx('j-statusbar__sep', className)}
+    />
   );
 }

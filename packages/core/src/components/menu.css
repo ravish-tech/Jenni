@@ -1,5 +1,5 @@
 /*
- * Jenni — Dropdown menu.
+ * Dropdown menu & cascading submenus.
  *   <div class="j-menu" id="m" popover role="menu" data-align="start">
  *     <div class="j-menu__label">Account</div>
  *     <button class="j-menu__item" role="menuitem">
@@ -40,9 +40,9 @@
     &:focus-visible { box-shadow: var(--j-shadow-md), var(--j-inset-highlight); }
   }
 
-  /* Match the trigger width when the browser can measure the anchor. */
+  /* Match the trigger width when the browser can measure the anchor (root menus only). */
   @supports (width: anchor-size(width)) {
-    :where(.j-menu) { min-width: max(var(--_min-w), anchor-size(width)); }
+    :where(.j-menu:not(.j-menu__sub-content)) { min-width: max(var(--_min-w), anchor-size(width)); }
   }
 
   :where(.j-menu__item) {
@@ -144,4 +144,35 @@
   }
 
   :where(.j-menu__group) { display: flex; flex-direction: column; }
+
+  /* ---- Cascading submenus ---- */
+  :where(.j-menu__sub) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  :where(.j-menu__sub-trigger[aria-expanded="true"]:not(:focus, :focus-visible)) {
+    background: color-mix(in oklch, var(--_hl) 65%, transparent);
+    color: var(--_hl-fg);
+  }
+
+  :where(.j-menu__sub-chevron) {
+    flex: none;
+    width: 14px;
+    height: 14px;
+    margin-inline-start: auto;
+    padding-inline-start: 0;
+    color: var(--j-fg-subtle);
+    transition: color var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  :where(.j-menu__sub-trigger:is(:focus, :focus-visible, [aria-expanded="true"])) :where(.j-menu__sub-chevron) {
+    color: currentColor;
+  }
+
+  :where(.j-menu__sub-content) {
+    --_min-w: var(--j-menu-min-width, 11rem);
+    --j-floating-offset: 4px;
+  }
 }

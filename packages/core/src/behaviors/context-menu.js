@@ -3,6 +3,8 @@
 // (`contextmenu` event), keyboard `ContextMenu` / `Shift+F10`, or imperative
 // `openAt` / `openFor` / `openFromEvent`, clamped inside an 8px safe viewport margin.
 
+import { createSubmenu, getDirectItems, isSubmenuBound } from './menu.js';
+
 const ITEM = '[role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"]';
 const VIEWPORT_PAD = 8;
 
@@ -25,10 +27,18 @@ let closeCurrent = null;
  *   returnFocusTo?: HTMLElement | null,
  * }} ContextMenuOpenForOptions
  * @typedef {{
+ *   nativeEvent?: Event,
+ *   preventDefault: () => void,
+ *   currentTarget?: EventTarget | null,
+ *   target?: EventTarget | null,
+ *   clientX?: number,
+ *   clientY?: number,
+ * }} ContextMenuEventLike
+ * @typedef {{
  *   openAt: (x: number, y: number, opts?: ContextMenuOpenAtOptions | boolean) => void,
  *   openFor: (anchorEl: HTMLElement, opts?: ContextMenuOpenForOptions) => void,
- *   openFromEvent: (e: MouseEvent | KeyboardEvent | { nativeEvent?: Event, preventDefault: () => void, currentTarget?: EventTarget | null, target?: EventTarget | null, clientX?: number, clientY?: number }) => void,
- *   close: () => void,
+ *   openFromEvent: (e: MouseEvent | KeyboardEvent | ContextMenuEventLike) => void,
+ *   close: (opts?: { restoreFocus?: boolean } | boolean) => void,
  *   isOpen: () => boolean,
  *   destroy: () => void,
  * }} ContextMenuMethods
@@ -62,18 +72,36 @@ export function createContextMenu(target, menu, options = {}) {
   /** @type {HTMLElement | null} */
   let returnFocusEl = null;
 
-  const items = () =>
-    /** @type {HTMLElement[]} */ (
-      [...menu.querySelectorAll(ITEM)].filter(
-        (el) => !isDisabled(el) && /** @type {HTMLElement} */ (el).offsetParent !== null,
-      )
-    );
+  const items = () => getDirectItems(menu);
 
   /** @param {HTMLElement | undefined} el */
   const focus = (el) => el?.focus({ preventScroll: false });
   const isOpen = () => menu.matches(':popover-open');
 
-  const close = () => {
+  const hideSubmenus = () => {
+    menu.querySelectorAll('.j-menu__sub-content').forEach((el) => {
+      const sub = /** @type {HTMLElement} */ (el);
+      if (sub.matches(':popover-open')) {
+        try {
+          sub.hidePopover();
+        } catch {
+          /* ignore */
+        }
+      }
+      const subWrap = sub.closest('.j-menu__sub');
+      const subTrigger = subWrap?.querySelector(
+        ':scope > .j-menu__sub-trigger, :scope > [aria-haspopup="menu"]',
+      );
+      if (subTrigger) subTrigger.setAttribute('aria-expanded', 'false');
+    });
+  };
+
+  /**
+   * @param {{ restoreFocus?: boolean } | boolean} [opts]
+   */
+  const close = (opts) => {
+    const restoreFocus = typeof opts === 'boolean' ? opts : Boolean(opts?.restoreFocus);
+    hideSubmenus();
     if (isOpen()) {
       try {
         menu.hidePopover();
@@ -82,6 +110,9 @@ export function createContextMenu(target, menu, options = {}) {
       }
     }
     if (closeCurrent === close) closeCurrent = null;
+    if (restoreFocus) {
+      returnFocusEl?.focus?.({ preventScroll: true });
+    }
   };
 
   /**
@@ -157,6 +188,7 @@ export function createContextMenu(target, menu, options = {}) {
     focusFirstOnOpen = keyboard;
 
     if (wasOpen) {
+      hideSubmenus();
       placeAt(x, y);
       if (keyboard) focus(items()[0]);
       else menu.focus({ preventScroll: true });
@@ -173,7 +205,9 @@ export function createContextMenu(target, menu, options = {}) {
     closeCurrent = close;
     placeAt(x, y);
     menu.querySelectorAll(ITEM).forEach((el) => {
-      /** @type {HTMLElement} */ (el).tabIndex = -1;
+      if (el.closest('.j-menu, [role="menu"]') === menu) {
+        /** @type {HTMLElement} */ (el).tabIndex = -1;
+      }
     });
     if (keyboard) focus(items()[0]);
     else menu.focus({ preventScroll: true });
@@ -295,10 +329,13 @@ export function createContextMenu(target, menu, options = {}) {
   };
 
   const onToggle = (/** @type {Event} */ e) => {
+    if (e.target !== menu) return;
     const opened = /** @type {ToggleEvent} */ (e).newState === 'open';
     if (opened) {
       menu.querySelectorAll(ITEM).forEach((el) => {
-        /** @type {HTMLElement} */ (el).tabIndex = -1;
+        if (el.closest('.j-menu, [role="menu"]') === menu) {
+          /** @type {HTMLElement} */ (el).tabIndex = -1;
+        }
       });
       if (focusFirstOnOpen) focus(items()[0]);
       else if (!menu.contains(document.activeElement)) menu.focus({ preventScroll: true });
@@ -306,6 +343,7 @@ export function createContextMenu(target, menu, options = {}) {
       window.addEventListener('scroll', onWindowScroll, { capture: true, passive: true });
       window.addEventListener('resize', onWindowResize, { passive: true });
     } else {
+      hideSubmenus();
       if (closeCurrent === close) closeCurrent = null;
       document.removeEventListener('contextmenu', onDocContext, true);
       window.removeEventListener('scroll', onWindowScroll, { capture: true });
@@ -334,6 +372,9 @@ export function createContextMenu(target, menu, options = {}) {
 
   /** @param {KeyboardEvent} e */
   const onMenuKey = (e) => {
+    const targetMenu = e.target instanceof Element ? e.target.closest('.j-menu, [role="menu"]') : null;
+    if (targetMenu && targetMenu !== menu) return;
+
     const list = items();
     const i = list.indexOf(/** @type {HTMLElement} */ (document.activeElement));
     const last = list.length - 1;
@@ -359,14 +400,12 @@ export function createContextMenu(target, menu, options = {}) {
       case 'Escape': {
         e.preventDefault();
         e.stopPropagation();
-        const restoreEl = returnFocusEl;
-        close();
-        restoreEl?.focus?.({ preventScroll: true });
+        close({ restoreFocus: true });
         break;
       }
       case 'Tab':
         e.preventDefault();
-        close();
+        close({ restoreFocus: false });
         break;
       case 'Enter':
       case ' ': {
@@ -388,42 +427,79 @@ export function createContextMenu(target, menu, options = {}) {
 
   /** @param {MouseEvent} e */
   const onMenuClick = (e) => {
-    const item = /** @type {HTMLElement | null} */ (/** @type {Element} */ (e.target).closest(ITEM));
+    const item =
+      e.target instanceof Element ? /** @type {HTMLElement | null} */ (e.target.closest(ITEM)) : null;
     if (!item || !menu.contains(item)) return;
+    if (
+      item.classList.contains('j-menu__sub-trigger') ||
+      item.getAttribute('aria-haspopup') === 'menu'
+    ) {
+      return;
+    }
     if (isDisabled(item)) {
       e.preventDefault();
       return;
     }
     const role = item.getAttribute('role');
+    const ownerMenu = item.closest('.j-menu, [role="menu"]') || menu;
     if (manageChecked && role === 'menuitemcheckbox') {
       item.setAttribute('aria-checked', String(item.getAttribute('aria-checked') !== 'true'));
     } else if (manageChecked && role === 'menuitemradio') {
-      const group = item.closest('[role="group"]') || menu;
-      group
-        .querySelectorAll('[role="menuitemradio"]')
-        .forEach((r) => r.setAttribute('aria-checked', String(r === item)));
+      const group = item.closest('[role="group"]') || ownerMenu;
+      group.querySelectorAll('[role="menuitemradio"]').forEach((r) => {
+        if (r.closest('.j-menu, [role="menu"]') === ownerMenu) {
+          r.setAttribute('aria-checked', String(r === item));
+        }
+      });
     }
     const evt = new CustomEvent('j-select', { bubbles: true, cancelable: true, detail: { item } });
     item.dispatchEvent(evt);
     const keepOpen =
       role !== 'menuitem' ? !item.hasAttribute('data-close') : item.hasAttribute('data-keep-open');
-    if (!evt.defaultPrevented && !keepOpen) close();
+    if (!evt.defaultPrevented && !keepOpen) close({ restoreFocus: false });
   };
 
   /** @param {PointerEvent} e */
   const onPointerMove = (e) => {
     if (e.pointerType === 'touch') return;
-    const item = /** @type {HTMLElement | null} */ (/** @type {Element} */ (e.target).closest(ITEM));
-    if (item && !isDisabled(item) && document.activeElement !== item) {
-      item.focus({ preventScroll: true });
-    } else if (!item && menu.contains(document.activeElement) && document.activeElement !== menu) {
+    const targetMenu = e.target instanceof Element ? e.target.closest('.j-menu, [role="menu"]') : null;
+    if (targetMenu && targetMenu !== menu) return;
+    const item =
+      e.target instanceof Element ? /** @type {HTMLElement | null} */ (e.target.closest(ITEM)) : null;
+    if (item && item.closest('.j-menu, [role="menu"]') === menu && !isDisabled(item)) {
+      if (document.activeElement !== item) item.focus({ preventScroll: true });
+    } else if (
+      !item &&
+      menu.contains(document.activeElement) &&
+      document.activeElement?.closest('.j-menu, [role="menu"]') === menu &&
+      document.activeElement !== menu
+    ) {
       menu.focus({ preventScroll: true });
     }
   };
 
   const onPointerLeave = () => {
-    if (menu.contains(document.activeElement)) menu.focus({ preventScroll: true });
+    if (
+      menu.contains(document.activeElement) &&
+      document.activeElement?.closest('.j-menu, [role="menu"]') === menu
+    ) {
+      menu.focus({ preventScroll: true });
+    }
   };
+
+  // Auto-wire any plain-HTML `.j-menu__sub` children not already bound by framework wrappers.
+  /** @type {Array<() => void>} */
+  const subCleanups = [];
+  menu.querySelectorAll('.j-menu__sub').forEach((subEl) => {
+    const subContent = /** @type {HTMLElement | null} */ (
+      subEl.querySelector(':scope > .j-menu__sub-content, :scope > .j-menu')
+    );
+    if (subContent && !isSubmenuBound(subContent)) {
+      subCleanups.push(
+        createSubmenu(/** @type {HTMLElement} */ (subEl), { loop, manageChecked }),
+      );
+    }
+  });
 
   if (target) {
     target.addEventListener('contextmenu', onContextMenu);
@@ -437,7 +513,9 @@ export function createContextMenu(target, menu, options = {}) {
 
   const destroy = () => {
     clearTimeout(typedTimer);
-    close();
+    subCleanups.forEach((fn) => fn());
+    subCleanups.length = 0;
+    close({ restoreFocus: false });
     document.removeEventListener('contextmenu', onDocContext, true);
     window.removeEventListener('scroll', onWindowScroll, { capture: true });
     window.removeEventListener('resize', onWindowResize);

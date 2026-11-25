@@ -14,6 +14,7 @@ import { DemoSection, DemoCode } from '@/kit';
 import {
   JDropdownMenu,
   JDropdownItem,
+  JDropdownSub,
   JDropdownLabel,
   JDropdownSeparator,
   JButton,
@@ -140,6 +141,43 @@ const html = `<button class="j-button" data-variant="outline" popovertarget="dem
         <JBadge v-if="snapPixels" size="sm" variant="outline" tone="neutral">Snap</JBadge>
         <JBadge size="sm" tone="info">{{ density }}</JBadge>
       </JInline>
+    </JInline>
+  </DemoSection>
+
+  <DemoSection title="Cascading Submenus" description="Nested WAI-ARIA submenus with diagonal hover grace timers and ArrowRight / ArrowLeft keyboard navigation.">
+    <JInline gap="item" justify="center">
+      <JDropdownMenu align="start">
+        <template #trigger>
+          <JButton variant="outline">
+            File actions
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m4.5 6.5 3.5 3.5 3.5-3.5" /></svg>
+          </JButton>
+        </template>
+
+        <JDropdownItem shortcut="⌘N" @select="lastAction = 'New document'">New document</JDropdownItem>
+        <JDropdownSub label="Share">
+          <JDropdownItem @select="lastAction = 'Copy link'">Copy public link</JDropdownItem>
+          <JDropdownItem @select="lastAction = 'Invite email'">Invite by email…</JDropdownItem>
+          <JDropdownSeparator />
+          <JDropdownSub label="Embed snippet">
+            <JDropdownItem @select="lastAction = 'Embed iframe'">Responsive iframe</JDropdownItem>
+            <JDropdownItem @select="lastAction = 'Embed script'">Async script tag</JDropdownItem>
+            <JDropdownItem @select="lastAction = 'Embed markdown'">Markdown card</JDropdownItem>
+          </JDropdownSub>
+        </JDropdownSub>
+        <JDropdownSub label="Export as">
+          <JDropdownItem shortcut="⇧⌘E" @select="lastAction = 'Export PNG'">PNG (2x retina)</JDropdownItem>
+          <JDropdownItem @select="lastAction = 'Export SVG'">Vector SVG</JDropdownItem>
+          <JDropdownItem @select="lastAction = 'Export PDF'">Print-ready PDF</JDropdownItem>
+        </JDropdownSub>
+        <JDropdownSub label="Archive (locked)" disabled>
+          <JDropdownItem>Cold storage</JDropdownItem>
+        </JDropdownSub>
+        <JDropdownSeparator />
+        <JDropdownItem tone="danger" shortcut="⌘⌫" @select="lastAction = 'Move to trash'">Move to trash</JDropdownItem>
+      </JDropdownMenu>
+
+      <JBadge variant="soft" tone="neutral">Selected: {{ lastAction }}</JBadge>
     </JInline>
   </DemoSection>
 

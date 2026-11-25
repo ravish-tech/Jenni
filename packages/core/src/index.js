@@ -15,6 +15,7 @@ import {
 } from './behaviors/forms.js';
 import {
   initAvatars,
+  initSparklines,
   initAccordions,
   initDataTables,
   initSteppers,
@@ -53,6 +54,7 @@ export function initJenni(root = document) {
     initRichTextEditors(root),
     initToggles(root),
     initAvatars(root),
+    initSparklines(root),
     initAccordions(root),
     initDataTables(root),
     initSteppers(root),

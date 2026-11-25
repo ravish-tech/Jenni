@@ -1,7 +1,12 @@
 // Group index for "forms" components.
 export { default as JButton } from './forms/JButton.vue';
 export { default as JButtonGroup } from './forms/JButtonGroup.vue';
-export { default as JInput } from './forms/JInput.vue';
+export {
+  default as JSplitButton,
+  type JSplitButtonProps,
+  type SplitButtonVariant,
+} from './forms/JSplitButton.vue';
+export { default as JInput, type JInputProps } from './forms/JInput.vue';
 export { default as JTextarea } from './forms/JTextarea.vue';
 export { default as JCheckbox } from './forms/JCheckbox.vue';
 export { default as JRadio } from './forms/JRadio.vue';

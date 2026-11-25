@@ -189,6 +189,9 @@
     padding: var(--_pad);
     font-size: var(--j-text-md);
   }
+  :where(.j-drawer[data-flush] .j-drawer__body) {
+    padding: 0;
+  }
 
   :where(.j-drawer__footer) {
     flex: none;

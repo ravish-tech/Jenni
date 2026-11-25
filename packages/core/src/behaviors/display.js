@@ -10,6 +10,7 @@ export {
 } from './icon.js';
 export { ENTITY_HUE_RING, hashEntitySeed, getEntityHue, getEntityColorVars } from './entity-color.js';
 export { initAvatars } from './avatar.js';
+export { computeSparkline, createSparkline, initSparklines } from './sparkline.js';
 export { initAccordions } from './accordion.js';
 export { createDataTable, initDataTables } from './table.js';
 export { createVirtualizer } from './virtual-list.js';

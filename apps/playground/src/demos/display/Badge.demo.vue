@@ -9,8 +9,9 @@ export const meta = {
 </script>
 
 <script setup lang="ts">
+import { ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JBadge, JAvatar, JInline, JStack, JList, JListItem } from 'jenni-vue';
+import { JBadge, JButton, JAvatar, JInline, JStack, JList, JListItem, type JDisplayTone } from 'jenni-vue';
 
 const tones = ['accent', 'neutral', 'success', 'warning', 'danger', 'info'] as const;
 const variants = ['soft', 'solid', 'outline'] as const;
@@ -19,6 +20,28 @@ const members = [
   { name: 'Grace Hopper', handle: 'grace@acme.dev', role: 'Maintainer', tone: 'info' },
   { name: 'Alan Turing', handle: 'alan@acme.dev', role: 'Invited', tone: 'neutral' },
 ] as const;
+
+interface FilterChip {
+  id: string;
+  label: string;
+  tone: JDisplayTone;
+}
+
+const initialFilters: FilterChip[] = [
+  { id: 'status', label: 'status: open', tone: 'accent' },
+  { id: 'region', label: 'region: eu-west-1', tone: 'info' },
+  { id: 'p95', label: 'latency > 200ms', tone: 'warning' },
+  { id: 'env', label: 'env: production', tone: 'neutral' },
+];
+const activeFilters = ref<FilterChip[]>([...initialFilters]);
+
+function removeFilter(id: string) {
+  activeFilters.value = activeFilters.value.filter((f) => f.id !== id);
+}
+
+function resetFilters() {
+  activeFilters.value = [...initialFilters];
+}
 
 const html = `<div class="j-inline" data-gap="related">
   <span class="j-badge">Soft</span>
@@ -69,6 +92,32 @@ const html = `<div class="j-inline" data-gap="related">
       </JBadge>
       <JBadge variant="solid" tone="neutral">v2.4.0</JBadge>
       <JBadge variant="solid" size="sm">12</JBadge>
+    </JInline>
+  </DemoSection>
+
+  <DemoSection title="Removable filter badges" description="Pass removable (or closable) to render an accessible trailing × button that emits remove.">
+    <JInline gap="related" wrap>
+      <JBadge
+        v-for="f in activeFilters"
+        :key="f.id"
+        :tone="f.tone"
+        removable
+        :remove-label="`Remove ${f.label}`"
+        @remove="removeFilter(f.id)"
+      >
+        {{ f.label }}
+      </JBadge>
+      <span v-if="activeFilters.length === 0" style="color:var(--j-fg-muted);font-size:var(--j-text-sm)">
+        No active filters.
+      </span>
+      <JButton
+        v-if="activeFilters.length < initialFilters.length"
+        size="sm"
+        variant="ghost"
+        @click="resetFilters"
+      >
+        Reset filters
+      </JButton>
     </JInline>
   </DemoSection>
 

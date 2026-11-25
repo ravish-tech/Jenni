@@ -11,10 +11,20 @@ export const meta = {
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JButton, JButtonGroup, JCard, JInline, JStack } from 'jenni-vue';
+import {
+  JButton,
+  JButtonGroup,
+  JCard,
+  JDropdownItem,
+  JDropdownSeparator,
+  JInline,
+  JSplitButton,
+  JStack,
+} from 'jenni-vue';
 
 const variants = ['solid', 'soft', 'outline', 'ghost', 'link'] as const;
 const tones = ['accent', 'neutral', 'danger', 'success', 'warning', 'info'] as const;
+const lastSplitAction = ref('Deploy production');
 
 const saving = ref(false);
 function save() {
@@ -104,6 +114,55 @@ const html = `<button class="j-button">Save changes</button>
         <JButton>Center</JButton>
         <JButton>Right</JButton>
       </JButtonGroup>
+    </JStack>
+  </DemoSection>
+
+  <DemoSection title="Split button" description="Primary action paired with an attached dropdown menu across solid, soft, and outline variants, tones, and sizes.">
+    <JStack gap="field" align="center">
+      <JInline gap="related" justify="center">
+        <JSplitButton label="Deploy" @click="lastSplitAction = 'Deploy production'">
+          <JDropdownItem @select="lastSplitAction = 'Deploy preview'">Deploy preview</JDropdownItem>
+          <JDropdownItem @select="lastSplitAction = 'Promote staging'">Promote staging</JDropdownItem>
+          <JDropdownSeparator />
+          <JDropdownItem tone="danger" @select="lastSplitAction = 'Rollback release'">Rollback release</JDropdownItem>
+        </JSplitButton>
+
+        <JSplitButton variant="soft" label="Squash & merge" @click="lastSplitAction = 'Squash & merge'">
+          <JDropdownItem @select="lastSplitAction = 'Create merge commit'">Create merge commit</JDropdownItem>
+          <JDropdownItem @select="lastSplitAction = 'Rebase and merge'">Rebase and merge</JDropdownItem>
+        </JSplitButton>
+
+        <JSplitButton variant="outline" @click="lastSplitAction = 'Export CSV'">
+          <template #default>Export CSV</template>
+          <template #menu>
+            <JDropdownItem @select="lastSplitAction = 'Export Parquet'">Export Parquet</JDropdownItem>
+            <JDropdownItem @select="lastSplitAction = 'Export JSON Lines'">Export JSON Lines</JDropdownItem>
+          </template>
+        </JSplitButton>
+      </JInline>
+
+      <JInline gap="related" justify="center">
+        <JSplitButton tone="success" variant="solid" label="Approve" @click="lastSplitAction = 'Approve'">
+          <JDropdownItem @select="lastSplitAction = 'Approve with comment'">Approve with comment</JDropdownItem>
+          <JDropdownItem @select="lastSplitAction = 'Request changes'">Request changes</JDropdownItem>
+        </JSplitButton>
+        <JSplitButton tone="danger" variant="soft" label="Terminate" @click="lastSplitAction = 'Terminate'">
+          <JDropdownItem @select="lastSplitAction = 'Drain connections'">Drain connections</JDropdownItem>
+          <JDropdownItem tone="danger" @select="lastSplitAction = 'Force kill'">Force kill</JDropdownItem>
+        </JSplitButton>
+        <JSplitButton tone="neutral" variant="outline" label="Archive" @click="lastSplitAction = 'Archive'">
+          <JDropdownItem @select="lastSplitAction = 'Move to cold storage'">Move to cold storage</JDropdownItem>
+        </JSplitButton>
+      </JInline>
+
+      <JInline gap="related" justify="center">
+        <JSplitButton v-for="s in (['sm', 'md', 'lg'] as const)" :key="s" :size="s" variant="outline" :label="`Run (${s})`" @click="lastSplitAction = `Run (${s})`">
+          <JDropdownItem @select="lastSplitAction = `Run with debugger (${s})`">Run with debugger</JDropdownItem>
+          <JDropdownItem @select="lastSplitAction = `Profile CPU (${s})`">Profile CPU</JDropdownItem>
+        </JSplitButton>
+      </JInline>
+
+      <span style="color: var(--j-fg-muted); font-size: var(--j-text-sm)">Last action: {{ lastSplitAction }}</span>
     </JStack>
   </DemoSection>
 

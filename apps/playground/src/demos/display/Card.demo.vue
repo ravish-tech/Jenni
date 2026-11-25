@@ -129,6 +129,39 @@ const html = `<article class="j-card" style="width:100%;max-width:360px">
     </JCard>
   </DemoSection>
 
+  <DemoSection title="Flush Body (Edge-to-Edge Content)" description="Pass flush to remove body padding for full-bleed lists, tables, editors, or terminals with crisp header and footer hairlines.">
+    <JCard
+      flush
+      title="Recent deployments"
+      description="Production cluster · eu-central-1"
+      footer-divider
+      style="width:100%;max-width:460px"
+    >
+      <template #action>
+        <JBadge tone="success" dot>Healthy</JBadge>
+      </template>
+      <JList variant="divided" inset-divider lines="2">
+        <JListItem
+          v-for="d in [
+            { id: 'dep-904', title: 'api-gateway@2.18.4', meta: '2m ago · 142ms p95', tone: 'success', status: 'Live' },
+            { id: 'dep-903', title: 'worker-ingest@1.9.1', meta: '38m ago · 4 shards', tone: 'info', status: 'Canary' },
+            { id: 'dep-902', title: 'auth-edge@3.2.0', meta: '3h ago · Global', tone: 'neutral', status: 'Superseded' },
+          ]"
+          :key="d.id"
+          :title="d.title"
+          :description="d.meta"
+        >
+          <template #trailing>
+            <JBadge size="sm" :tone="d.tone">{{ d.status }}</JBadge>
+          </template>
+        </JListItem>
+      </JList>
+      <template #footer>
+        <span style="color:var(--j-fg-muted);font-size:var(--j-text-sm)">All 3 services passing readiness probes.</span>
+      </template>
+    </JCard>
+  </DemoSection>
+
   <DemoSection title="Plain HTML">
     <DemoCode lang="html" :code="html" />
   </DemoSection>

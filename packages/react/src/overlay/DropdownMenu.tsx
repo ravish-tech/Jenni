@@ -8,7 +8,7 @@ import {
   type ReactNode,
   type ToggleEvent,
 } from 'react';
-import { createMenu } from 'jenni-core/behaviors/menu.js';
+import { createMenu, createSubmenu } from 'jenni-core/behaviors/menu.js';
 import {
   alignAttr,
   cx,
@@ -115,6 +115,7 @@ export function DropdownMenu({
   }, [isOpen, open]);
 
   const handleToggle = (e: ToggleEvent<HTMLDivElement>) => {
+    if (e.target !== menuRef.current) return;
     onToggle?.(e);
     setOpen(e.newState === 'open');
   };
@@ -230,6 +231,117 @@ export function DropdownItem<T extends ElementType = 'button'>({
       {children}
       {shortcut != null && <kbd className="j-menu__shortcut">{shortcut}</kbd>}
     </Tag>
+  );
+}
+
+export interface DropdownSubProps extends Omit<ComponentProps<'div'>, 'children'> {
+  label?: ReactNode;
+  icon?: ReactNode;
+  inset?: boolean;
+  disabled?: boolean;
+  textValue?: string;
+  open?: boolean;
+  defaultOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  children?: ReactNode;
+}
+
+export function DropdownSub({
+  label,
+  icon,
+  inset,
+  disabled,
+  textValue,
+  open,
+  defaultOpen,
+  onOpenChange,
+  className,
+  children,
+  ref,
+  ...rest
+}: DropdownSubProps) {
+  const subId = useId();
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const subMenuRef = useRef<HTMLDivElement | null>(null);
+  const [isOpen, setOpen] = useControllable(open, defaultOpen ?? false, onOpenChange);
+
+  useEffect(() => {
+    const triggerEl = triggerRef.current;
+    const subMenuEl = subMenuRef.current;
+    if (!triggerEl || !subMenuEl) return;
+    return createSubmenu(triggerEl, subMenuEl, { manageChecked: false });
+  }, []);
+
+  useEffect(() => {
+    const el = subMenuRef.current;
+    if (!el) return;
+    const domOpen = el.matches(':popover-open');
+    if (isOpen && !domOpen && !disabled) {
+      try {
+        el.showPopover();
+      } catch {
+        /* ignore */
+      }
+    } else if (!isOpen && domOpen) {
+      try {
+        el.hidePopover();
+      } catch {
+        /* ignore */
+      }
+    }
+  }, [isOpen, open, disabled]);
+
+  const handleToggle = (e: ToggleEvent<HTMLDivElement>) => {
+    if (e.target !== subMenuRef.current) return;
+    setOpen(e.newState === 'open');
+  };
+
+  const resolvedTextValue =
+    textValue ?? (typeof label === 'string' || typeof label === 'number' ? String(label) : undefined);
+
+  return (
+    <div {...rest} ref={ref} className={cx('j-menu__sub', className)}>
+      <button
+        ref={triggerRef}
+        type="button"
+        role="menuitem"
+        aria-haspopup="menu"
+        aria-expanded={isOpen}
+        aria-controls={subId}
+        disabled={disabled || undefined}
+        aria-disabled={disabled || undefined}
+        data-inset={flag(inset)}
+        data-text-value={resolvedTextValue}
+        className="j-menu__item j-menu__sub-trigger"
+      >
+        {icon}
+        {label}
+        <svg
+          className="j-menu__sub-chevron"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={1.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="m6 4 4 4-4 4" />
+        </svg>
+      </button>
+      <div
+        id={subId}
+        ref={subMenuRef}
+        className="j-menu j-menu__sub-content"
+        role="menu"
+        popover="manual"
+        data-side="right"
+        data-align="start"
+        onToggle={handleToggle}
+      >
+        {children}
+      </div>
+    </div>
   );
 }
 

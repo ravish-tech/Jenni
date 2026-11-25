@@ -17,6 +17,10 @@ type CardOwnProps<T extends ElementType> = {
   footerDivider?: boolean;
   /** Force the interactive hover state (e.g. a clickable div). */
   interactive?: boolean;
+  /** Remove `.j-card__body` padding for edge-to-edge grids, lists, editors, or terminals. */
+  flush?: boolean;
+  /** Alias for `flush`. */
+  bodyFlush?: boolean;
 };
 
 export type CardProps<T extends ElementType = 'div'> = CardOwnProps<T> &
@@ -24,7 +28,7 @@ export type CardProps<T extends ElementType = 'div'> = CardOwnProps<T> &
 
 export function Card<T extends ElementType = 'div'>({
   as, variant = 'surface', size = 'md', title, description, action, media, footer, footerDivider,
-  interactive, className, children, ...rest
+  interactive, flush, bodyFlush, className, children, ...rest
 }: CardProps<T>) {
   const Tag: ElementType = as ?? 'div';
   // Headings / divs are not valid inside <button>; use phrasing content there.
@@ -39,6 +43,7 @@ export function Card<T extends ElementType = 'div'>({
       data-variant={attr(variant, 'surface')}
       data-size={attr(size, 'md')}
       data-interactive={interactive ? '' : undefined}
+      data-flush={flush || bodyFlush ? '' : undefined}
     >
       {media != null && <Part className="j-card__media">{media}</Part>}
       {hasHeader && (

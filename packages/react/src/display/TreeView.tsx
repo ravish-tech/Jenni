@@ -1,5 +1,6 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useId,
@@ -20,16 +21,33 @@ export interface TreeNode {
   icon?: 'folder' | 'file' | 'none' | ReactNode;
   meta?: ReactNode;
   disabled?: boolean;
+  /** Marks a node whose children are loaded asynchronously on first expand. */
+  lazy?: boolean;
+  /** Alias indicating this node has expandable children even before `children` are loaded. */
+  hasChildren?: boolean;
+  /** Explicit loading spinner override for this node. */
+  loading?: boolean;
   children?: TreeNode[];
 }
 
 interface TreeViewContextValue {
   selectedSet: Set<string>;
   expandedSet: Set<string>;
+  loadingSet: Set<string>;
   focusedValue: string | undefined;
   expandOnClick: boolean;
+  hasLazyLoader: boolean;
+  getLoadedChildren: (value: string) => TreeNode[] | undefined;
+  isExpandedNow: (value: string) => boolean;
+  registerNode: (value: string, node: TreeNode) => void;
+  unregisterNode: (value: string) => void;
   select: (value: string) => void;
-  toggleExpand: (value: string, force?: boolean) => void;
+  toggleExpand: (
+    value: string,
+    force?: boolean,
+    node?: TreeNode,
+    itemEl?: HTMLElement | null,
+  ) => void | Promise<void>;
   registerDefaultExpanded: (value: string) => void;
   setFocused: (value: string) => void;
   ensureInitialFocus: (value: string) => void;
@@ -40,6 +58,22 @@ const TreeViewContext = createContext<TreeViewContextValue | null>(null);
 function toArray(val: string | string[] | undefined): string[] {
   if (Array.isArray(val)) return val.filter(Boolean);
   return val ? [val] : [];
+}
+
+function findNodeInList(
+  list: TreeNode[] | undefined,
+  targetId: string,
+  loadedMap: Record<string, TreeNode[]>,
+): TreeNode | undefined {
+  if (!list) return undefined;
+  for (const n of list) {
+    if (n.id === targetId) return n;
+    const nested =
+      findNodeInList(n.children, targetId, loadedMap) ??
+      findNodeInList(loadedMap[n.id], targetId, loadedMap);
+    if (nested) return nested;
+  }
+  return undefined;
 }
 
 export interface TreeViewProps extends Omit<ComponentProps<'ul'>, 'defaultValue' | 'onSelect'> {
@@ -56,6 +90,12 @@ export interface TreeViewProps extends Omit<ComponentProps<'ul'>, 'defaultValue'
   defaultExpanded?: string[];
   onExpandedChange?: (expanded: string[]) => void;
   expandOnClick?: boolean;
+  /** Async loader invoked when expanding a `lazy` / `hasChildren` node whose children haven't loaded yet. */
+  loadChildren?: (node: TreeNode) => Promise<TreeNode[] | void>;
+  /** Fired when a lazy node loads (or requests loading of) children. */
+  onLoadChildren?: (node: TreeNode, children?: TreeNode[]) => void;
+  /** Fired when `loadChildren` rejects. */
+  onLoadError?: (error: unknown, node: TreeNode) => void;
 }
 
 export function TreeView({
@@ -72,6 +112,9 @@ export function TreeView({
   defaultExpanded = [],
   onExpandedChange,
   expandOnClick = true,
+  loadChildren,
+  onLoadChildren,
+  onLoadError,
   className,
   children,
   onKeyDown,
@@ -82,6 +125,8 @@ export function TreeView({
   const [focusedValue, setFocusedValue] = useState<string | undefined>(
     () => toArray(value ?? defaultValue)[0],
   );
+  const [loadingSet, setLoadingSet] = useState<Set<string>>(() => new Set());
+  const [loadedChildrenMap, setLoadedChildrenMap] = useState<Record<string, TreeNode[]>>({});
 
   const isSelectedControlled = value !== undefined;
   const isExpandedControlled = expanded !== undefined;
@@ -97,6 +142,135 @@ export function TreeView({
   );
 
   const treeRef = useRef<HTMLUListElement | null>(null);
+  const inFlightRef = useRef<Map<string, Promise<void>>>(new Map());
+  const registeredDefaultsRef = useRef<Set<string>>(new Set());
+  const nodeRegistryRef = useRef<Map<string, TreeNode>>(new Map());
+  const expandedSetRef = useRef<Set<string>>(expandedSet);
+  expandedSetRef.current = expandedSet;
+  const loadedMapRef = useRef<Record<string, TreeNode[]>>(loadedChildrenMap);
+  loadedMapRef.current = loadedChildrenMap;
+  const nodesRef = useRef<TreeNode[] | undefined>(nodes);
+  nodesRef.current = nodes;
+
+  const registerNode = useCallback((val: string, node: TreeNode) => {
+    nodeRegistryRef.current.set(val, node);
+  }, []);
+
+  const unregisterNode = useCallback((val: string) => {
+    nodeRegistryRef.current.delete(val);
+  }, []);
+
+  const isExpandedNow = useCallback((val: string) => expandedSetRef.current.has(val), []);
+
+  const commitExpanded = useCallback(
+    (val: string, nextOpen: boolean) => {
+      const latestSet = expandedSetRef.current;
+      const currentlyOpen = latestSet.has(val);
+      if (nextOpen === currentlyOpen) return;
+
+      const currentArr = Array.from(latestSet);
+      const next = nextOpen ? [...currentArr, val] : currentArr.filter((v) => v !== val);
+      expandedSetRef.current = new Set(next);
+      if (!isExpandedControlled) {
+        setInternalExpanded((prev) => {
+          const has = prev.includes(val);
+          if (nextOpen === has) return prev;
+          return nextOpen ? [...prev, val] : prev.filter((v) => v !== val);
+        });
+      }
+      onExpandedChange?.(next);
+    },
+    [isExpandedControlled, onExpandedChange],
+  );
+
+  const setLoadingState = useCallback((val: string, active: boolean) => {
+    setLoadingSet((prev) => {
+      const has = prev.has(val);
+      if (active === has) return prev;
+      const next = new Set(prev);
+      if (active) next.add(val);
+      else next.delete(val);
+      return next;
+    });
+  }, []);
+
+  const toggleExpand = useCallback(
+    (
+      val: string,
+      force?: boolean,
+      explicitNode?: TreeNode,
+      itemEl?: HTMLElement | null,
+    ): void | Promise<void> => {
+      const existingTask = inFlightRef.current.get(val);
+      if (existingTask) return existingTask;
+
+      const currentlyOpen = expandedSetRef.current.has(val);
+      const nextOpen = force !== undefined ? force : !currentlyOpen;
+      if (!nextOpen) {
+        commitExpanded(val, false);
+        return;
+      }
+
+      let resolvedNode =
+        explicitNode ??
+        findNodeInList(nodesRef.current, val, loadedMapRef.current) ??
+        nodeRegistryRef.current.get(val);
+      if (!resolvedNode && itemEl?.hasAttribute('data-lazy')) {
+        const labelText = itemEl.querySelector('.j-tree__label')?.textContent?.trim() ?? val;
+        resolvedNode = { id: val, label: labelText, lazy: true };
+      }
+
+      const isLazy = Boolean(resolvedNode?.lazy || resolvedNode?.hasChildren);
+      const hasStaticChildren = Boolean(
+        resolvedNode?.children && resolvedNode.children.length > 0,
+      );
+      const hasCachedChildren = Object.prototype.hasOwnProperty.call(loadedMapRef.current, val);
+
+      if (isLazy && !hasStaticChildren && !hasCachedChildren && resolvedNode) {
+        const targetNode = resolvedNode;
+        if (loadChildren) {
+          setLoadingState(val, true);
+          const task = Promise.resolve()
+            .then(() => loadChildren(targetNode))
+            .then(
+              (result) => {
+                inFlightRef.current.delete(val);
+                setLoadingState(val, false);
+                if (Array.isArray(result)) {
+                  loadedMapRef.current = { ...loadedMapRef.current, [val]: result };
+                  setLoadedChildrenMap((prev) => ({ ...prev, [val]: result }));
+                  commitExpanded(val, true);
+                  onLoadChildren?.(targetNode, result);
+                } else {
+                  commitExpanded(val, true);
+                  onLoadChildren?.(targetNode);
+                }
+              },
+              (err) => {
+                inFlightRef.current.delete(val);
+                setLoadingState(val, false);
+                commitExpanded(val, false);
+                onLoadError?.(err, targetNode);
+              },
+            );
+          inFlightRef.current.set(val, task);
+          return task;
+        }
+
+        onLoadChildren?.(targetNode);
+        commitExpanded(val, true);
+        return;
+      }
+
+      commitExpanded(val, true);
+    },
+    [commitExpanded, loadChildren, onLoadChildren, onLoadError, setLoadingState],
+  );
+
+  const getLoadedChildren = useCallback(
+    (val: string) => loadedChildrenMap[val],
+    [loadedChildrenMap],
+  );
 
   const ctx = useMemo<TreeViewContextValue>(() => {
     const select = (val: string) => {
@@ -114,26 +288,24 @@ export function TreeView({
       setFocusedValue(val);
     };
 
-    const toggleExpand = (val: string, force?: boolean) => {
-      const current = Array.from(expandedSet);
-      const currentlyOpen = expandedSet.has(val);
-      const nextOpen = force !== undefined ? force : !currentlyOpen;
-      if (nextOpen === currentlyOpen) return;
-
-      const next = nextOpen ? [...current, val] : current.filter((v) => v !== val);
-      if (!isExpandedControlled) setInternalExpanded(next);
-      onExpandedChange?.(next);
-    };
-
     return {
       selectedSet,
       expandedSet,
+      loadingSet,
       focusedValue,
       expandOnClick,
+      hasLazyLoader: Boolean(loadChildren),
+      getLoadedChildren,
+      isExpandedNow,
+      registerNode,
+      unregisterNode,
       select,
       toggleExpand,
       registerDefaultExpanded: (val: string) => {
+        if (registeredDefaultsRef.current.has(val)) return;
+        registeredDefaultsRef.current.add(val);
         if (isExpandedControlled) return;
+        expandedSetRef.current = new Set([...expandedSetRef.current, val]);
         setInternalExpanded((prev) => (prev.includes(val) ? prev : [...prev, val]));
       },
       setFocused: setFocusedValue,
@@ -144,13 +316,19 @@ export function TreeView({
   }, [
     selectedSet,
     expandedSet,
+    loadingSet,
     focusedValue,
     expandOnClick,
+    loadChildren,
+    getLoadedChildren,
+    isExpandedNow,
+    registerNode,
+    unregisterNode,
+    toggleExpand,
     multiple,
     isSelectedControlled,
     isExpandedControlled,
     onValueChange,
-    onExpandedChange,
   ]);
 
   const handleKeyDown = (event: KeyboardEvent<HTMLUListElement>) => {
@@ -160,10 +338,18 @@ export function TreeView({
     if (!res) return;
     const val = res.item.dataset.value;
     if (!val) return;
-    if (res.action === 'focus') setFocusedValue(val);
-    else if (res.action === 'expand') ctx.toggleExpand(val, true);
-    else if (res.action === 'collapse') ctx.toggleExpand(val, false);
-    else if (res.action === 'select') ctx.select(val);
+    if (res.action === 'focus') {
+      setFocusedValue(val);
+    } else if (res.action === 'expand') {
+      void ctx.toggleExpand(val, true, undefined, res.item);
+    } else if (res.action === 'collapse') {
+      void ctx.toggleExpand(val, false, undefined, res.item);
+    } else if (res.action === 'select') {
+      if (event.key === 'Enter' && expandOnClick && res.item.hasAttribute('aria-expanded')) {
+        void ctx.toggleExpand(val, undefined, undefined, res.item);
+      }
+      ctx.select(val);
+    }
   };
 
   return (
@@ -196,6 +382,9 @@ export interface TreeItemProps extends Omit<ComponentProps<'li'>, 'children'> {
   meta?: ReactNode;
   disabled?: boolean;
   defaultExpanded?: boolean;
+  lazy?: boolean;
+  hasChildren?: boolean;
+  loading?: boolean;
   node?: TreeNode;
   children?: ReactNode;
 }
@@ -207,6 +396,9 @@ export function TreeItem({
   meta,
   disabled = false,
   defaultExpanded = false,
+  lazy = false,
+  hasChildren: hasChildrenProp = false,
+  loading = false,
   node,
   className,
   children,
@@ -220,14 +412,83 @@ export function TreeItem({
   const itemLabel = node?.label ?? label;
   const itemMeta = node?.meta ?? meta;
   const itemDisabled = Boolean(node?.disabled ?? disabled);
-  const childNodes = node?.children;
-  const hasChildren = Boolean((childNodes && childNodes.length > 0) || children != null);
-  const resolvedIcon = node?.icon ?? icon ?? (hasChildren ? 'folder' : 'file');
+
+  const isLazy = Boolean(node?.lazy || node?.hasChildren || lazy || hasChildrenProp);
+  const staticChildren = node?.children;
+  const loadedChildren = tree?.getLoadedChildren(itemKey);
+  const effectiveChildren =
+    staticChildren && staticChildren.length > 0 ? staticChildren : loadedChildren;
+  const hasLoadedEmpty =
+    loadedChildren !== undefined &&
+    loadedChildren.length === 0 &&
+    (!staticChildren || staticChildren.length === 0);
+  const hasSlotChildren = children != null;
+  const hasBranch = Boolean(
+    (effectiveChildren && effectiveChildren.length > 0) ||
+      hasSlotChildren ||
+      (isLazy && !hasLoadedEmpty),
+  );
+  const hasRenderedChildren = Boolean(
+    (effectiveChildren && effectiveChildren.length > 0) || hasSlotChildren,
+  );
+  const isLoading = Boolean(node?.loading || loading || tree?.loadingSet.has(itemKey));
+
+  const effectiveNode = useMemo<TreeNode>(
+    () =>
+      node ?? {
+        id: itemKey,
+        label: itemLabel,
+        icon,
+        meta,
+        disabled: itemDisabled,
+        lazy: isLazy,
+        hasChildren: hasChildrenProp,
+        loading,
+      },
+    [node, itemKey, itemLabel, icon, meta, itemDisabled, isLazy, hasChildrenProp, loading],
+  );
+
+  const resolvedIcon =
+    node?.icon ?? icon ?? (hasBranch || isLazy ? 'folder' : 'file');
+
+  const registerNode = tree?.registerNode;
+  const unregisterNode = tree?.unregisterNode;
 
   useEffect(() => {
+    if (!registerNode || !unregisterNode) return;
+    registerNode(itemKey, effectiveNode);
+    return () => {
+      unregisterNode(itemKey);
+    };
+  }, [registerNode, unregisterNode, itemKey, effectiveNode]);
+
+  const didRegisterRef = useRef(false);
+
+  useEffect(() => {
+    if (didRegisterRef.current) return;
+    didRegisterRef.current = true;
     if (defaultExpanded && tree) tree.registerDefaultExpanded(itemKey);
     if (!itemDisabled && tree) tree.ensureInitialFocus(itemKey);
-  }, [defaultExpanded, itemDisabled, tree, itemKey]);
+    if (
+      tree &&
+      tree.hasLazyLoader &&
+      isLazy &&
+      (!staticChildren || staticChildren.length === 0) &&
+      loadedChildren === undefined &&
+      tree.isExpandedNow(itemKey)
+    ) {
+      void tree.toggleExpand(itemKey, true, effectiveNode);
+    }
+  }, [
+    defaultExpanded,
+    itemDisabled,
+    tree,
+    itemKey,
+    isLazy,
+    staticChildren,
+    loadedChildren,
+    effectiveNode,
+  ]);
 
   const [localExpanded, setLocalExpanded] = useState(defaultExpanded);
   const [localSelected, setLocalSelected] = useState(false);
@@ -244,10 +505,10 @@ export function TreeItem({
 
   const handleChevronClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
-    if (itemDisabled || !hasChildren) return;
+    if (itemDisabled || !hasBranch || isLoading) return;
     if (tree) {
       tree.setFocused(itemKey);
-      tree.toggleExpand(itemKey);
+      void tree.toggleExpand(itemKey, undefined, effectiveNode);
     } else {
       setLocalExpanded((prev) => !prev);
     }
@@ -257,12 +518,12 @@ export function TreeItem({
     if (itemDisabled) return;
     if (tree) {
       tree.setFocused(itemKey);
-      if (hasChildren && tree.expandOnClick) {
-        tree.toggleExpand(itemKey);
+      if (hasBranch && tree.expandOnClick && !isLoading) {
+        void tree.toggleExpand(itemKey, undefined, effectiveNode);
       }
       tree.select(itemKey);
     } else {
-      if (hasChildren) setLocalExpanded((prev) => !prev);
+      if (hasBranch) setLocalExpanded((prev) => !prev);
       setLocalSelected((prev) => !prev);
     }
   };
@@ -313,32 +574,40 @@ export function TreeItem({
         className="j-tree__item"
         role="treeitem"
         data-value={itemKey}
-        aria-expanded={hasChildren ? (isExpanded ? 'true' : 'false') : undefined}
-        aria-owns={hasChildren ? groupId : undefined}
+        data-lazy={isLazy ? '' : undefined}
+        data-loaded-empty={hasLoadedEmpty ? '' : undefined}
+        aria-expanded={hasBranch ? (isExpanded ? 'true' : 'false') : undefined}
+        aria-busy={isLoading ? 'true' : undefined}
+        aria-owns={hasRenderedChildren ? groupId : undefined}
         aria-selected={isSelected ? 'true' : 'false'}
         aria-disabled={itemDisabled ? 'true' : undefined}
         tabIndex={tabIndex}
         onClick={handleRowClick}
         onFocus={() => !itemDisabled && tree?.setFocused(itemKey)}
       >
-        {hasChildren ? (
+        {hasBranch || isLoading ? (
           <button
             type="button"
-            className="j-tree__chevron"
+            className="j-tree__chevron j-tree__toggle"
+            data-loading={isLoading ? '' : undefined}
             tabIndex={-1}
             aria-hidden="true"
             onClick={handleChevronClick}
           >
-            <svg
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6.25 4.25 10 8l-3.75 3.75" />
-            </svg>
+            {isLoading ? (
+              <span className="j-tree__spinner" aria-hidden="true" />
+            ) : (
+              <svg
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M6.25 4.25 10 8l-3.75 3.75" />
+              </svg>
+            )}
           </button>
         ) : (
           <span className="j-tree__spacer" aria-hidden="true" />
@@ -355,11 +624,11 @@ export function TreeItem({
         {itemMeta != null && <span className="j-tree__meta">{itemMeta}</span>}
       </div>
 
-      {hasChildren && (
+      {hasRenderedChildren && (
         <div className="j-tree__branch" role="none">
           <ul id={groupId} className="j-tree__group" role="group">
-            {childNodes && childNodes.length > 0
-              ? childNodes.map((child) => <TreeItem key={child.id} node={child} />)
+            {effectiveChildren && effectiveChildren.length > 0
+              ? effectiveChildren.map((child) => <TreeItem key={child.id} node={child} />)
               : children}
           </ul>
         </div>

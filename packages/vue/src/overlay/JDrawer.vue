@@ -19,6 +19,10 @@ const props = withDefaults(
     closable?: boolean;
     /** Close on backdrop click and Escape. */
     dismissible?: boolean;
+    /** Remove `.j-drawer__body` padding for edge-to-edge lists, tables, or editors. */
+    flush?: boolean;
+    /** Alias for `flush`. */
+    bodyFlush?: boolean;
     /** Teleport <dialog> to `<body>` (or a selector / element); pass `false` to keep inline. */
     teleport?: boolean | string | HTMLElement;
   }>(),
@@ -111,6 +115,7 @@ defineExpose({ show, close });
       :data-side="side === 'right' ? undefined : side"
       :data-size="size === 'md' ? undefined : size"
       :data-inset="inset ? '' : undefined"
+      :data-flush="flush || bodyFlush ? '' : undefined"
       :aria-labelledby="title || slots.header ? titleId : undefined"
       :aria-describedby="description ? descId : undefined"
       v-bind="$attrs"

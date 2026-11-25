@@ -62,13 +62,17 @@ import 'jenni-core/css/data-grid.css';
 
 ## 4. Choosing the Right Component
 
-- **Application Chrome:** Use `JAppShell` / `AppShell` (`16` layouts: `sidebar`, `header-sidebar`, `ide`, `workspace`, `copilot`, `split`, `three-pane`, `command-center`, etc. × `4` variants: `flat`, `inset`, `floating`, `contrast`) paired with `JToolbar`/`Toolbar` and `JStatusBar`/`StatusBar` (`#statusbar` slot).
-- **Navigation vs. Open Documents:** Use `JTabs` / `Tabs` (`underline` | `pill`) for static view switching; use `JDocTabs` / `DocTabs` for closable, pinnable, reorderable IDE/notebook/browser document strips (`dirty` dot, middle-click close, overflow menu, `@tab-contextmenu`).
-- **Tables vs. High-Density Grids & Large Lists:**
+- **Application Chrome:** Use `JAppShell` / `AppShell` (`16` layouts: `sidebar`, `header-sidebar`, `ide`, `workspace`, `copilot`, `split`, `three-pane`, `command-center`, etc. × `4` variants: `flat`, `inset`, `floating`, `contrast`) paired with `JToolbar`/`Toolbar` (`JToolbarSpacer`) and `JStatusBar`/`StatusBar` (`JStatusBarSeparator`, `#statusbar` slot).
+- **Navigation vs. Open Documents:** Use `JTabs` / `Tabs` (`underline` | `pill`) for static view switching; use `JDocTabs` / `DocTabs` for closable, pinnable, reorderable IDE/notebook/browser document strips (`#tab="{ tab, active, index, closable, close }"` preserves the trailing `dirty` dot + `×` close button automatically unless `hideTabTail` is set).
+- **Tables, Grids, Trees & Micro-Charts:**
   - `< 200` editorial rows: `JTable` / `JDataTable` (`Table` / `DataTable`).
   - `500–50,000+` custom rows or feeds: `JVirtualList` / `VirtualList` (`itemHeight` number or function, or `variableHeight` via `ResizeObserver`).
   - Dense multi-column workbenches: `JDataGrid` / `DataGrid` (virtualized `role="grid"`, `pinned: 'left' | 'right'`, resizable columns, `Shift+Click` / `Shift+Enter` multi-sort, `Shift`-range multi-select, 2D arrow + header keyboard navigation, `@row-contextmenu`).
-- **Dialogs & Drawers:** `JDialog`/`Dialog` and `JDrawer`/`Drawer` teleport to `<body>` by default (`teleport` defaults to `true`; pass `:teleport="false"` / `teleport={false}` only for inline container previews). Do **not** wrap them in custom portal components.
+  - Remote / large hierarchies: `JTreeView` / `TreeView` with `lazy: true` + `:load-children="fn"` (`loadChildren`).
+  - Inline KPI & table trends: `JSparkline` / `Sparkline` (`variant="line" | "area" | "bar"`, `smooth` monotone cubic, `showEndDot`, `showMinMax`).
+- **Forms, Menus & Badges:**
+  - Use `clearable` on `JInput` / `Input`, `JSplitButton` / `SplitButton` for primary action + secondary menu, `JDropdownSub` / `DropdownSub` for cascading submenus inside both `DropdownMenu` and `ContextMenu`, `allowCustomValue` + `creatable` + `loading` + `:filter="false"` + `debounce` on `JCombobox` / `Combobox`, and `removable` (`@remove` / `onRemove`) on `JBadge` / `Badge`.
+- **Dialogs, Drawers & Flush Containers:** `JDialog`/`Dialog` and `JDrawer`/`Drawer` teleport to `<body>` by default (`teleport` defaults to `true`; pass `:teleport="false"` / `teleport={false}` only for inline container previews). Pass `flush` on `Card`, `Dialog`, or `Drawer` to remove body padding for edge-to-edge grids, lists, editors, or terminals.
 - **Context Menus:** `JContextMenu` / `ContextMenu` only closes when an ancestor of its trigger scrolls (streaming sibling logs/terminals never dismiss open menus) and exposes `openAt(x, y)`, `openFor(el)`, and `openFromEvent(e)` on its template `ref`.
 - **Icons:** Use `JIcon` / `Icon` (`65` built-in 16×16 stroke icons) and connect app icon libraries once via `provideIcons(resolver)` (Vue), `<IconProvider icons={...}>` (React), or `registerIcons(map)`.
 - **Charts, Editors & Terminals:** Use `useThemeTokens()` (Vue/React) or `getThemeTokens()` / `onThemeChange()` (`jenni-core`) to feed live `#rrggbb` colors for `--j-chart-1..8`, `--j-syntax-*` (CodeMirror/Monaco), and 16-color ANSI `xterm.js` `ITheme` (`tokens.terminal`).
@@ -426,7 +430,8 @@ useShortcut('g p', () => navigateToPullRequests(), { scope: paneRef });
 | `JSidebarItem` / `SidebarItem` | layout | `jenni-core/css/bars.css` | as, label, badge, active, disabled | icon, default, badge |
 | `JStack` / `Stack` | layout | `jenni-core/css/primitives.css` | as, gap, align, justify | default |
 | `JStatusBar` / `StatusBar` | layout | `jenni-core/css/statusbar.css` | as, variant, border, ariaLabel, role | start, default, center, end |
-| `JStatusBarItem` / `StatusBarItem` | layout | `jenni-core/css/statusbar.css` | as, icon, dot, tone, interactive, href, title, disabled | icon, default |
+| `JStatusBarItem` / `StatusBarItem` | layout | `jenni-core/css/statusbar.css` | as, icon, dot, tone, interactive, href, title, disabled, separator | icon, default |
+| `JStatusBarSeparator` / `StatusBarSeparator` | layout | `jenni-core/css/statusbar.css` | — | — |
 | `JToolbar` / `Toolbar` | layout | `jenni-core/css/toolbar.css` | as, size, orientation, border, surface, sticky, translucent, wrap, loop, ariaLabel | start, default, center, end |
 | `JToolbarGroup` / `ToolbarGroup` | layout | `jenni-core/css/toolbar.css` | as, ariaLabel | default |
 | `JToolbarSeparator` / `ToolbarSeparator` | layout | `jenni-core/css/toolbar.css` | orientation | — |
@@ -440,7 +445,7 @@ useShortcut('g p', () => navigateToPullRequests(), { scope: paneRef });
 | `JDatePicker` / `DatePicker` | forms | `jenni-core/css/date-picker.css` | modelValue, mode, min, max, weekStartsOn, placeholder, clearable, showFooter, size, tone, disabled, invalid, name, locale, markers | day |
 | `JField` / `Field` | forms | `jenni-core/css/field.css` | label, hint, error, required, disabled, invalid, id | label, default, hint, error |
 | `JFileUpload` / `FileUpload` | forms | `jenni-core/css/file-upload.css` | modelValue, accept, multiple, maxSize, maxFiles, variant, tone, label, hint, disabled, invalid | — |
-| `JInput` / `Input` | forms | `jenni-core/css/input.css` | modelValue, size, tone, invalid | prefix, suffix |
+| `JInput` / `Input` | forms | `jenni-core/css/input.css` | modelValue, size, tone, invalid, clearable, clearLabel | prefix, suffix |
 | `JLabel` / `Label` | forms | `jenni-core/css/field.css` | required | default |
 | `JNumberInput` / `NumberInput` | forms | `jenni-core/css/number-input.css` | modelValue, min, max, step, controls, prefix, suffix, placeholder, size, tone, disabled, invalid, readonly | prefix, suffix |
 | `JPinInput` / `PinInput` | forms | `jenni-core/css/pin-input.css` | modelValue, length, type, mask, separator, placeholder, otp, size, tone, disabled, invalid | — |
@@ -451,6 +456,7 @@ useShortcut('g p', () => navigateToPullRequests(), { scope: paneRef });
 | `JSegmentedItem` / `SegmentedItem` | forms | `jenni-core/css/segmented.css` | value, disabled | default |
 | `JSelect` / `Select` | forms | `jenni-core/css/select.css` | modelValue, options, placeholder, size, tone, invalid | default |
 | `JSlider` / `Slider` | forms | `jenni-core/css/slider.css` | modelValue, defaultValue, min, max, step, size, tone, invalid | — |
+| `JSplitButton` / `SplitButton` | forms | `jenni-core/css/button.css` | open, label, variant, size, tone, disabled, loading, menuDisabled, menuLabel, side, align, type | default, menu |
 | `JSwitch` / `Switch` | forms | `jenni-core/css/switch.css` | modelValue, size, tone, invalid, label, description, placement | default, description |
 | `JTagInput` / `TagInput` | forms | `jenni-core/css/tag-input.css` | modelValue, maxTags, allowDuplicates, placeholder, size, tone, disabled, invalid | — |
 | `JTextarea` / `Textarea` | forms | `jenni-core/css/textarea.css` | modelValue, size, tone, invalid, autoGrow | — |
@@ -462,10 +468,10 @@ useShortcut('g p', () => navigateToPullRequests(), { scope: paneRef });
 | `JAlert` / `Alert` | display | `jenni-core/css/alert.css` | variant, tone, title, description, icon | icon, title, default, actions |
 | `JAvatar` / `Avatar` | display | `jenni-core/css/avatar.css` | src, alt, name, initials, size, shape, tone, status, colorSeed, autoColor | default |
 | `JAvatarGroup` / `AvatarGroup` | display | `jenni-core/css/avatar.css` | size, max, total | default |
-| `JBadge` / `Badge` | display | `jenni-core/css/badge.css` | variant, size, tone, dot, colorSeed, autoColor | icon, default |
+| `JBadge` / `Badge` | display | `jenni-core/css/badge.css` | variant, size, tone, dot, removable, closable, removeLabel, colorSeed, autoColor | icon, default |
 | `JBreadcrumb` / `Breadcrumb` | display | `jenni-core/css/breadcrumb.css` | separator, variant, size, label, maxItems, itemsBeforeCollapse, itemsAfterCollapse | default |
 | `JBreadcrumbItem` / `BreadcrumbItem` | display | `jenni-core/css/breadcrumb.css` | href, current, ellipsis, label | default, icon |
-| `JCard` / `Card` | display | `jenni-core/css/card.css` | as, variant, size, title, description, interactive, footerDivider | media, header, action, default, footer |
+| `JCard` / `Card` | display | `jenni-core/css/card.css` | as, variant, size, title, description, interactive, footerDivider, flush, bodyFlush | media, header, action, default, footer |
 | `JCarousel` / `Carousel` | display | `jenni-core/css/carousel.css` | modelValue, defaultValue, slidesPerView, gap, loop, autoplay, arrows, dots, showCounter, orientation, tone, height, label | default, footer |
 | `JCarouselSlide` / `CarouselSlide` | display | `jenni-core/css/carousel.css` | label, index | default |
 | `JCollapsible` / `Collapsible` | display | `jenni-core/css/accordion.css` | modelValue, variant, size, title, defaultOpen, disabled | icon, trigger, default |
@@ -478,23 +484,25 @@ useShortcut('g p', () => navigateToPullRequests(), { scope: paneRef });
 | `JProgress` / `Progress` | display | `jenni-core/css/progress.css` | value, max, size, tone, label, segments, steps | — |
 | `JSeparator` / `Separator` | display | `jenni-core/css/separator.css` | orientation, label, align, decorative | default |
 | `JSkeleton` / `Skeleton` | display | `jenni-core/css/skeleton.css` | shape, width, height, lines | default |
+| `JSparkline` / `Sparkline` | display | `jenni-core/css/sparkline.css` | data, variant, width, height, tone, color, smooth, strokeWidth, min, max, showEndDot, showMinMax, fillOpacity, label | — |
 | `JSpinner` / `Spinner` | display | `jenni-core/css/spinner.css` | size, label | — |
 | `JStep` / `Step` | display | `jenni-core/css/stepper.css` | index, title, description, status, disabled | icon, default, description |
 | `JStepper` / `Stepper` | display | `jenni-core/css/stepper.css` | modelValue, steps, defaultValue, orientation, size, tone, clickable, linear, label | default |
 | `JTable` / `Table` | display | `jenni-core/css/table.css` | variant, size, hover, stickyHeader, pinFirst, pinLast, caption, maxHeight | caption, default |
-| `JTreeItem` / `TreeItem` | display | `jenni-core/css/tree-view.css` | value, label, icon, meta, disabled, defaultExpanded, node | icon, label, meta, default |
-| `JTreeView` / `TreeView` | display | `jenni-core/css/tree-view.css` | expanded, modelValue, nodes, multiple, guides, size, tone, label, defaultValue, defaultExpanded, expandOnClick | default |
+| `JTreeItem` / `TreeItem` | display | `jenni-core/css/tree-view.css` | value, label, icon, meta, disabled, defaultExpanded, lazy, hasChildren, loading, node | icon, label, meta, children, default |
+| `JTreeView` / `TreeView` | display | `jenni-core/css/tree-view.css` | expanded, modelValue, nodes, multiple, guides, size, tone, label, defaultValue, defaultExpanded, expandOnClick, loadChildren | default |
 | `JVirtualList` / `VirtualList` | display | `jenni-core/css/virtual-list.css` | items, itemHeight, estimateHeight, height, overscan, keyField, divided, role, ariaLabel | empty, default |
-| `JCombobox` / `Combobox` | overlay | `jenni-core/css/combobox.css` | modelValue, options, multiple, placeholder, emptyText, size, clearable, disabled, invalid, name, filter | — |
+| `JCombobox` / `Combobox` | overlay | `jenni-core/css/combobox.css` | modelValue, options, multiple, placeholder, emptyText, size, clearable, disabled, invalid, name, filter, allowCustomValue, freeSolo, commitOnBlur, creatable, loading, loadingText, debounce, search | — |
 | `JCommandPalette` / `CommandPalette` | overlay | `jenni-core/css/command-palette.css` | query, open, items, groups, placeholder, emptyText, shortcut, inline, closeOnSelect, dismissible, showFooter, showEsc, ariaLabel, breadcrumbs, filter | trigger, header, default, item, item-icon, empty, footer |
 | `JContextMenu` / `ContextMenu` | overlay | `jenni-core/css/context-menu.css` | open, loop, disabled, target | trigger, default |
-| `JDialog` / `Dialog` | overlay | `jenni-core/css/dialog.css` | open, title, description, size, closable, dismissible, teleport | trigger, header, default, footer |
-| `JDocTabs` / `DocTabs` | overlay | `jenni-core/css/doc-tabs.css` | modelValue, tabs, defaultValue, variant, size, closable, closablePinned, addable, reorderable, middleClickClose, showOverflowMenu, ariaLabel, addLabel, overflowLabel | tab, icon, empty, actions |
-| `JDrawer` / `Drawer` | overlay | `jenni-core/css/drawer.css` | open, title, description, side, size, inset, closable, dismissible, teleport | trigger, header, default, footer |
+| `JDialog` / `Dialog` | overlay | `jenni-core/css/dialog.css` | open, title, description, size, closable, dismissible, flush, bodyFlush, teleport | trigger, header, default, footer |
+| `JDocTabs` / `DocTabs` | overlay | `jenni-core/css/doc-tabs.css` | modelValue, tabs, defaultValue, variant, size, closable, closablePinned, addable, reorderable, middleClickClose, showOverflowMenu, hideTabTail, ariaLabel, addLabel, overflowLabel | tab, icon, label, empty, actions |
+| `JDrawer` / `Drawer` | overlay | `jenni-core/css/drawer.css` | open, title, description, side, size, inset, closable, dismissible, flush, bodyFlush, teleport | trigger, header, default, footer |
 | `JDropdownItem` / `DropdownItem` | overlay | `jenni-core/css/menu.css` | checked, as, href, role, shortcut, tone, inset, disabled, keepOpen, closeOnSelect, textValue | icon, default, shortcut |
 | `JDropdownLabel` / `DropdownLabel` | overlay | `jenni-core/css/menu.css` | inset | default |
 | `JDropdownMenu` / `DropdownMenu` | overlay | `jenni-core/css/menu.css` | open, side, align, arrow, loop, anchor | trigger, default |
 | `JDropdownSeparator` / `DropdownSeparator` | overlay | `jenni-core/css/menu.css` | — | — |
+| `JDropdownSub` / `DropdownSub` | overlay | `jenni-core/css/menu.css` | open, label, inset, disabled, textValue | icon, trigger, default |
 | `JHoverCard` / `HoverCard` | overlay | `jenni-core/css/hover-card.css` | open, side, align, size, arrow, openDelay, closeDelay, disabled, anchor | trigger, default |
 | `JPopover` / `Popover` | overlay | `jenni-core/css/popover.css` | open, side, align, size, arrow, anchor | trigger, default |
 | `JTab` / `Tab` | overlay | `jenni-core/css/tabs.css` | value, disabled | default |

@@ -28,6 +28,13 @@ export { Card, type CardProps } from './display/Card';
 export { Alert, type AlertProps } from './display/Alert';
 export { Spinner, type SpinnerProps } from './display/Spinner';
 export { Progress, type ProgressProps } from './display/Progress';
+export {
+  Sparkline,
+  type SparklineProps,
+  type SparklineVariant,
+  type SparklineTone,
+} from './display/Sparkline';
+export { computeSparkline } from 'jenni-core/behaviors/sparkline.js';
 export { Skeleton, type SkeletonProps } from './display/Skeleton';
 export { Kbd, type KbdProps } from './display/Kbd';
 export { Separator, type SeparatorProps } from './display/Separator';

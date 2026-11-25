@@ -11,7 +11,7 @@ export const meta = {
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JDialog, JButton, JField, JInput, JSwitch, JStack, JInline } from 'jenni-vue';
+import { JDialog, JButton, JField, JInput, JSwitch, JStack, JInline, JList, JListItem, JBadge } from 'jenni-vue';
 
 const name = ref('Ada Lovelace');
 const handle = ref('@ada');
@@ -105,6 +105,40 @@ const html = `<button class="j-button" data-variant="outline" commandfor="demo-h
       <template #footer="{ close }">
         <JButton variant="ghost" @click="close">Keep key</JButton>
         <JButton tone="danger" @click="close">Revoke key</JButton>
+      </template>
+    </JDialog>
+  </DemoSection>
+
+  <DemoSection title="Flush Body (Edge-to-Edge Content)" description="Pass flush to remove body padding for full-bleed lists, data tables, or diff viewers between crisp header and footer borders.">
+    <JDialog
+      flush
+      title="Select target environment"
+      description="Choose where this migration release will run."
+    >
+      <template #trigger="{ open }">
+        <JButton variant="outline" @click="open">Open flush dialog</JButton>
+      </template>
+
+      <JList variant="divided" inset-divider lines="2">
+        <JListItem
+          v-for="env in [
+            { name: 'Production (eu-west-1)', desc: '12 replicas · Strict change window', status: 'Protected', tone: 'warning' },
+            { name: 'Staging (eu-west-1)', desc: '4 replicas · Auto-sync enabled', status: 'Ready', tone: 'success' },
+            { name: 'Preview (us-east-1)', desc: 'Ephemeral branch sandbox', status: 'Ready', tone: 'info' },
+          ]"
+          :key="env.name"
+          :title="env.name"
+          :description="env.desc"
+        >
+          <template #trailing>
+            <JBadge size="sm" :tone="env.tone">{{ env.status }}</JBadge>
+          </template>
+        </JListItem>
+      </JList>
+
+      <template #footer="{ close }">
+        <JButton variant="ghost" @click="close">Cancel</JButton>
+        <JButton @click="close">Continue</JButton>
       </template>
     </JDialog>
   </DemoSection>

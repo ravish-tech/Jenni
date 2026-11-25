@@ -12,7 +12,11 @@ export interface JStatusBarItemProps {
   href?: string;
   title?: string;
   disabled?: boolean;
+  /** Render a trailing vertical separator rule after this item. */
+  separator?: boolean;
 }
+
+defineOptions({ inheritAttrs: false });
 
 const props = defineProps<JStatusBarItemProps>();
 
@@ -37,6 +41,7 @@ const isButton = computed(() => tag.value === 'button');
     :aria-disabled="!isButton && disabled ? 'true' : undefined"
     :data-tone="tone"
     :data-interactive="interactive && !isButton && !href ? '' : undefined"
+    v-bind="$attrs"
   >
     <span v-if="dot" class="j-statusbar__dot" aria-hidden="true" />
     <slot name="icon">
@@ -44,4 +49,11 @@ const isButton = computed(() => tag.value === 'button');
     </slot>
     <slot />
   </component>
+  <span
+    v-if="separator"
+    class="j-statusbar__sep"
+    role="separator"
+    aria-orientation="vertical"
+    aria-hidden="true"
+  />
 </template>

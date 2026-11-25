@@ -37,11 +37,30 @@ declare module 'jenni-core/behaviors/menu.js' {
     side?: string;
     loop?: boolean;
     manageChecked?: boolean;
+    anchor?: HTMLElement | null;
+  }
+  export interface SubmenuOptions {
+    side?: string;
+    align?: string;
+    offset?: number;
+    loop?: boolean;
+    manageChecked?: boolean;
+    openDelay?: number;
+    closeDelay?: number;
   }
   export function createMenu(
     trigger: HTMLElement,
     menu: HTMLElement,
     options?: MenuOptions,
+  ): () => void;
+  export function createSubmenu(
+    subContainer: HTMLElement,
+    options?: SubmenuOptions,
+  ): () => void;
+  export function createSubmenu(
+    trigger: HTMLElement,
+    subMenu: HTMLElement,
+    options?: SubmenuOptions,
   ): () => void;
   export function initMenus(root?: ParentNode): () => void;
 }

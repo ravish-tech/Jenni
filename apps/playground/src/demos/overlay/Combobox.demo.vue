@@ -3,13 +3,14 @@ export const meta = {
   name: 'Combobox',
   group: 'Overlay',
   order: 6,
-  description: 'WAI-ARIA 1.2 autocomplete input + anchored popover listbox with grouped filtering, checkmarks, and multi-select chips.',
+  description:
+    'WAI-ARIA 1.2 autocomplete input + anchored popover listbox with grouped filtering, free-text & creatable values, multi-select chips, and debounced async search.',
   status: 'draft',
 };
 </script>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
 import {
   JCombobox,
@@ -50,6 +51,90 @@ const frameworks: ComboboxOption[] = [
   { value: 'react', label: 'React 19' },
   { value: 'svelte', label: 'Svelte 5 (Planned)', disabled: true },
 ];
+
+// ---- Free-text & creatable demo state ----
+const targetRef = ref<string | null>('release/v2.4');
+const branchPresets = ref<ComboboxOption[]>([
+  { value: 'main', label: 'main', description: 'Default protected branch' },
+  { value: 'release/v2.4', label: 'release/v2.4', description: 'Active release train' },
+  { value: 'staging', label: 'staging', description: 'Pre-production canary' },
+]);
+const lastCreatedRef = ref<string | null>(null);
+
+function handleCreateBranch(val: string) {
+  lastCreatedRef.value = val;
+  if (!branchPresets.value.some((b) => b.value.toLowerCase() === val.toLowerCase())) {
+    branchPresets.value = [
+      ...branchPresets.value,
+      { value: val, label: val, description: 'Custom branch reference' },
+    ];
+  }
+}
+
+const issueTags = ref<string[]>(['a11y', 'tokens']);
+const tagCatalog = ref<ComboboxOption[]>([
+  { value: 'a11y', label: 'a11y', description: 'Keyboard & screen-reader parity' },
+  { value: 'tokens', label: 'tokens', description: 'Semantic OKLCH & density tokens' },
+  { value: 'overlay', label: 'overlay', description: 'Popover, dialog & focus management' },
+  { value: 'performance', label: 'performance', description: '60fps rendering & bundle budget' },
+]);
+
+function handleCreateTag(val: string) {
+  lastCreatedRef.value = val;
+  if (!tagCatalog.value.some((t) => t.value.toLowerCase() === val.toLowerCase())) {
+    tagCatalog.value = [...tagCatalog.value, { value: val, label: val, description: 'Created inline' }];
+  }
+}
+
+// ---- Async server search demo state ----
+const SERVER_DIRECTORY: ComboboxOption[] = [
+  { value: 'branch:main', label: 'main', description: 'HEAD · 8f41c2a · Protected', group: 'Branches' },
+  { value: 'branch:release/v2.4', label: 'release/v2.4', description: 'Release candidate · 14 commits ahead', group: 'Branches' },
+  { value: 'branch:feat/combobox-async', label: 'feat/combobox-async', description: 'Async search + creatable options', group: 'Branches' },
+  { value: 'branch:feat/grid-pinning', label: 'feat/grid-pinning', description: 'Sticky left/right column pinning', group: 'Branches' },
+  { value: 'branch:fix/anchor-flip', label: 'fix/anchor-flip', description: 'Viewport collision fallback', group: 'Branches' },
+  { value: 'branch:perf/virtual-scroll', label: 'perf/virtual-scroll', description: 'Zero-allocation row recycling', group: 'Branches' },
+  { value: 'user:ada', label: '@ada · Ada Lovelace', description: 'Core Architecture · London', group: 'Maintainers' },
+  { value: 'user:dieter', label: '@dieter · Dieter Rams', description: 'Design Systems · Kronberg', group: 'Maintainers' },
+  { value: 'user:grace', label: '@grace · Grace Hopper', description: 'Compiler Infrastructure · Arlington', group: 'Maintainers' },
+  { value: 'user:margaret', label: '@margaret · Margaret Hamilton', description: 'Fault-Tolerant Runtime · Cambridge', group: 'Maintainers' },
+  { value: 'user:alan', label: '@alan · Alan Kay', description: 'Interactive Environments · Palo Alto', group: 'Maintainers' },
+];
+
+const asyncTarget = ref<string | null>('branch:feat/combobox-async');
+const asyncSearchQuery = ref('');
+const asyncResults = ref<ComboboxOption[]>(SERVER_DIRECTORY.slice(0, 6));
+const isSearching = ref(false);
+let activeRequestId = 0;
+let networkTimer: ReturnType<typeof setTimeout> | null = null;
+
+function runAsyncSearch(q: string) {
+  const reqId = ++activeRequestId;
+  if (networkTimer !== null) {
+    clearTimeout(networkTimer);
+    networkTimer = null;
+  }
+  isSearching.value = true;
+  networkTimer = setTimeout(() => {
+    if (reqId !== activeRequestId) return;
+    const needle = q.trim().toLowerCase();
+    asyncResults.value = !needle
+      ? SERVER_DIRECTORY.slice(0, 6)
+      : SERVER_DIRECTORY.filter(
+          (item) =>
+            item.label.toLowerCase().includes(needle) ||
+            item.value.toLowerCase().includes(needle) ||
+            (item.description?.toLowerCase().includes(needle) ?? false) ||
+            (item.group?.toLowerCase().includes(needle) ?? false),
+        );
+    isSearching.value = false;
+    networkTimer = null;
+  }, 260);
+}
+
+onBeforeUnmount(() => {
+  if (networkTimer !== null) clearTimeout(networkTimer);
+});
 
 const html = `<div style="max-width:18rem">
   <div class="j-combobox" data-j-combobox="demo-html-cb-list">
@@ -119,6 +204,78 @@ const html = `<div style="max-width:18rem">
       </JField>
       <JInline gap="inline">
         <JBadge size="sm" variant="outline" tone="neutral">{{ reviewers.length }} assigned</JBadge>
+      </JInline>
+    </JStack>
+  </DemoSection>
+
+  <DemoSection
+    title="Free-text & creatable values"
+    description="Combine allow-custom-value and creatable to accept arbitrary git refs or mint new multi-select tags inline via Enter, click, or blur."
+  >
+    <JStack gap="field" style="max-width:26rem">
+      <JField
+        label="Target branch or commit SHA (single)"
+        hint="Pick an existing branch, click Create, or type any ref and press Enter or Tab."
+      >
+        <JCombobox
+          v-model="targetRef"
+          :options="branchPresets"
+          allow-custom-value
+          creatable
+          placeholder="e.g. feat/custom-ref or a1b2c3d…"
+          @create="handleCreateBranch"
+        />
+      </JField>
+
+      <JField
+        label="Issue labels (multi-select creatable)"
+        hint="Type a new label name and press Enter or click the + Create row."
+      >
+        <JCombobox
+          v-model="issueTags"
+          multiple
+          allow-custom-value
+          :creatable="(q) => `Create tag '${q}'`"
+          :options="tagCatalog"
+          placeholder="Add or create labels…"
+          @create="handleCreateTag"
+        />
+      </JField>
+
+      <JInline gap="related">
+        <JBadge variant="soft" tone="neutral">Ref: {{ targetRef ?? 'none' }}</JBadge>
+        <JBadge variant="outline" tone="neutral">{{ issueTags.length }} labels</JBadge>
+        <JBadge v-if="lastCreatedRef" variant="soft" tone="accent">Created: {{ lastCreatedRef }}</JBadge>
+      </JInline>
+    </JStack>
+  </DemoSection>
+
+  <DemoSection
+    title="Async server search"
+    description="Disable client filtering (:filter='false'), debounce @search by 220ms, and surface an inline spinner while a 260ms server lookup resolves."
+  >
+    <JStack gap="item" style="max-width:26rem">
+      <JField
+        label="Jump to branch or maintainer"
+        hint="Try searching 'feat', 'perf', 'ada', or 'kronberg'."
+      >
+        <JCombobox
+          v-model="asyncTarget"
+          v-model:search="asyncSearchQuery"
+          :options="asyncResults"
+          :filter="false"
+          :loading="isSearching"
+          :debounce="220"
+          loading-text="Querying repository index…"
+          placeholder="Search branches & maintainers…"
+          @search="runAsyncSearch"
+        />
+      </JField>
+      <JInline gap="related">
+        <JBadge variant="soft" tone="neutral">Selected: {{ asyncTarget ?? 'none' }}</JBadge>
+        <JBadge variant="outline" :tone="isSearching ? 'accent' : 'neutral'">
+          {{ isSearching ? 'Fetching…' : `${asyncResults.length} results` }}
+        </JBadge>
       </JInline>
     </JStack>
   </DemoSection>

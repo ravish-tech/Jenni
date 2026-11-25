@@ -2,6 +2,23 @@
 
 All notable changes to `jenni-core`, `jenni-vue`, and `jenni-react` are documented in this file.
 
+## [0.3.0] — 2026-11-20
+
+### Added
+- **Sparkline Micro-Chart (`JSparkline` / `Sparkline`, `computeSparkline`)**: Zero-dependency inline SVG micro-chart (`line`, `area`, `bar`) with overshoot-free Fritsch–Carlson monotone cubic smoothing, min/max & end dots, semantic tones, and `--j-chart-1..8` support.
+- **Split Button (`JSplitButton` / `SplitButton`)**: Primary action button paired with an attached WAI-ARIA dropdown menu trigger across `solid`, `soft`, and `outline` variants.
+- **Cascading Submenus (`JDropdownSub` / `DropdownSub`, `createSubmenu`)**: Multi-level nested submenus inside both `DropdownMenu` and `ContextMenu` with hover grace timers, `ArrowRight`/`ArrowLeft`/`Escape` keyboard navigation, and viewport edge flipping.
+- **Lazy Tree Children (`JTreeView` / `TreeView`)**: Async `lazy` / `hasChildren` + `loadChildren(node)` expansion with inline `.j-tree__spinner`, `aria-busy`, concurrency deduplication, and empty-folder chevron retirement.
+- **Combobox Free Text & Async Search (`JCombobox` / `Combobox`)**: `allowCustomValue` (`freeSolo`), `creatable` (`+ Create "…"`), `loading` spinner, `:filter="false"` server-side mode, `debounce`, and `v-model:search` / `@search` (`searchValue` / `onSearch`).
+- **Clearable Input (`JInput` / `Input`)**: `clearable` prop + `@clear` / `onClear` with zero layout shift inside `.j-input-group`.
+- **Flush Card, Dialog & Drawer Bodies**: `flush` (`bodyFlush`) prop on `Card`, `Dialog`, and `Drawer` removing body padding for edge-to-edge grids, lists, editors, and terminals.
+- **Removable Badge (`JBadge` / `Badge`)**: `removable` (`closable`) prop + `@remove` / `onRemove`.
+- **Status-Bar Separators (`JStatusBarSeparator` / `StatusBarSeparator`)**: Crisp vertical dividers + `separator` prop on `StatusBarItem`.
+- **Document Tabs Custom Slot Ergonomics (`JDocTabs` / `DocTabs`)**: `#tab` / `renderTab` now receives `{ tab, active, index, closable, close }`, preserves the trailing `dirty` dot + `×` close button automatically (unless `hideTabTail` is set), and adds `#label` / `renderLabel`.
+
+### Fixed
+- **TypeScript Subpath Resolution for `jenni-core/behaviors/*.js`**: Added explicit `"./behaviors/*.js"` export mapping to `"./dist/behaviors/*.d.ts"` in `jenni-core/package.json` so consumers need zero manual `.d.ts` shims.
+
 ## [0.2.0] — 2026-11-20
 
 ### Bug Fixes

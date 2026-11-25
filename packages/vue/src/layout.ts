@@ -24,6 +24,10 @@ export {
 } from './layout/JStatusBar.vue';
 export { default as JStatusBarItem, type JStatusBarItemProps } from './layout/JStatusBarItem.vue';
 export {
+  default as JStatusBarSeparator,
+  type JStatusBarSeparatorProps,
+} from './layout/JStatusBarSeparator.vue';
+export {
   default as JToolbar,
   type JToolbarProps,
   type JToolbarSize,

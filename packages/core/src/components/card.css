@@ -11,6 +11,7 @@
  * </article>
  *   data-variant: surface (default) | outline | ghost | elevated
  *   data-size:    sm | md (default) | lg   (padding + title scale)
+ *   data-flush:   edge-to-edge .j-card__body with crisp header/footer hairlines
  *   Interactive when rendered as <a>/<button> or with [data-interactive].
  * Public props: --j-card-radius, --j-card-padding
  */
@@ -170,5 +171,33 @@
     inline-size: 100%;
     block-size: 100%;
     object-fit: cover;
+  }
+
+  /* Flush body (edge-to-edge grids, lists, editors, or terminals) */
+  :where(.j-card[data-flush]) {
+    padding: 0;
+    gap: 0;
+    overflow: clip;
+  }
+  :where(.j-card[data-flush] > .j-card__header) {
+    padding: var(--_p);
+  }
+  :where(.j-card[data-flush] > .j-card__header:has(+ .j-card__body)) {
+    padding-block-end: var(--j-space-4);
+    border-bottom: 1px solid var(--j-border-subtle, var(--j-border));
+  }
+  :where(.j-card[data-flush] > .j-card__body) {
+    padding: 0;
+  }
+  :where(.j-card[data-flush] > .j-card__footer) {
+    padding: var(--j-space-3) var(--_p);
+    border-block-start: 1px solid var(--j-border-subtle, var(--j-border));
+  }
+  :where(.j-card[data-flush] > .j-card__footer[data-divider]) {
+    margin: 0;
+    border-block-start-color: var(--j-border);
+  }
+  :where(.j-card[data-flush] > .j-card__media) {
+    margin: 0;
   }
 }

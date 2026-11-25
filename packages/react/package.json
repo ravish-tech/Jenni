@@ -1,6 +1,6 @@
 {
   "name": "jenni-react",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Jenni (pronounced 'yenni') components for React 19 — beauty, simplicity, and performance. Built in loving memory of Jenni.",
   "license": "Apache-2.0",
   "author": "Ravish Kumar",
@@ -44,7 +44,7 @@
     "./AGENTS.md": "./AGENTS.md"
   },
   "peerDependencies": {
-    "jenni-core": "^0.2.0",
+    "jenni-core": "^0.3.0",
     "react": ">=19.0.0",
     "react-dom": ">=19.0.0"
   },

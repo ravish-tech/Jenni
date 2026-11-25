@@ -3,7 +3,7 @@
  *   data-variant: soft (default) | solid | outline
  *   data-size:    sm | md (default) | lg
  *   data-tone:    accent (default) | neutral | danger | success | warning | info
- * Parts: .j-badge__dot (status dot), any <svg> child is sized as an icon.
+ * Parts: .j-badge__dot (status dot), .j-badge__remove (trailing × button), any <svg> child is sized as an icon.
  * Public props: --j-badge-radius
  */
 @layer jenni.components {
@@ -104,6 +104,43 @@
   }
   :where(.j-badge > svg:first-child, .j-badge > .j-badge__dot:first-child) {
     margin-inline-start: calc(var(--j-space-0-5) * -1);
+  }
+  :where(.j-badge__remove) {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(14px * var(--j-density));
+    height: calc(14px * var(--j-density));
+    margin-inline-end: calc(-3px * var(--j-density));
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: transparent;
+    color: currentColor;
+    opacity: 0.65;
+    cursor: pointer;
+    outline: none;
+    transition:
+      opacity var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      width: 10px;
+      height: 10px;
+      flex: none;
+    }
+
+    &:hover {
+      opacity: 1;
+      background-color: color-mix(in oklch, currentColor 14%, transparent);
+    }
+
+    &:focus-visible {
+      opacity: 1;
+      box-shadow: var(--j-ring);
+    }
   }
 
   /* Interactive badges (links / buttons) */

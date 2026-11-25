@@ -1,4 +1,8 @@
-// Jenni — Tree View behavior (WAI-ARIA tree pattern with roving focus & expand/collapse).
+// Tree View behavior (WAI-ARIA tree pattern with roving focus, lazy branches & expand/collapse).
+
+/** @param {unknown} el @returns {el is HTMLElement} */
+const isElementLike = (el) =>
+  Boolean(el && typeof el === 'object' && typeof (/** @type {Element} */ (el).getAttribute) === 'function');
 
 /** @param {Element} el */
 const isDisabled = (el) => el.hasAttribute('disabled') || el.getAttribute('aria-disabled') === 'true';
@@ -10,11 +14,11 @@ const isDisabled = (el) => el.hasAttribute('disabled') || el.getAttribute('aria-
  * @returns {boolean}
  */
 function isItemVisible(tree, item) {
-  /** @type {HTMLElement | null} */
+  /** @type {HTMLElement | null | undefined} */
   let cursor = item.parentElement;
   while (cursor && cursor !== tree) {
     if (cursor.hidden || cursor.hasAttribute('data-collapsed')) return false;
-    if (cursor.classList.contains('j-tree__node')) {
+    if (cursor.classList?.contains('j-tree__node')) {
       const ownerItem = /** @type {HTMLElement | null} */ (
         cursor.querySelector(':scope > [role="treeitem"]')
       );
@@ -36,7 +40,7 @@ export function getVisibleTreeItems(tree) {
   return /** @type {HTMLElement[]} */ (
     [...tree.querySelectorAll('[role="treeitem"]')].filter(
       (el) =>
-        el instanceof HTMLElement &&
+        isElementLike(el) &&
         el.closest('[role="tree"]') === tree &&
         !isDisabled(el) &&
         isItemVisible(tree, el),
@@ -51,7 +55,7 @@ export function getVisibleTreeItems(tree) {
  */
 function focusTreeItem(tree, activeItem) {
   tree.querySelectorAll('[role="treeitem"]').forEach((el) => {
-    if (el instanceof HTMLElement && el.closest('[role="tree"]') === tree) {
+    if (isElementLike(el) && el.closest('[role="tree"]') === tree) {
       el.tabIndex = el === activeItem ? 0 : -1;
     }
   });
@@ -76,15 +80,30 @@ function focusTreeItem(tree, activeItem) {
  * @returns {TreeKeyResult | null}
  */
 export function treeKeydown(tree, event) {
-  const active = document.activeElement;
-  if (!(active instanceof HTMLElement) || active.getAttribute('role') !== 'treeitem') return null;
+  const docActive =
+    tree.ownerDocument?.activeElement ??
+    (typeof document !== 'undefined' ? document.activeElement : null);
+  const targetItem =
+    event.target && typeof (/** @type {Element} */ (event.target).closest) === 'function'
+      ? /** @type {Element} */ (event.target).closest('[role="treeitem"]')
+      : null;
+  const active = isElementLike(docActive) && docActive.getAttribute('role') === 'treeitem'
+    ? docActive
+    : isElementLike(targetItem)
+      ? targetItem
+      : null;
+  if (!active || active.getAttribute('role') !== 'treeitem') return null;
   if (active.closest('[role="tree"]') !== tree) return null;
 
   const items = getVisibleTreeItems(tree);
   const idx = items.indexOf(active);
   if (idx < 0) return null;
 
-  const rtl = getComputedStyle(tree).direction === 'rtl';
+  const rtl =
+    typeof getComputedStyle === 'function' &&
+    typeof Element !== 'undefined' &&
+    tree instanceof Element &&
+    getComputedStyle(tree).direction === 'rtl';
   const expandKey = rtl ? 'ArrowLeft' : 'ArrowRight';
   const collapseKey = rtl ? 'ArrowRight' : 'ArrowLeft';
 
@@ -118,7 +137,11 @@ export function treeKeydown(tree, event) {
 
   if (event.key === expandKey) {
     const expanded = active.getAttribute('aria-expanded');
-    if (expanded === 'false') {
+    const isLazyUnexpanded =
+      expanded === null &&
+      active.hasAttribute('data-lazy') &&
+      !active.hasAttribute('data-loaded-empty');
+    if (expanded === 'false' || isLazyUnexpanded) {
       event.preventDefault();
       return { action: 'expand', item: active };
     }
@@ -128,7 +151,7 @@ export function treeKeydown(tree, event) {
         ? /** @type {HTMLElement[]} */ (
             [...node.querySelectorAll('[role="treeitem"]')].filter(
               (el) =>
-                el instanceof HTMLElement &&
+                isElementLike(el) &&
                 el !== active &&
                 el.closest('[role="tree"]') === tree &&
                 !isDisabled(el) &&
@@ -153,7 +176,7 @@ export function treeKeydown(tree, event) {
     }
     const ownNode = active.closest('.j-tree__node');
     const parentNode = ownNode?.parentElement?.closest('.j-tree__node');
-    if (parentNode && tree.contains(parentNode)) {
+    if (parentNode && (typeof tree.contains !== 'function' || tree.contains(parentNode))) {
       const parentItem = /** @type {HTMLElement | null} */ (
         parentNode.querySelector(':scope > [role="treeitem"]')
       );
@@ -203,7 +226,7 @@ export function createTreeView(root) {
    * @param {boolean} nextOpen
    */
   const setExpanded = (item, nextOpen) => {
-    if (!item.hasAttribute('aria-expanded')) return;
+    if (!item.hasAttribute('aria-expanded') || item.getAttribute('aria-busy') === 'true') return;
     item.setAttribute('aria-expanded', String(nextOpen));
     root.dispatchEvent(
       new CustomEvent('j-toggle', {
@@ -241,14 +264,14 @@ export function createTreeView(root) {
   /** @param {MouseEvent} event */
   const onClick = (event) => {
     const target = event.target;
-    if (!(target instanceof Element)) return;
+    if (!isElementLike(target)) return;
     const item = target.closest('[role="treeitem"]');
-    if (!(item instanceof HTMLElement) || item.closest('[role="tree"]') !== root || isDisabled(item)) {
+    if (!isElementLike(item) || item.closest('[role="tree"]') !== root || isDisabled(item)) {
       return;
     }
 
     focusTreeItem(root, item);
-    const hitChevron = Boolean(target.closest('.j-tree__chevron'));
+    const hitChevron = Boolean(target.closest('.j-tree__chevron, .j-tree__toggle'));
     if (item.hasAttribute('aria-expanded')) {
       const isOpen = item.getAttribute('aria-expanded') === 'true';
       if (hitChevron) {
@@ -285,7 +308,8 @@ const bound = new WeakMap();
  * @param {ParentNode} [root=document]
  * @returns {() => void} cleanup
  */
-export function initTreeViews(root = document) {
+export function initTreeViews(root = typeof document !== 'undefined' ? document : undefined) {
+  if (!root) return () => {};
   /** @type {HTMLElement[]} */
   const made = [];
   root.querySelectorAll('.j-tree').forEach((el) => {

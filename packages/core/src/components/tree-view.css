@@ -112,8 +112,8 @@
     }
   }
 
-  /* ---- Chevron & Leaf Spacer ---- */
-  :where(.j-tree__chevron, .j-tree__spacer) {
+  /* ---- Chevron, Toggle & Leaf Spacer ---- */
+  :where(.j-tree__chevron, .j-tree__toggle, .j-tree__spacer) {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -122,7 +122,7 @@
     block-size: var(--_chevron);
   }
 
-  :where(.j-tree__chevron) {
+  :where(.j-tree__chevron, .j-tree__toggle) {
     padding: 0;
     border: 0;
     border-radius: var(--j-radius-xs);
@@ -140,7 +140,7 @@
       block-size: var(--_chevron);
     }
 
-    &:empty::before {
+    &:not([data-loading]):empty::before {
       content: "";
       inline-size: var(--_chevron);
       block-size: var(--_chevron);
@@ -148,17 +148,47 @@
       mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6.25 4.25 10 8l-3.75 3.75'/%3E%3C/svg%3E") center / contain no-repeat;
     }
 
+    &[data-loading] {
+      color: var(--j-fg-muted);
+      cursor: progress;
+      transform: none;
+    }
+
     @media (hover: hover) {
-      &:hover {
+      &:hover:not([data-loading]) {
         color: var(--j-fg);
         background-color: color-mix(in oklch, var(--j-fg) 7%, transparent);
       }
     }
   }
 
-  :where(.j-tree__item[aria-expanded="true"]) > :where(.j-tree__chevron) {
+  :where(.j-tree__item[aria-expanded="true"]) > :where(.j-tree__chevron, .j-tree__toggle):not([data-loading]) {
     transform: rotate(90deg);
     color: var(--j-fg-muted);
+  }
+
+  :where(.j-tree__spinner) {
+    box-sizing: border-box;
+    display: inline-block;
+    flex: none;
+    width: calc(12px * var(--j-density));
+    height: calc(12px * var(--j-density));
+    border: 1.5px solid color-mix(in oklch, currentColor 25%, transparent);
+    border-top-color: currentColor;
+    border-radius: 999px;
+    animation: j-tree-spin 650ms linear infinite;
+  }
+
+  @keyframes j-tree-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(.j-tree__spinner) {
+      animation-duration: 2s;
+    }
   }
 
   /* ---- Leading Folder / File Icon ---- */
@@ -213,8 +243,13 @@
     grid-template-rows: 1fr;
     opacity: 1;
     transition:
-      grid-template-rows var(--j-duration) var(--j-ease-emphasized),
+      grid-template-rows var(--j-duration-slow) var(--j-ease-emphasized),
       opacity var(--j-duration-fast) var(--j-ease-out);
+
+    @starting-style {
+      grid-template-rows: 0fr;
+      opacity: 0;
+    }
 
     & > :where(.j-tree__group) {
       overflow: hidden;
@@ -228,9 +263,9 @@
     opacity: 0;
     visibility: hidden;
     transition:
-      grid-template-rows var(--j-duration) var(--j-ease-emphasized),
+      grid-template-rows var(--j-duration-slow) var(--j-ease-emphasized),
       opacity var(--j-duration-fast) var(--j-ease-out),
-      visibility 0s linear var(--j-duration);
+      visibility 0s linear var(--j-duration-slow);
   }
 
   :where(.j-tree__group) {

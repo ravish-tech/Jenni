@@ -5,6 +5,7 @@
  * Parts:
  *   .j-statusbar__section  — start | center | end groups
  *   .j-statusbar__item     — compact status readout or interactive button/link
+ *   .j-statusbar__sep      — 1px × 12px vertical divider rule
  *   .j-statusbar__dot      — 6px status indicator dot
  */
 @layer jenni.components {
@@ -44,6 +45,7 @@
     --j-fg: oklch(95.5% 0.003 var(--j-hue-neutral));
     --j-fg-muted: oklch(74% 0.008 var(--j-hue-neutral));
     --j-border: oklch(26% 0.007 var(--j-hue-neutral));
+    --j-border-strong: oklch(36% 0.009 var(--j-hue-neutral));
     background-color: oklch(16% var(--j-chroma-neutral) var(--j-hue-neutral));
     color: var(--j-fg-muted);
     border-color: var(--j-border);
@@ -155,6 +157,22 @@
     ):hover:not(:disabled, [aria-disabled="true"]) {
     background-color: color-mix(in oklch, var(--j-accent-fg) 14%, transparent);
     color: var(--j-accent-fg);
+  }
+
+  :where(.j-statusbar__sep) {
+    flex: none;
+    align-self: center;
+    inline-size: 1px;
+    block-size: calc(12px * var(--j-density));
+    margin-inline: calc(2px * var(--j-density));
+    border: 0;
+    background-color: var(--j-border-strong);
+  }
+  :where(.j-statusbar[data-variant="contrast"]) :where(.j-statusbar__sep) {
+    background-color: var(--j-border-strong);
+  }
+  :where(.j-statusbar[data-variant="accent"]) :where(.j-statusbar__sep) {
+    background-color: color-mix(in oklch, var(--j-accent-fg) 28%, transparent);
   }
 
   :where(.j-statusbar__dot) {

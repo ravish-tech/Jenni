@@ -66,6 +66,9 @@ export interface ComboboxOption {
   disabled?: boolean;
 }
 
+export type ComboboxFilter = boolean | ((option: ComboboxOption, query: string) => boolean);
+export type ComboboxCreatable = boolean | ((query: string) => string);
+
 export interface CommandItem {
   id?: string;
   value: string;

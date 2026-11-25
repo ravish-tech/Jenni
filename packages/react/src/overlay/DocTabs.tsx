@@ -39,6 +39,13 @@ export interface DocTabItem {
   meta?: unknown;
 }
 
+export interface DocTabRenderState {
+  active: boolean;
+  index: number;
+  closable: boolean;
+  close: (event?: ReactMouseEvent) => void;
+}
+
 export interface DocTabsHandle {
   scrollToTab: (id: string, instant?: boolean) => void;
   focusActiveTab: () => void;
@@ -65,10 +72,13 @@ export interface DocTabsProps extends Omit<ComponentProps<'div'>, 'children' | '
   reorderable?: boolean;
   middleClickClose?: boolean;
   showOverflowMenu?: boolean;
+  /** Suppress the automatic trailing dirty dot and `×` close button when rendering custom `renderTab` content. */
+  hideTabTail?: boolean;
   addLabel?: string;
   overflowLabel?: string;
   renderIcon?: (tab: DocTabItem) => ReactNode;
-  renderTab?: (tab: DocTabItem, active: boolean) => ReactNode;
+  renderLabel?: (tab: DocTabItem, state: DocTabRenderState) => ReactNode;
+  renderTab?: (tab: DocTabItem, state: DocTabRenderState) => ReactNode;
   actions?: ReactNode;
   empty?: ReactNode;
   ref?: Ref<DocTabsHandle>;
@@ -93,10 +103,12 @@ export function DocTabs({
   reorderable = false,
   middleClickClose = true,
   showOverflowMenu = true,
+  hideTabTail = false,
   'aria-label': ariaLabel = 'Open documents',
   addLabel = 'New tab',
   overflowLabel = 'More tabs',
   renderIcon,
+  renderLabel,
   renderTab,
   actions,
   empty,
@@ -314,9 +326,19 @@ export function DocTabs({
         aria-label={ariaLabel}
       >
         {tabs.length > 0 ? (
-          tabs.map((tab) => {
+          tabs.map((tab, index) => {
             const active = tab.id === activeId;
             const tabClosable = isTabClosable(tab);
+            const handleClose = (e?: ReactMouseEvent) => {
+              e?.stopPropagation();
+              closeTab(tab);
+            };
+            const tabState: DocTabRenderState = {
+              active,
+              index,
+              closable: tabClosable,
+              close: handleClose,
+            };
             const iconContent = renderIcon
               ? renderIcon(tab)
               : typeof tab.icon === 'string'
@@ -346,7 +368,7 @@ export function DocTabs({
                 onContextMenu={(e) => onTabContextMenu?.(tab, e)}
               >
                 {renderTab ? (
-                  renderTab(tab, active)
+                  renderTab(tab, tabState)
                 ) : (
                   <>
                     {tab.pinned && (
@@ -361,30 +383,29 @@ export function DocTabs({
                       </span>
                     )}
 
-                    <span className="j-doc-tabs__label">{tab.label}</span>
+                    <span className="j-doc-tabs__label">
+                      {renderLabel ? renderLabel(tab, tabState) : tab.label}
+                    </span>
 
                     {tab.badge != null && <span className="j-doc-tabs__badge">{tab.badge}</span>}
-
-                    {(tab.dirty || tabClosable) && (
-                      <span className="j-doc-tabs__tail">
-                        {tab.dirty && <span className="j-doc-tabs__dirty" aria-hidden="true" />}
-                        {tabClosable && (
-                          <button
-                            type="button"
-                            tabIndex={-1}
-                            className="j-doc-tabs__close"
-                            aria-label={`Close ${tab.label}`}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              closeTab(tab);
-                            }}
-                          >
-                            <Icon name="x" size="xs" />
-                          </button>
-                        )}
-                      </span>
-                    )}
                   </>
+                )}
+
+                {!hideTabTail && (tab.dirty || tabClosable) && (
+                  <span className="j-doc-tabs__tail">
+                    {tab.dirty && <span className="j-doc-tabs__dirty" aria-hidden="true" />}
+                    {tabClosable && (
+                      <button
+                        type="button"
+                        tabIndex={-1}
+                        className="j-doc-tabs__close"
+                        aria-label={`Close ${tab.label}`}
+                        onClick={handleClose}
+                      >
+                        <Icon name="x" size="xs" />
+                      </button>
+                    )}
+                  </span>
                 )}
               </div>
             );

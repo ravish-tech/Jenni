@@ -18,6 +18,7 @@ import {
   JToolbarSeparator,
   JStatusBar,
   JStatusBarItem,
+  JStatusBarSeparator,
   JIcon,
   JButton,
   JInput,
@@ -46,10 +47,12 @@ const code = `<JToolbar size="sm" aria-label="Editor actions">
 <JStatusBar variant="subtle">
   <template #start>
     <JStatusBarItem icon="git-branch" interactive>{{ branch }}</JStatusBarItem>
+    <JStatusBarSeparator />
     <JStatusBarItem tone="success" dot>0 errors · 0 warnings</JStatusBarItem>
   </template>
   <template #end>
     <JStatusBarItem>{{ lineCol }}</JStatusBarItem>
+    <JStatusBarSeparator />
     <JStatusBarItem>UTF-8</JStatusBarItem>
   </template>
 </JStatusBar>`;
@@ -102,11 +105,14 @@ const code = `<JToolbar size="sm" aria-label="Editor actions">
           <JStatusBarItem icon="git-branch" interactive @click="branch = branch === 'main' ? 'feat/data-grid' : 'main'">
             {{ branch }}
           </JStatusBarItem>
+          <JStatusBarSeparator />
           <JStatusBarItem tone="success" dot>0 errors · 0 warnings</JStatusBarItem>
         </template>
         <template #end>
           <JStatusBarItem>{{ lineCol }}</JStatusBarItem>
+          <JStatusBarSeparator />
           <JStatusBarItem>UTF-8</JStatusBarItem>
+          <JStatusBarSeparator />
           <JStatusBarItem icon="terminal" interactive>SQL Engine 3.12</JStatusBarItem>
         </template>
       </JStatusBar>
@@ -119,6 +125,7 @@ const code = `<JToolbar size="sm" aria-label="Editor actions">
         <JStatusBar variant="subtle" border="none">
           <template #start>
             <JStatusBarItem icon="git-branch">main</JStatusBarItem>
+            <JStatusBarSeparator />
             <JStatusBarItem tone="success" dot>Healthy</JStatusBarItem>
           </template>
           <template #end>
@@ -131,6 +138,7 @@ const code = `<JToolbar size="sm" aria-label="Editor actions">
         <JStatusBar variant="contrast" border="none">
           <template #start>
             <JStatusBarItem icon="terminal" interactive>ssh prod-eu-1</JStatusBarItem>
+            <JStatusBarSeparator />
             <JStatusBarItem tone="info" dot>Connected · 18ms</JStatusBarItem>
           </template>
           <template #end>
@@ -143,6 +151,8 @@ const code = `<JToolbar size="sm" aria-label="Editor actions">
         <JStatusBar variant="accent" border="none">
           <template #start>
             <JStatusBarItem icon="play">Debugging · Port 9229</JStatusBarItem>
+            <JStatusBarSeparator />
+            <JStatusBarItem>2 breakpoints</JStatusBarItem>
           </template>
           <template #end>
             <JStatusBarItem>Accent Active</JStatusBarItem>

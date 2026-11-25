@@ -48,9 +48,19 @@ export interface JDocTabsProps {
   reorderable?: boolean;
   middleClickClose?: boolean;
   showOverflowMenu?: boolean;
+  /** Suppress the automatic trailing dirty dot and `×` close button when rendering custom `#tab` content. */
+  hideTabTail?: boolean;
   ariaLabel?: string;
   addLabel?: string;
   overflowLabel?: string;
+}
+
+export interface DocTabRenderState {
+  tab: DocTabItem;
+  active: boolean;
+  index: number;
+  closable: boolean;
+  close: (event?: MouseEvent) => void;
 }
 
 export interface JDocTabsHandle {
@@ -72,6 +82,7 @@ const props = withDefaults(defineProps<JDocTabsProps>(), {
   reorderable: false,
   middleClickClose: true,
   showOverflowMenu: true,
+  hideTabTail: false,
   ariaLabel: 'Open documents',
   addLabel: 'New tab',
   overflowLabel: 'More tabs',
@@ -337,7 +348,7 @@ defineExpose({
     >
       <template v-if="tabs.length > 0">
         <div
-          v-for="tab in tabs"
+          v-for="(tab, index) in tabs"
           :id="`${baseId}-tab-${tab.id}`"
           :key="tab.id"
           class="j-doc-tabs__tab"
@@ -356,7 +367,14 @@ defineExpose({
           @click="handleTabClick(tab)"
           @contextmenu="handleContextMenu(tab, $event)"
         >
-          <slot name="tab" :tab="tab" :active="tab.id === activeId">
+          <slot
+            name="tab"
+            :tab="tab"
+            :active="tab.id === activeId"
+            :index="index"
+            :closable="isTabClosable(tab)"
+            :close="(e?: MouseEvent) => handleTabClose(tab, e)"
+          >
             <span v-if="tab.pinned" class="j-doc-tabs__pin" aria-hidden="true">
               <JIcon name="pin" size="xs" />
             </span>
@@ -367,24 +385,28 @@ defineExpose({
               </slot>
             </span>
 
-            <span class="j-doc-tabs__label">{{ tab.label }}</span>
+            <span class="j-doc-tabs__label">
+              <slot name="label" :tab="tab" :active="tab.id === activeId" :index="index">
+                {{ tab.label }}
+              </slot>
+            </span>
 
             <span v-if="tab.badge != null" class="j-doc-tabs__badge">{{ tab.badge }}</span>
-
-            <span v-if="tab.dirty || isTabClosable(tab)" class="j-doc-tabs__tail">
-              <span v-if="tab.dirty" class="j-doc-tabs__dirty" aria-hidden="true" />
-              <button
-                v-if="isTabClosable(tab)"
-                type="button"
-                tabindex="-1"
-                class="j-doc-tabs__close"
-                :aria-label="`Close ${tab.label}`"
-                @click.stop="handleTabClose(tab, $event)"
-              >
-                <JIcon name="x" size="xs" />
-              </button>
-            </span>
           </slot>
+
+          <span v-if="!hideTabTail && (tab.dirty || isTabClosable(tab))" class="j-doc-tabs__tail">
+            <span v-if="tab.dirty" class="j-doc-tabs__dirty" aria-hidden="true" />
+            <button
+              v-if="isTabClosable(tab)"
+              type="button"
+              tabindex="-1"
+              class="j-doc-tabs__close"
+              :aria-label="`Close ${tab.label}`"
+              @click.stop="handleTabClose(tab, $event)"
+            >
+              <JIcon name="x" size="xs" />
+            </button>
+          </span>
         </div>
       </template>
 

@@ -28,6 +28,13 @@ export { default as JCard } from './display/JCard.vue';
 export { default as JAlert } from './display/JAlert.vue';
 export { default as JSpinner } from './display/JSpinner.vue';
 export { default as JProgress } from './display/JProgress.vue';
+export {
+  default as JSparkline,
+  type JSparklineProps,
+  type JSparklineVariant,
+  type JSparklineTone,
+} from './display/JSparkline.vue';
+export { computeSparkline } from 'jenni-core/behaviors/sparkline.js';
 export { default as JSkeleton } from './display/JSkeleton.vue';
 export { default as JKbd } from './display/JKbd.vue';
 export { default as JSeparator } from './display/JSeparator.vue';
