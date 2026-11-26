@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 1,
   description: 'Compact label for status, counts and metadata.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

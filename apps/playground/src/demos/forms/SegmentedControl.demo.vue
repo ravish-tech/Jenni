@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 3,
   description: 'Architectural capsule radiogroup with a damped 300ms gliding indicator.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

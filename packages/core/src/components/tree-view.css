@@ -168,15 +168,15 @@
   }
 
   :where(.j-tree__spinner) {
-    box-sizing: border-box;
     display: inline-block;
     flex: none;
-    width: calc(12px * var(--j-density));
-    height: calc(12px * var(--j-density));
-    border: 1.5px solid color-mix(in oklch, currentColor 25%, transparent);
-    border-top-color: currentColor;
-    border-radius: 999px;
-    animation: j-tree-spin 650ms linear infinite;
+    width: 12px;
+    height: 12px;
+    background-color: currentColor;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='9.5' stroke='black' stroke-opacity='0.2' stroke-width='2.4'/%3E%3Cpath d='M12 2.5a9.5 9.5 0 0 1 9.5 9.5' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    animation: j-tree-spin 0.85s linear infinite;
   }
 
   @keyframes j-tree-spin {

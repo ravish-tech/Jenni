@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 18,
   description: '2D SV spectrum loupe, hue/alpha sliders, HEX · OKLCH · RGB readout, and curated architectural swatches.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

@@ -16,6 +16,23 @@ export interface BreadcrumbProps extends ComponentProps<'nav'> {
   itemsAfterCollapse?: number;
 }
 
+const ellipsisSvg = (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    shapeRendering="geometricPrecision"
+    aria-hidden="true"
+  >
+    <circle cx="5" cy="12" r="1" fill="currentColor" />
+    <circle cx="12" cy="12" r="1" fill="currentColor" />
+    <circle cx="19" cy="12" r="1" fill="currentColor" />
+  </svg>
+);
+
 export function Breadcrumb({
   separator,
   variant,
@@ -61,7 +78,7 @@ export function Breadcrumb({
                 aria-label="Show hidden breadcrumbs"
                 onClick={() => setExpanded(true)}
               >
-                …
+                {ellipsisSvg}
               </button>
             </li>
             {all.slice(all.length - after)}
@@ -109,7 +126,7 @@ export function BreadcrumbItem({
           aria-label={label}
           onClick={onClick}
         >
-          {children ?? '…'}
+          {children ?? ellipsisSvg}
         </button>
       ) : current || !href ? (
         <span className="j-breadcrumb__page" aria-current={current ? 'page' : undefined}>

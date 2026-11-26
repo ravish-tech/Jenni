@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 2,
   description: 'User image with initials fallback, status and overlapping groups.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

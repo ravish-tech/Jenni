@@ -1,0 +1,217 @@
+/*
+ * DescriptionList — Structured key/value metadata inspector & specification table.
+ *
+ * <dl class="j-dl" data-layout="horizontal|stacked|grid" data-cols="1|2|3" data-variant="divided|striped|bordered|plain" data-size="sm|md">
+ *   <div class="j-dl__item" data-mono data-span="2">
+ *     <dt class="j-dl__term">Instance ID</dt>
+ *     <dd class="j-dl__details">i-0a98f4c12e7b3d01</dd>
+ *   </div>
+ * </dl>
+ *
+ * Public props: --j-dl-term-w, --j-dl-radius
+ */
+@layer jenni.components {
+  :where(.j-dl) {
+    --_py: var(--j-space-3);
+    --_px: var(--j-space-4);
+    --_term-fs: var(--j-text-sm);
+    --_details-fs: var(--j-text-sm);
+    --_mono-fs: var(--j-text-xs);
+    --_radius: var(--j-dl-radius, var(--j-radius-md));
+
+    container-type: inline-size;
+    container-name: j-dl;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    inline-size: 100%;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  :where(.j-dl[data-size="sm"]) {
+    --_py: var(--j-space-2);
+    --_px: var(--j-space-3);
+    --_term-fs: var(--j-text-xs);
+    --_details-fs: var(--j-text-xs);
+    --_mono-fs: var(--j-text-xs);
+  }
+
+  /* ---- Item, Term & Details ---- */
+  :where(.j-dl__item) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--j-space-0-5);
+    column-gap: var(--j-gap-field);
+    padding-block: var(--_py);
+    min-inline-size: 0;
+  }
+
+  :where(.j-dl__term) {
+    margin: 0;
+    color: var(--j-fg-muted);
+    font-size: var(--_term-fs);
+    font-weight: var(--j-weight-medium);
+    line-height: var(--j-leading);
+    min-inline-size: 0;
+  }
+
+  :where(.j-dl__details) {
+    margin: 0;
+    color: var(--j-fg);
+    font-size: var(--_details-fs);
+    line-height: var(--j-leading);
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+  }
+
+  :where(.j-dl__item[data-mono] .j-dl__details),
+  :where(.j-dl__details[data-mono]) {
+    font-family: var(--j-font-mono);
+    font-size: var(--_mono-fs);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- Layout: Horizontal (default, stacks gracefully < 440px) ---- */
+  @container j-dl (width >= 440px) {
+    :where(.j-dl:not([data-layout]) > .j-dl__item) {
+      grid-template-columns: var(--j-dl-term-w, minmax(140px, 30%)) minmax(0, 1fr);
+      align-items: baseline;
+    }
+  }
+
+  /* ---- Layout: Stacked ---- */
+  :where(.j-dl[data-layout="stacked"] > .j-dl__item) {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--j-space-1);
+  }
+
+  :where(.j-dl[data-layout="stacked"] .j-dl__term) {
+    font-size: var(--j-text-xs);
+  }
+
+  /* ---- Layout: Multi-Column @container Grid (6-track LCM for 1 | 2 | 3 cols) ---- */
+  :where(.j-dl[data-layout="grid"]) {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  :where(.j-dl[data-layout="grid"] > .j-dl__item) {
+    grid-column: span 6;
+    align-content: start;
+    row-gap: var(--j-space-1);
+  }
+
+  :where(.j-dl[data-layout="grid"] .j-dl__term) {
+    font-size: var(--j-text-xs);
+  }
+
+  @container j-dl (width >= 460px) {
+    :where(.j-dl[data-layout="grid"]:not([data-cols]) > .j-dl__item),
+    :where(.j-dl[data-layout="grid"][data-cols="2"] > .j-dl__item),
+    :where(.j-dl[data-layout="grid"][data-cols="3"] > .j-dl__item) {
+      grid-column: span 3;
+    }
+
+    :where(.j-dl[data-layout="grid"]:not([data-cols="1"]) > .j-dl__item[data-span="2"]),
+    :where(.j-dl[data-layout="grid"]:not([data-cols="1"]) > .j-dl__item[data-span="3"]) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @container j-dl (width >= 660px) {
+    :where(.j-dl[data-layout="grid"][data-cols="3"] > .j-dl__item) {
+      grid-column: span 2;
+    }
+
+    :where(.j-dl[data-layout="grid"][data-cols="3"] > .j-dl__item[data-span="2"]) {
+      grid-column: span 4;
+    }
+
+    :where(.j-dl[data-layout="grid"][data-cols="3"] > .j-dl__item[data-span="3"]) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  /* ---- Variant: Divided (default) ---- */
+  :where(.j-dl:not([data-variant]):not([data-layout="grid"]) > .j-dl__item) {
+    border-block-end: 1px solid var(--j-border);
+
+    &:first-child {
+      padding-block-start: 0;
+    }
+
+    &:last-child {
+      border-block-end: 0;
+      padding-block-end: 0;
+    }
+  }
+
+  :where(.j-dl:not([data-variant])[data-layout="grid"]) {
+    column-gap: var(--j-gap-group);
+    row-gap: 0;
+  }
+
+  :where(.j-dl:not([data-variant])[data-layout="grid"] > .j-dl__item) {
+    border-block-end: 1px solid var(--j-border);
+  }
+
+  /* ---- Variant: Striped ---- */
+  :where(.j-dl[data-variant="striped"]:not([data-layout="grid"]) > .j-dl__item) {
+    padding-inline: var(--_px);
+    border-radius: var(--j-radius-sm);
+
+    &:nth-child(odd) {
+      background-color: var(--j-surface-2);
+    }
+  }
+
+  :where(.j-dl[data-variant="striped"][data-layout="grid"]) {
+    gap: var(--j-space-2);
+  }
+
+  :where(.j-dl[data-variant="striped"][data-layout="grid"] > .j-dl__item) {
+    padding-inline: var(--_px);
+    border-radius: var(--j-radius-sm);
+    background-color: var(--j-surface-2);
+  }
+
+  /* ---- Variant: Bordered ---- */
+  :where(.j-dl[data-variant="bordered"]) {
+    gap: 1px;
+    background-color: var(--j-border);
+    border: 1px solid var(--j-border);
+    border-radius: var(--_radius);
+    overflow: clip;
+  }
+
+  :where(.j-dl[data-variant="bordered"] > .j-dl__item) {
+    padding: var(--_py) var(--_px);
+    background-color: var(--j-surface-1);
+  }
+
+  /* ---- Variant: Plain ---- */
+  :where(.j-dl[data-variant="plain"]:not([data-layout="grid"]) > .j-dl__item) {
+    padding-block: var(--j-space-1-5);
+
+    &:first-child {
+      padding-block-start: 0;
+    }
+
+    &:last-child {
+      padding-block-end: 0;
+    }
+  }
+
+  :where(.j-dl[data-variant="plain"][data-size="sm"]:not([data-layout="grid"]) > .j-dl__item) {
+    padding-block: var(--j-space-1);
+  }
+
+  :where(.j-dl[data-variant="plain"][data-layout="grid"]) {
+    column-gap: var(--j-gap-group);
+    row-gap: var(--j-gap-item);
+  }
+
+  :where(.j-dl[data-layout="grid"][data-variant="plain"] > .j-dl__item) {
+    padding-block: 0;
+  }
+}

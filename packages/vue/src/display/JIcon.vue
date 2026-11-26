@@ -76,6 +76,7 @@ const compDef = computed<Component | null>(() => {
       :stroke="svgDef.stroke ?? 'currentColor'"
       stroke-linecap="round"
       stroke-linejoin="round"
+      shape-rendering="geometricPrecision"
       focusable="false"
       aria-hidden="true"
       v-html="svgDef.body"

@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 11,
   description: 'Native checkbox, custom-drawn with a crisp 1.75px check and indeterminate dash.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

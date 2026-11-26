@@ -96,8 +96,17 @@ function selectPage(next: number) {
         aria-label="Previous page"
         @click="selectPage(currentPage - 1)"
       >
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M9.75 4.25 6 8l3.75 3.75" />
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          shape-rendering="geometricPrecision"
+          aria-hidden="true"
+        >
+          <path d="M15 6l-6 6 6 6" />
         </svg>
         <span v-if="renderLabels">Previous</span>
       </button>
@@ -112,8 +121,17 @@ function selectPage(next: number) {
         @click="selectPage(currentPage + 1)"
       >
         <span v-if="renderLabels">Next</span>
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M6.25 4.25 10 8l-3.75 3.75" />
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          shape-rendering="geometricPrecision"
+          aria-hidden="true"
+        >
+          <path d="M9 6l6 6-6 6" />
         </svg>
       </button>
     </template>
@@ -127,8 +145,17 @@ function selectPage(next: number) {
           aria-label="Previous page"
           @click="selectPage(currentPage - 1)"
         >
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M9.75 4.25 6 8l3.75 3.75" />
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            shape-rendering="geometricPrecision"
+            aria-hidden="true"
+          >
+            <path d="M15 6l-6 6 6 6" />
           </svg>
           <span v-if="renderLabels">Previous</span>
         </button>
@@ -158,8 +185,17 @@ function selectPage(next: number) {
           @click="selectPage(currentPage + 1)"
         >
           <span v-if="renderLabels">Next</span>
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M6.25 4.25 10 8l-3.75 3.75" />
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            shape-rendering="geometricPrecision"
+            aria-hidden="true"
+          >
+            <path d="M9 6l6 6-6 6" />
           </svg>
         </button>
       </li>

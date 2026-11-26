@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 15,
   description: 'Windowed O(1) fixed-height and ResizeObserver variable-height virtual scroller for 50,000+ items at 60fps.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

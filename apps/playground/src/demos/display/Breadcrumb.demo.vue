@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 7,
   description: 'Hierarchical location trail with crisp chevron or slash separators and collapsible depth.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 
@@ -65,13 +65,13 @@ const html = `<nav class="j-breadcrumb" aria-label="Breadcrumb">
       <JBreadcrumb>
         <JBreadcrumbItem href="#home" @click.prevent>
           <template #icon>
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 6.8 8 2.25l5.5 4.55v6.2a1 1 0 0 1-1 1h-9a1 1 0 0 1-1-1z" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-9.5Z" /></svg>
           </template>
           Overview
         </JBreadcrumbItem>
         <JBreadcrumbItem href="#infra" @click.prevent>
           <template #icon>
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="12" height="4" rx="1" /><rect x="2" y="9" width="12" height="4" rx="1" /></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision"><rect x="3" y="4" width="18" height="6" rx="1.5" /><rect x="3" y="14" width="18" height="6" rx="1.5" /></svg>
           </template>
           Clusters
         </JBreadcrumbItem>

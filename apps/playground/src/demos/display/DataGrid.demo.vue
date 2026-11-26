@@ -5,7 +5,7 @@ export const meta = {
   order: 14.5,
   wide: true,
   description: 'High-density virtualized data grid with pinned & resizable columns, Shift+Click multi-sort, Shift-range selection, 2D keyboard navigation, and context menu hooks.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

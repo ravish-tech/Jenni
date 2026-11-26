@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 17,
   description: 'Hardware-accelerated CSS scroll-snap gallery with elongated pill pagination, multi-card viewports, and synced controls.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

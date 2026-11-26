@@ -149,6 +149,7 @@ export function Icon({
         stroke={svgDef.stroke ?? 'currentColor'}
         strokeLinecap="round"
         strokeLinejoin="round"
+        shapeRendering="geometricPrecision"
         focusable="false"
         aria-hidden="true"
         dangerouslySetInnerHTML={{ __html: svgDef.body }}

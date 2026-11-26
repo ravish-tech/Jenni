@@ -4,7 +4,7 @@ export const meta = {
   group: 'Overlay',
   order: 9,
   description: 'Top-layer stacked notification deck with hover fan-out, timer pause, and shared imperative API.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

@@ -328,15 +328,15 @@ describe('icon.js — built-in dictionary, registry & SVG XSS sanitizer', () => 
     clearRegisteredIcons();
   });
 
-  it('ships 65 built-in stroke icon keys', () => {
+  it('ships 130+ built-in 24x24 stroke icon keys', () => {
     const keys = listBuiltinIcons();
-    assert.equal(keys.length, 65);
+    assert.ok(keys.length >= 130, `Expected >= 130 icons, got ${keys.length}`);
     assert.equal(Object.isFrozen(BUILTIN_ICONS), true);
     for (const key of keys) {
       const def = resolveIcon(key);
       assert.ok(def && typeof def === 'object');
       assert.equal(Object.isFrozen(def), true);
-      assert.equal(def.viewBox, '0 0 16 16');
+      assert.equal(def.viewBox, '0 0 24 24');
       assert.ok(def.body.length > 0);
     }
   });

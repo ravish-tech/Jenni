@@ -4,7 +4,7 @@ export const meta = {
   group: 'Overlay',
   order: 11,
   description: 'Top-layer modal command launcher and inline combobox surface with grouped instant search, multi-key chords, nested namespace drilldown, and damped 300ms reveal.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 
@@ -279,7 +279,7 @@ const html = `<button class="j-button" commandfor="app-cmd" command="show-modal"
 >
   <div class="j-command-palette__header">
     <span class="j-command-palette__search-icon" aria-hidden="true">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M11.5 11.5 14 14M7.25 12.5a5.25 5.25 0 1 1 0-10.5 5.25 5.25 0 0 1 0 10.5Z"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision"><path d="M21 21l-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z"/></svg>
     </span>
     <input
       class="j-command-palette__input"
@@ -346,8 +346,8 @@ const html = `<button class="j-button" commandfor="app-cmd" command="show-modal"
           @click="modalOpen = true"
         >
           <span style="display: inline-flex; align-items: center; gap: var(--j-space-2)">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
-              <path d="M11.5 11.5 14 14M7.25 12.5a5.25 5.25 0 1 1 0-10.5 5.25 5.25 0 0 1 0 10.5Z" />
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision" aria-hidden="true">
+              <path d="M21 21l-4.35-4.35M11 19a8 8 0 1 1 0-16 8 8 0 0 1 0 16Z" />
             </svg>
             <span>Search commands or jump to…</span>
           </span>

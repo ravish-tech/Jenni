@@ -1,0 +1,134 @@
+/*
+ * Alert Dialog — modal confirmation dialog requiring an explicit user decision.
+ *   <dialog class="j-dialog j-alert-dialog" role="alertdialog" aria-modal="true"
+ *           data-tone="danger" data-size="sm" aria-labelledby="ad-t" aria-describedby="ad-d">
+ *     <div class="j-alert-dialog__header">
+ *       <span class="j-alert-dialog__icon" aria-hidden="true"><svg …/></span>
+ *       <div class="j-alert-dialog__content">
+ *         <h2 class="j-dialog__title j-alert-dialog__title" id="ad-t">Delete workspace?</h2>
+ *         <p class="j-dialog__description j-alert-dialog__description" id="ad-d">…</p>
+ *       </div>
+ *     </div>
+ *     <div class="j-alert-dialog__body">…</div>
+ *     <footer class="j-dialog__footer j-alert-dialog__footer">
+ *       <button class="j-button" data-variant="outline">Cancel</button>
+ *       <button class="j-button" data-tone="danger">Delete</button>
+ *     </footer>
+ *   </dialog>
+ * Options:
+ *   data-tone: danger (default) | warning | accent | info
+ *   data-size: sm (default, 26rem) | md (32rem)
+ */
+@layer jenni.components {
+  :where(.j-alert-dialog) {
+    --_w: var(--j-alert-dialog-width, 26rem);
+    --_pad: var(--j-space-5);
+
+    &[data-size="sm"] {
+      --_w: var(--j-alert-dialog-width, 26rem);
+    }
+    &[data-size="md"] {
+      --_w: var(--j-alert-dialog-width, 32rem);
+    }
+  }
+
+  /* Default tone for alert-dialog when no explicit data-tone is set */
+  :where(.j-alert-dialog:not([data-tone])) {
+    --j-tone: var(--j-danger);
+    --j-tone-hover: var(--j-danger-hover);
+    --j-tone-fg: var(--j-danger-fg);
+    --j-tone-soft: var(--j-danger-soft);
+    --j-tone-soft-fg: var(--j-danger-soft-fg);
+  }
+
+  :where(.j-alert-dialog__header) {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--j-gap-field);
+    padding: var(--_pad);
+  }
+
+  :where(.j-alert-dialog__header:has(+ .j-alert-dialog__body)) {
+    padding-block-end: var(--j-space-3);
+  }
+
+  :where(.j-alert-dialog__icon) {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    inline-size: max(32px, round(calc(40px * var(--j-density)), 1px));
+    block-size: max(32px, round(calc(40px * var(--j-density)), 1px));
+    border-radius: var(--j-radius-md);
+    background-color: var(--j-tone-soft);
+    color: var(--j-tone);
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--j-tone) 18%, transparent);
+  }
+
+  :where(.j-alert-dialog__icon > svg) {
+    inline-size: 24px;
+    block-size: 24px;
+    flex-shrink: 0;
+  }
+
+  :where(.j-alert-dialog__content) {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-1-5);
+    padding-block-start: var(--j-space-0-5);
+  }
+
+  :where(.j-alert-dialog__title) {
+    font-size: var(--j-text-lg);
+    font-weight: var(--j-weight-semibold);
+    letter-spacing: var(--j-tracking-tight);
+    line-height: var(--j-leading-tight);
+    color: var(--j-fg);
+  }
+
+  :where(.j-alert-dialog__description) {
+    font-size: var(--j-text-sm);
+    line-height: var(--j-leading);
+    color: var(--j-fg-muted);
+  }
+
+  /* Reset inherited tone inside custom body slot so form controls remain neutral/accent */
+  :where(.j-alert-dialog__body) {
+    --j-tone: var(--j-accent);
+    --j-tone-hover: var(--j-accent-hover);
+    --j-tone-fg: var(--j-accent-fg);
+    --j-tone-soft: var(--j-accent-soft);
+    --j-tone-soft-fg: var(--j-accent-soft-fg);
+
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow: auto;
+    padding: 0 var(--_pad) var(--_pad);
+    font-size: var(--j-text-sm);
+    color: var(--j-fg);
+  }
+
+  /* Indent body on wider viewports when header has a leading tone badge */
+  @media (width >= 30rem) {
+    :where(.j-alert-dialog__header:has(> .j-alert-dialog__icon) + .j-alert-dialog__body) {
+      padding-inline-start: calc(
+        var(--_pad) + max(32px, round(calc(40px * var(--j-density)), 1px)) + var(--j-gap-field)
+      );
+    }
+  }
+
+  :where(.j-alert-dialog__footer) {
+    justify-content: flex-end;
+    gap: var(--j-gap-related);
+
+    @media (width < 30rem) {
+      flex-direction: column-reverse;
+      align-items: stretch;
+
+      & > :where(.j-button) {
+        inline-size: 100%;
+      }
+    }
+  }
+}

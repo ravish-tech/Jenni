@@ -4,7 +4,7 @@ export const meta = {
   group: 'Overlay',
   order: 1,
   description: 'Brief contextual label on hover or keyboard focus, with instant warm handoff and shortcut hints.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

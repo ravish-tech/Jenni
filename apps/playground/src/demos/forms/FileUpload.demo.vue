@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 15,
   description: 'Calm dashed dropzone and compact attachment row with byte formatting and size validation.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

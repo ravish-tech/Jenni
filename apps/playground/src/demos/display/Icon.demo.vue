@@ -3,8 +3,8 @@ export const meta = {
   name: 'Icon & Registry',
   group: 'Display',
   order: 0.5,
-  description: 'Optical 16×16 stroke icons with semantic sizes, tones, spin state, and pluggable app icon registry (registerIcons / provideIcons).',
-  status: 'draft',
+  description: 'High-definition 24×24 vector icons with size-calibrated optical strokes (1.5–2.0), semantic tones, spin state, and pluggable app icon registry.',
+  status: 'stable',
 };
 </script>
 
@@ -24,10 +24,10 @@ import {
 
 // Demonstrate connecting custom app icons alongside built-in icons
 provideIcons({
-  'app-cube': '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor"><path d="M8 1.8 13.8 5v6L8 14.2 2.2 11V5L8 1.8Z"/><path d="M8 8v6.2M8 8 13.8 5M8 8 2.2 5"/></svg>',
+  'app-cube': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2.5 20.5 7.25v9.5L12 21.5 3.5 16.75v-9.5L12 2.5Z"/><path d="M12 12v9.5M12 12l8.5-4.75M12 12 3.5 7.25"/></svg>',
   'app-pulse': {
-    viewBox: '0 0 16 16',
-    body: '<path d="M1.5 8h3l2-4.5 3 9 2-4.5h3" stroke-linecap="round" stroke-linejoin="round"/>',
+    viewBox: '0 0 24 24',
+    body: '<path d="M2 12h4.5l2.8-6.5 4.4 13 2.8-6.5H22"/>',
   },
 });
 
@@ -54,8 +54,8 @@ provideIcons({ 'app-cube': '<svg viewBox="0 0 16 16">...</svg>' });
 
 <template>
   <DemoSection
-    title="Built-in Optical Icon Set"
-    description="Crisp 16×16 stroke icons ready out of the box, searchable below."
+    title="High-Definition 24×24 Optical Icon Set"
+    description="130+ precision vector icons authored on a 24×24 grid with automatic optical stroke calibration across xs (12px) through xl (24px)."
   >
     <JStack gap="field" style="width: 100%">
       <JInline justify="between" wrap>

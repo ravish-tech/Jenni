@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 8,
   description: 'Monospace character cells for OTP and security codes with paste distribution.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

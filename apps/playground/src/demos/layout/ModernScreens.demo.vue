@@ -5,7 +5,7 @@ export const meta = {
   order: 9,
   description:
     'Future-ready AI conversational artifact workspaces, infinite spatial node stages, 3-column documentation, and split onboarding flows.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

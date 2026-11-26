@@ -1,0 +1,248 @@
+/*
+ * Timeline — Activity, deployment, and audit event feed.
+ *
+ * <ol class="j-timeline" data-size="sm|md" data-line="solid|dashed">
+ *   <li class="j-timeline__item" data-tone="accent|neutral|success|warning|danger|info" data-active>
+ *     <div class="j-timeline__axis" aria-hidden="true">
+ *       <div class="j-timeline__marker-wrap">
+ *         <span class="j-timeline__marker">…</span>
+ *       </div>
+ *       <span class="j-timeline__rail"></span>
+ *     </div>
+ *     <div class="j-timeline__content">
+ *       <div class="j-timeline__header">
+ *         <span class="j-timeline__title">Release v2.8.0 promoted</span>
+ *         <time class="j-timeline__time">14:32:08 UTC</time>
+ *       </div>
+ *       <p class="j-timeline__description">…</p>
+ *       <div class="j-timeline__details">…</div>
+ *     </div>
+ *   </li>
+ * </ol>
+ */
+@layer jenni.components {
+  :where(.j-timeline) {
+    --_rail-col: max(20px, round(calc(24px * var(--j-density)), 2px));
+    --_ring-size: 10px;
+    --_icon-box: max(20px, round(calc(24px * var(--j-density)), 2px));
+    --_icon-glyph: 13px;
+    --_title-fs: var(--j-text-sm);
+    --_time-fs: var(--j-text-xs);
+    --_desc-fs: var(--j-text-sm);
+    --_item-pb: var(--j-space-5);
+
+    display: flex;
+    flex-direction: column;
+    inline-size: 100%;
+    min-inline-size: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  :where(.j-timeline[data-size="sm"]) {
+    --_rail-col: max(18px, round(calc(20px * var(--j-density)), 2px));
+    --_ring-size: 8px;
+    --_icon-box: max(18px, round(calc(20px * var(--j-density)), 2px));
+    --_icon-glyph: 11px;
+    --_title-fs: var(--j-text-xs);
+    --_time-fs: var(--j-text-xs);
+    --_desc-fs: var(--j-text-xs);
+    --_item-pb: var(--j-space-3);
+  }
+
+  /* ---- Item ---- */
+  :where(.j-timeline__item) {
+    position: relative;
+    display: grid;
+    grid-template-columns: var(--_rail-col) minmax(0, 1fr);
+    column-gap: var(--j-gap-item);
+    padding-block-end: var(--_item-pb);
+    min-inline-size: 0;
+
+    &:last-child {
+      padding-block-end: 0;
+    }
+  }
+
+  /* ---- Left Track & Connector Rail ---- */
+  :where(.j-timeline__axis) {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-block-size: 100%;
+  }
+
+  :where(.j-timeline__marker-wrap) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: 100%;
+    min-block-size: calc(var(--_title-fs) * var(--j-leading-tight));
+  }
+
+  /* Architectural Ring / Dot (default when empty) */
+  :where(.j-timeline__marker) {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: var(--_ring-size);
+    block-size: var(--_ring-size);
+    border-radius: var(--j-radius-full);
+    border: 2px solid var(--j-border-strong);
+    background-color: var(--j-surface-1);
+    color: var(--j-fg-muted);
+    transition:
+      background-color var(--j-duration-slow) var(--j-ease-emphasized),
+      border-color var(--j-duration-slow) var(--j-ease-emphasized),
+      box-shadow var(--j-duration-slow) var(--j-ease-emphasized),
+      color var(--j-duration-slow) var(--j-ease-emphasized);
+  }
+
+  /* Semantic tone ring */
+  :where(.j-timeline__item[data-tone]:not([data-tone="neutral"])) :where(.j-timeline__marker:empty) {
+    border-color: var(--j-tone);
+  }
+
+  /* Active step halo on architectural ring */
+  :where(.j-timeline__item[data-active]) :where(.j-timeline__marker:empty) {
+    border-color: var(--j-fg);
+    background-color: var(--j-fg);
+    box-shadow: 0 0 0 3.5px color-mix(in oklch, var(--j-fg) 14%, transparent);
+  }
+
+  :where(.j-timeline__item[data-active][data-tone]:not([data-tone="neutral"]))
+    :where(.j-timeline__marker:empty) {
+    border-color: var(--j-tone);
+    background-color: var(--j-tone);
+    box-shadow: 0 0 0 3.5px color-mix(in oklch, var(--j-tone) 20%, transparent);
+  }
+
+  /* Icon / Custom Dot Marker */
+  :where(.j-timeline__marker:not(:empty)) {
+    inline-size: var(--_icon-box);
+    block-size: var(--_icon-box);
+    border: 0;
+    background-color: var(--j-surface-2);
+    color: var(--j-fg-muted);
+    box-shadow: inset 0 0 0 1px var(--j-border);
+
+    & > svg {
+      inline-size: var(--_icon-glyph);
+      block-size: var(--_icon-glyph);
+      flex: none;
+    }
+
+    & > .j-icon {
+      --j-icon-size: var(--_icon-glyph);
+    }
+  }
+
+  :where(.j-timeline__item[data-tone]:not([data-tone="neutral"]))
+    :where(.j-timeline__marker:not(:empty)) {
+    background-color: var(--j-tone-soft);
+    color: var(--j-tone);
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--j-tone) 24%, transparent);
+  }
+
+  :where(.j-timeline__item[data-active]) :where(.j-timeline__marker:not(:empty)) {
+    color: var(--j-fg);
+    box-shadow:
+      inset 0 0 0 1.5px var(--j-fg),
+      0 0 0 3.5px color-mix(in oklch, var(--j-fg) 14%, transparent);
+  }
+
+  :where(.j-timeline__item[data-active][data-tone]:not([data-tone="neutral"]))
+    :where(.j-timeline__marker:not(:empty)) {
+    color: var(--j-tone);
+    box-shadow:
+      inset 0 0 0 1.5px var(--j-tone),
+      0 0 0 3.5px color-mix(in oklch, var(--j-tone) 20%, transparent);
+  }
+
+  /* Vertical Connector Rail */
+  :where(.j-timeline__rail) {
+    flex: 1 1 auto;
+    inline-size: 0;
+    margin-block-start: var(--j-space-1);
+    margin-block-end: calc((var(--_item-pb) - var(--j-space-1)) * -1);
+    border-inline-start: 1px solid var(--j-border);
+  }
+
+  :where(.j-timeline__item:last-child) :where(.j-timeline__rail) {
+    display: none;
+  }
+
+  :where(.j-timeline[data-line="dashed"] .j-timeline__rail),
+  :where(.j-timeline__item[data-line="dashed"] .j-timeline__rail) {
+    border-inline-start-style: dashed;
+    border-inline-start-color: var(--j-border-strong);
+  }
+
+  :where(.j-timeline__item[data-line="solid"] .j-timeline__rail) {
+    border-inline-start-style: solid;
+    border-inline-start-color: var(--j-border);
+  }
+
+  /* ---- Right Content Column ---- */
+  :where(.j-timeline__content) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--j-space-1);
+    min-inline-size: 0;
+  }
+
+  :where(.j-timeline__item:has(> .j-timeline__axis .j-timeline__marker:not(:empty)))
+    > :where(.j-timeline__content) {
+    padding-block-start: max(0px, calc((var(--_icon-box) - (var(--_title-fs) * var(--j-leading-tight))) / 2));
+  }
+
+  :where(.j-timeline__header) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--j-space-0-5) var(--j-gap-item);
+    min-inline-size: 0;
+  }
+
+  :where(.j-timeline__title) {
+    color: var(--j-fg);
+    font-size: var(--_title-fs);
+    font-weight: var(--j-weight-medium);
+    line-height: var(--j-leading-tight);
+    letter-spacing: var(--j-tracking-tight);
+  }
+
+  :where(.j-timeline__item[data-active]) :where(.j-timeline__title) {
+    font-weight: var(--j-weight-semibold);
+  }
+
+  :where(.j-timeline__time) {
+    color: var(--j-fg-subtle);
+    font-size: var(--_time-fs);
+    font-variant-numeric: tabular-nums;
+    line-height: var(--j-leading-tight);
+    white-space: nowrap;
+  }
+
+  :where(.j-timeline__description) {
+    margin: 0;
+    color: var(--j-fg-muted);
+    font-size: var(--_desc-fs);
+    line-height: var(--j-leading);
+  }
+
+  :where(.j-timeline__details) {
+    margin-block-start: var(--j-space-1);
+    color: var(--j-fg-muted);
+    font-size: var(--_desc-fs);
+    line-height: var(--j-leading);
+    min-inline-size: 0;
+  }
+}

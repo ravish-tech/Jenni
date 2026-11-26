@@ -1,36 +1,120 @@
 /*
- * Spinner — <span class="j-spinner" role="status" aria-label="Loading"></span>
- * Pure CSS ring with a fading tail and a rounded head. Inherits currentColor.
- *   data-size: sm | md (default) | lg
- * Public props: --j-spinner-size, --j-spinner-thickness
+ * Spinner — <span class="j-spinner" role="status" aria-label="Loading">…</span>
+ * Crisp HD vector SVG indicator (with razor-sharp SVG mask fallback for empty spans).
+ *   data-size:    xs (12px) | sm (14px) | md (16px, default) | lg (20px) | xl (28px)
+ *   data-variant: ring (default) | arc | dots
+ *   data-tone:    accent | neutral | danger | success | warning | info
+ * Public props: --j-spinner-size, --j-spinner-stroke
  */
 @layer jenni.components {
   :where(.j-spinner) {
     --_s: var(--j-spinner-size, 16px);
-    --_t: var(--j-spinner-thickness, max(1.5px, calc(var(--_s) / 8)));
+    --_stroke: var(--j-spinner-stroke, 2.35);
 
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     flex: none;
     inline-size: var(--_s);
     block-size: var(--_s);
-    border-radius: var(--j-radius-full);
-    background:
-      radial-gradient(circle at 50% calc(var(--_t) / 2), currentColor calc(var(--_t) / 2 - 0.3px), transparent calc(var(--_t) / 2)),
-      conic-gradient(from 0deg, transparent 8%, currentColor),
-      color-mix(in oklch, currentColor 14%, transparent);
-    mask: radial-gradient(farthest-side, transparent calc(100% - var(--_t) - 0.5px), currentColor calc(100% - var(--_t)));
     vertical-align: middle;
-    animation: j-spinner-rotate 0.95s linear infinite;
+    line-height: 0;
   }
-  :where(.j-spinner[data-size="sm"]) { --_s: var(--j-spinner-size, 12px); }
-  :where(.j-spinner[data-size="lg"]) { --_s: var(--j-spinner-size, 24px); }
+
+  :where(.j-spinner[data-size="xs"]) { --_s: var(--j-spinner-size, 12px); }
+  :where(.j-spinner[data-size="sm"]) { --_s: var(--j-spinner-size, 14px); }
+  :where(.j-spinner[data-size="lg"]) { --_s: var(--j-spinner-size, 20px); }
+  :where(.j-spinner[data-size="xl"]) { --_s: var(--j-spinner-size, 28px); }
+
+  :where(.j-spinner[data-tone]) {
+    color: var(--j-tone);
+  }
+  :where(.j-spinner[data-tone="neutral"]) {
+    color: var(--j-fg-muted);
+  }
+
+  /* Plain-HTML fallback when no child <svg> is rendered */
+  :where(.j-spinner:empty) {
+    background-color: currentColor;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='9.5' stroke='black' stroke-opacity='0.2' stroke-width='2.4'/%3E%3Cpath d='M12 2.5a9.5 9.5 0 0 1 9.5 9.5' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    animation: j-spinner-rotate 0.85s linear infinite;
+  }
+
+  :where(.j-spinner__svg) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
+    transform-origin: 50% 50%;
+    animation: j-spinner-rotate 1.35s linear infinite;
+  }
+
+  :where(.j-spinner[data-variant="dots"] .j-spinner__svg) {
+    animation: none;
+  }
+
+  :where(.j-spinner__track) {
+    stroke-width: var(--_stroke);
+    opacity: 0.18;
+  }
+
+  /* Circumference for r=9.5 is 2 * pi * 9.5 ≈ 59.69 */
+  :where(.j-spinner__arc) {
+    stroke-width: var(--_stroke);
+    stroke-dasharray: 4.5 55.19;
+    stroke-dashoffset: 0;
+    animation: j-spinner-dash 1.35s var(--j-ease-in-out) infinite;
+  }
+
+  :where(.j-spinner__dot) {
+    opacity: 0.22;
+    animation: j-spinner-pulse 1.2s var(--j-ease-in-out) infinite;
+  }
+  :where(.j-spinner__dot:nth-child(2)) {
+    animation-delay: 0.18s;
+  }
+  :where(.j-spinner__dot:nth-child(3)) {
+    animation-delay: 0.36s;
+  }
 
   @keyframes j-spinner-rotate {
     to { transform: rotate(1turn); }
   }
 
-  /* Loading feedback stays, but calmer. */
+  @keyframes j-spinner-dash {
+    0% {
+      stroke-dasharray: 4.5 55.19;
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: 41.78 17.91;
+      stroke-dashoffset: -14.92;
+    }
+    100% {
+      stroke-dasharray: 4.5 55.19;
+      stroke-dashoffset: -59.69;
+    }
+  }
+
+  @keyframes j-spinner-pulse {
+    0%, 80%, 100% { opacity: 0.22; }
+    40% { opacity: 1; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    :where(.j-spinner) { animation-duration: 2.2s; }
+    :where(.j-spinner:empty),
+    :where(.j-spinner__svg) {
+      animation-duration: 2.4s;
+    }
+    :where(.j-spinner__arc) {
+      animation: none;
+      stroke-dasharray: 16 43.69;
+      stroke-dashoffset: 0;
+    }
+    :where(.j-spinner__dot) {
+      animation-duration: 2.4s;
+    }
   }
 }

@@ -121,13 +121,31 @@ export function Pagination({
   };
 
   const prevSvg = (
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M9.75 4.25 6 8l3.75 3.75" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      shapeRendering="geometricPrecision"
+      aria-hidden="true"
+    >
+      <path d="M15 6l-6 6 6 6" />
     </svg>
   );
   const nextSvg = (
-    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <path d="M6.25 4.25 10 8l-3.75 3.75" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      shapeRendering="geometricPrecision"
+      aria-hidden="true"
+    >
+      <path d="M9 6l6 6-6 6" />
     </svg>
   );
 

@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 6,
   description: 'Calm editorial zero-data composition with an architectural icon emblem and measured copy.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

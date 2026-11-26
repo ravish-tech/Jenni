@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 1,
   description: 'Triggers an action. Five variants, three sizes, any tone.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

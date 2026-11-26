@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 7,
   description: 'Tabular-numeral spinbutton with hairline steppers, units, Shift×10, and clamp-on-blur.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

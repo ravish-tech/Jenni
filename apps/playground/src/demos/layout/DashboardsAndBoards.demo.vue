@@ -5,7 +5,7 @@ export const meta = {
   order: 8,
   description:
     '12-column container-responsive Bento dashboards and horizontal Kanban swimlane boards with sticky column headers.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

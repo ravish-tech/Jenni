@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 4,
   description: 'Label + control + hint + error. Wires id, aria-describedby and aria-invalid for you.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

@@ -1,0 +1,240 @@
+/*
+ * Banner — System-wide shell top bar & inline page announcement strip.
+ *
+ * <div class="j-banner" role="status" data-tone="info" data-variant="soft|solid|surface" data-align="start|center" data-flush>
+ *   <div class="j-banner__inner">
+ *     <span class="j-banner__icon">…</span>
+ *     <div class="j-banner__content">
+ *       <span class="j-banner__title">Scheduled maintenance</span>
+ *       <span class="j-banner__description">Read-only window starts Sunday at 02:00 UTC.</span>
+ *     </div>
+ *     <div class="j-banner__actions">…</div>
+ *   </div>
+ *   <button type="button" class="j-banner__close" aria-label="Dismiss banner">…</button>
+ * </div>
+ *
+ * Public props: --j-banner-radius
+ */
+@layer jenni.components {
+  :where(.j-banner) {
+    --_bg: var(--j-tone-soft);
+    --_edge: color-mix(in oklch, var(--j-tone) 20%, var(--j-border));
+    --_shadow: 0 0 0 0 transparent;
+    --_title: var(--j-tone-soft-fg);
+    --_text: color-mix(in oklch, var(--j-tone-soft-fg) 80%, var(--j-fg));
+    --_icon: var(--j-tone);
+    --_close: var(--j-tone-soft-fg);
+
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--j-gap-item);
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: max(30px, round(calc(40px * var(--j-density)), 1px));
+    padding-block: var(--j-space-2);
+    padding-inline: var(--j-space-4);
+    border: 1px solid var(--_edge);
+    border-radius: var(--j-banner-radius, var(--j-radius-md));
+    background-color: var(--_bg);
+    color: var(--_text);
+    box-shadow: var(--_shadow);
+    font-size: var(--j-text-sm);
+    line-height: var(--j-leading-tight);
+    transition:
+      background-color var(--j-duration-slow) var(--j-ease-emphasized),
+      border-color var(--j-duration-slow) var(--j-ease-emphasized),
+      color var(--j-duration-slow) var(--j-ease-emphasized),
+      box-shadow var(--j-duration-slow) var(--j-ease-emphasized);
+  }
+
+  /* ---- Neutral Tone Adjustments ---- */
+  :where(.j-banner[data-tone="neutral"]) {
+    --_bg: var(--j-surface-2);
+    --_edge: var(--j-border);
+    --_title: var(--j-fg);
+    --_text: var(--j-fg-muted);
+    --_icon: var(--j-fg-muted);
+    --_close: var(--j-fg-muted);
+  }
+
+  /* ---- Variant: Solid (High-salience incident / release bar) ---- */
+  :where(.j-banner[data-variant="solid"]) {
+    --_bg: var(--j-tone);
+    --_edge: color-mix(in oklch, var(--j-tone-hover) 65%, var(--j-tone));
+    --_title: var(--j-tone-fg);
+    --_text: color-mix(in oklch, var(--j-tone-fg) 90%, transparent);
+    --_icon: var(--j-tone-fg);
+    --_close: var(--j-tone-fg);
+  }
+
+  /* ---- Variant: Surface (Architectural surface container with tone icon) ---- */
+  :where(.j-banner[data-variant="surface"]) {
+    --_bg: var(--j-surface-1);
+    --_edge: var(--j-border);
+    --_shadow: var(--j-shadow-xs);
+    --_title: var(--j-fg);
+    --_text: var(--j-fg-muted);
+    --_icon: var(--j-tone);
+    --_close: var(--j-fg-muted);
+  }
+
+  :where(.j-banner[data-variant="surface"][data-tone="neutral"]) {
+    --_icon: var(--j-fg-muted);
+  }
+
+  /* ---- Flush Mode (Edge-to-edge top chrome bar) ---- */
+  :where(.j-banner[data-flush]) {
+    min-block-size: max(28px, round(calc(36px * var(--j-density)), 1px));
+    padding-block: var(--j-space-1-5);
+    border-radius: 0;
+    border-inline: 0;
+    border-top: 0;
+    box-shadow: none;
+  }
+
+  /* ---- Seamless JAppShell #banner Integration ---- */
+  :where(.j-shell__banner:has(> .j-banner)) {
+    min-block-size: 0;
+    padding: 0;
+    background-color: transparent;
+    border-block-end: 0;
+  }
+
+  :where(.j-shell__banner > .j-banner) {
+    flex: 1 1 100%;
+    min-block-size: max(26px, round(calc(34px * var(--j-density)), 1px));
+    padding-block: var(--j-space-1);
+    font-size: var(--j-text-xs);
+    border-radius: 0;
+    border-inline: 0;
+    border-top: 0;
+    box-shadow: none;
+  }
+
+  :where(.j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__banner:has(> .j-banner)) {
+    box-shadow: none;
+  }
+
+  :where(.j-shell[data-variant="floating"]:not([data-layout="floating-dock"]) .j-shell__banner > .j-banner) {
+    border: 1px solid var(--_edge);
+    border-radius: var(--j-radius-md);
+  }
+
+  /* ---- Inner Flex Layout & Center Alignment ---- */
+  :where(.j-banner__inner) {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--j-space-1-5) var(--j-gap-item);
+    min-inline-size: 0;
+  }
+
+  :where(.j-banner[data-align="center"] .j-banner__inner) {
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* ---- Icon ---- */
+  :where(.j-banner__icon) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    color: var(--_icon);
+
+    & > svg {
+      inline-size: 16px;
+      block-size: 16px;
+      flex: none;
+    }
+  }
+
+  :where(.j-shell__banner > .j-banner .j-banner__icon) {
+    --j-icon-size: 14px;
+  }
+
+  /* ---- Copy ---- */
+  :where(.j-banner__content) {
+    display: flex;
+    flex: 1 1 200px;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--j-space-0-5) var(--j-space-2);
+    min-inline-size: 0;
+  }
+
+  :where(.j-banner[data-align="center"] .j-banner__content) {
+    flex: 0 1 auto;
+    justify-content: center;
+  }
+
+  :where(.j-banner__title) {
+    color: var(--_title);
+    font-weight: var(--j-weight-semibold);
+    letter-spacing: var(--j-tracking-tight);
+  }
+
+  :where(.j-banner__description) {
+    color: var(--_text);
+    font-weight: var(--j-weight-regular);
+  }
+
+  :where(.j-banner__description a, .j-banner__content a) {
+    color: var(--_title);
+    font-weight: var(--j-weight-medium);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, currentColor 45%, transparent);
+    text-underline-offset: 2px;
+  }
+
+  /* ---- Trailing Actions ---- */
+  :where(.j-banner__actions) {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--j-gap-related);
+    margin-inline-start: auto;
+  }
+
+  :where(.j-banner[data-align="center"] .j-banner__actions) {
+    margin-inline-start: 0;
+  }
+
+  /* ---- Dismiss Button ---- */
+  :where(.j-banner__close) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: max(22px, round(calc(26px * var(--j-density)), 1px));
+    block-size: max(22px, round(calc(26px * var(--j-density)), 1px));
+    margin-inline-end: calc(var(--j-space-1) * -1);
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background-color: transparent;
+    color: var(--_close);
+    opacity: 0.76;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      opacity var(--j-duration-fast) var(--j-ease-out),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    @media (hover: hover) {
+      &:hover {
+        opacity: 1;
+        background-color: color-mix(in oklch, currentColor 14%, transparent);
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+      opacity: 1;
+      box-shadow: var(--j-ring);
+    }
+  }
+}

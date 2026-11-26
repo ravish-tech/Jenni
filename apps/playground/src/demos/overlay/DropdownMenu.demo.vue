@@ -4,7 +4,7 @@ export const meta = {
   group: 'Overlay',
   order: 4,
   description: 'Compact 32px action menu with roving keyboard navigation, typeahead, shortcuts, checkboxes and radios.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

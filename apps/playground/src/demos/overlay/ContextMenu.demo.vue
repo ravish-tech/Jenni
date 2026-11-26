@@ -4,7 +4,7 @@ export const meta = {
   group: 'Overlay',
   order: 5,
   description: 'Right-click target surface opening a viewport-clamped .j-menu with keyboard navigation, checkboxes, and radios.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

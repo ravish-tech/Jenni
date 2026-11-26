@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 13,
   description: 'Precision on/off toggle. Native checkbox with role="switch" and a calm, weighted glide.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

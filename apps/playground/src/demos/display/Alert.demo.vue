@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 5,
   description: 'Callout that communicates status or guidance with a tone-matched icon.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

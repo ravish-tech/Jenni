@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 2,
   description: 'Stateful press button and single/multiple toggle groups with zero scale squish.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 19,
   description: 'Composable editorial prose editor with active formatting reflection, inline link bar, and tabular word/character counts.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

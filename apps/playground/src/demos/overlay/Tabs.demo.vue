@@ -4,7 +4,7 @@ export const meta = {
   group: 'Overlay',
   order: 10,
   description: 'Organizes views with roving focus, a damped FLIP indicator glide and zero-hop panel fades.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

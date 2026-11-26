@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 16,
   description: 'WAI-ARIA hierarchical explorer with subtle indentation hairlines, async lazy child loading, smooth branch collapse, and full keyboard roving focus.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

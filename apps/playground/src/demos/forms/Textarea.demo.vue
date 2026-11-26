@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 6,
   description: 'Multi-line text that grows with its content (field-sizing: content).',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

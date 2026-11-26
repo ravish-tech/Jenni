@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 12,
   description: 'Precision key cap with a crisp hairline edge and a quiet 1px bottom bevel.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

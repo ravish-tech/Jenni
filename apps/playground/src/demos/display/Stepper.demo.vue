@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 15,
   description: 'Horizontal and vertical multi-step progress rails with 300ms emphasized connector fills and linear gating.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 16,
   description: 'Architectural 7-column month grid and anchored date/range picker with WAI-ARIA arrow navigation.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

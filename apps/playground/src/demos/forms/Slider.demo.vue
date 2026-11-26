@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 14,
   description: 'Precision <input type="range"> with a crisp circular thumb and filled track.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

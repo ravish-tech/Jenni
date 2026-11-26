@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 13,
   description: 'Crisp 1px hairline divider — horizontal or vertical, with optional section label.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

@@ -4,7 +4,7 @@ export const meta = {
   group: 'Overlay',
   order: 2,
   description: 'Interactive preview card opened after a calm 320ms hover delay and bridged across a 180ms close delay.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

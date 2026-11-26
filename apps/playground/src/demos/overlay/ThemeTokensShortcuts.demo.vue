@@ -5,7 +5,7 @@ export const meta = {
   order: 12,
   wide: true,
   description: 'Live JS color resolver for Charts, CodeMirror & xterm.js (useThemeTokens), plus tab-visibility-aware keyboard shortcuts (useShortcut).',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

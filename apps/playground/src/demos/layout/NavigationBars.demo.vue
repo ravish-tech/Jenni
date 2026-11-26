@@ -4,7 +4,7 @@ export const meta = {
   group: 'Layout',
   order: 3,
   description: 'Collapsible sidebar & icon rail, frosted translucent top bar, and tab/action bottom bars.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

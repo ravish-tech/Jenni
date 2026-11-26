@@ -5,7 +5,7 @@ export const meta = {
   order: 7.5,
   wide: true,
   description: 'IDE, notebook, and browser document tab strip with dirty indicators, middle-click close, pinned tabs, drag-to-reorder, wheel scroll, overflow menu, and context menu hooks.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

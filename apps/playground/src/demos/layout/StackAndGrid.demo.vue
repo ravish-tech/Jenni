@@ -4,7 +4,7 @@ export const meta = {
   group: 'Layout',
   order: 5,
   description: '1D Flexbox vertical stacks, horizontal inline clusters, and six semantic relationship gaps.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

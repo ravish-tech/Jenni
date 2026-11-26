@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 12,
   description: 'Pick one option from a set. Native radios, arrow-key navigation for free.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

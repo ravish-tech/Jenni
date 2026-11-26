@@ -1,4 +1,4 @@
-// Pluggable icon registry and optical 16x16 stroke icon dictionary.
+// Pluggable icon registry and optical 24x24 geometricPrecision stroke icon dictionary.
 // Supports built-in SVG definitions, raw <svg> markup strings, { viewBox, body }
 // objects, icon dictionaries, and dynamic resolver functions (Lucide, Tabler,
 // custom sprites, or framework components).
@@ -61,154 +61,307 @@ function freezeParsedSvg(viewBox, body, fill, stroke) {
 }
 
 /** @param {string} body @returns {ParsedSvgIcon} */
-const svg16 = (body) => freezeParsedSvg('0 0 16 16', body);
+const svg24 = (body) => freezeParsedSvg('0 0 24 24', body);
 
-const ICON_X = svg16('<path d="M4 4l8 8M12 4l-8 8"/>');
-const ICON_SETTINGS = svg16(
-  '<path d="M8 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm5.2-2a5.2 5.2 0 0 0-.1-1l1.2-1-1.2-2-1.4.5a5.2 5.2 0 0 0-1.7-1L9.7 2H6.3L6 3.5a5.2 5.2 0 0 0-1.7 1l-1.4-.5-1.2 2 1.2 1a5.2 5.2 0 0 0 0 2l-1.2 1 1.2 2 1.4-.5c.5.4 1.1.8 1.7 1L6.3 14h3.4l.3-1.5c.6-.2 1.2-.6 1.7-1l1.4.5 1.2-2-1.2-1c.1-.3.1-.7.1-1Z"/>',
+const ICON_X = svg24('<path d="M18 6 6 18M6 6l12 12"/>');
+const ICON_SETTINGS = svg24(
+  '<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.26.6.85 1 1.51 1H21a2 2 0 1 1 0 4h-.09c-.66 0-1.25.4-1.51 1Z"/>',
 );
-const ICON_EDIT = svg16(
-  '<path d="M11.15 2.35a1.41 1.41 0 0 1 2 2L5.5 12l-2.75.75L3.5 10l7.65-7.65ZM9.75 3.75l2 2"/>',
+const ICON_EDIT = svg24(
+  '<path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/>',
 );
-const ICON_REFRESH = svg16(
-  '<path d="M13.5 3.25v3.25h-3.25M2.5 12.75V9.5h3.25"/><path d="M3.15 6A5.25 5.25 0 0 1 12.1 4.4l1.4 2.1M12.85 10a5.25 5.25 0 0 1-8.95 1.6L2.5 9.5"/>',
+const ICON_REFRESH = svg24(
+  '<path d="M21 3v5h-5M3 21v-5h5"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L21 8M20.49 15a9 9 0 0 1-14.85 3.36L3 16"/>',
 );
-const ICON_MORE_H = svg16(
-  '<circle cx="3.5" cy="8" r="1"/><circle cx="8" cy="8" r="1"/><circle cx="12.5" cy="8" r="1"/>',
+const ICON_MORE_H = svg24(
+  '<circle cx="5" cy="12" r="1.25"/><circle cx="12" cy="12" r="1.25"/><circle cx="19" cy="12" r="1.25"/>',
 );
-const ICON_ALERT_TRIANGLE = svg16(
-  '<path d="M7.13 2.95a1 1 0 0 1 1.74 0l4.86 8.55a1 1 0 0 1-.87 1.5H3.14a1 1 0 0 1-.87-1.5l4.86-8.55ZM8 6.25v2.75M8 11.15h.01"/>',
+const ICON_ALERT_TRIANGLE = svg24(
+  '<path d="m21.73 18-8-14a2 2 0 0 0-3.46 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4M12 17h.01"/>',
 );
-const ICON_ALERT_CIRCLE = svg16(
-  '<circle cx="8" cy="8" r="5.75"/><path d="M8 5.25v3.25M8 10.85h.01"/>',
+const ICON_ALERT_CIRCLE = svg24(
+  '<circle cx="12" cy="12" r="9.5"/><path d="M12 8v4.5M12 16h.01"/>',
 );
+const ICON_PANEL_LEFT = svg24(
+  '<rect x="3" y="3.5" width="18" height="17" rx="2"/><path d="M9 3.5v17"/>',
+);
+const ICON_SPARKLES = svg24(
+  '<path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3Zm7 12 .8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8L19 15Z"/>',
+);
+const ICON_CHEVRON_DOWN = svg24('<path d="m6 9 6 6 6-6"/>');
+const ICON_ARROW_RIGHT = svg24('<path d="M5 12h14m-6-6 6 6-6 6"/>');
 
 /**
- * Built-in dictionary of crisp, optical 16x16 stroke icons and standard aliases.
+ * Built-in dictionary of high-definition 24x24 precision stroke icons and standard aliases.
  * @type {Readonly<Record<string, ParsedSvgIcon>>}
  */
 export const BUILTIN_ICONS = Object.freeze({
-  check: svg16('<path d="M3 8.5 6.5 12 13 4.5"/>'),
+  check: svg24('<path d="M20 6 9 17l-5-5"/>'),
   x: ICON_X,
   close: ICON_X,
-  plus: svg16('<path d="M8 3.25v9.5M3.25 8h9.5"/>'),
-  minus: svg16('<path d="M3.25 8h9.5"/>'),
-  search: svg16('<circle cx="7.25" cy="7.25" r="4.5"/><path d="m10.6 10.6 3.15 3.15"/>'),
+  plus: svg24('<path d="M12 5v14M5 12h14"/>'),
+  minus: svg24('<path d="M5 12h14"/>'),
+  search: svg24('<circle cx="11" cy="11" r="7.5"/><path d="m20.5 20.5-4.15-4.15"/>'),
   settings: ICON_SETTINGS,
   gear: ICON_SETTINGS,
-  'chevron-down': svg16('<path d="m4 6 4 4 4-4"/>'),
-  'chevron-up': svg16('<path d="m4 10 4-4 4 4"/>'),
-  'chevron-left': svg16('<path d="m10 4-4 4 4 4"/>'),
-  'chevron-right': svg16('<path d="m6 4 4 4-4 4"/>'),
-  'chevrons-up-down': svg16(
-    '<path d="m5.25 6 2.75-2.75L10.75 6M5.25 10 8 12.75 10.75 10"/>',
+  'chevron-down': ICON_CHEVRON_DOWN,
+  chevron: ICON_CHEVRON_DOWN,
+  'chevron-up': svg24('<path d="m18 15-6-6-6 6"/>'),
+  'chevron-left': svg24('<path d="m15 18-6-6 6-6"/>'),
+  'chevron-right': svg24('<path d="m9 18 6-6-6-6"/>'),
+  'chevrons-up-down': svg24('<path d="m7 15 5 5 5-5M7 9l5-5 5 5"/>'),
+  'arrow-up': svg24('<path d="M12 19V5m-6 6 6-6 6 6"/>'),
+  'arrow-down': svg24('<path d="M12 5v14m-6-6 6 6 6-6"/>'),
+  'arrow-left': svg24('<path d="M19 12H5m6-6-6 6 6 6"/>'),
+  'arrow-right': ICON_ARROW_RIGHT,
+  arrow: ICON_ARROW_RIGHT,
+  'external-link': svg24(
+    '<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>',
   ),
-  'arrow-up': svg16('<path d="M8 13V3m-4 4 4-4 4 4"/>'),
-  'arrow-down': svg16('<path d="M8 3v10m-4-4 4 4 4-4"/>'),
-  'arrow-left': svg16('<path d="M13 8H3m4-4L3 8l4 4"/>'),
-  'arrow-right': svg16('<path d="M3 8h10m-4-4 4 4-4 4"/>'),
-  'external-link': svg16(
-    '<path d="M9.5 2.5h4v4M13.5 2.5l-6 6M7 3.5H3.75A1.25 1.25 0 0 0 2.5 4.75v7.5c0 .69.56 1.25 1.25 1.25h7.5c.69 0 1.25-.56 1.25-1.25V9"/>',
+  copy: svg24(
+    '<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"/>',
   ),
-  copy: svg16(
-    '<rect x="5.5" y="5.5" width="8" height="8" rx="1.25"/><path d="M3.5 10.5h-.25A1.25 1.25 0 0 1 2 9.25v-6C2 2.56 2.56 2 3.25 2h6c.69 0 1.25.56 1.25 1.25v.25"/>',
+  clipboard: svg24(
+    '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>',
   ),
-  clipboard: svg16(
-    '<rect x="5.5" y="1.75" width="5" height="2.5" rx="0.75"/><path d="M5.5 3H4a1.25 1.25 0 0 0-1.25 1.25v8.5c0 .69.56 1.25 1.25 1.25h8c.69 0 1.25-.56 1.25-1.25v-8.5C13.25 3.56 12.69 3 12 3h-1.5"/>',
-  ),
-  trash: svg16(
-    '<path d="M2.75 4.25h10.5M6 4.25V3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1.25m1.75 0v8.5a1.25 1.25 0 0 1-1.25 1.25h-5A1.25 1.25 0 0 1 4.25 12.75v-8.5M6.75 7v4.25M9.25 7v4.25"/>',
+  trash: svg24(
+    '<path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M10 11v6M14 11v6"/>',
   ),
   edit: ICON_EDIT,
   pencil: ICON_EDIT,
-  eye: svg16(
-    '<path d="M1.75 8s2.25-4.25 6.25-4.25S14.25 8 14.25 8s-2.25 4.25-6.25 4.25S1.75 8 1.75 8Z"/><circle cx="8" cy="8" r="1.75"/>',
+  eye: svg24(
+    '<path d="M2.06 12.35a1 1 0 0 1 0-.7C3.78 7.5 7.52 5 12 5s8.22 2.5 9.94 6.65a1 1 0 0 1 0 .7C20.22 16.5 16.48 19 12 19s-8.22-2.5-9.94-6.65Z"/><circle cx="12" cy="12" r="3"/>',
   ),
-  'eye-off': svg16(
-    '<path d="M2.5 2.5l11 11M6.82 6.82a1.75 1.75 0 0 0 2.36 2.36M4.3 4.42C2.75 5.48 1.75 8 1.75 8s2.25 4.25 6.25 4.25c1.3 0 2.42-.45 3.33-1.08M6.5 3.92A6.3 6.3 0 0 1 8 3.75c4 0 6.25 4.25 6.25 4.25a10.4 10.4 0 0 1-1.66 2.34"/>',
+  'eye-off': svg24(
+    '<path d="M3 3l18 18M10.58 10.58a2 2 0 0 0 2.83 2.83M9.88 5.09A10.94 10.94 0 0 1 12 5c4.48 0 8.22 2.5 9.94 6.65a1 1 0 0 1 0 .7 11.4 11.4 0 0 1-4.18 5.15M6.61 6.61A11.5 11.5 0 0 0 2.06 11.65a1 1 0 0 0 0 .7C3.78 16.5 7.52 19 12 19c1.9 0 3.68-.45 5.23-1.27"/>',
   ),
-  folder: svg16(
-    '<path d="M2 4.25C2 3.56 2.56 3 3.25 3h3l1.4 1.5h5.1c.69 0 1.25.56 1.25 1.25v6.5c0 .69-.56 1.25-1.25 1.25H3.25C2.56 13.5 2 12.94 2 12.25v-8Z"/>',
+  folder: svg24(
+    '<path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/>',
   ),
-  'folder-open': svg16(
-    '<path d="M2 12.25V4.25C2 3.56 2.56 3 3.25 3h3l1.4 1.5h5.1c.69 0 1.25.56 1.25 1.25V7M2 12.25l1.6-5.25h10.9l-1.5 5.25a1 1 0 0 1-.96.75H2.96A.96.96 0 0 1 2 12.25Z"/>',
+  'folder-open': svg24(
+    '<path d="m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2"/>',
   ),
-  file: svg16(
-    '<path d="M4.25 2h4.8L12.5 5.45v7.3c0 .69-.56 1.25-1.25 1.25h-7C3.56 14 3 13.44 3 12.75V3.25C3 2.56 3.56 2 4.25 2Z"/><path d="M9 2v3.5h3.5"/>',
+  file: svg24(
+    '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>',
   ),
-  'file-code': svg16(
-    '<path d="M4.25 2h4.8L12.5 5.45v7.3c0 .69-.56 1.25-1.25 1.25h-7C3.56 14 3 13.44 3 12.75V3.25C3 2.56 3.56 2 4.25 2Z"/><path d="M9 2v3.5h3.5M6.5 8.25 5 9.75l1.5 1.5M9 8.25l1.5 1.5L9 11.25"/>',
+  'file-code': svg24(
+    '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4m-10 4-2 2 2 2m4-4 2 2-2 2"/>',
   ),
-  terminal: svg16(
-    '<rect x="2" y="2.75" width="12" height="10.5" rx="1.25"/><path d="m4.5 6 2.5 2-2.5 2M8.25 10.25h3.25"/>',
+  terminal: svg24(
+    '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3.5 3L7 15m5.5 0H17"/>',
   ),
-  code: svg16(
-    '<path d="M5.25 4.75 2 8l3.25 3.25M10.75 4.75 14 8l-3.25 3.25M9.25 3.25l-2.5 9.5"/>',
+  code: svg24('<path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/>'),
+  'git-branch': svg24(
+    '<line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/>',
   ),
-  'git-branch': svg16(
-    '<circle cx="4.75" cy="3.75" r="1.5"/><circle cx="11.25" cy="5.25" r="1.5"/><circle cx="4.75" cy="12.25" r="1.5"/><path d="M4.75 5.25v5.5M11.25 6.75c0 2.25-1.75 3-6.5 3"/>',
+  'git-commit': svg24('<circle cx="12" cy="12" r="3.5"/><path d="M2 12h6.5M15.5 12H22"/>'),
+  'git-pull-request': svg24(
+    '<circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7M6 9v12"/>',
   ),
-  'git-commit': svg16('<circle cx="8" cy="8" r="2.25"/><path d="M1.75 8h4M10.25 8h4"/>'),
-  'git-pull-request': svg16(
-    '<circle cx="4.5" cy="3.75" r="1.5"/><circle cx="4.5" cy="12.25" r="1.5"/><circle cx="11.5" cy="12.25" r="1.5"/><path d="M4.5 5.25v5.5M8.5 3.75h1.75a1.25 1.25 0 0 1 1.25 1.25v5.75M9.75 2.25 8.25 3.75l1.5 1.5"/>',
+  'git-merge': svg24(
+    '<circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 21V9a9 9 0 0 0 9 9"/>',
   ),
-  'git-merge': svg16(
-    '<circle cx="4.5" cy="3.75" r="1.5"/><circle cx="4.5" cy="12.25" r="1.5"/><circle cx="11.75" cy="9.5" r="1.5"/><path d="M4.5 5.25v5.5M4.5 5.25c0 2.5 2.25 4.25 5.75 4.25"/>',
+  play: svg24('<polygon points="6 3 20 12 6 21 6 3"/>'),
+  pause: svg24(
+    '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>',
   ),
-  play: svg16('<path d="M4.5 3.15 12.75 8 4.5 12.85V3.15Z"/>'),
-  pause: svg16(
-    '<rect x="4" y="3" width="2.75" height="10" rx="0.6"/><rect x="9.25" y="3" width="2.75" height="10" rx="0.6"/>',
-  ),
-  stop: svg16('<rect x="3.25" y="3.25" width="9.5" height="9.5" rx="1.25"/>'),
+  stop: svg24('<rect x="4.5" y="4.5" width="15" height="15" rx="2"/>'),
   refresh: ICON_REFRESH,
   reload: ICON_REFRESH,
-  download: svg16(
-    '<path d="M8 2.5v7.75m-3.25-3L8 10.5l3.25-3.25M2.75 11.25v1.25c0 .69.56 1.25 1.25 1.25h8c.69 0 1.25-.56 1.25-1.25v-1.25"/>',
+  reset: svg24('<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5"/>'),
+  download: svg24(
+    '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5 5 5 5-5m-5 5V3"/>',
   ),
-  upload: svg16(
-    '<path d="M8 10.5V2.75m-3.25 3L8 2.5l3.25 3.25M2.75 11.25v1.25c0 .69.56 1.25 1.25 1.25h8c.69 0 1.25-.56 1.25-1.25v-1.25"/>',
+  upload: svg24(
+    '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m14-7-5-5-5 5m5-5v12"/>',
   ),
-  filter: svg16('<path d="M2.25 3.25h11.5L9.5 8.3v4.2l-3 1v-5.2L2.25 3.25Z"/>'),
-  sliders: svg16(
-    '<path d="M2.5 4.5h3.25M8.25 4.5h5.25M2.5 8h6.25M11.25 8h2.25M2.5 11.5h2.25M7.25 11.5h6.25"/><circle cx="7" cy="4.5" r="1.25"/><circle cx="10" cy="8" r="1.25"/><circle cx="6" cy="11.5" r="1.25"/>',
+  filter: svg24('<polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>'),
+  sliders: svg24(
+    '<path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/>',
   ),
   'more-horizontal': ICON_MORE_H,
   dots: ICON_MORE_H,
-  'more-vertical': svg16(
-    '<circle cx="8" cy="3.5" r="1"/><circle cx="8" cy="8" r="1"/><circle cx="8" cy="12.5" r="1"/>',
+  'more-vertical': svg24(
+    '<circle cx="12" cy="5" r="1.25"/><circle cx="12" cy="12" r="1.25"/><circle cx="12" cy="19" r="1.25"/>',
   ),
-  pin: svg16(
-    '<path d="M9.75 2.25 13.75 6.25l-1.5 1.5-1.1-.35-2.4 2.4.4 2.45L8 13.4l-2.7-2.7L2.5 13.5m2.8-2.8L2.6 8l1.15-1.15 2.45.4 2.4-2.4-.35-1.1 1.5-1.5Z"/>',
+  pin: svg24(
+    '<path d="M12 17v5M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6a1 1 0 0 1 1-1 1 1 0 0 0 1-1V3H7v1a1 1 0 0 0 1 1 1 1 0 0 1 1 1z"/>',
   ),
-  star: svg16(
-    '<path d="m8 2.15 1.76 3.57 3.94.57-2.85 2.78.67 3.93L8 11.15 4.48 13l.67-3.93L2.3 6.29l3.94-.57L8 2.15Z"/>',
+  'file-text': svg24(
+    '<path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8M8 17h6M8 9h2"/>',
   ),
-  bell: svg16(
-    '<path d="M4 6.75a4 4 0 0 1 8 0c0 3.25 1.5 4.25 1.5 4.25h-11S4 10 4 6.75ZM6.75 13a1.45 1.45 0 0 0 2.5 0"/>',
+  star: svg24(
+    '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
   ),
-  info: svg16('<circle cx="8" cy="8" r="5.75"/><path d="M8 7.25v3.5M8 5.15h.01"/>'),
+  bell: svg24(
+    '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9m4.3 13a1.94 1.94 0 0 0 3.4 0"/>',
+  ),
+  info: svg24('<circle cx="12" cy="12" r="9.5"/><path d="M12 16v-4.5M12 8h.01"/>'),
   'alert-triangle': ICON_ALERT_TRIANGLE,
   warning: ICON_ALERT_TRIANGLE,
   'alert-circle': ICON_ALERT_CIRCLE,
   error: ICON_ALERT_CIRCLE,
-  'check-circle': svg16('<circle cx="8" cy="8" r="5.75"/><path d="m5.5 8.15 1.75 1.75 3.25-3.5"/>'),
-  clock: svg16('<circle cx="8" cy="8" r="5.75"/><path d="M8 4.75V8l2.25 1.5"/>'),
-  calendar: svg16(
-    '<rect x="2.25" y="3.25" width="11.5" height="10.25" rx="1.25"/><path d="M5.25 2v2.25M10.75 2v2.25M2.25 6.5h11.5"/>',
+  'check-circle': svg24('<circle cx="12" cy="12" r="9.5"/><path d="m8.5 12.25 2.4 2.4 4.8-5.1"/>'),
+  clock: svg24('<circle cx="12" cy="12" r="9.5"/><path d="M12 6.5V12l3.5 2"/>'),
+  calendar: svg24(
+    '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9.5h18"/>',
   ),
-  user: svg16('<circle cx="8" cy="5.25" r="2.5"/><path d="M3.25 13.5a4.75 4.75 0 0 1 9.5 0"/>'),
-  'panel-left': svg16('<rect x="2" y="2.5" width="12" height="11" rx="1.25"/><path d="M6 2.5v11"/>'),
-  'panel-right': svg16('<rect x="2" y="2.5" width="12" height="11" rx="1.25"/><path d="M10 2.5v11"/>'),
-  'panel-bottom': svg16('<rect x="2" y="2.5" width="12" height="11" rx="1.25"/><path d="M2 9.5h12"/>'),
-  maximize: svg16(
-    '<path d="M10 2.5h3.5V6M6 13.5H2.5V10M13.5 2.5 9.25 6.75M2.5 13.5l4.25-4.25"/>',
+  user: svg24('<circle cx="12" cy="8" r="4"/><path d="M19 21v-1a7 7 0 0 0-14 0v1"/>'),
+  users: svg24(
+    '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
   ),
-  minimize: svg16(
-    '<path d="M10 6h3.5M10 6V2.5M6 10H2.5M6 10v3.5M13.5 2.5 10 6M2.5 13.5 6 10"/>',
+  'user-plus': svg24(
+    '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6m-3-3h6"/>',
   ),
-  sparkles: svg16(
-    '<path d="m8 2 1.15 3.35L12.5 6.5 9.15 7.65 8 11 6.85 7.65 3.5 6.5l3.35-1.15L8 2Zm4.25 7.5.55 1.7 1.7.55-1.7.55-.55 1.7-.55-1.7-1.7-.55 1.7-.55.55-1.7Z"/>',
+  'panel-left': ICON_PANEL_LEFT,
+  'dock-left': ICON_PANEL_LEFT,
+  sidebar: ICON_PANEL_LEFT,
+  'panel-right': svg24('<rect x="3" y="3.5" width="18" height="17" rx="2"/><path d="M15 3.5v17"/>'),
+  panel: svg24('<rect x="3" y="3.5" width="18" height="17" rx="2"/><path d="M15 3.5v17"/>'),
+  'panel-bottom': svg24('<rect x="3" y="3.5" width="18" height="17" rx="2"/><path d="M3 15h18"/>'),
+  maximize: svg24('<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>'),
+  expand: svg24('<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>'),
+  minimize: svg24('<path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/>'),
+  sparkles: ICON_SPARKLES,
+  sparkle: ICON_SPARKLES,
+  menu: svg24('<path d="M3 6h18M3 12h18M3 18h18"/>'),
+  sun: svg24(
+    '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32 1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>',
   ),
+  moon: svg24('<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>'),
+  monitor: svg24(
+    '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/>',
+  ),
+  loader: svg24(
+    '<path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48 2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48 2.83-2.83"/>',
+  ),
+  command: svg24(
+    '<path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3Z"/>',
+  ),
+  layers: svg24('<path d="m12 2 10 5-10 5L2 7l10-5Zm10 10-10 5-10-5m20 5-10 5-10-5"/>'),
+  cpu: svg24(
+    '<rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6" rx="1"/><path d="M9 2v3m6-3v3M9 19v3m6-3v3M2 9h3m-3 6h3m14-6h3m-3 6h3"/>',
+  ),
+  database: svg24(
+    '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.66 3.58 3 8 3s8-1.34 8-3V5M4 12c0 1.66 3.58 3 8 3s8-1.34 8-3"/>',
+  ),
+  server: svg24(
+    '<rect x="3" y="3" width="18" height="7" rx="2"/><rect x="3" y="14" width="18" height="7" rx="2"/><path d="M7 6.5h.01M7 17.5h.01"/>',
+  ),
+  cloud: svg24('<path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/>'),
+  globe: svg24(
+    '<circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19M12 2.5a15.3 15.3 0 0 1 4 9.5 15.3 15.3 0 0 1-4 9.5 15.3 15.3 0 0 1-4-9.5 15.3 15.3 0 0 1 4-9.5Z"/>',
+  ),
+  lock: svg24(
+    '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M7.5 11V7a4.5 4.5 0 0 1 9 0v4"/>',
+  ),
+  unlock: svg24(
+    '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M7.5 11V7a4.5 4.5 0 0 1 8.8-1.2"/>',
+  ),
+  shield: svg24('<path d="M12 2.5 19.5 6v5.5c0 5-3.2 8.7-7.5 10-4.3-1.3-7.5-5-7.5-10V6L12 2.5Z"/>'),
+  'shield-check': svg24(
+    '<path d="M12 2.5 19.5 6v5.5c0 5-3.2 8.7-7.5 10-4.3-1.3-7.5-5-7.5-10V6L12 2.5Z"/><path d="m9 12 2 2 4-4"/>',
+  ),
+  key: svg24(
+    '<circle cx="7.5" cy="15.5" r="4.5"/><path d="m21 3-9.6 9.6M15.5 8.5l2.5 2.5M18 6l2.5 2.5"/>',
+  ),
+  send: svg24('<path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/>'),
+  paperclip: svg24(
+    '<path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>',
+  ),
+  bookmark: svg24('<path d="m19 21-7-4.5L5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/>'),
+  archive: svg24(
+    '<rect x="2" y="3" width="20" height="5" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8m-10 4h4"/>',
+  ),
+  inbox: svg24(
+    '<path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/>',
+  ),
+  mail: svg24(
+    '<rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+  ),
+  message: svg24('<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/>'),
+  building: svg24(
+    '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4M8 6h.01M16 6h.01M12 6h.01M12 10h.01M12 14h.01M16 10h.01M16 14h.01M8 10h.01M8 14h.01"/>',
+  ),
+  'chart-bar': svg24('<path d="M3 3v18h18M7 16v-4m5 4V8m5 8v-6"/>'),
+  'chart-line': svg24('<path d="M3 3v18h18M7 15l4-4 3 3 5-6"/>'),
+  activity: svg24('<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>'),
+  zap: svg24('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>'),
+  flame: svg24(
+    '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5Z"/>',
+  ),
+  tag: svg24(
+    '<path d="M12.59 2.59A2 2 0 0 0 11.17 2H4a2 2 0 0 0-2 2v7.17a2 2 0 0 0 .59 1.42l8.58 8.58a2 2 0 0 0 2.83 0l7.17-7.17a2 2 0 0 0 0-2.83Z"/><path d="M7 7h.01"/>',
+  ),
+  hash: svg24('<path d="M4 9h16M4 15h16M10 3 8 21m8-18-2 18"/>'),
+  link: svg24(
+    '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>',
+  ),
+  unlink: svg24(
+    '<path d="m18.84 12.25 1.72-1.71a5 5 0 0 0-7.07-7.07l-1.72 1.71M5.16 11.75l-1.72 1.71a5 5 0 0 0 7.07 7.07l1.72-1.71M8 2v3M2 8h3m11 11v3m3-8h3"/>',
+  ),
+  share: svg24(
+    '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.59 13.51 6.83 3.98m-.01-10.98-6.82 3.98"/>',
+  ),
+  'grip-vertical': svg24(
+    '<circle cx="9" cy="5" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="19" r="1"/>',
+  ),
+  'grip-horizontal': svg24(
+    '<circle cx="5" cy="9" r="1"/><circle cx="12" cy="9" r="1"/><circle cx="19" cy="9" r="1"/><circle cx="5" cy="15" r="1"/><circle cx="12" cy="15" r="1"/><circle cx="19" cy="15" r="1"/>',
+  ),
+  layout: svg24(
+    '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 9v12"/>',
+  ),
+  columns: svg24(
+    '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M15 3v18"/>',
+  ),
+  screens: svg24(
+    '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
+  ),
+  home: svg24('<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1Z"/>'),
+  compass: svg24(
+    '<circle cx="12" cy="12" r="9.5"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>',
+  ),
+  book: svg24(
+    '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15Z"/>',
+  ),
+  wrench: svg24(
+    '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/>',
+  ),
+  bug: svg24(
+    '<rect x="8" y="6" width="8" height="14" rx="4"/><path d="m19 7-3 2M5 7l3 2m11 10-3-2M5 19l3-2M20 13h-4M8 13H4m5-7V4m6 2V4"/>',
+  ),
+  diff: svg24('<path d="M12 3v12M6 9h12M6 19h12"/>'),
+  history: svg24('<path d="M3 12a9 9 0 1 0 3-6.7L3 8M3 3v5h5m4-1v5l3.5 2"/>'),
+  undo: svg24('<path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-15-6.7L3 13"/>'),
+  redo: svg24('<path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 15-6.7L21 13"/>'),
+  save: svg24(
+    '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2Z"/><path d="M17 21v-8H7v8M7 3v5h8"/>',
+  ),
+  'help-circle': svg24(
+    '<circle cx="12" cy="12" r="9.5"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 2.75-3 2.75M12 17h.01"/>',
+  ),
+  'minus-circle': svg24('<circle cx="12" cy="12" r="9.5"/><path d="M8 12h8"/>'),
+  'plus-circle': svg24('<circle cx="12" cy="12" r="9.5"/><path d="M12 8v8M8 12h8"/>'),
+  'x-circle': svg24('<circle cx="12" cy="12" r="9.5"/><path d="m15 9-6 6m0-6 6 6"/>'),
+  ban: svg24('<circle cx="12" cy="12" r="9.5"/><path d="m5.3 5.3 13.4 13.4"/>'),
+  wifi: svg24(
+    '<path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/>',
+  ),
+  image: svg24(
+    '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/>',
+  ),
+  camera: svg24(
+    '<path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/>',
+  ),
+  mic: svg24(
+    '<rect x="9" y="2" width="6" height="11" rx="3"/><path d="M19 10v2a7 7 0 0 1-14 0v-2m7 9v3"/>',
+  ),
+  gauge: svg24('<path d="m12 14 4-4M3.34 19a10 10 0 1 1 17.32 0"/>'),
+  ruler: svg24('<rect x="3" y="8" width="18" height="8" rx="1"/><path d="M7 8v4m4-4v3m4-3v4m4-4v3"/>'),
+  tablet: svg24('<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/>'),
+  smartphone: svg24('<rect x="6" y="2" width="12" height="20" rx="2"/><path d="M12 18h.01"/>'),
+  laptop: svg24('<rect x="4" y="4" width="16" height="11" rx="2"/><path d="M2 19h20"/>'),
 });
 
 /** @type {Array<IconRegistrySource<unknown>>} */

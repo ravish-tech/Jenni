@@ -4,7 +4,7 @@ export const meta = {
   group: 'Overlay',
   order: 3,
   description: 'Floating surface anchored to a trigger for contextual forms, inspectors and quick settings.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

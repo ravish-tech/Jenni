@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 3,
   description: 'Architectural surface that groups related content and actions.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

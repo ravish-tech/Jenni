@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 11,
   description: 'Quiet, low-contrast shimmer placeholder for loading layouts. Static under reduced motion.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

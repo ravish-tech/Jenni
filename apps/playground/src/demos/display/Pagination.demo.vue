@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 8,
   description: 'Tabular-numeral page navigation with stable windowing and poised active states.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

@@ -119,6 +119,8 @@
     --j-control-sm: max(20px, round(calc(28px * var(--j-density)), 1px));
     --j-control-md: max(24px, round(calc(34px * var(--j-density)), 1px));
     --j-control-lg: max(30px, round(calc(42px * var(--j-density)), 1px));
+    --j-statusbar-h: max(18px, round(calc(24px * var(--j-density)), 1px));
+    --j-icon-scale: 1;
     --j-hit-min: 44px;
 
     --j-list-h-compact: max(24px, round(calc(32px * var(--j-density)), 1px));
@@ -293,6 +295,7 @@
     --j-control-sm:  max(20px, round(calc(28px * var(--j-density)), 1px));
     --j-control-md:  max(24px, round(calc(34px * var(--j-density)), 1px));
     --j-control-lg:  max(30px, round(calc(42px * var(--j-density)), 1px));
+    --j-statusbar-h: max(18px, round(calc(24px * var(--j-density)), 1px));
     --j-list-h-compact: max(24px, round(calc(32px * var(--j-density)), 1px));
     --j-list-h-1:       max(30px, round(calc(44px * var(--j-density)), 1px));
     --j-list-h-2:       max(42px, round(calc(60px * var(--j-density)), 1px));

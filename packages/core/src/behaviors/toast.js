@@ -722,13 +722,13 @@ export function bindToasterInteractions(toaster, options = {}) {
 
 const TONE_ICONS = {
   success:
-    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="m5.5 8.2 1.7 1.7 3.4-3.7"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision" aria-hidden="true"><circle cx="12" cy="12" r="9.25"/><path d="m8.25 12.25 2.5 2.5 5-5.5"/></svg>',
   danger:
-    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 5.2v3.3M8 10.8h.01"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision" aria-hidden="true"><circle cx="12" cy="12" r="9.25"/><path d="M12 7.75v4.75M12 15.75h.01"/></svg>',
   warning:
-    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.4 14.2 13a.8.8 0 0 1-.7 1.2H2.5a.8.8 0 0 1-.7-1.2L8 2.4Z"/><path d="M8 6.5v3M8 11.6h.01"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision" aria-hidden="true"><path d="M10.44 4.2a1.8 1.8 0 0 1 3.12 0l7.2 12.47A1.8 1.8 0 0 1 19.2 19.37H4.8a1.8 1.8 0 0 1-1.56-2.7Z"/><path d="M12 9.25v4.25M12 16.5h.01"/></svg>',
   info:
-    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 7.4v3.4M8 5.2h.01"/></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" shape-rendering="geometricPrecision" aria-hidden="true"><circle cx="12" cy="12" r="9.25"/><path d="M12 11v5M12 8h.01"/></svg>',
 };
 
 /** @type {null | (() => void)} */

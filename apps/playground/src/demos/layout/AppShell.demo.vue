@@ -6,7 +6,7 @@ export const meta = {
   wide: 'full' as const,
   description:
     'Sixteen container-query shell archetypes, four surface variants (Flat, Inset, Floating, Contrast), AI Copilot sidecars, IDE workbenches, and mobile drill-down.',
-  status: 'draft' as const,
+  status: 'stable' as const,
 };
 </script>
 

@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 4,
   description: 'Progressive disclosure panels built on native <details> with damped 300ms height glide.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

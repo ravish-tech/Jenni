@@ -5,7 +5,7 @@ export const meta = {
   order: 6,
   description:
     'WAI-ARIA 1.2 autocomplete input + anchored popover listbox with grouped filtering, free-text & creatable values, multi-select chips, and debounced async search.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

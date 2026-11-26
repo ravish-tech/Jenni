@@ -4,7 +4,7 @@ export const meta = {
   group: 'Display',
   order: 9,
   description: 'Styled native <progress> with smooth determinate transitions and a serene indeterminate glide.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

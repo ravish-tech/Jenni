@@ -78,8 +78,15 @@ export interface JAlertProps {
   icon?: boolean;
 }
 
+export type JSpinnerSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number | string;
+export type JSpinnerVariant = 'ring' | 'arc' | 'dots';
+
 export interface JSpinnerProps {
-  size?: JDisplaySize;
+  size?: JSpinnerSize;
+  variant?: JSpinnerVariant;
+  tone?: JDisplayTone;
+  /** Custom SVG stroke width (default calibrated optically). */
+  thickness?: number | string;
   /** Accessible label. */
   label?: string;
 }

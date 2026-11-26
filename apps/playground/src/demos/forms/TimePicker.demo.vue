@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 17,
   description: 'Tabular-numeral segmented spinbutton with numeric auto-advance and anchored column picker.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

@@ -5,7 +5,7 @@ export const meta = {
   order: 4,
   description:
     '12-column CSS Grid with @container responsive spans, column offsets, auto-fit/auto-fill intrinsic tracks, independent axis gaps, and CSS Subgrid.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

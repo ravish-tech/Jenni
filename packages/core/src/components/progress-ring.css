@@ -1,0 +1,136 @@
+/*
+ * Progress Ring — <div class="j-progress-ring" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72">
+ * Circular HD vector progress indicator with tabular center readout and calm indeterminate sweep.
+ *   data-size:          xs (20px) | sm (28px) | md (40px, default) | lg (56px) | xl (76px)
+ *   data-tone:          accent (default) | neutral | success | warning | danger | info
+ *   data-indeterminate: calm continuous sweep when value is omitted / null
+ * Public props: --j-progress-ring-size, --j-progress-ring-stroke, --j-progress-ring-track
+ */
+@layer jenni.components {
+  :where(.j-progress-ring) {
+    --_s: var(--j-progress-ring-size, 40px);
+    --_stroke: var(--j-progress-ring-stroke, 3.5);
+    --_circ: 111.53;
+    --_offset: 0;
+    --_fs: clamp(0.5625rem, calc(var(--_s) * 0.25), 1.375rem);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    inline-size: var(--_s);
+    block-size: var(--_s);
+    vertical-align: middle;
+    user-select: none;
+  }
+
+  :where(.j-progress-ring[data-size="xs"]) {
+    --_s: var(--j-progress-ring-size, 20px);
+    --_fs: 0.5625rem;
+  }
+  :where(.j-progress-ring[data-size="sm"]) {
+    --_s: var(--j-progress-ring-size, 28px);
+    --_fs: 0.625rem;
+  }
+  :where(.j-progress-ring[data-size="lg"]) {
+    --_s: var(--j-progress-ring-size, 56px);
+    --_fs: var(--j-text-sm);
+  }
+  :where(.j-progress-ring[data-size="xl"]) {
+    --_s: var(--j-progress-ring-size, 76px);
+    --_fs: var(--j-text-lg);
+  }
+
+  :where(.j-progress-ring__svg) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    overflow: visible;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+  }
+
+  :where(.j-progress-ring__track) {
+    stroke: var(--j-progress-ring-track, color-mix(in oklch, var(--j-fg) 10%, transparent));
+    stroke-width: var(--_stroke);
+  }
+
+  :where(.j-progress-ring__fill) {
+    stroke: var(--j-tone);
+    stroke-width: var(--_stroke);
+    stroke-linecap: round;
+    stroke-dasharray: var(--_circ);
+    stroke-dashoffset: var(--_offset);
+    transition:
+      stroke-dashoffset 300ms var(--j-ease-emphasized),
+      stroke var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  :where(.j-progress-ring[data-tone="neutral"] .j-progress-ring__fill) {
+    stroke: var(--j-fg-muted);
+  }
+
+  /* Indeterminate sweep */
+  :where(.j-progress-ring[data-indeterminate] .j-progress-ring__svg) {
+    animation: j-progress-ring-rotate 1.5s linear infinite;
+  }
+
+  :where(.j-progress-ring[data-indeterminate] .j-progress-ring__fill) {
+    transition: none;
+    stroke-dasharray: calc(var(--_circ) * 0.08) calc(var(--_circ) * 0.92);
+    stroke-dashoffset: 0;
+    animation: j-progress-ring-sweep 1.5s var(--j-ease-in-out) infinite;
+  }
+
+  :where(.j-progress-ring__label) {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    color: var(--j-fg);
+    font-size: var(--_fs);
+    font-weight: var(--j-weight-semibold);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    letter-spacing: var(--j-tracking-tight);
+    text-align: center;
+    pointer-events: none;
+  }
+
+  @keyframes j-progress-ring-rotate {
+    from { transform: rotate(-90deg); }
+    to   { transform: rotate(270deg); }
+  }
+
+  @keyframes j-progress-ring-sweep {
+    0% {
+      stroke-dasharray: calc(var(--_circ) * 0.08) calc(var(--_circ) * 0.92);
+      stroke-dashoffset: 0;
+    }
+    50% {
+      stroke-dasharray: calc(var(--_circ) * 0.68) calc(var(--_circ) * 0.32);
+      stroke-dashoffset: calc(var(--_circ) * -0.24);
+    }
+    100% {
+      stroke-dasharray: calc(var(--_circ) * 0.08) calc(var(--_circ) * 0.92);
+      stroke-dashoffset: calc(var(--_circ) * -1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(.j-progress-ring__fill) {
+      transition-duration: 0ms;
+    }
+    :where(.j-progress-ring[data-indeterminate] .j-progress-ring__svg) {
+      animation-duration: 2.6s;
+    }
+    :where(.j-progress-ring[data-indeterminate] .j-progress-ring__fill) {
+      animation: none;
+      stroke-dasharray: calc(var(--_circ) * 0.28) calc(var(--_circ) * 0.72);
+      stroke-dashoffset: 0;
+    }
+  }
+}

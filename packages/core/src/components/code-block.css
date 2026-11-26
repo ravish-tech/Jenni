@@ -1,0 +1,502 @@
+/*
+ * Copy Button & Code Block
+ *
+ * Copy Button — <button type="button" class="j-copy-button" data-copy-value="...">
+ *   data-size:    xs | sm (default) | md
+ *   data-variant: ghost (default) | outline | soft
+ *   data-copied   transient success state with checkmark swap
+ *
+ * Code Block — <div class="j-code-block">
+ *   data-variant:      outline (default) | surface | contrast
+ *   data-line-numbers  enable tabular-numeral gutter
+ *   data-wrap          soft-wrap long code lines instead of horizontal scroll
+ *   data-lang          language identifier (e.g. ts, vue, sql, diff)
+ * Parts:
+ *   .j-code-block__header, .j-code-block__meta, .j-code-block__filename,
+ *   .j-code-block__lang, .j-code-block__actions, .j-code-block__body,
+ *   .j-code-block__floating-actions, .j-code-block__pre, .j-code-block__code,
+ *   .j-code-block__line ([data-highlighted], [data-diff="add"|"del"|"hunk"]),
+ *   .j-code-block__gutter, .j-code-block__content, .j-code-tok ([data-tok])
+ * Public custom properties:
+ *   --j-code-max-h, --j-code-line-highlight, --j-code-radius
+ */
+@layer jenni.components {
+  /* ---- Copy Button ---- */
+  :where(.j-copy-button) {
+    --_h: var(--j-control-sm);
+    --_px: var(--j-space-2);
+    --_fs: var(--j-text-xs);
+    --_icon: 14px;
+    --_radius: var(--j-radius-sm);
+    --_bg: transparent;
+    --_bg-hover: var(--j-surface-3);
+    --_fg: var(--j-fg-muted);
+    --_fg-hover: var(--j-fg);
+    --_border: transparent;
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-space-1-5);
+    block-size: var(--_h);
+    min-inline-size: var(--_h);
+    padding-inline: var(--_px);
+    border: 1px solid var(--_border);
+    border-radius: var(--_radius);
+    background-color: var(--_bg);
+    color: var(--_fg);
+    font-family: var(--j-font-sans);
+    font-size: var(--_fs);
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    white-space: nowrap;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out),
+      opacity var(--j-duration-fast) var(--j-ease-out);
+
+    &:not(:has(.j-copy-button__label)) {
+      inline-size: var(--_h);
+      padding-inline: 0;
+    }
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled="true"]) {
+        background-color: var(--_bg-hover);
+        color: var(--_fg-hover);
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: var(--j-ring);
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+  }
+
+  /* Copy Button Sizes */
+  :where(.j-copy-button[data-size="xs"]) {
+    --_h: max(20px, round(calc(24px * var(--j-density)), 1px));
+    --_px: var(--j-space-1-5);
+    --_fs: max(11px, calc(var(--j-text-xs) - 0.5px));
+    --_icon: 13px;
+    --_radius: var(--j-radius-xs);
+    gap: var(--j-space-1);
+  }
+
+  :where(.j-copy-button[data-size="md"]) {
+    --_h: var(--j-control-md);
+    --_px: var(--j-space-2-5);
+    --_fs: var(--j-text-sm);
+    --_icon: 16px;
+    --_radius: var(--j-radius-md);
+  }
+
+  /* Copy Button Variants */
+  :where(.j-copy-button[data-variant="outline"]) {
+    --_bg: var(--j-surface-1);
+    --_bg-hover: var(--j-surface-2);
+    --_fg: var(--j-fg-muted);
+    --_fg-hover: var(--j-fg);
+    --_border: var(--j-border-strong);
+  }
+
+  :where(.j-copy-button[data-variant="soft"]) {
+    --_bg: var(--j-surface-2);
+    --_bg-hover: var(--j-surface-3);
+    --_fg: var(--j-fg);
+    --_fg-hover: var(--j-fg);
+    --_border: color-mix(in oklch, var(--j-border) 60%, transparent);
+  }
+
+  /* Copy Button Copied State */
+  :where(.j-copy-button[data-copied]) {
+    --_fg: var(--j-success);
+    --_fg-hover: var(--j-success);
+  }
+
+  :where(.j-copy-button[data-variant="outline"][data-copied]) {
+    --_bg: color-mix(in oklch, var(--j-success-soft) 55%, var(--j-surface-1));
+    --_bg-hover: color-mix(in oklch, var(--j-success-soft) 70%, var(--j-surface-1));
+    --_border: color-mix(in oklch, var(--j-success) 42%, var(--j-border));
+  }
+
+  :where(.j-copy-button[data-variant="soft"][data-copied]) {
+    --_bg: var(--j-success-soft);
+    --_bg-hover: var(--j-success-soft);
+    --_fg: var(--j-success-soft-fg);
+    --_fg-hover: var(--j-success-soft-fg);
+    --_border: color-mix(in oklch, var(--j-success) 24%, transparent);
+  }
+
+  :where(.j-copy-button__icons) {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    inline-size: var(--_icon);
+    block-size: var(--_icon);
+    flex: none;
+  }
+
+  :where(.j-copy-button__icon, .j-copy-button > svg) {
+    grid-area: 1 / 1;
+    inline-size: var(--_icon);
+    block-size: var(--_icon);
+    flex: none;
+    transition:
+      opacity var(--j-duration-fast) var(--j-ease-out),
+      transform var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  :where(.j-copy-button__icon--copy) {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  :where(.j-copy-button__icon--check) {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+
+  :where(.j-copy-button[data-copied] .j-copy-button__icon--copy) {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+
+  :where(.j-copy-button[data-copied] .j-copy-button__icon--check) {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  :where(.j-copy-button__label) {
+    line-height: 1;
+  }
+
+  /* ---- Code Block ---- */
+  :where(.j-code-block) {
+    --j-code-line-highlight: light-dark(
+      oklch(92.5% 0.03 var(--j-hue) / 0.55),
+      oklch(28.5% 0.05 var(--j-hue) / 0.44)
+    );
+    --_bg: var(--j-code-bg);
+    --_fg: var(--j-code-fg);
+    --_border: var(--j-border);
+    --_header-bg: color-mix(in oklch, var(--j-surface-2) 72%, var(--j-code-bg));
+    --_header-border: var(--j-border);
+    --_line-h: calc(var(--j-text-sm) * 1.62);
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-inline-size: 0;
+    border: 1px solid var(--_border);
+    border-radius: var(--j-code-radius, var(--j-radius-lg));
+    background-color: var(--_bg);
+    color: var(--_fg);
+    overflow: hidden;
+  }
+
+  :where(.j-code-block[data-variant="surface"]) {
+    --_bg: var(--j-surface-2);
+    --_border: color-mix(in oklch, var(--j-border) 70%, transparent);
+    --_header-bg: color-mix(in oklch, var(--j-surface-3) 60%, var(--j-surface-2));
+    --_header-border: color-mix(in oklch, var(--j-border) 75%, transparent);
+  }
+
+  :where(.j-code-block[data-variant="contrast"]) {
+    color-scheme: dark;
+    --j-code-bg: oklch(15.2% 0.006 var(--j-hue-neutral));
+    --j-code-fg: oklch(92.5% 0.005 var(--j-hue-neutral));
+    --j-code-gutter-bg: oklch(14.2% 0.006 var(--j-hue-neutral));
+    --j-code-gutter-fg: oklch(50% 0.008 var(--j-hue-neutral));
+    --j-code-selection: oklch(35% 0.065 var(--j-hue) / 0.55);
+    --j-code-line-highlight: oklch(28.5% 0.05 var(--j-hue) / 0.48);
+    --j-syntax-keyword: oklch(75% 0.135 295);
+    --j-syntax-string: oklch(75% 0.12 155);
+    --j-syntax-number: oklch(77% 0.13 55);
+    --j-syntax-function: oklch(76% 0.12 245);
+    --j-syntax-type: oklch(76% 0.11 195);
+    --j-syntax-property: oklch(78% 0.1 225);
+    --j-syntax-operator: oklch(74% 0.085 210);
+    --j-syntax-punctuation: oklch(69% 0.008 var(--j-hue-neutral));
+    --j-syntax-comment: oklch(55% 0.008 var(--j-hue-neutral));
+    --j-syntax-added: oklch(73% 0.125 155);
+    --j-syntax-deleted: oklch(70% 0.15 25);
+    --_bg: var(--j-code-bg);
+    --_fg: var(--j-code-fg);
+    --_border: oklch(26.5% 0.008 var(--j-hue-neutral));
+    --_header-bg: oklch(13.4% 0.006 var(--j-hue-neutral));
+    --_header-border: oklch(24% 0.008 var(--j-hue-neutral));
+
+    & :where(.j-code-block__filename) {
+      color: oklch(93% 0.005 var(--j-hue-neutral));
+    }
+
+    & :where(.j-code-block__lang) {
+      background-color: oklch(22.5% 0.008 var(--j-hue-neutral));
+      color: oklch(74% 0.008 var(--j-hue-neutral));
+      box-shadow: inset 0 0 0 1px oklch(30% 0.008 var(--j-hue-neutral));
+    }
+
+    & :where(.j-copy-button:not([data-copied])) {
+      --_fg: oklch(72% 0.008 var(--j-hue-neutral));
+      --_fg-hover: oklch(95% 0.004 var(--j-hue-neutral));
+      --_bg-hover: oklch(24% 0.008 var(--j-hue-neutral));
+    }
+
+    & :where(.j-copy-button[data-copied]) {
+      --_fg: oklch(72% 0.125 155);
+      --_fg-hover: oklch(74% 0.125 155);
+    }
+  }
+
+  /* Header Bar */
+  :where(.j-code-block__header) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-item);
+    min-block-size: max(32px, round(calc(38px * var(--j-density)), 1px));
+    padding-inline: var(--j-space-3-5, var(--j-space-3)) var(--j-space-2);
+    padding-block: var(--j-space-1);
+    border-block-end: 1px solid var(--_header-border);
+    background-color: var(--_header-bg);
+  }
+
+  :where(.j-code-block__meta) {
+    display: flex;
+    align-items: center;
+    gap: var(--j-space-2);
+    min-inline-size: 0;
+  }
+
+  :where(.j-code-block__filename) {
+    font-family: var(--j-font-mono);
+    font-size: var(--j-text-xs);
+    font-weight: var(--j-weight-medium);
+    color: var(--j-fg);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  :where(.j-code-block__lang) {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    block-size: max(16px, round(calc(20px * var(--j-density)), 1px));
+    padding-inline: var(--j-space-1-5);
+    border-radius: var(--j-radius-xs);
+    background-color: var(--j-surface-3);
+    box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--j-border-strong) 55%, transparent);
+    color: var(--j-fg-muted);
+    font-family: var(--j-font-mono);
+    font-size: max(10px, calc(var(--j-text-xs) - 1px));
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+    user-select: none;
+  }
+
+  :where(.j-code-block__actions) {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    margin-inline-start: auto;
+  }
+
+  /* Body & Floating Copy Action (when header is omitted) */
+  :where(.j-code-block__body) {
+    position: relative;
+    min-inline-size: 0;
+  }
+
+  :where(.j-code-block__floating-actions) {
+    position: absolute;
+    inset-block-start: var(--j-space-2);
+    inset-inline-end: var(--j-space-2);
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-1);
+    border-radius: var(--j-radius-sm);
+    background-color: color-mix(in oklch, var(--_bg) 86%, transparent);
+    backdrop-filter: blur(6px);
+  }
+
+  /* Scrollable <pre> & <code> */
+  :where(.j-code-block__pre) {
+    margin: 0;
+    overflow: auto;
+    max-block-size: var(--j-code-max-h, none);
+    font-family: var(--j-font-mono);
+    font-size: var(--j-text-sm);
+    line-height: 1.62;
+    tab-size: 2;
+    -webkit-overflow-scrolling: touch;
+
+    & ::selection {
+      background-color: var(--j-code-selection);
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: inset 0 0 0 2px var(--j-ring-color);
+    }
+  }
+
+  :where(.j-code-block__code) {
+    display: block;
+    min-inline-size: 100%;
+    inline-size: max-content;
+    padding-block: var(--j-space-3);
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  :where(.j-code-block[data-wrap] .j-code-block__code) {
+    inline-size: 100%;
+  }
+
+  /* Code Lines */
+  :where(.j-code-block__line) {
+    display: flex;
+    align-items: baseline;
+    min-block-size: var(--_line-h);
+    padding-inline: var(--j-space-4);
+    border-inline-start: 2px solid transparent;
+  }
+
+  :where(.j-code-block[data-line-numbers] .j-code-block__line) {
+    padding-inline-start: 0;
+  }
+
+  :where(.j-code-block__line[data-highlighted]) {
+    background-color: var(--j-code-line-highlight);
+    border-inline-start-color: var(--j-accent);
+  }
+
+  :where(.j-code-block__line[data-diff="add"]) {
+    background-color: color-mix(in oklch, var(--j-syntax-added) 13%, transparent);
+    border-inline-start-color: var(--j-syntax-added);
+  }
+
+  :where(.j-code-block__line[data-diff="del"]) {
+    background-color: color-mix(in oklch, var(--j-syntax-deleted) 13%, transparent);
+    border-inline-start-color: var(--j-syntax-deleted);
+  }
+
+  :where(.j-code-block__line[data-diff="hunk"]) {
+    background-color: color-mix(in oklch, var(--j-info) 11%, transparent);
+    border-inline-start-color: var(--j-info);
+    color: var(--j-info-soft-fg);
+  }
+
+  :where(.j-code-block[data-lang="diff"] .j-code-block__line[data-diff="add"]) {
+    color: var(--j-syntax-added);
+  }
+
+  :where(.j-code-block[data-lang="diff"] .j-code-block__line[data-diff="del"]) {
+    color: var(--j-syntax-deleted);
+  }
+
+  /* Tabular-Numeral Line Gutter */
+  :where(.j-code-block__gutter) {
+    flex: none;
+    display: inline-flex;
+    justify-content: flex-end;
+    align-items: baseline;
+    min-inline-size: calc(3.2ch + var(--j-space-4));
+    padding-inline: var(--j-space-3);
+    margin-inline-end: var(--j-space-1);
+    color: var(--j-code-gutter-fg);
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  :where(.j-code-block__line[data-highlighted] .j-code-block__gutter) {
+    color: var(--j-fg-muted);
+  }
+
+  :where(.j-code-block__line[data-diff="add"] .j-code-block__gutter) {
+    color: var(--j-syntax-added);
+  }
+
+  :where(.j-code-block__line[data-diff="del"] .j-code-block__gutter) {
+    color: var(--j-syntax-deleted);
+  }
+
+  :where(.j-code-block__content) {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    white-space: pre;
+
+    &:empty::after {
+      content: "\200b";
+    }
+  }
+
+  :where(.j-code-block[data-wrap] .j-code-block__content) {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  /* Syntax Token Colors */
+  :where(.j-code-tok[data-tok="plain"]) {
+    color: inherit;
+  }
+
+  :where(.j-code-tok[data-tok="keyword"]) {
+    color: var(--j-syntax-keyword);
+  }
+
+  :where(.j-code-tok[data-tok="string"]) {
+    color: var(--j-syntax-string);
+  }
+
+  :where(.j-code-tok[data-tok="comment"]) {
+    color: var(--j-syntax-comment);
+    font-style: italic;
+  }
+
+  :where(.j-code-tok[data-tok="number"]) {
+    color: var(--j-syntax-number);
+  }
+
+  :where(.j-code-tok[data-tok="function"]) {
+    color: var(--j-syntax-function);
+  }
+
+  :where(.j-code-tok[data-tok="type"]) {
+    color: var(--j-syntax-type);
+  }
+
+  :where(.j-code-tok[data-tok="operator"]) {
+    color: var(--j-syntax-operator);
+  }
+
+  :where(.j-code-tok[data-tok="property"]) {
+    color: var(--j-syntax-property);
+  }
+
+  :where(.j-code-tok[data-tok="punctuation"]) {
+    color: var(--j-syntax-punctuation);
+  }
+}

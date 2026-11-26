@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 9,
   description: 'Multi-line wrapping token input with removable chips, comma/Enter commit, and maxTags.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

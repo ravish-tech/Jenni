@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 5,
   description: 'Single-line text entry with optional prefix / suffix adornments.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

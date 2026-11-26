@@ -15,6 +15,7 @@
 
   :where(.j-icon) {
     --_size: var(--j-icon-size, 1em);
+    --_stroke: var(--j-icon-stroke, 1.75);
 
     display: inline-flex;
     align-items: center;
@@ -22,27 +23,44 @@
     flex-shrink: 0;
     inline-size: var(--_size, 1em);
     block-size: var(--_size, 1em);
+    font-size: calc(var(--_size, 1em) * var(--j-icon-scale, 1));
     color: currentColor;
     vertical-align: -0.125em;
     line-height: 1;
     user-select: none;
   }
 
-  :where(.j-icon[data-size="xs"]) { --_size: 12px; }
-  :where(.j-icon[data-size="sm"]) { --_size: 14px; }
-  :where(.j-icon[data-size="md"]) { --_size: 16px; }
-  :where(.j-icon[data-size="lg"]) { --_size: 20px; }
-  :where(.j-icon[data-size="xl"]) { --_size: 24px; }
+  :where(.j-icon[data-size="xs"]) {
+    --_size: 12px;
+    --_stroke: var(--j-icon-stroke, 2);
+  }
+  :where(.j-icon[data-size="sm"]) {
+    --_size: 14px;
+    --_stroke: var(--j-icon-stroke, 1.85);
+  }
+  :where(.j-icon[data-size="md"]) {
+    --_size: 16px;
+    --_stroke: var(--j-icon-stroke, 1.75);
+  }
+  :where(.j-icon[data-size="lg"]) {
+    --_size: 20px;
+    --_stroke: var(--j-icon-stroke, 1.6);
+  }
+  :where(.j-icon[data-size="xl"]) {
+    --_size: 24px;
+    --_stroke: var(--j-icon-stroke, 1.5);
+  }
 
   :where(.j-icon[data-tone]) {
     color: var(--j-tone);
   }
 
   :where(.j-icon > svg) {
-    inline-size: 100%;
-    block-size: 100%;
+    inline-size: calc(100% * var(--j-icon-scale, 1));
+    block-size: calc(100% * var(--j-icon-scale, 1));
     flex-shrink: 0;
-    stroke-width: var(--j-icon-stroke, 1.65);
+    stroke-width: var(--_stroke);
+    shape-rendering: geometricPrecision;
   }
 
   :where(.j-icon[data-spin]) {

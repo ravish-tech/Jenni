@@ -1,0 +1,125 @@
+/*
+ * Menubar — WAI-ARIA role="menubar" horizontal application menu bar.
+ *   <div class="j-menubar" role="menubar" aria-label="Application menu">
+ *     <div class="j-menubar__menu" role="none">
+ *       <button type="button" class="j-menubar__trigger" role="menuitem"
+ *               aria-haspopup="menu" aria-expanded="false" aria-controls="mb-file">File</button>
+ *       <div class="j-menu j-menubar__content" id="mb-file" role="menu" popover="manual"
+ *            data-side="bottom" data-align="start">…</div>
+ *     </div>
+ *   </div>
+ * Options:
+ *   data-size:    sm | md (default)
+ *   data-variant: bordered (default) | surface | plain
+ */
+@layer jenni.components {
+  :where(.j-menubar) {
+    --_bar-h: max(28px, round(calc(36px * var(--j-density)), 1px));
+    --_trig-h: max(22px, round(calc(28px * var(--j-density)), 1px));
+    --_trig-px: var(--j-space-2-5);
+    --_fs: var(--j-text-sm);
+    --_pad-x: var(--j-space-1);
+
+    display: inline-flex;
+    align-items: center;
+    gap: var(--j-space-0-5);
+    min-block-size: var(--_bar-h);
+    max-inline-size: 100%;
+    padding-inline: var(--_pad-x);
+    border-radius: var(--j-radius-md);
+    background-color: var(--j-surface-1);
+    border: 1px solid var(--j-border);
+    box-shadow: var(--j-shadow-xs);
+    color: var(--j-fg);
+    user-select: none;
+
+    &[data-size="sm"] {
+      --_bar-h: max(24px, round(calc(30px * var(--j-density)), 1px));
+      --_trig-h: max(20px, round(calc(24px * var(--j-density)), 1px));
+      --_trig-px: var(--j-space-2);
+      --_fs: var(--j-text-xs);
+      --_pad-x: var(--j-space-1);
+    }
+
+    &[data-variant="surface"] {
+      background-color: light-dark(var(--j-surface-2), var(--j-surface-1));
+      border-color: transparent;
+      box-shadow: none;
+    }
+
+    &[data-variant="plain"] {
+      --_bar-h: var(--_trig-h);
+      --_pad-x: 0;
+      background-color: transparent;
+      border-color: transparent;
+      border-radius: 0;
+      box-shadow: none;
+    }
+  }
+
+  :where(.j-menubar__menu) {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+
+  :where(.j-menubar__trigger) {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--j-gap-inline);
+    block-size: var(--_trig-h);
+    padding-inline: var(--_trig-px);
+    border: 0;
+    border-radius: var(--j-radius-sm);
+    background-color: transparent;
+    color: var(--j-fg);
+    font-family: inherit;
+    font-size: var(--_fs);
+    font-weight: var(--j-weight-medium);
+    line-height: 1;
+    letter-spacing: var(--j-tracking-tight);
+    white-space: nowrap;
+    cursor: default;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    @media (hover: hover) {
+      &:hover:not(:disabled, [aria-disabled="true"], [aria-expanded="true"], [data-open]) {
+        background-color: color-mix(in oklch, var(--j-fg) 7%, transparent);
+      }
+    }
+
+    &:is([aria-expanded="true"], [data-open]) {
+      background-color: var(--j-accent-soft);
+      color: var(--j-accent-soft-fg);
+      transition-duration: 0ms;
+    }
+
+    &:focus-visible {
+      box-shadow: var(--j-ring);
+    }
+
+    &:is(:disabled, [aria-disabled="true"]) {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+  }
+
+  :where(.j-menubar__content) {
+    --_min-w: var(--j-menubar-menu-min-width, 13rem);
+    --_dur: var(--j-duration-fast);
+    --j-floating-offset: 4px;
+    flex-direction: column;
+
+    &:popover-open {
+      display: flex;
+    }
+  }
+}

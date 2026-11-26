@@ -4,7 +4,7 @@ export const meta = {
   group: 'Overlay',
   order: 8,
   description: 'Edge-docked and floating inset sheets built on native <dialog> with weighted 300ms glide and blur scrim.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 

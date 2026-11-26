@@ -4,7 +4,7 @@ export const meta = {
   group: 'Layout',
   order: 6,
   description: 'Structured rows with canonical heights (32/44/60/76px), keyline inset dividers, and interactive states.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 
