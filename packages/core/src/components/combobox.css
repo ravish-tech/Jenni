@@ -98,6 +98,39 @@
       padding-block: var(--j-space-1);
       padding-inline-start: var(--j-space-1-5);
     }
+
+    & > svg {
+      flex: none;
+      inline-size: var(--_icon);
+      block-size: var(--_icon);
+      color: var(--j-fg-subtle);
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, var(--_icon));
+      color: var(--j-fg-subtle);
+    }
+  }
+
+  :where(.j-combobox__icon) {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--j-fg-subtle);
+
+    & > svg {
+      flex: none;
+      inline-size: var(--_icon);
+      block-size: var(--_icon);
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, var(--_icon));
+    }
+  }
+  :where(.j-combobox__icon.j-icon:not([data-size])) {
+    --_size: var(--j-icon-size, var(--_icon));
   }
 
   :where(.j-combobox__chips) {
@@ -150,6 +183,9 @@
       width: 10px;
       height: 10px;
     }
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, 10px);
+    }
   }
 
   :where(.j-combobox__input) {
@@ -188,17 +224,17 @@
   }
 
   :where(.j-combobox__spinner) {
-    box-sizing: border-box;
     display: inline-block;
     flex: none;
     width: 14px;
     height: 14px;
     margin-inline: var(--j-space-0-5);
-    border-radius: var(--j-radius-full);
     color: var(--j-accent);
-    border: 1.75px solid color-mix(in oklch, currentColor 22%, transparent);
-    border-block-start-color: currentColor;
-    animation: j-combobox-spin 0.75s linear infinite;
+    background-color: currentColor;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='9.5' stroke='black' stroke-opacity='0.2' stroke-width='2.4'/%3E%3Cpath d='M12 2.5a9.5 9.5 0 0 1 9.5 9.5' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+    mask-size: 100% 100%;
+    mask-repeat: no-repeat;
+    animation: j-combobox-spin 0.85s linear infinite;
 
     &[hidden] {
       display: none;
@@ -254,12 +290,15 @@
       width: 14px;
       height: 14px;
     }
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, 14px);
+    }
   }
 
-  :where(.j-combobox__chevron > svg) {
+  :where(.j-combobox__chevron > :is(svg, .j-icon)) {
     transition: rotate var(--j-duration-slow) var(--j-ease-emphasized);
   }
-  :where(.j-combobox:has(.j-combobox__input[aria-expanded="true"])) :where(.j-combobox__chevron > svg) {
+  :where(.j-combobox:has(.j-combobox__input[aria-expanded="true"])) :where(.j-combobox__chevron > :is(svg, .j-icon)) {
     rotate: 180deg;
   }
 
@@ -275,6 +314,7 @@
     inset: auto;
     margin: 0;
     box-sizing: border-box;
+    flex-direction: column;
     min-width: var(--_anchor-w, 12rem);
     max-width: min(var(--_anchor-max-w, 32rem), calc(100vw - 16px));
     max-height: min(var(--j-combobox-max-height, 18rem), calc(100dvh - 16px));
@@ -311,7 +351,6 @@
 
     &:popover-open {
       display: flex;
-      flex-direction: column;
       opacity: 1;
       translate: 0 0;
       scale: 1;
@@ -400,6 +439,41 @@
     &[aria-selected="true"]::after {
       opacity: 1;
     }
+
+    & > svg {
+      flex: none;
+      width: 16px;
+      height: 16px;
+      color: var(--j-fg-muted);
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, 16px);
+      color: var(--j-fg-muted);
+    }
+  }
+
+  :where(.j-combobox__option-icon) {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    color: var(--j-fg-muted);
+
+    & > svg {
+      flex: none;
+      width: 16px;
+      height: 16px;
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, 16px);
+    }
+  }
+  :where(.j-combobox__option-icon.j-icon:not([data-size])) {
+    --_size: var(--j-icon-size, 16px);
   }
 
   :where(.j-combobox__option-body) {
@@ -439,6 +513,11 @@
       flex: none;
       width: 14px;
       height: 14px;
+      color: var(--j-accent);
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, 14px);
       color: var(--j-accent);
     }
 

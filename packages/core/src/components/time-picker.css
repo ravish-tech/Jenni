@@ -231,6 +231,7 @@
     inset: auto;
     margin: 0;
     padding: 0;
+    flex-direction: column;
     width: max-content;
     border: 1px solid var(--j-border);
     border-radius: var(--j-radius-lg);
@@ -261,7 +262,6 @@
 
     &:popover-open {
       display: flex;
-      flex-direction: column;
       opacity: 1;
       translate: 0 0;
       scale: 1;

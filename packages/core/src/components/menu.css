@@ -24,6 +24,7 @@
     min-width: var(--_min-w);
     max-width: calc(100vw - 16px);
     max-height: min(var(--j-menu-max-height, 24rem), 100dvh - 16px);
+    flex-direction: column;
     overflow: hidden auto;
     overscroll-behavior: contain;
     padding: var(--_pad);
@@ -36,7 +37,7 @@
     outline: none;
     scroll-padding-block: var(--_pad);
 
-    &:popover-open { display: flex; flex-direction: column; }
+    &:popover-open { display: flex; }
     &:focus-visible { box-shadow: var(--j-shadow-md), var(--j-inset-highlight); }
   }
 
@@ -114,8 +115,12 @@
     height: 16px;
     color: var(--j-fg-muted);
   }
-  :where(.j-menu__item:focus) :where(.j-menu__icon, svg) { color: currentColor; }
-  :where(.j-menu__item[data-tone="danger"]) :where(.j-menu__icon, svg) { color: currentColor; }
+  :where(.j-menu__icon.j-icon:not([data-size]), .j-menu__item > .j-icon:not([data-size])) {
+    --_size: var(--j-icon-size, 16px);
+    color: var(--j-fg-muted);
+  }
+  :where(.j-menu__item:focus) :where(.j-menu__icon, svg, .j-icon) { color: currentColor; }
+  :where(.j-menu__item[data-tone="danger"]) :where(.j-menu__icon, svg, .j-icon) { color: currentColor; }
 
   :where(.j-menu__shortcut) {
     margin-inline-start: auto;
