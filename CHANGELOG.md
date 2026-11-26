@@ -4,7 +4,7 @@ All notable changes to `jenni-core`, `jenni-vue`, and `jenni-react` are document
 
 ## [0.4.0] — 2026-11-25
 
-### Added — `ravmon` Backlog (`#1`–`#11`)
+### Added — Desktop & Workbench Enhancements (`#1`–`#11`)
 - **Item #1 — `JIcon` Child Sizing & `--j-icon-scale` (`button`, `toggle`, `badge`, `breadcrumb`, `pagination`, `empty-state`, `combobox`, `statusbar`)**: Direct `.j-icon:not([data-size])` children now automatically inherit component icon dimensions alongside `> svg`; bumped `JButton` / `JToggle` `--_icon` sizes (`sm: 16px`, `md: 18px`, `lg: 20px`) and added `--j-icon-scale` (default `1`) for padded icon fonts.
 - **Item #2 — Popover Exit Transition Layout Stability**: Moved `flex-direction: column` (and inline-flex layout rules) onto base popover selectors across `menu.css`, `combobox.css`, `time-picker.css`, `tooltip.css`, and `menubar.css` so items never flip into a row during `allow-discrete` exit fades.
 - **Item #3 — Chrome-Style Tab Strip (`JTabStrip` / `TabStrip`, `createTabStrip`)**: Full window title-bar & document tab strip with icon, title, close button, `pinned`, `preview` (italic), `dirty` marker, `loading` spinner, `indicator` dot, `description` hover card, activate on `pointerdown`, middle-click close, `@dblclick`, drag reorder (`@reorder`), drag-out detach (`@detach`), scroll fades + `+` (`@new`), `:search="true"` filter dropdown with inline close buttons, built-in + `#context-menu` actions, roving `tabindex`, `:titlebar="true"` top-edge (`y=0`) hit boxes (`--j-tab-strip-gap` / `--ct-gap`), and `--j-tab-strip-active-bg`.

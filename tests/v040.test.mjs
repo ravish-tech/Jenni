@@ -30,7 +30,7 @@ function walkFiles(dir, ext) {
   return out;
 }
 
-describe('ravmon Item #1 — JIcon child sizing, bumped button/toggle icon tokens & --j-icon-scale', () => {
+describe('Item #1 — JIcon child sizing, bumped button/toggle icon tokens & --j-icon-scale', () => {
   test('tokens.css and icon.css define --j-icon-scale and 130+ 24x24 HD icons', () => {
     const tokens = read('packages/core/src/tokens.css');
     const iconCss = read('packages/core/src/components/icon.css');
@@ -71,7 +71,7 @@ describe('ravmon Item #1 — JIcon child sizing, bumped button/toggle icon token
   });
 });
 
-describe('ravmon Item #2 — Popover panels keep flex-direction: column during exit fade', () => {
+describe('Item #2 — Popover panels keep flex-direction: column during exit fade', () => {
   test('menu, combobox, time-picker, menubar, and tab-strip set flex-direction: column on base rule, never only inside :popover-open', () => {
     for (const slug of ['menu', 'combobox', 'time-picker', 'menubar', 'tab-strip']) {
       const css = read(`packages/core/src/components/${slug}.css`);
@@ -87,7 +87,7 @@ describe('ravmon Item #2 — Popover panels keep flex-direction: column during e
   });
 });
 
-describe('ravmon Item #3 — JTabStrip / TabStrip (Chrome-style tab strip)', () => {
+describe('Item #3 — JTabStrip / TabStrip (Chrome-style tab strip)', () => {
   test('exports tab-strip behavior helpers and implements titlebar y=0 hit target + active bg token', () => {
     assert.equal(typeof createTabStrip, 'function');
     assert.equal(typeof getTabStripElements, 'function');
@@ -102,7 +102,7 @@ describe('ravmon Item #3 — JTabStrip / TabStrip (Chrome-style tab strip)', () 
   });
 });
 
-describe('ravmon Item #4 & #5 — JSidebarLayout, JSidebarToggle, .j-resize-handle & JSplitHandle', () => {
+describe('Item #4 & #5 — JSidebarLayout, JSidebarToggle, .j-resize-handle & JSplitHandle', () => {
   test('JSidebarLayout computes width relative to layout bounding rect (not clientX from x=0) and resizable.css exposes standalone .j-resize-handle', () => {
     const vueSrc = read('packages/vue/src/layout/JSidebarLayout.vue');
     const reactSrc = read('packages/react/src/layout/SidebarLayout.tsx');
@@ -179,7 +179,7 @@ describe('ravmon Item #4 & #5 — JSidebarLayout, JSidebarToggle, .j-resize-hand
   });
 });
 
-describe('ravmon Item #6 — JScrollArea dynamic overscroll wheel chaining', () => {
+describe('Item #6 — JScrollArea dynamic overscroll wheel chaining', () => {
   test('scroll-area.css applies overscroll-behavior: contain only when overflowing or explicitly requested', () => {
     const css = read('packages/core/src/components/scroll-area.css');
     const js = read('packages/core/src/behaviors/scroll-area.js');
@@ -198,7 +198,7 @@ describe('ravmon Item #6 — JScrollArea dynamic overscroll wheel chaining', () 
   });
 });
 
-describe('ravmon Item #7 & #8 — Clearable JSelect and JDialog default Enter action', () => {
+describe('Item #7 & #8 — Clearable JSelect and JDialog default Enter action', () => {
   test('select.css, JSelect.vue, and Select.tsx preserve native <select> and wire clearable button', () => {
     const css = read('packages/core/src/components/select.css');
     const vue = read('packages/vue/src/forms/JSelect.vue');
@@ -230,7 +230,7 @@ describe('ravmon Item #7 & #8 — Clearable JSelect and JDialog default Enter ac
   });
 });
 
-describe('ravmon Item #9, #10 & #11 — Sticky PageHeader, Collapsible TableSection & StatusBar options', () => {
+describe('Item #9, #10 & #11 — Sticky PageHeader, Collapsible TableSection & StatusBar options', () => {
   test('page.css, JPageHeader.vue, and Page.tsx use IntersectionObserver sentinel and [data-stuck] hairline', () => {
     const pageCss = read('packages/core/src/components/page.css');
     const vueHeader = read('packages/vue/src/layout/JPageHeader.vue');

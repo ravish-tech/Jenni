@@ -165,7 +165,7 @@ useShortcut('mod+enter', () => runNotebookCell(), { scope: tabRootRef });`;
           }"
         >
           <div style="margin-bottom: 8px">
-            <span :style="{ color: tokens.terminal.green }">ravmon@studio</span>:<span :style="{ color: tokens.terminal.blue }">~/workspace</span>$
+            <span :style="{ color: tokens.terminal.green }">dev@studio</span>:<span :style="{ color: tokens.terminal.blue }">~/workspace</span>$
             xterm.options.theme ({{ tokens.terminal.background }})
           </div>
           <div style="display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px">

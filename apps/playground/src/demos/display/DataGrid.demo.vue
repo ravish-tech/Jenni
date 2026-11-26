@@ -48,7 +48,7 @@ const AUTHORS = [
   'Barbara Liskov',
   'Ken Thompson',
 ] as const;
-const REPOS = ['core-tokens', 'shell-engine', 'ravmon-agent', 'query-planner', 'doc-tabs'] as const;
+const REPOS = ['core-tokens', 'shell-engine', 'runtime-agent', 'query-planner', 'doc-tabs'] as const;
 const STATUSES = ['Open', 'Merged', 'Open', 'Draft', 'Changes'] as const;
 
 const rows: PullRequestRow[] = Array.from({ length: 2500 }, (_, i) => ({
