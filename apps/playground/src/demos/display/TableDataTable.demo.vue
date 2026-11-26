@@ -4,18 +4,20 @@ export const meta = {
   group: 'Display',
   order: 14,
   description: 'High-density semantic tables and interactive data grids with sticky headers, sorting, indeterminate selection, and tabular numerals.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { reactive, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
 import {
   JTable,
+  JTableSection,
   JDataTable,
   JBadge,
   JButton,
+  JSwitch,
   JStack,
   JInline,
   type JDataTableColumn,
@@ -75,6 +77,70 @@ function statusTone(status: DeploymentRow['status']): JDisplayTone {
   if (status === 'Ready') return 'success';
   if (status === 'Building') return 'info';
   return 'danger';
+}
+
+interface FeatureFlagItem {
+  key: string;
+  name: string;
+  rollout: string;
+  stage: 'GA' | 'Beta' | 'Canary';
+}
+
+interface FeatureFlagGroup {
+  id: string;
+  title: string;
+  items: FeatureFlagItem[];
+}
+
+const featureGroups: FeatureFlagGroup[] = [
+  {
+    id: 'routing',
+    title: 'Edge Routing & Delivery',
+    items: [
+      { key: 'http3_quic', name: 'HTTP/3 adaptive QUIC congestion control', rollout: '100% prod', stage: 'GA' },
+      { key: 'smart_shield', name: 'Origin shield tiered request coalescing', rollout: '100% prod', stage: 'GA' },
+      { key: 'early_hints', name: '103 Early Hints preload injection', rollout: '50% canary', stage: 'Beta' },
+    ],
+  },
+  {
+    id: 'security',
+    title: 'Identity & Zero-Trust Access',
+    items: [
+      { key: 'mtls_mesh', name: 'Strict mTLS workload certificate pinning', rollout: '100% prod', stage: 'GA' },
+      { key: 'passkey_stepup', name: 'WebAuthn passkey step-up for destructive mutations', rollout: '25% orgs', stage: 'Beta' },
+    ],
+  },
+  {
+    id: 'telemetry',
+    title: 'Observability & Tail Sampling',
+    items: [
+      { key: 'ebpf_profile', name: 'Continuous eBPF flamegraph profiling', rollout: '10% nodes', stage: 'Canary' },
+      { key: 'otlp_zstd', name: 'Zstandard dictionary compression on OTLP spans', rollout: '100% prod', stage: 'GA' },
+    ],
+  },
+];
+
+const featureFlags = reactive<Record<string, boolean>>({
+  http3_quic: true,
+  smart_shield: true,
+  early_hints: false,
+  mtls_mesh: true,
+  passkey_stepup: true,
+  ebpf_profile: false,
+  otlp_zstd: true,
+});
+
+const expandedSections = ref<string[]>(['routing', 'security']);
+const featureTableRef = ref<{
+  expandAll: () => void;
+  collapseAll: () => void;
+  toggleSection: (id: string, force?: boolean) => void;
+} | null>(null);
+
+function stageTone(stage: FeatureFlagItem['stage']): JDisplayTone {
+  if (stage === 'GA') return 'success';
+  if (stage === 'Beta') return 'info';
+  return 'warning';
 }
 
 const ledgerRows = [
@@ -162,6 +228,71 @@ const html = `<div class="j-table-wrap" data-hover>
         </template>
       </JDataTable>
     </div>
+  </DemoSection>
+
+  <DemoSection
+    title="Collapsible Section Rows (Feature Toggles)"
+    description="Group rows under JTableSection headers with v-model:expanded-sections, expandAll / collapseAll controls, and ArrowUp / ArrowDown roving focus across visible rows."
+  >
+    <JStack gap="item" style="width: 100%">
+      <JInline justify="between" align="center">
+        <span style="font-size: var(--j-text-xs); color: var(--j-fg-muted)">
+          {{ expandedSections.length }} of {{ featureGroups.length }} groups expanded
+        </span>
+        <JInline gap="related">
+          <JButton size="sm" variant="outline" tone="neutral" @click="featureTableRef?.expandAll()">
+            Expand all
+          </JButton>
+          <JButton size="sm" variant="outline" tone="neutral" @click="featureTableRef?.collapseAll()">
+            Collapse all
+          </JButton>
+        </JInline>
+      </JInline>
+
+      <JTable ref="featureTableRef" v-model:expanded-sections="expandedSections" hover>
+        <thead>
+          <tr>
+            <th scope="col">Capability</th>
+            <th scope="col">Flag Key</th>
+            <th scope="col">Stage</th>
+            <th scope="col">Rollout</th>
+            <th scope="col" data-align="end">Enabled</th>
+          </tr>
+        </thead>
+        <tbody>
+          <JTableSection
+            v-for="group in featureGroups"
+            :key="group.id"
+            :id="group.id"
+            :title="group.title"
+            :count="group.items.length"
+            :colspan="5"
+          >
+            <tr v-for="flag in group.items" :key="flag.key">
+              <th scope="row">{{ flag.name }}</th>
+              <td>
+                <code style="font-family: var(--j-font-mono); font-size: var(--j-text-xs); color: var(--j-fg-muted)">
+                  {{ flag.key }}
+                </code>
+              </td>
+              <td>
+                <JBadge size="sm" variant="soft" :tone="stageTone(flag.stage)">
+                  {{ flag.stage }}
+                </JBadge>
+              </td>
+              <td style="color: var(--j-fg-muted)">{{ flag.rollout }}</td>
+              <td data-align="end">
+                <JSwitch
+                  v-model="featureFlags[flag.key]"
+                  size="sm"
+                  :aria-label="`Toggle ${flag.name}`"
+                />
+              </td>
+            </tr>
+          </JTableSection>
+        </tbody>
+      </JTable>
+    </JStack>
   </DemoSection>
 
   <DemoSection

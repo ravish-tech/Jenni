@@ -1,12 +1,23 @@
 import {
+  Children,
+  cloneElement,
+  createContext,
+  Fragment,
+  isValidElement,
+  use,
+  useCallback,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
   useState,
   type CSSProperties,
   type ComponentProps,
+  type ReactElement,
   type ReactNode,
+  type Ref,
 } from 'react';
+import { bindTableRovingFocus } from 'jenni-core/behaviors/table.js';
 import { Pagination } from './Pagination';
 import {
   attr,
@@ -16,9 +27,36 @@ import {
   type TableVariant,
 } from './types';
 
+declare module 'jenni-core/behaviors/table.js' {
+  export function bindTableRovingFocus(table: HTMLTableElement): () => void;
+  export function createCollapsibleTable(
+    root: HTMLElement,
+    hooks?: { onToggle?: () => void },
+  ): () => void;
+  export function initCollapsibleTables(root?: ParentNode): () => void;
+}
+
 export type { TableVariant, TableAlign, TableSortDirection };
 
-export interface TableProps extends Omit<ComponentProps<'table'>, 'caption'> {
+export interface TableHandle {
+  expandAll: () => void;
+  collapseAll: () => void;
+  toggleSection: (id: string, force?: boolean) => void;
+  isSectionExpanded: (id: string) => boolean;
+  readonly element: HTMLTableElement | null;
+}
+
+interface TableSectionsContextValue {
+  isSectionExpanded: (id: string, fallbackExpanded?: boolean) => boolean;
+  toggleSection: (id: string, force?: boolean) => void;
+  registerSection: (id: string, defaultExpanded?: boolean) => void;
+  unregisterSection: (id: string) => void;
+}
+
+const TableSectionsContext = createContext<TableSectionsContextValue | null>(null);
+
+export interface TableProps extends Omit<ComponentProps<'table'>, 'caption' | 'ref'> {
+  ref?: Ref<TableHandle>;
   variant?: TableVariant;
   size?: DisplaySize;
   hover?: boolean;
@@ -28,9 +66,13 @@ export interface TableProps extends Omit<ComponentProps<'table'>, 'caption'> {
   caption?: ReactNode;
   maxHeight?: string | number;
   wrapClassName?: string;
+  expandedSections?: string[];
+  defaultExpandedSections?: string[];
+  onExpandedSectionsChange?: (expandedSections: string[]) => void;
 }
 
 export function Table({
+  ref,
   variant = 'surface',
   size = 'md',
   hover = false,
@@ -40,10 +82,128 @@ export function Table({
   caption,
   maxHeight,
   wrapClassName,
+  expandedSections,
+  defaultExpandedSections,
+  onExpandedSectionsChange,
   className,
   children,
   ...rest
 }: TableProps) {
+  const tableRef = useRef<HTMLTableElement | null>(null);
+  const isControlled = expandedSections !== undefined;
+  const hasExplicitDefault = defaultExpandedSections !== undefined;
+
+  const [internalExpanded, setInternalExpanded] = useState<string[]>(() =>
+    defaultExpandedSections ? [...defaultExpandedSections] : [],
+  );
+  const registeredOrderRef = useRef<string[]>([]);
+  const seededRef = useRef<Set<string>>(new Set());
+  const [hasSections, setHasSections] = useState(false);
+
+  const activeExpanded = isControlled ? expandedSections : internalExpanded;
+  const activeSet = useMemo(() => new Set(activeExpanded), [activeExpanded]);
+  const activeExpandedRef = useRef(activeExpanded);
+  activeExpandedRef.current = activeExpanded;
+  const onChangeRef = useRef(onExpandedSectionsChange);
+  onChangeRef.current = onExpandedSectionsChange;
+
+  const updateExpanded = useCallback(
+    (next: string[]) => {
+      if (!isControlled) {
+        setInternalExpanded(next);
+      }
+      onChangeRef.current?.(next);
+    },
+    [isControlled],
+  );
+
+  const isSectionExpanded = useCallback(
+    (id: string, fallbackExpanded?: boolean): boolean => {
+      if (isControlled || hasExplicitDefault || seededRef.current.has(id)) {
+        return activeSet.has(id);
+      }
+      return fallbackExpanded ?? true;
+    },
+    [activeSet, isControlled, hasExplicitDefault],
+  );
+
+  const toggleSection = useCallback(
+    (id: string, force?: boolean) => {
+      const current = new Set(activeExpandedRef.current);
+      const nextOpen = force !== undefined ? force : !current.has(id);
+      if (nextOpen) current.add(id);
+      else current.delete(id);
+      updateExpanded(Array.from(current));
+    },
+    [updateExpanded],
+  );
+
+  const expandAll = useCallback(() => {
+    const ordered = [...registeredOrderRef.current];
+    if (tableRef.current) {
+      tableRef.current.querySelectorAll('tr.j-table__section-row[data-section-id]').forEach((el) => {
+        const sid = (el as HTMLElement).dataset.sectionId;
+        if (sid && !ordered.includes(sid)) ordered.push(sid);
+      });
+    }
+    updateExpanded(ordered);
+  }, [updateExpanded]);
+
+  const collapseAll = useCallback(() => {
+    updateExpanded([]);
+  }, [updateExpanded]);
+
+  const registerSection = useCallback(
+    (id: string, sectionDefaultExpanded?: boolean) => {
+      if (!registeredOrderRef.current.includes(id)) {
+        registeredOrderRef.current.push(id);
+      }
+      setHasSections(true);
+      if (!seededRef.current.has(id)) {
+        seededRef.current.add(id);
+        if (!isControlled && !hasExplicitDefault && (sectionDefaultExpanded ?? true)) {
+          setInternalExpanded((prev) => (prev.includes(id) ? prev : [...prev, id]));
+        }
+      }
+    },
+    [isControlled, hasExplicitDefault],
+  );
+
+  const unregisterSection = useCallback((id: string) => {
+    registeredOrderRef.current = registeredOrderRef.current.filter((k) => k !== id);
+    seededRef.current.delete(id);
+  }, []);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      expandAll,
+      collapseAll,
+      toggleSection,
+      isSectionExpanded: (id: string) => isSectionExpanded(id, false),
+      get element() {
+        return tableRef.current;
+      },
+    }),
+    [expandAll, collapseAll, toggleSection, isSectionExpanded],
+  );
+
+  useEffect(() => {
+    const el = tableRef.current;
+    if (!el) return;
+    return bindTableRovingFocus(el);
+  }, []);
+
+  const ctxValue = useMemo<TableSectionsContextValue>(
+    () => ({
+      isSectionExpanded,
+      toggleSection,
+      registerSection,
+      unregisterSection,
+    }),
+    [isSectionExpanded, toggleSection, registerSection, unregisterSection],
+  );
+
   const wrapStyle: CSSProperties | undefined =
     maxHeight != null
       ? ({
@@ -52,24 +212,159 @@ export function Table({
       : undefined;
 
   return (
-    <div
-      className={wrapClassName ? `j-table-wrap ${wrapClassName}` : 'j-table-wrap'}
-      data-variant={attr(variant, 'surface')}
-      data-size={attr(size, 'md')}
-      data-hover={hover ? '' : undefined}
-      data-sticky-header={stickyHeader ? '' : undefined}
-      style={wrapStyle}
-    >
-      <table
-        {...rest}
-        className={className ? `j-table ${className}` : 'j-table'}
-        data-pin-first={pinFirst ? '' : undefined}
-        data-pin-last={pinLast ? '' : undefined}
+    <TableSectionsContext value={ctxValue}>
+      <div
+        className={wrapClassName ? `j-table-wrap ${wrapClassName}` : 'j-table-wrap'}
+        data-variant={attr(variant, 'surface')}
+        data-size={attr(size, 'md')}
+        data-hover={hover ? '' : undefined}
+        data-sticky-header={stickyHeader ? '' : undefined}
+        style={wrapStyle}
       >
-        {caption != null && <caption>{caption}</caption>}
-        {children}
-      </table>
-    </div>
+        <table
+          {...rest}
+          ref={tableRef}
+          className={className ? `j-table ${className}` : 'j-table'}
+          data-j-managed={hasSections || isControlled ? '' : undefined}
+          data-pin-first={pinFirst ? '' : undefined}
+          data-pin-last={pinLast ? '' : undefined}
+        >
+          {caption != null && <caption>{caption}</caption>}
+          {children}
+        </table>
+      </div>
+    </TableSectionsContext>
+  );
+}
+
+export interface TableSectionProps extends Omit<ComponentProps<'tr'>, 'id' | 'title' | 'onToggle'> {
+  id: string;
+  title?: ReactNode;
+  colSpan?: number;
+  /** Alias for `colSpan`. */
+  colspan?: number;
+  count?: number | string;
+  defaultExpanded?: boolean;
+  disabled?: boolean;
+  actions?: ReactNode;
+  onToggle?: (expanded: boolean) => void;
+  children?: ReactNode;
+}
+
+function decorateSectionChildren(
+  nodes: ReactNode,
+  isHidden: boolean,
+  sectionId: string,
+): ReactNode {
+  return Children.map(nodes, (child) => {
+    if (!isValidElement(child)) return child;
+    if (child.type === Fragment) {
+      const fragProps = child.props as { children?: ReactNode };
+      return <>{decorateSectionChildren(fragProps.children, isHidden, sectionId)}</>;
+    }
+    if (typeof child.type === 'string' && child.type.toLowerCase() === 'tr') {
+      const trEl = child as ReactElement<{ hidden?: boolean; 'data-section-parent'?: string }>;
+      const explicitHidden = Boolean(trEl.props.hidden);
+      return cloneElement(trEl, {
+        'data-section-parent': sectionId,
+        hidden: isHidden || explicitHidden ? true : undefined,
+      });
+    }
+    return child;
+  });
+}
+
+export function TableSection({
+  id,
+  title,
+  colSpan,
+  colspan,
+  count,
+  defaultExpanded,
+  disabled = false,
+  actions,
+  onToggle,
+  className,
+  children,
+  ...rest
+}: TableSectionProps) {
+  const ctx = use(TableSectionsContext);
+  const [localExpanded, setLocalExpanded] = useState(defaultExpanded ?? true);
+  const rowRef = useRef<HTMLTableRowElement | null>(null);
+  const [detectedColSpan, setDetectedColSpan] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    if (!ctx) return;
+    ctx.registerSection(id, defaultExpanded);
+    return () => ctx.unregisterSection(id);
+  }, [ctx, id, defaultExpanded]);
+
+  useEffect(() => {
+    if (colSpan != null || colspan != null || !rowRef.current) return;
+    const headCells = rowRef.current.closest('table')?.tHead?.rows[0]?.cells.length;
+    if (headCells && headCells > 0) {
+      setDetectedColSpan(headCells);
+    }
+  }, [colSpan, colspan]);
+
+  const expanded = ctx
+    ? ctx.isSectionExpanded(id, defaultExpanded ?? true)
+    : localExpanded;
+  const effectiveColSpan = colSpan ?? colspan ?? detectedColSpan ?? 99;
+
+  const handleToggle = () => {
+    if (disabled) return;
+    const next = !expanded;
+    if (ctx) {
+      ctx.toggleSection(id, next);
+    } else {
+      setLocalExpanded(next);
+    }
+    onToggle?.(next);
+  };
+
+  return (
+    <>
+      <tr
+        {...rest}
+        ref={rowRef}
+        className={className ? `j-table__section-row ${className}` : 'j-table__section-row'}
+        data-section-id={id}
+        data-expanded={expanded ? '' : undefined}
+      >
+        <th colSpan={effectiveColSpan} className="j-table__section-cell">
+          <div className="j-table__section-bar">
+            <button
+              type="button"
+              className="j-table__section-btn"
+              aria-expanded={expanded ? 'true' : 'false'}
+              disabled={disabled || undefined}
+              onClick={handleToggle}
+            >
+              <svg
+                className="j-table__section-chevron"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                shapeRendering="geometricPrecision"
+                aria-hidden="true"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+              <span className="j-table__section-title">{title}</span>
+              {count !== undefined && count !== null && (
+                <span className="j-table__section-count">{count}</span>
+              )}
+            </button>
+            {actions != null && <div className="j-table__section-actions">{actions}</div>}
+          </div>
+        </th>
+      </tr>
+      {decorateSectionChildren(children, !expanded, id)}
+    </>
   );
 }
 
