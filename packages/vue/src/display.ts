@@ -45,7 +45,8 @@ export { default as JBreadcrumb } from './display/JBreadcrumb.vue';
 export { default as JBreadcrumbItem } from './display/JBreadcrumbItem.vue';
 export { default as JPagination } from './display/JPagination.vue';
 export { default as JEmptyState } from './display/JEmptyState.vue';
-export { default as JTable } from './display/JTable.vue';
+export { default as JTable, type JTableHandle } from './display/JTable.vue';
+export { default as JTableSection, type JTableSectionProps } from './display/JTableSection.vue';
 export { default as JDataTable } from './display/JDataTable.vue';
 export {
   default as JVirtualList,
@@ -72,6 +73,75 @@ export { default as JTreeView } from './display/JTreeView.vue';
 export { default as JTreeItem } from './display/JTreeItem.vue';
 export { default as JCarousel } from './display/JCarousel.vue';
 export { default as JCarouselSlide } from './display/JCarouselSlide.vue';
+export {
+  default as JBanner,
+  type JBannerProps,
+  type BannerTone,
+  type BannerVariant,
+  type BannerAlign,
+} from './display/JBanner.vue';
+export {
+  default as JCodeBlock,
+  type JCodeBlockProps,
+  type CodeBlockVariant,
+} from './display/JCodeBlock.vue';
+export {
+  default as JCopyButton,
+  type JCopyButtonProps,
+  type CopyButtonSize,
+  type CopyButtonVariant,
+} from './display/JCopyButton.vue';
+export {
+  copyToClipboard,
+  tokenizeCodeLines,
+  normalizeCodeLanguage,
+} from 'jenni-core/behaviors/code-block.js';
+export {
+  default as JDescriptionList,
+  type JDescriptionListProps,
+  type DescriptionListLayout,
+  type DescriptionListVariant,
+  type DescriptionListSize,
+  type DescriptionListCols,
+  type DescriptionListEntry,
+} from './display/JDescriptionList.vue';
+export {
+  default as JDescriptionItem,
+  type JDescriptionItemProps,
+  type DescriptionItemSpan,
+} from './display/JDescriptionItem.vue';
+export {
+  default as JProgressRing,
+  type JProgressRingProps,
+  type JProgressRingSize,
+  type JProgressRingTone,
+} from './display/JProgressRing.vue';
+export {
+  default as JStat,
+  type JStatProps,
+  type StatTrend,
+  type StatVariant,
+  type StatTrendTone,
+  type StatSize,
+} from './display/JStat.vue';
+export {
+  default as JStatGroup,
+  type JStatGroupProps,
+  type StatGroupCols,
+  type StatGroupVariant,
+} from './display/JStatGroup.vue';
+export {
+  default as JTimeline,
+  type JTimelineProps,
+  type TimelineSize,
+  type TimelineEntry,
+} from './display/JTimeline.vue';
+export {
+  default as JTimelineItem,
+  type JTimelineItemProps,
+  type TimelineTone,
+  type TimelineLine,
+} from './display/JTimelineItem.vue';
 export type {
   JDisplayTone,
   JDisplaySize,
@@ -82,6 +152,8 @@ export type {
   JAvatarGroupProps,
   JCardProps,
   JAlertProps,
+  JSpinnerSize,
+  JSpinnerVariant,
   JSpinnerProps,
   ProgressSegment,
   JProgressProps,

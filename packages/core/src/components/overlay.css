@@ -3,9 +3,12 @@
 @import "./tooltip.css";
 @import "./popover.css";
 @import "./menu.css";
+@import "./menubar.css";
 @import "./dialog.css";
+@import "./alert-dialog.css";
 @import "./tabs.css";
 @import "./doc-tabs.css";
+@import "./tab-strip.css";
 @import "./toast.css";
 @import "./drawer.css";
 @import "./combobox.css";

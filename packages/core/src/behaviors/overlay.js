@@ -12,14 +12,27 @@ import { initComboboxes } from './combobox.js';
 import { initContextMenus } from './context-menu.js';
 import { initHoverCards } from './hover-card.js';
 import { initCommandPalettes } from './command-palette.js';
+import { initMenubars } from './menubar.js';
+import { initTabStrips } from './tab-strip.js';
 
 export { supportsAnchor, linkAnchor, trackAnchor, anchorPopover } from './anchor.js';
 export { createTooltip, initTooltips } from './tooltip.js';
 export { createPopover, initPopovers } from './popover.js';
 export { createMenu, createSubmenu, getDirectItems, initMenus } from './menu.js';
-export { initDialogs, lightDismiss, requestClose, supportsCommands, supportsClosedBy } from './dialog.js';
+export {
+  initDialogs,
+  lightDismiss,
+  requestClose,
+  supportsCommands,
+  supportsClosedBy,
+  bindDialogDefaultAction,
+  resolveDialogDefaultButton,
+  focusDialogDefaultAction,
+} from './dialog.js';
 export { createTabs, initTabs, syncTabIndicator, tabsKeydown, getTabs } from './tabs.js';
 export { createDocTabs, initDocTabs, getDocTabElements } from './doc-tabs.js';
+export { createTabStrip, getTabStripElements, initTabStrips } from './tab-strip.js';
+export { createMenubar, initMenubars } from './menubar.js';
 export {
   toast,
   updateToast,
@@ -61,6 +74,8 @@ export function initOverlay(root = document) {
     initContextMenus(root),
     initHoverCards(root),
     initCommandPalettes(root),
+    initMenubars(root),
+    initTabStrips(root),
   ];
   return () => undo.forEach((fn) => fn());
 }

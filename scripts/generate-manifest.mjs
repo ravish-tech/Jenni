@@ -36,6 +36,18 @@ export const COMPONENT_CSS_DEPS = {
   'context-menu': ['floating.css', 'menu.css', 'context-menu.css'],
   'hover-card': ['floating.css', 'hover-card.css'],
   'doc-tabs': ['floating.css', 'menu.css', 'doc-tabs.css'],
+  'tab-strip': ['floating.css', 'menu.css', 'hover-card.css', 'tab-strip.css'],
+  'alert-dialog': ['dialog.css', 'alert-dialog.css'],
+  menubar: ['floating.css', 'menu.css', 'menubar.css'],
+  'sidebar-layout': [
+    'resizable.css',
+    'floating.css',
+    'menu.css',
+    'context-menu.css',
+    'tooltip.css',
+    'button.css',
+    'sidebar-layout.css',
+  ],
   'data-grid': ['choice.css', 'checkbox.css', 'virtual-list.css', 'data-grid.css'],
 };
 
@@ -55,6 +67,8 @@ const VUE_TO_CSS_SLUG = {
   Sidebar: 'bars',
   SidebarGroup: 'bars',
   SidebarItem: 'bars',
+  SidebarLayout: 'sidebar-layout',
+  SidebarToggle: 'sidebar-layout',
   TopBar: 'bars',
   BottomBar: 'bars',
   BottomBarItem: 'bars',
@@ -69,6 +83,7 @@ const VUE_TO_CSS_SLUG = {
   ResizableGroup: 'resizable',
   ResizablePanel: 'resizable',
   ResizableHandle: 'resizable',
+  SplitHandle: 'resizable',
   Bento: 'screens',
   BentoCell: 'screens',
   Board: 'screens',
@@ -110,9 +125,19 @@ const VUE_TO_CSS_SLUG = {
   AvatarGroup: 'avatar',
   Card: 'card',
   Alert: 'alert',
+  Banner: 'banner',
   Spinner: 'spinner',
   Progress: 'progress',
+  ProgressRing: 'progress-ring',
   Sparkline: 'sparkline',
+  Stat: 'stat',
+  StatGroup: 'stat',
+  Timeline: 'timeline',
+  TimelineItem: 'timeline',
+  DescriptionList: 'description-list',
+  DescriptionItem: 'description-list',
+  CodeBlock: 'code-block',
+  CopyButton: 'code-block',
   Skeleton: 'skeleton',
   Kbd: 'kbd',
   Separator: 'separator',
@@ -124,6 +149,7 @@ const VUE_TO_CSS_SLUG = {
   Pagination: 'pagination',
   EmptyState: 'empty-state',
   Table: 'table',
+  TableSection: 'table',
   DataTable: 'table',
   VirtualList: 'virtual-list',
   DataGrid: 'data-grid',
@@ -134,6 +160,7 @@ const VUE_TO_CSS_SLUG = {
   Carousel: 'carousel',
   CarouselSlide: 'carousel',
   Dialog: 'dialog',
+  AlertDialog: 'alert-dialog',
   Drawer: 'drawer',
   Popover: 'popover',
   Tooltip: 'tooltip',
@@ -143,12 +170,15 @@ const VUE_TO_CSS_SLUG = {
   DropdownSub: 'menu',
   DropdownLabel: 'menu',
   DropdownSeparator: 'menu',
+  Menubar: 'menubar',
+  MenubarMenu: 'menubar',
   ContextMenu: 'context-menu',
   Tabs: 'tabs',
   TabList: 'tabs',
   Tab: 'tabs',
   TabPanel: 'tabs',
   DocTabs: 'doc-tabs',
+  TabStrip: 'tab-strip',
   Toaster: 'toast',
   Combobox: 'combobox',
   CommandPalette: 'command-palette',
@@ -778,6 +808,7 @@ export function generateManifests() {
       catalogTable,
     ].join('\n');
 
+    fs.writeFileSync(path.join(ROOT, 'AGENTS.md'), bundledAgentsMd, 'utf8');
     fs.writeFileSync(path.join(ROOT, 'packages/core/AGENTS.md'), bundledAgentsMd, 'utf8');
     fs.writeFileSync(path.join(ROOT, 'packages/vue/AGENTS.md'), bundledAgentsMd, 'utf8');
     fs.writeFileSync(path.join(ROOT, 'packages/react/AGENTS.md'), bundledAgentsMd, 'utf8');
@@ -799,14 +830,16 @@ export function generateManifests() {
       '- **Respectful naming:** Keep the name strictly to package identifiers (`jenni-core`, `jenni-vue`, `jenni-react`) and top-level dedication; never use it casually in prose or mock brand text.',
       '',
       '## Agent Documentation & Machine-Readable References',
-      `- [Full Agent Guide, Recipes & Component Catalog](https://ravish-tech.github.io/Jenni/llms-full.txt): Philosophy, spatial rules, Vue 3 & React 19 patterns, and all ${manifest.componentCount} components.`,
+      `- [Full Agent Guide, Recipes & Component Catalog](https://ravish-tech.github.io/Jenni/llms-full.txt): Philosophy, spatial rules, anti-patterns, Vue 3 & React 19 patterns, and all ${manifest.componentCount} components.`,
       `- [Component & Token AST Manifest (JSON)](https://ravish-tech.github.io/Jenni/COMPONENT_MANIFEST.json): Exact props, types, defaults, v-models, events, slots, CSS slugs, and ${manifest.tokens.length} tokens.`,
       '- [Interactive Design Lab](https://ravish-tech.github.io/Jenni/): Live demos, theme/density controls, and multi-tier benchmarks.',
       '- [GitHub Repository](https://github.com/ravish-tech/Jenni): Source code, releases, and `.agents/skills/jenni-ui/SKILL.md`.',
       '',
     ].join('\n');
 
-    const tokenLines = manifest.tokens.map((t) => `- \`${t.name}\`: \`${t.value}\``).join('\n');
+    const tokenLines = manifest.tokens
+      .map((t) => (typeof t === 'string' ? `- \`${t}\`` : `- \`${t.name}\`: \`${t.value}\``))
+      .join('\n');
     const llmsFullTxt = [
       bundledAgentsMd.trim(),
       '',
@@ -818,6 +851,7 @@ export function generateManifests() {
       '',
     ].join('\n');
 
+    fs.writeFileSync(path.join(ROOT, 'llms.txt'), llmsTxt, 'utf8');
     fs.writeFileSync(path.join(publicDir, 'llms.txt'), llmsTxt, 'utf8');
     fs.writeFileSync(path.join(publicDir, 'llms-full.txt'), llmsFullTxt, 'utf8');
   }

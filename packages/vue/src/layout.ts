@@ -13,6 +13,16 @@ export { default as JSection } from './layout/JSection.vue';
 export { default as JSidebar } from './layout/JSidebar.vue';
 export { default as JSidebarGroup } from './layout/JSidebarGroup.vue';
 export { default as JSidebarItem } from './layout/JSidebarItem.vue';
+export { default as JSidebarLayout } from './layout/JSidebarLayout.vue';
+export { default as JSidebarToggle } from './layout/JSidebarToggle.vue';
+export {
+  JSidebarLayoutKey,
+  type JSidebarState,
+  type JSidebarLayoutProps,
+  type JSidebarToggleProps,
+  type JSidebarLayoutContextValue,
+  type JSidebarLayoutExpose,
+} from './layout/sidebar-layout-context';
 export { default as JTopBar } from './layout/JTopBar.vue';
 export { default as JBottomBar } from './layout/JBottomBar.vue';
 export { default as JBottomBarItem } from './layout/JBottomBarItem.vue';
@@ -21,6 +31,8 @@ export {
   type JStatusBarProps,
   type JStatusBarVariant,
   type JStatusBarBorder,
+  type JStatusBarSize,
+  type JStatusBarTextSize,
 } from './layout/JStatusBar.vue';
 export { default as JStatusBarItem, type JStatusBarItemProps } from './layout/JStatusBarItem.vue';
 export {
@@ -57,6 +69,13 @@ export { default as JScrollArea } from './layout/JScrollArea.vue';
 export { default as JResizableGroup } from './layout/JResizableGroup.vue';
 export { default as JResizablePanel } from './layout/JResizablePanel.vue';
 export { default as JResizableHandle } from './layout/JResizableHandle.vue';
+export {
+  default as JSplitHandle,
+  type JSplitHandleProps,
+  type SplitHandleDragPayload,
+  type SplitHandleOrientation,
+  type SplitHandleSource,
+} from './layout/JSplitHandle.vue';
 export type {
   JGap,
   JAlign,
@@ -85,6 +104,7 @@ export type {
   JCanvasToolsPlacement,
   JScrollOrientation,
   JScrollbarVisibility,
+  JScrollOverscroll,
   JResizableOrientation,
   JStackProps,
   JInlineProps,

@@ -1,6 +1,6 @@
 {
   "name": "jenni-vue",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Jenni (pronounced 'yenni') components for Vue 3 — beauty, simplicity, and performance. Built in loving memory of Jenni.",
   "license": "Apache-2.0",
   "author": "Ravish Kumar",
@@ -44,7 +44,7 @@
     "./AGENTS.md": "./AGENTS.md"
   },
   "peerDependencies": {
-    "jenni-core": "^0.3.0",
+    "jenni-core": "^0.4.0",
     "vue": "^3.5.0"
   },
   "publishConfig": {

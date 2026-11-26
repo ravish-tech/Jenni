@@ -2,6 +2,26 @@
 
 All notable changes to `jenni-core`, `jenni-vue`, and `jenni-react` are documented in this file.
 
+## [0.4.0] — 2026-11-25
+
+### Added — `ravmon` Backlog (`#1`–`#11`)
+- **Item #1 — `JIcon` Child Sizing & `--j-icon-scale` (`button`, `toggle`, `badge`, `breadcrumb`, `pagination`, `empty-state`, `combobox`, `statusbar`)**: Direct `.j-icon:not([data-size])` children now automatically inherit component icon dimensions alongside `> svg`; bumped `JButton` / `JToggle` `--_icon` sizes (`sm: 16px`, `md: 18px`, `lg: 20px`) and added `--j-icon-scale` (default `1`) for padded icon fonts.
+- **Item #2 — Popover Exit Transition Layout Stability**: Moved `flex-direction: column` (and inline-flex layout rules) onto base popover selectors across `menu.css`, `combobox.css`, `time-picker.css`, `tooltip.css`, and `menubar.css` so items never flip into a row during `allow-discrete` exit fades.
+- **Item #3 — Chrome-Style Tab Strip (`JTabStrip` / `TabStrip`, `createTabStrip`)**: Full window title-bar & document tab strip with icon, title, close button, `pinned`, `preview` (italic), `dirty` marker, `loading` spinner, `indicator` dot, `description` hover card, activate on `pointerdown`, middle-click close, `@dblclick`, drag reorder (`@reorder`), drag-out detach (`@detach`), scroll fades + `+` (`@new`), `:search="true"` filter dropdown with inline close buttons, built-in + `#context-menu` actions, roving `tabindex`, `:titlebar="true"` top-edge (`y=0`) hit boxes (`--j-tab-strip-gap` / `--ct-gap`), and `--j-tab-strip-active-bg`.
+- **Item #4 — Resizable & Collapsible Sidebar Layout (`JSidebarLayout` + `JSidebarToggle` / `SidebarLayout` + `SidebarToggle`)**: Full-height view layout with `open | rail | hidden` states (`rail` when `#rail` exists), container-relative drag width (`clientX - layoutRect.left`, `defaultWidth=260`, `min=180`, `max=600`), `storageKey` persistence, edge hover toggle, right-click edge menu (`Show / Rail / Hide`), and context-wired `<JSidebarToggle />` (`dock-left` icon + dynamic tooltip).
+- **Item #5 — Reusable `.j-resize-handle` & Headless `JSplitHandle` / `SplitHandle` (`createSplitHandle`)**: Standalone pointer-captured splitter primitive (`horizontal` / `vertical`, `withGrip`, `@drag-start`, `@drag`, `@drag-end`, keyboard arrows with `step` / `largeStep`, cursor & `user-select` lock).
+- **Item #6 — Dynamic `JScrollArea` / `ScrollArea` Overscroll Containment**: `ResizeObserver`-driven `data-overflows-y` / `data-overflows-x` applies `overscroll-behavior: contain` only on axes that actually overflow (`overscroll="dynamic | contain | auto"`), preventing swallowed wheel events on short content.
+- **Item #7 — Clearable Native `JSelect` / `Select`**: Added `clearable`, `emptyValue = ''`, `clearLabel = 'Clear'`, and `clearTooltip` while keeping a real `<select>` element.
+- **Item #8 — `JDialog` / `Dialog` Default Action on `Enter`**: Added `default` prop on `JButton` / `Button` inside `#footer` and `defaultAction` prop on `JDialog` / `Dialog` (`bindDialogDefaultAction`), focusing the primary action on open and firing on `Enter` safely outside textareas, selects, other buttons, `Shift+Enter`, and IME composition.
+- **Item #9 — Sticky `JPageHeader` / `PageHeader` (`sticky` & `JPage` `stickyHeader`)**: `IntersectionObserver` sentinel sticks headers to the nearest scroll container with `--j-bg` and reveals `--j-border` only while `[data-stuck]`.
+- **Item #10 — Collapsible Table Sections (`JTableSection` / `TableSection`)**: Grouped `<tbody>` sections inside `JTable` / `Table` with `aria-expanded` chevron headers, `v-model:expanded-sections`, keyboard roving focus skipping collapsed rows, and `expandAll()` / `collapseAll()` helpers.
+- **Item #11 — `JStatusBar` / `StatusBar` Height, Text Size & Monospace Props**: Added `--j-statusbar-h`, `size="sm | md | lg"` (`lg` = `30px` density-scaled), `height` override, tokenized `--j-text-xs` default (`textSize="xs | sm"`), and `mono` prop.
+
+### Added — High-Definition Vector Icons, Spinners & 8 Flagship Components
+- **HD `24×24` Precision Icon Engine (`130+` icons)**: Upgraded `BUILTIN_ICONS` to `24×24` `geometricPrecision` paths with size-calibrated optical stroke weights (`xs: 2` → `xl: 1.5`).
+- **HD Vector Spinners & `JProgressRing` / `ProgressRing`**: Upgraded `JSpinner` / `Spinner` and all inline loading indicators (`Button`, `Toast`, `Combobox`, `TreeView`, `Alert`) to crisp SVG `stroke-linecap="round"` vector arcs, plus determinate/indeterminate circular `ProgressRing`.
+- **New Display & Overlay Primitives**: Added `JStat` / `JStatGroup` (`Stat` / `StatGroup`), `JTimeline` / `JTimelineItem` (`Timeline` / `TimelineItem`), `JDescriptionList` / `JDescriptionItem` (`DescriptionList` / `DescriptionItem`), `JBanner` / `Banner`, `JCodeBlock` + `JCopyButton` (`CodeBlock` + `CopyButton`), `JAlertDialog` / `AlertDialog`, and `JMenubar` / `JMenubarMenu` (`Menubar` / `MenubarMenu`).
+
 ## [0.3.0] — 2026-11-20
 
 ### Added

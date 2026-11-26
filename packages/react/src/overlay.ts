@@ -45,6 +45,29 @@ export {
 export { ContextMenu, type ContextMenuProps } from './overlay/ContextMenu';
 export { HoverCard, type HoverCardProps } from './overlay/HoverCard';
 export { CommandPalette, type CommandPaletteProps } from './overlay/CommandPalette';
+export {
+  AlertDialog,
+  type AlertDialogProps,
+  type AlertDialogTone,
+  type AlertDialogSize,
+} from './overlay/AlertDialog';
+export {
+  Menubar,
+  MenubarMenu,
+  type MenubarProps,
+  type MenubarMenuProps,
+  type MenubarHandle,
+  type MenubarSize,
+  type MenubarVariant,
+} from './overlay/Menubar';
+export {
+  TabStrip,
+  type TabStripItem,
+  type TabStripProps,
+  type TabStripHandle,
+  type TabStripSize,
+  type TabStripIndicatorTone,
+} from './overlay/TabStrip';
 export type {
   FloatingSide,
   FloatingAlign,

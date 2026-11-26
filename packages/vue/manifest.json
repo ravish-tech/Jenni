@@ -1,7 +1,7 @@
 {
   "$schema": "https://ravish-tech.github.io/Jenni/schema/component-manifest-v1.json",
   "name": "Jenni UI Component & Token Manifest",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "packages": {
     "core": "jenni-core",
     "vue": "jenni-vue",
@@ -56,7 +56,7 @@
       "createVirtualizer"
     ]
   },
-  "componentCount": 110,
+  "componentCount": 128,
   "tokens": [
     "--j-accent",
     "--j-accent-fg",
@@ -140,6 +140,7 @@
     "--j-hit-min",
     "--j-hue",
     "--j-hue-neutral",
+    "--j-icon-scale",
     "--j-info",
     "--j-info-fg",
     "--j-info-hover",
@@ -193,6 +194,7 @@
     "--j-space-6",
     "--j-space-8",
     "--j-split-master-w",
+    "--j-statusbar-h",
     "--j-subbar-h",
     "--j-success",
     "--j-success-fg",
@@ -264,6 +266,15 @@
       "bytesSource": 12104
     },
     {
+      "slug": "alert-dialog",
+      "foundationImport": "jenni-core/css/foundation.css",
+      "componentImport": "jenni-core/css/alert-dialog.css",
+      "standaloneImport": "jenni-core/css/alert-dialog.css",
+      "requiresFoundation": true,
+      "sourceImport": "jenni-core/components/alert-dialog.css",
+      "bytesSource": 4164
+    },
+    {
       "slug": "alert",
       "foundationImport": "jenni-core/css/foundation.css",
       "componentImport": "jenni-core/css/alert.css",
@@ -288,7 +299,16 @@
       "standaloneImport": "jenni-core/css/badge.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/badge.css",
-      "bytesSource": 5164
+      "bytesSource": 5378
+    },
+    {
+      "slug": "banner",
+      "foundationImport": "jenni-core/css/foundation.css",
+      "componentImport": "jenni-core/css/banner.css",
+      "standaloneImport": "jenni-core/css/banner.css",
+      "requiresFoundation": true,
+      "sourceImport": "jenni-core/components/banner.css",
+      "bytesSource": 7064
     },
     {
       "slug": "bars",
@@ -306,7 +326,7 @@
       "standaloneImport": "jenni-core/css/breadcrumb.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/breadcrumb.css",
-      "bytesSource": 4730
+      "bytesSource": 5527
     },
     {
       "slug": "button",
@@ -315,7 +335,7 @@
       "standaloneImport": "jenni-core/css/button.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/button.css",
-      "bytesSource": 9784
+      "bytesSource": 10176
     },
     {
       "slug": "card",
@@ -354,6 +374,15 @@
       "bytesSource": 1886
     },
     {
+      "slug": "code-block",
+      "foundationImport": "jenni-core/css/foundation.css",
+      "componentImport": "jenni-core/css/code-block.css",
+      "standaloneImport": "jenni-core/css/code-block.css",
+      "requiresFoundation": true,
+      "sourceImport": "jenni-core/components/code-block.css",
+      "bytesSource": 14730
+    },
+    {
       "slug": "color-picker",
       "foundationImport": "jenni-core/css/foundation.css",
       "componentImport": "jenni-core/css/color-picker.css",
@@ -369,7 +398,7 @@
       "standaloneImport": "jenni-core/css/combobox.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/combobox.css",
-      "bytesSource": 13620
+      "bytesSource": 15563
     },
     {
       "slug": "command-palette",
@@ -417,6 +446,15 @@
       "bytesSource": 16954
     },
     {
+      "slug": "description-list",
+      "foundationImport": "jenni-core/css/foundation.css",
+      "componentImport": "jenni-core/css/description-list.css",
+      "standaloneImport": "jenni-core/css/description-list.css",
+      "requiresFoundation": true,
+      "sourceImport": "jenni-core/components/description-list.css",
+      "bytesSource": 5946
+    },
+    {
       "slug": "dialog",
       "foundationImport": "jenni-core/css/foundation.css",
       "componentImport": "jenni-core/css/dialog.css",
@@ -432,7 +470,7 @@
       "standaloneImport": "jenni-core/css/display.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/display.css",
-      "bytesSource": 612
+      "bytesSource": 777
     },
     {
       "slug": "doc-tabs",
@@ -459,7 +497,7 @@
       "standaloneImport": "jenni-core/css/empty-state.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/empty-state.css",
-      "bytesSource": 4111
+      "bytesSource": 4218
     },
     {
       "slug": "field",
@@ -522,7 +560,7 @@
       "standaloneImport": "jenni-core/css/icon.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/icon.css",
-      "bytesSource": 1536
+      "bytesSource": 1975
     },
     {
       "slug": "input",
@@ -549,7 +587,7 @@
       "standaloneImport": "jenni-core/css/layout.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/layout.css",
-      "bytesSource": 347
+      "bytesSource": 379
     },
     {
       "slug": "list",
@@ -567,7 +605,16 @@
       "standaloneImport": "jenni-core/css/menu.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/menu.css",
-      "bytesSource": 6226
+      "bytesSource": 6413
+    },
+    {
+      "slug": "menubar",
+      "foundationImport": "jenni-core/css/foundation.css",
+      "componentImport": "jenni-core/css/menubar.css",
+      "standaloneImport": "jenni-core/css/menubar.css",
+      "requiresFoundation": true,
+      "sourceImport": "jenni-core/components/menubar.css",
+      "bytesSource": 3702
     },
     {
       "slug": "number-input",
@@ -585,7 +632,7 @@
       "standaloneImport": "jenni-core/css/overlay.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/overlay.css",
-      "bytesSource": 410
+      "bytesSource": 492
     },
     {
       "slug": "page",
@@ -594,7 +641,7 @@
       "standaloneImport": "jenni-core/css/page.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/page.css",
-      "bytesSource": 4557
+      "bytesSource": 5399
     },
     {
       "slug": "pagination",
@@ -603,7 +650,7 @@
       "standaloneImport": "jenni-core/css/pagination.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/pagination.css",
-      "bytesSource": 7251
+      "bytesSource": 7362
     },
     {
       "slug": "pin-input",
@@ -633,6 +680,15 @@
       "bytesSource": 3015
     },
     {
+      "slug": "progress-ring",
+      "foundationImport": "jenni-core/css/foundation.css",
+      "componentImport": "jenni-core/css/progress-ring.css",
+      "standaloneImport": "jenni-core/css/progress-ring.css",
+      "requiresFoundation": true,
+      "sourceImport": "jenni-core/components/progress-ring.css",
+      "bytesSource": 4214
+    },
+    {
       "slug": "progress",
       "foundationImport": "jenni-core/css/foundation.css",
       "componentImport": "jenni-core/css/progress.css",
@@ -657,7 +713,7 @@
       "standaloneImport": "jenni-core/css/resizable.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/resizable.css",
-      "bytesSource": 7406
+      "bytesSource": 9113
     },
     {
       "slug": "rich-text",
@@ -684,7 +740,7 @@
       "standaloneImport": "jenni-core/css/scroll-area.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/scroll-area.css",
-      "bytesSource": 7554
+      "bytesSource": 7961
     },
     {
       "slug": "segmented",
@@ -702,7 +758,7 @@
       "standaloneImport": "jenni-core/css/select.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/select.css",
-      "bytesSource": 4897
+      "bytesSource": 7133
     },
     {
       "slug": "separator",
@@ -721,6 +777,15 @@
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/shell.css",
       "bytesSource": 57517
+    },
+    {
+      "slug": "sidebar-layout",
+      "foundationImport": "jenni-core/css/foundation.css",
+      "componentImport": "jenni-core/css/sidebar-layout.css",
+      "standaloneImport": "jenni-core/css/sidebar-layout.css",
+      "requiresFoundation": true,
+      "sourceImport": "jenni-core/components/sidebar-layout.css",
+      "bytesSource": 10095
     },
     {
       "slug": "skeleton",
@@ -756,7 +821,16 @@
       "standaloneImport": "jenni-core/css/spinner.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/spinner.css",
-      "bytesSource": 1417
+      "bytesSource": 3477
+    },
+    {
+      "slug": "stat",
+      "foundationImport": "jenni-core/css/foundation.css",
+      "componentImport": "jenni-core/css/stat.css",
+      "standaloneImport": "jenni-core/css/stat.css",
+      "requiresFoundation": true,
+      "sourceImport": "jenni-core/components/stat.css",
+      "bytesSource": 9202
     },
     {
       "slug": "statusbar",
@@ -765,7 +839,7 @@
       "standaloneImport": "jenni-core/css/statusbar.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/statusbar.css",
-      "bytesSource": 5434
+      "bytesSource": 6236
     },
     {
       "slug": "stepper",
@@ -786,13 +860,22 @@
       "bytesSource": 3331
     },
     {
+      "slug": "tab-strip",
+      "foundationImport": "jenni-core/css/foundation.css",
+      "componentImport": "jenni-core/css/tab-strip.css",
+      "standaloneImport": "jenni-core/css/tab-strip.css",
+      "requiresFoundation": true,
+      "sourceImport": "jenni-core/components/tab-strip.css",
+      "bytesSource": 25204
+    },
+    {
       "slug": "table",
       "foundationImport": "jenni-core/css/foundation.css",
       "componentImport": "jenni-core/css/table.css",
       "standaloneImport": "jenni-core/css/table.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/table.css",
-      "bytesSource": 14533
+      "bytesSource": 17849
     },
     {
       "slug": "tabs",
@@ -828,7 +911,16 @@
       "standaloneImport": "jenni-core/css/time-picker.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/time-picker.css",
-      "bytesSource": 11247
+      "bytesSource": 11245
+    },
+    {
+      "slug": "timeline",
+      "foundationImport": "jenni-core/css/foundation.css",
+      "componentImport": "jenni-core/css/timeline.css",
+      "standaloneImport": "jenni-core/css/timeline.css",
+      "requiresFoundation": true,
+      "sourceImport": "jenni-core/components/timeline.css",
+      "bytesSource": 7477
     },
     {
       "slug": "toast",
@@ -837,7 +929,7 @@
       "standaloneImport": "jenni-core/css/toast.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/toast.css",
-      "bytesSource": 8526
+      "bytesSource": 8775
     },
     {
       "slug": "toggle",
@@ -846,7 +938,7 @@
       "standaloneImport": "jenni-core/css/toggle.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/toggle.css",
-      "bytesSource": 7025
+      "bytesSource": 7144
     },
     {
       "slug": "toolbar",
@@ -873,7 +965,7 @@
       "standaloneImport": "jenni-core/css/tree-view.css",
       "requiresFoundation": true,
       "sourceImport": "jenni-core/components/tree-view.css",
-      "bytesSource": 8344
+      "bytesSource": 8542
     },
     {
       "slug": "virtual-list",
@@ -901,6 +993,13 @@
     "jenni-core/behaviors/carousel.js": [
       "createCarousel",
       "initCarousels"
+    ],
+    "jenni-core/behaviors/code-block.js": [
+      "copyToClipboard",
+      "normalizeCodeLanguage",
+      "tokenizeCodeLines",
+      "initCopyButtons",
+      "initCodeBlocks"
     ],
     "jenni-core/behaviors/color-picker.js": [
       "DEFAULT_OKLCH_SWATCHES",
@@ -965,6 +1064,9 @@
       "supportsClosedBy",
       "requestClose",
       "lightDismiss",
+      "resolveDialogDefaultButton",
+      "focusDialogDefaultAction",
+      "bindDialogDefaultAction",
       "initDialogs"
     ],
     "jenni-core/behaviors/doc-tabs.js": [
@@ -1011,6 +1113,10 @@
       "createSubmenu",
       "createMenu",
       "initMenus"
+    ],
+    "jenni-core/behaviors/menubar.js": [
+      "createMenubar",
+      "initMenubars"
     ],
     "jenni-core/behaviors/number-input.js": [
       "clampNumberValue",
@@ -1081,11 +1187,24 @@
       "createSparkline",
       "initSparklines"
     ],
+    "jenni-core/behaviors/split-handle.js": [
+      "createSplitHandle",
+      "initSplitHandles"
+    ],
     "jenni-core/behaviors/stepper.js": [
       "createStepper",
       "initSteppers"
     ],
+    "jenni-core/behaviors/tab-strip.js": [
+      "getTabStripElements",
+      "createTabStrip",
+      "initTabStrips"
+    ],
     "jenni-core/behaviors/table.js": [
+      "getVisibleRovingTargets",
+      "bindTableRovingFocus",
+      "createCollapsibleTable",
+      "initCollapsibleTables",
       "createDataTable",
       "initDataTables"
     ],
@@ -4047,6 +4166,11 @@
           "type": "JPageSize",
           "required": false,
           "default": "'lg'"
+        },
+        {
+          "name": "stickyHeader",
+          "type": "boolean",
+          "required": false
         }
       ],
       "events": [],
@@ -4068,6 +4192,11 @@
             "type": "JPageSize",
             "required": false,
             "default": "'lg'"
+          },
+          {
+            "name": "stickyHeader",
+            "type": "boolean",
+            "required": false
           }
         ],
         "models": [],
@@ -4090,6 +4219,11 @@
             "name": "size",
             "type": "PageSize",
             "required": false
+          },
+          {
+            "name": "stickyHeader",
+            "type": "boolean",
+            "required": false
           }
         ]
       }
@@ -4109,6 +4243,7 @@
           "jenni-core/components/page.css"
         ],
         "classes": [
+          "j-page-header__sentinel",
           "j-page-header",
           "j-page-header__eyebrow",
           "j-page-header__main",
@@ -4139,6 +4274,12 @@
           "name": "bordered",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "sticky",
+          "type": "boolean",
+          "required": false,
+          "default": "undefined"
         }
       ],
       "events": [],
@@ -4172,6 +4313,12 @@
             "name": "bordered",
             "type": "boolean",
             "required": false
+          },
+          {
+            "name": "sticky",
+            "type": "boolean",
+            "required": false,
+            "default": "undefined"
           }
         ],
         "models": [],
@@ -4211,6 +4358,11 @@
           },
           {
             "name": "bordered",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "sticky",
             "type": "boolean",
             "required": false
           }
@@ -4684,6 +4836,12 @@
           "default": "'subtle'"
         },
         {
+          "name": "overscroll",
+          "type": "JScrollOverscroll",
+          "required": false,
+          "default": "'dynamic'"
+        },
+        {
           "name": "fade",
           "type": "boolean",
           "required": false,
@@ -4755,6 +4913,12 @@
             "default": "'subtle'"
           },
           {
+            "name": "overscroll",
+            "type": "JScrollOverscroll",
+            "required": false,
+            "default": "'dynamic'"
+          },
+          {
             "name": "fade",
             "type": "boolean",
             "required": false,
@@ -4818,6 +4982,11 @@
           {
             "name": "scrollbar",
             "type": "ScrollbarVisibility",
+            "required": false
+          },
+          {
+            "name": "overscroll",
+            "type": "ScrollOverscroll",
             "required": false
           },
           {
@@ -5372,6 +5541,657 @@
       }
     },
     {
+      "vueName": "JSidebarLayout",
+      "reactName": "SidebarLayout",
+      "group": "layout",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/sidebar-layout.css",
+        "standaloneImport": "jenni-core/css/sidebar-layout.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/resizable.css",
+          "jenni-core/components/floating.css",
+          "jenni-core/components/menu.css",
+          "jenni-core/components/context-menu.css",
+          "jenni-core/components/tooltip.css",
+          "jenni-core/components/button.css",
+          "jenni-core/components/sidebar-layout.css"
+        ],
+        "classes": [
+          "j-sidebar-layout",
+          "j-sidebar-layout__sidebar",
+          "j-sidebar-layout__rail",
+          "j-sidebar-layout__sidebar-pane",
+          "j-sidebar-layout__sidebar-header",
+          "j-sidebar-layout__sidebar-body",
+          "j-sidebar-layout__edge",
+          "j-sidebar-layout__edge-zone",
+          "j-sidebar-layout__edge-btn",
+          "j-sidebar-layout__main",
+          "j-sidebar-layout__main-header",
+          "j-sidebar-layout__content"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "as",
+          "type": "string | object",
+          "required": false,
+          "default": "'div'"
+        },
+        {
+          "name": "storageKey",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "defaultWidth",
+          "type": "number",
+          "required": false,
+          "default": "260"
+        },
+        {
+          "name": "min",
+          "type": "number",
+          "required": false,
+          "default": "180"
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "default": "600"
+        },
+        {
+          "name": "initialState",
+          "type": "JSidebarState",
+          "required": false,
+          "default": "'open'"
+        },
+        {
+          "name": "state",
+          "type": "JSidebarState",
+          "required": false
+        },
+        {
+          "name": "width",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "toggleLabel",
+          "type": "string",
+          "required": false,
+          "default": "'sidebar'"
+        },
+        {
+          "name": "sidebarAriaLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Sidebar'"
+        },
+        {
+          "name": "height",
+          "type": "string | number",
+          "required": false
+        },
+        {
+          "name": "bordered",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        }
+      ],
+      "events": [
+        "update:state",
+        "update:width",
+        "stateChange",
+        "widthChange"
+      ],
+      "slots": [
+        "rail",
+        "sidebar-header",
+        "sidebar",
+        "main-header",
+        "default"
+      ],
+      "exposed": [
+        "state",
+        "toggle",
+        "setState",
+        "width",
+        "setWidth"
+      ],
+      "vue": {
+        "name": "JSidebarLayout",
+        "props": [
+          {
+            "name": "as",
+            "type": "string | object",
+            "required": false,
+            "default": "'div'"
+          },
+          {
+            "name": "storageKey",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "defaultWidth",
+            "type": "number",
+            "required": false,
+            "default": "260"
+          },
+          {
+            "name": "min",
+            "type": "number",
+            "required": false,
+            "default": "180"
+          },
+          {
+            "name": "max",
+            "type": "number",
+            "required": false,
+            "default": "600"
+          },
+          {
+            "name": "initialState",
+            "type": "JSidebarState",
+            "required": false,
+            "default": "'open'"
+          },
+          {
+            "name": "state",
+            "type": "JSidebarState",
+            "required": false
+          },
+          {
+            "name": "width",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "toggleLabel",
+            "type": "string",
+            "required": false,
+            "default": "'sidebar'"
+          },
+          {
+            "name": "sidebarAriaLabel",
+            "type": "string",
+            "required": false,
+            "default": "'Sidebar'"
+          },
+          {
+            "name": "height",
+            "type": "string | number",
+            "required": false
+          },
+          {
+            "name": "bordered",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          }
+        ],
+        "models": [],
+        "events": [
+          "update:state",
+          "update:width",
+          "stateChange",
+          "widthChange"
+        ],
+        "slots": [
+          "rail",
+          "sidebar-header",
+          "sidebar",
+          "main-header",
+          "default"
+        ],
+        "exposed": [
+          "state",
+          "toggle",
+          "setState",
+          "width",
+          "setWidth"
+        ]
+      },
+      "react": {
+        "name": "SidebarLayout",
+        "propsInterface": "SidebarLayoutProps",
+        "props": [
+          {
+            "name": "storageKey",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "defaultWidth",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "min",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "max",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "initialState",
+            "type": "SidebarState",
+            "required": false
+          },
+          {
+            "name": "state",
+            "type": "SidebarState",
+            "required": false
+          },
+          {
+            "name": "onStateChange",
+            "type": "(state: SidebarState) => void",
+            "required": false
+          },
+          {
+            "name": "width",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "onWidthChange",
+            "type": "(width: number) => void",
+            "required": false
+          },
+          {
+            "name": "toggleLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "sidebarAriaLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "height",
+            "type": "string | number",
+            "required": false
+          },
+          {
+            "name": "bordered",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "sidebarHeader",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "sidebar",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "rail",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "mainHeader",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "children",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "elementRef",
+            "type": "Ref<HTMLDivElement>",
+            "required": false
+          },
+          {
+            "name": "apiRef",
+            "type": "Ref<SidebarLayoutHandle | null>",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JSidebarToggle",
+      "reactName": "SidebarToggle",
+      "group": "layout",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/sidebar-layout.css",
+        "standaloneImport": "jenni-core/css/sidebar-layout.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/resizable.css",
+          "jenni-core/components/floating.css",
+          "jenni-core/components/menu.css",
+          "jenni-core/components/context-menu.css",
+          "jenni-core/components/tooltip.css",
+          "jenni-core/components/button.css",
+          "jenni-core/components/sidebar-layout.css"
+        ],
+        "classes": [
+          "j-button",
+          "j-sidebar-toggle"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "kbd",
+          "type": "string | string[]",
+          "required": false
+        },
+        {
+          "name": "tooltipSide",
+          "type": "'top' | 'right' | 'bottom' | 'left'",
+          "required": false,
+          "default": "'bottom'"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        }
+      ],
+      "events": [
+        "click"
+      ],
+      "slots": [],
+      "exposed": [],
+      "vue": {
+        "name": "JSidebarToggle",
+        "props": [
+          {
+            "name": "label",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "kbd",
+            "type": "string | string[]",
+            "required": false
+          },
+          {
+            "name": "tooltipSide",
+            "type": "'top' | 'right' | 'bottom' | 'left'",
+            "required": false,
+            "default": "'bottom'"
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          }
+        ],
+        "models": [],
+        "events": [
+          "click"
+        ],
+        "slots": [],
+        "exposed": []
+      },
+      "react": {
+        "name": "SidebarToggle",
+        "propsInterface": "SidebarToggleProps",
+        "props": [
+          {
+            "name": "label",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "kbd",
+            "type": "string | string[]",
+            "required": false
+          },
+          {
+            "name": "tooltipSide",
+            "type": "FloatingSide",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JSplitHandle",
+      "reactName": "SplitHandle",
+      "group": "layout",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/resizable.css",
+        "standaloneImport": "jenni-core/css/resizable.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/resizable.css"
+        ],
+        "classes": [
+          "j-resize-handle"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "orientation",
+          "type": "SplitHandleOrientation",
+          "required": false,
+          "default": "'horizontal'"
+        },
+        {
+          "name": "withGrip",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "step",
+          "type": "number",
+          "required": false,
+          "default": "16"
+        },
+        {
+          "name": "largeStep",
+          "type": "number",
+          "required": false,
+          "default": "64"
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "valueNow",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "valueMin",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "valueMax",
+          "type": "number",
+          "required": false
+        }
+      ],
+      "events": [
+        "dragStart",
+        "drag",
+        "dragEnd"
+      ],
+      "slots": [],
+      "exposed": [
+        "isDragging",
+        "getElement"
+      ],
+      "vue": {
+        "name": "JSplitHandle",
+        "props": [
+          {
+            "name": "orientation",
+            "type": "SplitHandleOrientation",
+            "required": false,
+            "default": "'horizontal'"
+          },
+          {
+            "name": "withGrip",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "step",
+            "type": "number",
+            "required": false,
+            "default": "16"
+          },
+          {
+            "name": "largeStep",
+            "type": "number",
+            "required": false,
+            "default": "64"
+          },
+          {
+            "name": "ariaLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "valueNow",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "valueMin",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "valueMax",
+            "type": "number",
+            "required": false
+          }
+        ],
+        "models": [],
+        "events": [
+          "dragStart",
+          "drag",
+          "dragEnd"
+        ],
+        "slots": [],
+        "exposed": [
+          "isDragging",
+          "getElement"
+        ]
+      },
+      "react": {
+        "name": "SplitHandle",
+        "propsInterface": "SplitHandleProps",
+        "props": [
+          {
+            "name": "orientation",
+            "type": "SplitHandleOrientation",
+            "required": false
+          },
+          {
+            "name": "withGrip",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "step",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "largeStep",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "ariaLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "valueNow",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "valueMin",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "valueMax",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "onDragStart",
+            "type": "(event: PointerEvent) => void",
+            "required": false
+          },
+          {
+            "name": "onDrag",
+            "type": "(payload: SplitHandleDragPayload) => void",
+            "required": false
+          },
+          {
+            "name": "onDragEnd",
+            "type": "(event: PointerEvent) => void",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
       "vueName": "JStack",
       "reactName": "Stack",
       "group": "layout",
@@ -5513,6 +6333,29 @@
           "default": "'subtle'"
         },
         {
+          "name": "size",
+          "type": "JStatusBarSize",
+          "required": false,
+          "default": "'md'"
+        },
+        {
+          "name": "height",
+          "type": "number | string",
+          "required": false
+        },
+        {
+          "name": "textSize",
+          "type": "JStatusBarTextSize",
+          "required": false,
+          "default": "'xs'"
+        },
+        {
+          "name": "mono",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
           "name": "border",
           "type": "JStatusBarBorder",
           "required": false,
@@ -5553,6 +6396,29 @@
             "type": "JStatusBarVariant",
             "required": false,
             "default": "'subtle'"
+          },
+          {
+            "name": "size",
+            "type": "JStatusBarSize",
+            "required": false,
+            "default": "'md'"
+          },
+          {
+            "name": "height",
+            "type": "number | string",
+            "required": false
+          },
+          {
+            "name": "textSize",
+            "type": "JStatusBarTextSize",
+            "required": false,
+            "default": "'xs'"
+          },
+          {
+            "name": "mono",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
           },
           {
             "name": "border",
@@ -5598,6 +6464,26 @@
             "required": false
           },
           {
+            "name": "size",
+            "type": "StatusBarSize",
+            "required": false
+          },
+          {
+            "name": "height",
+            "type": "number | string",
+            "required": false
+          },
+          {
+            "name": "textSize",
+            "type": "StatusBarTextSize",
+            "required": false
+          },
+          {
+            "name": "mono",
+            "type": "boolean",
+            "required": false
+          },
+          {
             "name": "border",
             "type": "StatusBarBorder",
             "required": false
@@ -5610,6 +6496,11 @@
           {
             "name": "role",
             "type": "AriaRole",
+            "required": false
+          },
+          {
+            "name": "style",
+            "type": "CSSProperties",
             "required": false
           },
           {
@@ -6441,6 +7332,11 @@
           "required": false
         },
         {
+          "name": "default",
+          "type": "boolean",
+          "required": false
+        },
+        {
           "name": "type",
           "type": "'button' | 'submit' | 'reset'",
           "required": false,
@@ -6497,6 +7393,11 @@
             "required": false
           },
           {
+            "name": "default",
+            "type": "boolean",
+            "required": false
+          },
+          {
             "name": "type",
             "type": "'button' | 'submit' | 'reset'",
             "required": false,
@@ -6547,6 +7448,11 @@
           },
           {
             "name": "fullWidth",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "default",
             "type": "boolean",
             "required": false
           }
@@ -9750,7 +10656,9 @@
           "jenni-core/components/select.css"
         ],
         "classes": [
-          "j-select"
+          "j-select-wrap",
+          "j-select",
+          "j-select__clear"
         ]
       },
       "models": [
@@ -9790,15 +10698,46 @@
           "name": "invalid",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "clearable",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "emptyValue",
+          "type": "string | number",
+          "required": false,
+          "default": "''"
+        },
+        {
+          "name": "clearLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Clear'"
+        },
+        {
+          "name": "clearTooltip",
+          "type": "string",
+          "required": false
         }
       ],
       "events": [
-        "update:modelValue"
+        "update:modelValue",
+        "clear"
       ],
       "slots": [
         "default"
       ],
-      "exposed": [],
+      "exposed": [
+        "focus",
+        "select"
+      ],
       "vue": {
         "name": "JSelect",
         "props": [
@@ -9831,6 +10770,33 @@
             "name": "invalid",
             "type": "boolean",
             "required": false
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "clearable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "emptyValue",
+            "type": "string | number",
+            "required": false,
+            "default": "''"
+          },
+          {
+            "name": "clearLabel",
+            "type": "string",
+            "required": false,
+            "default": "'Clear'"
+          },
+          {
+            "name": "clearTooltip",
+            "type": "string",
+            "required": false
           }
         ],
         "models": [
@@ -9841,12 +10807,16 @@
           }
         ],
         "events": [
-          "update:modelValue"
+          "update:modelValue",
+          "clear"
         ],
         "slots": [
           "default"
         ],
-        "exposed": []
+        "exposed": [
+          "focus",
+          "select"
+        ]
       },
       "react": {
         "name": "Select",
@@ -9854,17 +10824,22 @@
         "props": [
           {
             "name": "value",
-            "type": "string",
+            "type": "string | number",
             "required": false
           },
           {
             "name": "defaultValue",
-            "type": "string",
+            "type": "string | number",
             "required": false
           },
           {
             "name": "onValueChange",
             "type": "(value: string) => void",
+            "required": false
+          },
+          {
+            "name": "onClear",
+            "type": "() => void",
             "required": false
           },
           {
@@ -9890,6 +10865,26 @@
           {
             "name": "invalid",
             "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "clearable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "emptyValue",
+            "type": "string | number",
+            "required": false
+          },
+          {
+            "name": "clearLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "clearTooltip",
+            "type": "string",
             "required": false
           }
         ]
@@ -12527,6 +13522,265 @@
       }
     },
     {
+      "vueName": "JBanner",
+      "reactName": "Banner",
+      "group": "display",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/banner.css",
+        "standaloneImport": "jenni-core/css/banner.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/banner.css"
+        ],
+        "classes": [
+          "j-banner",
+          "j-banner__inner",
+          "j-banner__icon",
+          "j-banner__content",
+          "j-banner__title",
+          "j-banner__description",
+          "j-banner__actions",
+          "j-banner__close"
+        ]
+      },
+      "models": [
+        {
+          "name": "v-model:open",
+          "modelProp": "open",
+          "type": "boolean"
+        }
+      ],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "tone",
+          "type": "BannerTone",
+          "required": false,
+          "default": "'info'"
+        },
+        {
+          "name": "variant",
+          "type": "BannerVariant",
+          "required": false,
+          "default": "'soft'"
+        },
+        {
+          "name": "flush",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "align",
+          "type": "BannerAlign",
+          "required": false,
+          "default": "'start'"
+        },
+        {
+          "name": "icon",
+          "type": "string | boolean",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "dismissible",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "closeLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Dismiss banner'"
+        }
+      ],
+      "events": [
+        "update:open",
+        "dismiss"
+      ],
+      "slots": [
+        "icon",
+        "title",
+        "default",
+        "actions"
+      ],
+      "exposed": [],
+      "vue": {
+        "name": "JBanner",
+        "props": [
+          {
+            "name": "open",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "tone",
+            "type": "BannerTone",
+            "required": false,
+            "default": "'info'"
+          },
+          {
+            "name": "variant",
+            "type": "BannerVariant",
+            "required": false,
+            "default": "'soft'"
+          },
+          {
+            "name": "flush",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "align",
+            "type": "BannerAlign",
+            "required": false,
+            "default": "'start'"
+          },
+          {
+            "name": "icon",
+            "type": "string | boolean",
+            "required": false,
+            "default": "true"
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "dismissible",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "closeLabel",
+            "type": "string",
+            "required": false,
+            "default": "'Dismiss banner'"
+          }
+        ],
+        "models": [
+          {
+            "name": "v-model:open",
+            "modelProp": "open",
+            "type": "boolean"
+          }
+        ],
+        "events": [
+          "update:open",
+          "dismiss"
+        ],
+        "slots": [
+          "icon",
+          "title",
+          "default",
+          "actions"
+        ],
+        "exposed": []
+      },
+      "react": {
+        "name": "Banner",
+        "propsInterface": "BannerProps",
+        "props": [
+          {
+            "name": "tone",
+            "type": "BannerTone",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "BannerVariant",
+            "required": false
+          },
+          {
+            "name": "flush",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "align",
+            "type": "BannerAlign",
+            "required": false
+          },
+          {
+            "name": "icon",
+            "type": "string | boolean | ReactNode",
+            "required": false
+          },
+          {
+            "name": "title",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "description",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "actions",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "dismissible",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "closeLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "open",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "defaultOpen",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "onOpenChange",
+            "type": "(open: boolean) => void",
+            "required": false
+          },
+          {
+            "name": "onDismiss",
+            "type": "(event: ReactMouseEvent<HTMLButtonElement>) => void",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
       "vueName": "JBreadcrumb",
       "reactName": "Breadcrumb",
       "group": "display",
@@ -13399,6 +14653,255 @@
       }
     },
     {
+      "vueName": "JCodeBlock",
+      "reactName": "CodeBlock",
+      "group": "display",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/code-block.css",
+        "standaloneImport": "jenni-core/css/code-block.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/code-block.css"
+        ],
+        "classes": [
+          "j-code-block",
+          "j-managed",
+          "j-code-block__header",
+          "j-code-block__meta",
+          "j-code-block__filename",
+          "j-code-block__lang",
+          "j-code-block__actions",
+          "j-code-block__body",
+          "j-code-block__floating-actions",
+          "j-code-block__pre",
+          "j-code-block__code",
+          "j-code-block__line",
+          "j-code-block__gutter",
+          "j-code-block__content",
+          "j-code-tok"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "code",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "language",
+          "type": "string",
+          "required": false,
+          "default": "'plain'"
+        },
+        {
+          "name": "filename",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "lineNumbers",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "startLine",
+          "type": "number",
+          "required": false,
+          "default": "1"
+        },
+        {
+          "name": "highlightLines",
+          "type": "readonly number[]",
+          "required": false
+        },
+        {
+          "name": "diff",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "wrap",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "copyable",
+          "type": "boolean",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "maxHeight",
+          "type": "string | number",
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "CodeBlockVariant",
+          "required": false,
+          "default": "'outline'"
+        }
+      ],
+      "events": [
+        "copy"
+      ],
+      "slots": [
+        "actions"
+      ],
+      "exposed": [],
+      "vue": {
+        "name": "JCodeBlock",
+        "props": [
+          {
+            "name": "code",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "language",
+            "type": "string",
+            "required": false,
+            "default": "'plain'"
+          },
+          {
+            "name": "filename",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "lineNumbers",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "startLine",
+            "type": "number",
+            "required": false,
+            "default": "1"
+          },
+          {
+            "name": "highlightLines",
+            "type": "readonly number[]",
+            "required": false
+          },
+          {
+            "name": "diff",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "wrap",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "copyable",
+            "type": "boolean",
+            "required": false,
+            "default": "true"
+          },
+          {
+            "name": "maxHeight",
+            "type": "string | number",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "CodeBlockVariant",
+            "required": false,
+            "default": "'outline'"
+          }
+        ],
+        "models": [],
+        "events": [
+          "copy"
+        ],
+        "slots": [
+          "actions"
+        ],
+        "exposed": []
+      },
+      "react": {
+        "name": "CodeBlock",
+        "propsInterface": "CodeBlockProps",
+        "props": [
+          {
+            "name": "code",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "language",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "filename",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "lineNumbers",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "startLine",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "highlightLines",
+            "type": "readonly number[]",
+            "required": false
+          },
+          {
+            "name": "diff",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "wrap",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "copyable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "maxHeight",
+            "type": "string | number",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "CodeBlockVariant",
+            "required": false
+          },
+          {
+            "name": "actions",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "onCopy",
+            "type": "(value: string) => void",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
       "vueName": "JCollapsible",
       "reactName": "Collapsible",
       "group": "display",
@@ -13572,6 +15075,197 @@
           {
             "name": "disabled",
             "type": "boolean",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JCopyButton",
+      "reactName": "CopyButton",
+      "group": "display",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/code-block.css",
+        "standaloneImport": "jenni-core/css/code-block.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/code-block.css"
+        ],
+        "classes": [
+          "j-copy-button",
+          "j-managed",
+          "j-copy-button__icons",
+          "j-copy-button__icon",
+          "j-copy-button__icon--copy",
+          "j-copy-button__icon--check",
+          "j-copy-button__label"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "value",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "size",
+          "type": "CopyButtonSize",
+          "required": false,
+          "default": "'sm'"
+        },
+        {
+          "name": "variant",
+          "type": "CopyButtonVariant",
+          "required": false,
+          "default": "'ghost'"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Copy to clipboard'"
+        },
+        {
+          "name": "copiedLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Copied'"
+        },
+        {
+          "name": "timeout",
+          "type": "number",
+          "required": false,
+          "default": "1600"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        }
+      ],
+      "events": [
+        "copy"
+      ],
+      "slots": [
+        "default"
+      ],
+      "exposed": [],
+      "vue": {
+        "name": "JCopyButton",
+        "props": [
+          {
+            "name": "value",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "size",
+            "type": "CopyButtonSize",
+            "required": false,
+            "default": "'sm'"
+          },
+          {
+            "name": "variant",
+            "type": "CopyButtonVariant",
+            "required": false,
+            "default": "'ghost'"
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "ariaLabel",
+            "type": "string",
+            "required": false,
+            "default": "'Copy to clipboard'"
+          },
+          {
+            "name": "copiedLabel",
+            "type": "string",
+            "required": false,
+            "default": "'Copied'"
+          },
+          {
+            "name": "timeout",
+            "type": "number",
+            "required": false,
+            "default": "1600"
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          }
+        ],
+        "models": [],
+        "events": [
+          "copy"
+        ],
+        "slots": [
+          "default"
+        ],
+        "exposed": []
+      },
+      "react": {
+        "name": "CopyButton",
+        "propsInterface": "CopyButtonProps",
+        "props": [
+          {
+            "name": "value",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "size",
+            "type": "CopyButtonSize",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "CopyButtonVariant",
+            "required": false
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "ariaLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "copiedLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "timeout",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "onCopy",
+            "type": "(value: string) => void",
             "required": false
           }
         ]
@@ -14763,6 +16457,256 @@
       }
     },
     {
+      "vueName": "JDescriptionItem",
+      "reactName": "DescriptionItem",
+      "group": "display",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/description-list.css",
+        "standaloneImport": "jenni-core/css/description-list.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/description-list.css"
+        ],
+        "classes": [
+          "j-dl__item",
+          "j-dl__term",
+          "j-dl__details"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "term",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "details",
+          "type": "string | number",
+          "required": false
+        },
+        {
+          "name": "mono",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "span",
+          "type": "DescriptionItemSpan",
+          "required": false
+        }
+      ],
+      "events": [],
+      "slots": [
+        "term",
+        "default"
+      ],
+      "exposed": [],
+      "vue": {
+        "name": "JDescriptionItem",
+        "props": [
+          {
+            "name": "term",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "details",
+            "type": "string | number",
+            "required": false
+          },
+          {
+            "name": "mono",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "span",
+            "type": "DescriptionItemSpan",
+            "required": false
+          }
+        ],
+        "models": [],
+        "events": [],
+        "slots": [
+          "term",
+          "default"
+        ],
+        "exposed": []
+      },
+      "react": {
+        "name": "DescriptionItem",
+        "propsInterface": "DescriptionItemProps",
+        "props": [
+          {
+            "name": "term",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "details",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "mono",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "span",
+            "type": "DescriptionItemSpan",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JDescriptionList",
+      "reactName": "DescriptionList",
+      "group": "display",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/description-list.css",
+        "standaloneImport": "jenni-core/css/description-list.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/description-list.css"
+        ],
+        "classes": [
+          "j-dl"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "layout",
+          "type": "DescriptionListLayout",
+          "required": false,
+          "default": "'horizontal'"
+        },
+        {
+          "name": "cols",
+          "type": "DescriptionListCols",
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "DescriptionListVariant",
+          "required": false,
+          "default": "'divided'"
+        },
+        {
+          "name": "size",
+          "type": "DescriptionListSize",
+          "required": false,
+          "default": "'md'"
+        },
+        {
+          "name": "termWidth",
+          "type": "string | number",
+          "required": false
+        },
+        {
+          "name": "items",
+          "type": "DescriptionListEntry[]",
+          "required": false
+        }
+      ],
+      "events": [],
+      "slots": [
+        "default"
+      ],
+      "exposed": [],
+      "vue": {
+        "name": "JDescriptionList",
+        "props": [
+          {
+            "name": "layout",
+            "type": "DescriptionListLayout",
+            "required": false,
+            "default": "'horizontal'"
+          },
+          {
+            "name": "cols",
+            "type": "DescriptionListCols",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "DescriptionListVariant",
+            "required": false,
+            "default": "'divided'"
+          },
+          {
+            "name": "size",
+            "type": "DescriptionListSize",
+            "required": false,
+            "default": "'md'"
+          },
+          {
+            "name": "termWidth",
+            "type": "string | number",
+            "required": false
+          },
+          {
+            "name": "items",
+            "type": "DescriptionListEntry[]",
+            "required": false
+          }
+        ],
+        "models": [],
+        "events": [],
+        "slots": [
+          "default"
+        ],
+        "exposed": []
+      },
+      "react": {
+        "name": "DescriptionList",
+        "propsInterface": "DescriptionListProps",
+        "props": [
+          {
+            "name": "layout",
+            "type": "DescriptionListLayout",
+            "required": false
+          },
+          {
+            "name": "cols",
+            "type": "DescriptionListCols",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "DescriptionListVariant",
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "DescriptionListSize",
+            "required": false
+          },
+          {
+            "name": "termWidth",
+            "type": "string | number",
+            "required": false
+          },
+          {
+            "name": "items",
+            "type": "DescriptionListEntry[]",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
       "vueName": "JEmptyState",
       "reactName": "EmptyState",
       "group": "display",
@@ -15553,6 +17497,172 @@
       }
     },
     {
+      "vueName": "JProgressRing",
+      "reactName": "ProgressRing",
+      "group": "display",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/progress-ring.css",
+        "standaloneImport": "jenni-core/css/progress-ring.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/progress-ring.css"
+        ],
+        "classes": [
+          "j-progress-ring",
+          "j-progress-ring__svg",
+          "j-progress-ring__track",
+          "j-progress-ring__fill",
+          "j-progress-ring__label"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "value",
+          "type": "number | null",
+          "required": false,
+          "default": "undefined"
+        },
+        {
+          "name": "max",
+          "type": "number",
+          "required": false,
+          "default": "100"
+        },
+        {
+          "name": "size",
+          "type": "JProgressRingSize",
+          "required": false,
+          "default": "'md'"
+        },
+        {
+          "name": "thickness",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "tone",
+          "type": "JProgressRingTone",
+          "required": false
+        },
+        {
+          "name": "showValue",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": false
+        }
+      ],
+      "events": [],
+      "slots": [
+        "default"
+      ],
+      "exposed": [],
+      "vue": {
+        "name": "JProgressRing",
+        "props": [
+          {
+            "name": "value",
+            "type": "number | null",
+            "required": false,
+            "default": "undefined"
+          },
+          {
+            "name": "max",
+            "type": "number",
+            "required": false,
+            "default": "100"
+          },
+          {
+            "name": "size",
+            "type": "JProgressRingSize",
+            "required": false,
+            "default": "'md'"
+          },
+          {
+            "name": "thickness",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "tone",
+            "type": "JProgressRingTone",
+            "required": false
+          },
+          {
+            "name": "showValue",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "models": [],
+        "events": [],
+        "slots": [
+          "default"
+        ],
+        "exposed": []
+      },
+      "react": {
+        "name": "ProgressRing",
+        "propsInterface": "ProgressRingProps",
+        "props": [
+          {
+            "name": "value",
+            "type": "number | null",
+            "required": false
+          },
+          {
+            "name": "max",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "ProgressRingSize",
+            "required": false
+          },
+          {
+            "name": "thickness",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "tone",
+            "type": "ProgressRingTone",
+            "required": false
+          },
+          {
+            "name": "showValue",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "children",
+            "type": "ReactNode",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
       "vueName": "JSeparator",
       "reactName": "Separator",
       "group": "display",
@@ -16055,16 +18165,36 @@
           "jenni-core/components/spinner.css"
         ],
         "classes": [
-          "j-spinner"
+          "j-spinner",
+          "j-spinner__svg",
+          "j-spinner__dot",
+          "j-spinner__arc",
+          "j-spinner__track"
         ]
       },
       "models": [],
       "props": [
         {
           "name": "size",
-          "type": "JDisplaySize",
+          "type": "JSpinnerSize",
           "required": false,
           "default": "'md'"
+        },
+        {
+          "name": "variant",
+          "type": "JSpinnerVariant",
+          "required": false,
+          "default": "'ring'"
+        },
+        {
+          "name": "tone",
+          "type": "JDisplayTone",
+          "required": false
+        },
+        {
+          "name": "thickness",
+          "type": "number | string",
+          "required": false
         },
         {
           "name": "label",
@@ -16081,9 +18211,25 @@
         "props": [
           {
             "name": "size",
-            "type": "JDisplaySize",
+            "type": "JSpinnerSize",
             "required": false,
             "default": "'md'"
+          },
+          {
+            "name": "variant",
+            "type": "JSpinnerVariant",
+            "required": false,
+            "default": "'ring'"
+          },
+          {
+            "name": "tone",
+            "type": "JDisplayTone",
+            "required": false
+          },
+          {
+            "name": "thickness",
+            "type": "number | string",
+            "required": false
           },
           {
             "name": "label",
@@ -16103,12 +18249,346 @@
         "props": [
           {
             "name": "size",
-            "type": "DisplaySize",
+            "type": "SpinnerSize",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "SpinnerVariant",
+            "required": false
+          },
+          {
+            "name": "tone",
+            "type": "DisplayTone",
+            "required": false
+          },
+          {
+            "name": "thickness",
+            "type": "number | string",
             "required": false
           },
           {
             "name": "label",
             "type": "string",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JStat",
+      "reactName": "Stat",
+      "group": "display",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/stat.css",
+        "standaloneImport": "jenni-core/css/stat.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/stat.css"
+        ],
+        "classes": [
+          "j-stat",
+          "j-stat__header",
+          "j-stat__label",
+          "j-stat__icon",
+          "j-stat__body",
+          "j-stat__primary",
+          "j-stat__value",
+          "j-stat__affix",
+          "j-stat__meta",
+          "j-stat__delta",
+          "j-stat__trend-icon",
+          "j-stat__help",
+          "j-stat__chart",
+          "j-stat__footer"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "label",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "value",
+          "type": "string | number",
+          "required": false
+        },
+        {
+          "name": "prefix",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "suffix",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "delta",
+          "type": "string | number",
+          "required": false
+        },
+        {
+          "name": "trend",
+          "type": "StatTrend",
+          "required": false
+        },
+        {
+          "name": "trendTone",
+          "type": "StatTrendTone",
+          "required": false,
+          "default": "'auto'"
+        },
+        {
+          "name": "helpText",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "StatVariant",
+          "required": false,
+          "default": "'outline'"
+        },
+        {
+          "name": "size",
+          "type": "StatSize",
+          "required": false,
+          "default": "'md'"
+        }
+      ],
+      "events": [],
+      "slots": [
+        "icon",
+        "value",
+        "trend",
+        "chart",
+        "footer"
+      ],
+      "exposed": [],
+      "vue": {
+        "name": "JStat",
+        "props": [
+          {
+            "name": "label",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "value",
+            "type": "string | number",
+            "required": false
+          },
+          {
+            "name": "prefix",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "suffix",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "delta",
+            "type": "string | number",
+            "required": false
+          },
+          {
+            "name": "trend",
+            "type": "StatTrend",
+            "required": false
+          },
+          {
+            "name": "trendTone",
+            "type": "StatTrendTone",
+            "required": false,
+            "default": "'auto'"
+          },
+          {
+            "name": "helpText",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "StatVariant",
+            "required": false,
+            "default": "'outline'"
+          },
+          {
+            "name": "size",
+            "type": "StatSize",
+            "required": false,
+            "default": "'md'"
+          }
+        ],
+        "models": [],
+        "events": [],
+        "slots": [
+          "icon",
+          "value",
+          "trend",
+          "chart",
+          "footer"
+        ],
+        "exposed": []
+      },
+      "react": {
+        "name": "Stat",
+        "propsInterface": "StatProps",
+        "props": [
+          {
+            "name": "label",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "value",
+            "type": "string | number",
+            "required": false
+          },
+          {
+            "name": "prefix",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "suffix",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "delta",
+            "type": "string | number",
+            "required": false
+          },
+          {
+            "name": "trend",
+            "type": "StatTrend",
+            "required": false
+          },
+          {
+            "name": "trendTone",
+            "type": "StatTrendTone",
+            "required": false
+          },
+          {
+            "name": "helpText",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "StatVariant",
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "StatSize",
+            "required": false
+          },
+          {
+            "name": "icon",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "trendContent",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "chart",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "footer",
+            "type": "ReactNode",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JStatGroup",
+      "reactName": "StatGroup",
+      "group": "display",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/stat.css",
+        "standaloneImport": "jenni-core/css/stat.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/stat.css"
+        ],
+        "classes": [
+          "j-stat-group"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "cols",
+          "type": "StatGroupCols",
+          "required": false,
+          "default": "4"
+        },
+        {
+          "name": "variant",
+          "type": "StatGroupVariant",
+          "required": false,
+          "default": "'cards'"
+        }
+      ],
+      "events": [],
+      "slots": [
+        "default"
+      ],
+      "exposed": [],
+      "vue": {
+        "name": "JStatGroup",
+        "props": [
+          {
+            "name": "cols",
+            "type": "StatGroupCols",
+            "required": false,
+            "default": "4"
+          },
+          {
+            "name": "variant",
+            "type": "StatGroupVariant",
+            "required": false,
+            "default": "'cards'"
+          }
+        ],
+        "models": [],
+        "events": [],
+        "slots": [
+          "default"
+        ],
+        "exposed": []
+      },
+      "react": {
+        "name": "StatGroup",
+        "propsInterface": "StatGroupProps",
+        "props": [
+          {
+            "name": "cols",
+            "type": "StatGroupCols",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "StatGroupVariant",
             "required": false
           }
         ]
@@ -16480,7 +18960,8 @@
         ],
         "classes": [
           "j-table-wrap",
-          "j-table"
+          "j-table",
+          "j-managed"
         ]
       },
       "models": [],
@@ -16530,14 +19011,31 @@
           "name": "maxHeight",
           "type": "string | number",
           "required": false
+        },
+        {
+          "name": "expandedSections",
+          "type": "string[]",
+          "required": false
+        },
+        {
+          "name": "defaultExpandedSections",
+          "type": "string[]",
+          "required": false
         }
       ],
-      "events": [],
+      "events": [
+        "update:expandedSections"
+      ],
       "slots": [
         "caption",
         "default"
       ],
-      "exposed": [],
+      "exposed": [
+        "expandAll",
+        "collapseAll",
+        "toggleSection",
+        "isSectionExpanded"
+      ],
       "vue": {
         "name": "JTable",
         "props": [
@@ -16586,20 +19084,42 @@
             "name": "maxHeight",
             "type": "string | number",
             "required": false
+          },
+          {
+            "name": "expandedSections",
+            "type": "string[]",
+            "required": false
+          },
+          {
+            "name": "defaultExpandedSections",
+            "type": "string[]",
+            "required": false
           }
         ],
         "models": [],
-        "events": [],
+        "events": [
+          "update:expandedSections"
+        ],
         "slots": [
           "caption",
           "default"
         ],
-        "exposed": []
+        "exposed": [
+          "expandAll",
+          "collapseAll",
+          "toggleSection",
+          "isSectionExpanded"
+        ]
       },
       "react": {
         "name": "Table",
         "propsInterface": "TableProps",
         "props": [
+          {
+            "name": "ref",
+            "type": "Ref<TableHandle>",
+            "required": false
+          },
           {
             "name": "variant",
             "type": "TableVariant",
@@ -16643,6 +19163,459 @@
           {
             "name": "wrapClassName",
             "type": "string",
+            "required": false
+          },
+          {
+            "name": "expandedSections",
+            "type": "string[]",
+            "required": false
+          },
+          {
+            "name": "defaultExpandedSections",
+            "type": "string[]",
+            "required": false
+          },
+          {
+            "name": "onExpandedSectionsChange",
+            "type": "(expandedSections: string[]) => void",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JTableSection",
+      "reactName": "TableSection",
+      "group": "display",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/table.css",
+        "standaloneImport": "jenni-core/css/table.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/table.css"
+        ],
+        "classes": [
+          "j-table__section-row",
+          "j-table__section-cell",
+          "j-table__section-bar",
+          "j-table__section-btn",
+          "j-table__section-chevron",
+          "j-table__section-title",
+          "j-table__section-count",
+          "j-table__section-actions"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "id",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "colspan",
+          "type": "number",
+          "required": false
+        },
+        {
+          "name": "count",
+          "type": "number | string",
+          "required": false
+        },
+        {
+          "name": "defaultExpanded",
+          "type": "boolean",
+          "required": false,
+          "default": "undefined"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        }
+      ],
+      "events": [
+        "toggle"
+      ],
+      "slots": [
+        "title",
+        "actions"
+      ],
+      "exposed": [],
+      "vue": {
+        "name": "JTableSection",
+        "props": [
+          {
+            "name": "id",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "colspan",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "count",
+            "type": "number | string",
+            "required": false
+          },
+          {
+            "name": "defaultExpanded",
+            "type": "boolean",
+            "required": false,
+            "default": "undefined"
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          }
+        ],
+        "models": [],
+        "events": [
+          "toggle"
+        ],
+        "slots": [
+          "title",
+          "actions"
+        ],
+        "exposed": []
+      },
+      "react": {
+        "name": "TableSection",
+        "propsInterface": "TableSectionProps",
+        "props": [
+          {
+            "name": "id",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "title",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "colSpan",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "colspan",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "count",
+            "type": "number | string",
+            "required": false
+          },
+          {
+            "name": "defaultExpanded",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "actions",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "onToggle",
+            "type": "(expanded: boolean) => void",
+            "required": false
+          },
+          {
+            "name": "children",
+            "type": "ReactNode",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JTimeline",
+      "reactName": "Timeline",
+      "group": "display",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/timeline.css",
+        "standaloneImport": "jenni-core/css/timeline.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/timeline.css"
+        ],
+        "classes": [
+          "j-timeline"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "size",
+          "type": "TimelineSize",
+          "required": false,
+          "default": "'md'"
+        },
+        {
+          "name": "line",
+          "type": "TimelineLine",
+          "required": false,
+          "default": "'solid'"
+        },
+        {
+          "name": "items",
+          "type": "TimelineEntry[]",
+          "required": false
+        }
+      ],
+      "events": [],
+      "slots": [
+        "default"
+      ],
+      "exposed": [],
+      "vue": {
+        "name": "JTimeline",
+        "props": [
+          {
+            "name": "size",
+            "type": "TimelineSize",
+            "required": false,
+            "default": "'md'"
+          },
+          {
+            "name": "line",
+            "type": "TimelineLine",
+            "required": false,
+            "default": "'solid'"
+          },
+          {
+            "name": "items",
+            "type": "TimelineEntry[]",
+            "required": false
+          }
+        ],
+        "models": [],
+        "events": [],
+        "slots": [
+          "default"
+        ],
+        "exposed": []
+      },
+      "react": {
+        "name": "Timeline",
+        "propsInterface": "TimelineProps",
+        "props": [
+          {
+            "name": "size",
+            "type": "TimelineSize",
+            "required": false
+          },
+          {
+            "name": "line",
+            "type": "TimelineLine",
+            "required": false
+          },
+          {
+            "name": "items",
+            "type": "TimelineEntry[]",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JTimelineItem",
+      "reactName": "TimelineItem",
+      "group": "display",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/timeline.css",
+        "standaloneImport": "jenni-core/css/timeline.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/timeline.css"
+        ],
+        "classes": [
+          "j-timeline__item",
+          "j-timeline__axis",
+          "j-timeline__marker-wrap",
+          "j-timeline__marker",
+          "j-timeline__rail",
+          "j-timeline__content",
+          "j-timeline__header",
+          "j-timeline__title",
+          "j-timeline__time",
+          "j-timeline__description",
+          "j-timeline__details"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "title",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "time",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "tone",
+          "type": "TimelineTone",
+          "required": false,
+          "default": "'neutral'"
+        },
+        {
+          "name": "icon",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "active",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "line",
+          "type": "TimelineLine",
+          "required": false
+        }
+      ],
+      "events": [],
+      "slots": [
+        "dot",
+        "title",
+        "time",
+        "default"
+      ],
+      "exposed": [],
+      "vue": {
+        "name": "JTimelineItem",
+        "props": [
+          {
+            "name": "title",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "time",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "tone",
+            "type": "TimelineTone",
+            "required": false,
+            "default": "'neutral'"
+          },
+          {
+            "name": "icon",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "active",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "line",
+            "type": "TimelineLine",
+            "required": false
+          }
+        ],
+        "models": [],
+        "events": [],
+        "slots": [
+          "dot",
+          "title",
+          "time",
+          "default"
+        ],
+        "exposed": []
+      },
+      "react": {
+        "name": "TimelineItem",
+        "propsInterface": "TimelineItemProps",
+        "props": [
+          {
+            "name": "title",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "time",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "description",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "tone",
+            "type": "TimelineTone",
+            "required": false
+          },
+          {
+            "name": "icon",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "dot",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "active",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "line",
+            "type": "TimelineLine",
             "required": false
           }
         ]
@@ -17378,6 +20351,342 @@
           {
             "name": "ref",
             "type": "Ref<VirtualListHandle>",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JAlertDialog",
+      "reactName": "AlertDialog",
+      "group": "overlay",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/alert-dialog.css",
+        "standaloneImport": "jenni-core/css/alert-dialog.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/dialog.css",
+          "jenni-core/components/alert-dialog.css"
+        ],
+        "classes": [
+          "j-dialog",
+          "j-alert-dialog",
+          "j-managed",
+          "j-alert-dialog__header",
+          "j-alert-dialog__icon",
+          "j-alert-dialog__content",
+          "j-dialog__title",
+          "j-alert-dialog__title",
+          "j-dialog__description",
+          "j-alert-dialog__description",
+          "j-alert-dialog__body",
+          "j-dialog__footer",
+          "j-alert-dialog__footer",
+          "j-button"
+        ]
+      },
+      "models": [
+        {
+          "name": "v-model:open",
+          "modelProp": "open",
+          "type": "boolean"
+        }
+      ],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "description",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "tone",
+          "type": "AlertDialogTone",
+          "required": false,
+          "default": "'danger'"
+        },
+        {
+          "name": "size",
+          "type": "AlertDialogSize",
+          "required": false,
+          "default": "'sm'"
+        },
+        {
+          "name": "confirmLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Confirm'"
+        },
+        {
+          "name": "cancelLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Cancel'"
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "icon",
+          "type": "boolean",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "closeOnBackdrop",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "closeOnEscape",
+          "type": "boolean",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "teleport",
+          "type": "boolean | string | HTMLElement",
+          "required": false,
+          "default": "true"
+        }
+      ],
+      "events": [
+        "update:open",
+        "confirm",
+        "cancel"
+      ],
+      "slots": [
+        "trigger",
+        "default"
+      ],
+      "exposed": [
+        "show",
+        "close"
+      ],
+      "vue": {
+        "name": "JAlertDialog",
+        "props": [
+          {
+            "name": "open",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "title",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "tone",
+            "type": "AlertDialogTone",
+            "required": false,
+            "default": "'danger'"
+          },
+          {
+            "name": "size",
+            "type": "AlertDialogSize",
+            "required": false,
+            "default": "'sm'"
+          },
+          {
+            "name": "confirmLabel",
+            "type": "string",
+            "required": false,
+            "default": "'Confirm'"
+          },
+          {
+            "name": "cancelLabel",
+            "type": "string",
+            "required": false,
+            "default": "'Cancel'"
+          },
+          {
+            "name": "loading",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "icon",
+            "type": "boolean",
+            "required": false,
+            "default": "true"
+          },
+          {
+            "name": "closeOnBackdrop",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "closeOnEscape",
+            "type": "boolean",
+            "required": false,
+            "default": "true"
+          },
+          {
+            "name": "teleport",
+            "type": "boolean | string | HTMLElement",
+            "required": false,
+            "default": "true"
+          }
+        ],
+        "models": [
+          {
+            "name": "v-model:open",
+            "modelProp": "open",
+            "type": "boolean"
+          }
+        ],
+        "events": [
+          "update:open",
+          "confirm",
+          "cancel"
+        ],
+        "slots": [
+          "trigger",
+          "default"
+        ],
+        "exposed": [
+          "show",
+          "close"
+        ]
+      },
+      "react": {
+        "name": "AlertDialog",
+        "propsInterface": "AlertDialogProps",
+        "props": [
+          {
+            "name": "open",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "defaultOpen",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "onOpenChange",
+            "type": "(open: boolean) => void",
+            "required": false
+          },
+          {
+            "name": "title",
+            "type": "ReactNode",
+            "required": true
+          },
+          {
+            "name": "description",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "tone",
+            "type": "AlertDialogTone",
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "AlertDialogSize",
+            "required": false
+          },
+          {
+            "name": "confirmLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "cancelLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "loading",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "icon",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "closeOnBackdrop",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "closeOnEscape",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "teleport",
+            "type": "boolean | string | HTMLElement",
+            "required": false
+          },
+          {
+            "name": "portal",
+            "type": "boolean | HTMLElement",
+            "required": false
+          },
+          {
+            "name": "trigger",
+            "type": "ReactNode | ((api: { open: () => void }) => ReactNode)",
+            "required": false
+          },
+          {
+            "name": "onConfirm",
+            "type": "(event: ReactMouseEvent<HTMLButtonElement>) => void | Promise<unknown>",
+            "required": false
+          },
+          {
+            "name": "onCancel",
+            "type": "() => void",
+            "required": false
+          },
+          {
+            "name": "children",
+            "type": "ReactNode | ((api: { close: () => void; cancel: () => void }) => ReactNode)",
             "required": false
           }
         ]
@@ -18394,6 +21703,7 @@
         ],
         "classes": [
           "j-dialog",
+          "j-managed",
           "j-dialog__header",
           "j-dialog__title",
           "j-dialog__description",
@@ -18452,6 +21762,12 @@
           "name": "bodyFlush",
           "type": "boolean",
           "required": false
+        },
+        {
+          "name": "defaultAction",
+          "type": "boolean | string",
+          "required": false,
+          "default": "true"
         },
         {
           "name": "teleport",
@@ -18519,6 +21835,12 @@
             "name": "bodyFlush",
             "type": "boolean",
             "required": false
+          },
+          {
+            "name": "defaultAction",
+            "type": "boolean | string",
+            "required": false,
+            "default": "true"
           },
           {
             "name": "teleport",
@@ -18616,6 +21938,11 @@
           {
             "name": "bodyFlush",
             "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "defaultAction",
+            "type": "boolean | string",
             "required": false
           },
           {
@@ -20298,6 +23625,282 @@
       }
     },
     {
+      "vueName": "JMenubar",
+      "reactName": "Menubar",
+      "group": "overlay",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/menubar.css",
+        "standaloneImport": "jenni-core/css/menubar.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/floating.css",
+          "jenni-core/components/menu.css",
+          "jenni-core/components/menubar.css"
+        ],
+        "classes": [
+          "j-menubar"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "size",
+          "type": "MenubarSize",
+          "required": false,
+          "default": "'md'"
+        },
+        {
+          "name": "variant",
+          "type": "MenubarVariant",
+          "required": false,
+          "default": "'bordered'"
+        },
+        {
+          "name": "loop",
+          "type": "boolean",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Menu bar'"
+        }
+      ],
+      "events": [
+        "select"
+      ],
+      "slots": [
+        "default"
+      ],
+      "exposed": [
+        "open",
+        "close",
+        "refresh"
+      ],
+      "vue": {
+        "name": "JMenubar",
+        "props": [
+          {
+            "name": "size",
+            "type": "MenubarSize",
+            "required": false,
+            "default": "'md'"
+          },
+          {
+            "name": "variant",
+            "type": "MenubarVariant",
+            "required": false,
+            "default": "'bordered'"
+          },
+          {
+            "name": "loop",
+            "type": "boolean",
+            "required": false,
+            "default": "true"
+          },
+          {
+            "name": "ariaLabel",
+            "type": "string",
+            "required": false,
+            "default": "'Menu bar'"
+          }
+        ],
+        "models": [],
+        "events": [
+          "select"
+        ],
+        "slots": [
+          "default"
+        ],
+        "exposed": [
+          "open",
+          "close",
+          "refresh"
+        ]
+      },
+      "react": {
+        "name": "Menubar",
+        "propsInterface": "MenubarProps",
+        "props": [
+          {
+            "name": "size",
+            "type": "MenubarSize",
+            "required": false
+          },
+          {
+            "name": "variant",
+            "type": "MenubarVariant",
+            "required": false
+          },
+          {
+            "name": "loop",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "ariaLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "menubarRef",
+            "type": "Ref<MenubarHandle>",
+            "required": false
+          },
+          {
+            "name": "onSelect",
+            "type": "(event: CustomEvent) => void",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JMenubarMenu",
+      "reactName": "MenubarMenu",
+      "group": "overlay",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/menubar.css",
+        "standaloneImport": "jenni-core/css/menubar.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/floating.css",
+          "jenni-core/components/menu.css",
+          "jenni-core/components/menubar.css"
+        ],
+        "classes": [
+          "j-menubar__menu",
+          "j-menubar__trigger",
+          "j-menu",
+          "j-menubar__content"
+        ]
+      },
+      "models": [
+        {
+          "name": "v-model:open",
+          "modelProp": "open",
+          "type": "boolean"
+        }
+      ],
+      "props": [
+        {
+          "name": "open",
+          "type": "boolean",
+          "required": false
+        },
+        {
+          "name": "label",
+          "type": "string",
+          "required": true
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "required": false
+        }
+      ],
+      "events": [
+        "update:open",
+        "select"
+      ],
+      "slots": [
+        "trigger",
+        "default"
+      ],
+      "exposed": [
+        "show",
+        "hide"
+      ],
+      "vue": {
+        "name": "JMenubarMenu",
+        "props": [
+          {
+            "name": "open",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "label",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false
+          }
+        ],
+        "models": [
+          {
+            "name": "v-model:open",
+            "modelProp": "open",
+            "type": "boolean"
+          }
+        ],
+        "events": [
+          "update:open",
+          "select"
+        ],
+        "slots": [
+          "trigger",
+          "default"
+        ],
+        "exposed": [
+          "show",
+          "hide"
+        ]
+      },
+      "react": {
+        "name": "MenubarMenu",
+        "propsInterface": "MenubarMenuProps",
+        "props": [
+          {
+            "name": "label",
+            "type": "ReactNode",
+            "required": true
+          },
+          {
+            "name": "disabled",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "open",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "defaultOpen",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "onOpenChange",
+            "type": "(open: boolean) => void",
+            "required": false
+          },
+          {
+            "name": "onSelect",
+            "type": "(event: CustomEvent) => void",
+            "required": false
+          },
+          {
+            "name": "children",
+            "type": "ReactNode | ((api: { close: () => void }) => ReactNode)",
+            "required": false
+          }
+        ]
+      }
+    },
+    {
       "vueName": "JPopover",
       "reactName": "Popover",
       "group": "overlay",
@@ -20654,6 +24257,557 @@
             "name": "value",
             "type": "string",
             "required": true
+          }
+        ]
+      }
+    },
+    {
+      "vueName": "JTabStrip",
+      "reactName": "TabStrip",
+      "group": "overlay",
+      "css": {
+        "foundationImport": "jenni-core/css/foundation.css",
+        "componentImport": "jenni-core/css/tab-strip.css",
+        "standaloneImport": "jenni-core/css/tab-strip.css",
+        "requiresFoundation": true,
+        "sourceImports": [
+          "jenni-core/tokens.css",
+          "jenni-core/base.css",
+          "jenni-core/components/floating.css",
+          "jenni-core/components/menu.css",
+          "jenni-core/components/hover-card.css",
+          "jenni-core/components/tab-strip.css"
+        ],
+        "classes": [
+          "j-tab-strip",
+          "j-tab-strip__start",
+          "j-tab-strip__search-btn",
+          "j-tab-strip__search-panel",
+          "j-tab-strip__search-header",
+          "j-tab-strip__search-input",
+          "j-tab-strip__search-list",
+          "j-tab-strip__search-item",
+          "j-tab-strip__media",
+          "j-spinner",
+          "j-spinner__svg",
+          "j-spinner__track",
+          "j-spinner__arc",
+          "j-tab-strip__search-item-main",
+          "j-tab-strip__search-item-title",
+          "j-tab-strip__search-item-desc",
+          "j-tab-strip__indicator",
+          "j-tab-strip__dirty",
+          "j-tab-strip__search-close",
+          "j-tab-strip__search-empty",
+          "j-tab-strip__viewport",
+          "j-tab-strip__scroller",
+          "j-tab-strip__tab",
+          "j-tab-strip__tab-surface",
+          "j-tab-strip__title",
+          "j-tab-strip__tail",
+          "j-tab-strip__close",
+          "j-tab-strip__new-btn",
+          "j-tab-strip__spacer",
+          "j-tab-strip__end",
+          "j-hover-card",
+          "j-tab-strip__preview-card",
+          "j-tab-strip__preview-title",
+          "j-tab-strip__preview-desc",
+          "j-menu",
+          "j-menu__item",
+          "j-menu__separator"
+        ]
+      },
+      "models": [],
+      "props": [
+        {
+          "name": "tabs",
+          "type": "TabStripItem[]",
+          "required": true
+        },
+        {
+          "name": "active",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "modelValue",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "defaultActive",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "defaultValue",
+          "type": "string",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "TabStripSize",
+          "required": false,
+          "default": "'md'"
+        },
+        {
+          "name": "closable",
+          "type": "boolean",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "closablePinned",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "addable",
+          "type": "boolean",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "draggable",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "detachable",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "search",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "titlebar",
+          "type": "boolean",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "contextMenu",
+          "type": "boolean",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "middleClickClose",
+          "type": "boolean",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "previewDelay",
+          "type": "number",
+          "required": false,
+          "default": "380"
+        },
+        {
+          "name": "ariaLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Open tabs'"
+        },
+        {
+          "name": "newTabLabel",
+          "type": "string",
+          "required": false,
+          "default": "'New tab'"
+        },
+        {
+          "name": "searchLabel",
+          "type": "string",
+          "required": false,
+          "default": "'Search tabs'"
+        },
+        {
+          "name": "searchPlaceholder",
+          "type": "string",
+          "required": false,
+          "default": "'Search open tabs…'"
+        }
+      ],
+      "events": [
+        "update:active",
+        "update:modelValue",
+        "update:tabs",
+        "change",
+        "close",
+        "closeOthers",
+        "closeRight",
+        "dblclick",
+        "reorder",
+        "detach",
+        "new"
+      ],
+      "slots": [
+        "start",
+        "tab-icon",
+        "icon",
+        "end",
+        "context-menu"
+      ],
+      "exposed": [
+        "scrollToTab",
+        "focusActiveTab",
+        "scrollActiveIntoView",
+        "closeContextMenu",
+        "closeSearch",
+        "sync",
+        "el"
+      ],
+      "vue": {
+        "name": "JTabStrip",
+        "props": [
+          {
+            "name": "tabs",
+            "type": "TabStripItem[]",
+            "required": true
+          },
+          {
+            "name": "active",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "modelValue",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "defaultActive",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "defaultValue",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "TabStripSize",
+            "required": false,
+            "default": "'md'"
+          },
+          {
+            "name": "closable",
+            "type": "boolean",
+            "required": false,
+            "default": "true"
+          },
+          {
+            "name": "closablePinned",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "addable",
+            "type": "boolean",
+            "required": false,
+            "default": "true"
+          },
+          {
+            "name": "draggable",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "detachable",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "search",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "titlebar",
+            "type": "boolean",
+            "required": false,
+            "default": "false"
+          },
+          {
+            "name": "contextMenu",
+            "type": "boolean",
+            "required": false,
+            "default": "true"
+          },
+          {
+            "name": "middleClickClose",
+            "type": "boolean",
+            "required": false,
+            "default": "true"
+          },
+          {
+            "name": "previewDelay",
+            "type": "number",
+            "required": false,
+            "default": "380"
+          },
+          {
+            "name": "ariaLabel",
+            "type": "string",
+            "required": false,
+            "default": "'Open tabs'"
+          },
+          {
+            "name": "newTabLabel",
+            "type": "string",
+            "required": false,
+            "default": "'New tab'"
+          },
+          {
+            "name": "searchLabel",
+            "type": "string",
+            "required": false,
+            "default": "'Search tabs'"
+          },
+          {
+            "name": "searchPlaceholder",
+            "type": "string",
+            "required": false,
+            "default": "'Search open tabs…'"
+          }
+        ],
+        "models": [],
+        "events": [
+          "update:active",
+          "update:modelValue",
+          "update:tabs",
+          "change",
+          "close",
+          "closeOthers",
+          "closeRight",
+          "dblclick",
+          "reorder",
+          "detach",
+          "new"
+        ],
+        "slots": [
+          "start",
+          "tab-icon",
+          "icon",
+          "end",
+          "context-menu"
+        ],
+        "exposed": [
+          "scrollToTab",
+          "focusActiveTab",
+          "scrollActiveIntoView",
+          "closeContextMenu",
+          "closeSearch",
+          "sync",
+          "el"
+        ]
+      },
+      "react": {
+        "name": "TabStrip",
+        "propsInterface": "TabStripProps",
+        "props": [
+          {
+            "name": "tabs",
+            "type": "TabStripItem[]",
+            "required": true
+          },
+          {
+            "name": "active",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "value",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "defaultActive",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "defaultValue",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "onActiveChange",
+            "type": "(id: string) => void",
+            "required": false
+          },
+          {
+            "name": "onValueChange",
+            "type": "(id: string) => void",
+            "required": false
+          },
+          {
+            "name": "onTabsChange",
+            "type": "(tabs: TabStripItem[]) => void",
+            "required": false
+          },
+          {
+            "name": "onTabClose",
+            "type": "(id: string) => void",
+            "required": false
+          },
+          {
+            "name": "onClose",
+            "type": "(id: string) => void",
+            "required": false
+          },
+          {
+            "name": "onCloseOthers",
+            "type": "(id: string) => void",
+            "required": false
+          },
+          {
+            "name": "onCloseRight",
+            "type": "(id: string) => void",
+            "required": false
+          },
+          {
+            "name": "onTabDoubleClick",
+            "type": "(id: string) => void",
+            "required": false
+          },
+          {
+            "name": "onReorder",
+            "type": "(detail: TabStripReorderDetail) => void",
+            "required": false
+          },
+          {
+            "name": "onDetach",
+            "type": "(detail: TabStripDetachDetail) => void",
+            "required": false
+          },
+          {
+            "name": "onNewTab",
+            "type": "(afterId?: string) => void",
+            "required": false
+          },
+          {
+            "name": "onNew",
+            "type": "(afterId?: string) => void",
+            "required": false
+          },
+          {
+            "name": "size",
+            "type": "TabStripSize",
+            "required": false
+          },
+          {
+            "name": "closable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "closablePinned",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "addable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "draggable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "detachable",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "search",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "titlebar",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "contextMenu",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "middleClickClose",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "name": "previewDelay",
+            "type": "number",
+            "required": false
+          },
+          {
+            "name": "ariaLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "newTabLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "searchLabel",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "searchPlaceholder",
+            "type": "string",
+            "required": false
+          },
+          {
+            "name": "start",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "end",
+            "type": "ReactNode",
+            "required": false
+          },
+          {
+            "name": "renderIcon",
+            "type": "(tab: TabStripItem) => ReactNode",
+            "required": false
+          },
+          {
+            "name": "renderContextMenu",
+            "type": "(ctx: { tab: TabStripItem; close: () => void }) => ReactNode",
+            "required": false
+          },
+          {
+            "name": "ref",
+            "type": "Ref<TabStripHandle>",
+            "required": false
+          },
+          {
+            "name": "handleRef",
+            "type": "Ref<TabStripHandle>",
+            "required": false
           }
         ]
       }
@@ -21428,6 +25582,78 @@
         "required": false
       }
     ],
+    "BannerProps": [
+      {
+        "name": "tone",
+        "type": "BannerTone",
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "BannerVariant",
+        "required": false
+      },
+      {
+        "name": "flush",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "align",
+        "type": "BannerAlign",
+        "required": false
+      },
+      {
+        "name": "icon",
+        "type": "string | boolean | ReactNode",
+        "required": false
+      },
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "actions",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "dismissible",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "closeLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": false
+      },
+      {
+        "name": "onDismiss",
+        "type": "(event: ReactMouseEvent<HTMLButtonElement>) => void",
+        "required": false
+      }
+    ],
     "BreadcrumbProps": [
       {
         "name": "separator",
@@ -21714,6 +25940,120 @@
       {
         "name": "index",
         "type": "number",
+        "required": false
+      }
+    ],
+    "CodeBlockProps": [
+      {
+        "name": "code",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "language",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "filename",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "lineNumbers",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "startLine",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "highlightLines",
+        "type": "readonly number[]",
+        "required": false
+      },
+      {
+        "name": "diff",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "wrap",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "copyable",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "maxHeight",
+        "type": "string | number",
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "CodeBlockVariant",
+        "required": false
+      },
+      {
+        "name": "actions",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "onCopy",
+        "type": "(value: string) => void",
+        "required": false
+      }
+    ],
+    "CopyButtonProps": [
+      {
+        "name": "value",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "size",
+        "type": "CopyButtonSize",
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "CopyButtonVariant",
+        "required": false
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "copiedLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "timeout",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "onCopy",
+        "type": "(value: string) => void",
         "required": false
       }
     ],
@@ -22148,6 +26488,82 @@
         "required": true
       }
     ],
+    "DescriptionListEntry": [
+      {
+        "name": "term",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "details",
+        "type": "string | number",
+        "required": true
+      },
+      {
+        "name": "mono",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "span",
+        "type": "DescriptionItemSpan",
+        "required": false
+      }
+    ],
+    "DescriptionListProps": [
+      {
+        "name": "layout",
+        "type": "DescriptionListLayout",
+        "required": false
+      },
+      {
+        "name": "cols",
+        "type": "DescriptionListCols",
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "DescriptionListVariant",
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "DescriptionListSize",
+        "required": false
+      },
+      {
+        "name": "termWidth",
+        "type": "string | number",
+        "required": false
+      },
+      {
+        "name": "items",
+        "type": "DescriptionListEntry[]",
+        "required": false
+      }
+    ],
+    "DescriptionItemProps": [
+      {
+        "name": "term",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "details",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "mono",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "span",
+        "type": "DescriptionItemSpan",
+        "required": false
+      }
+    ],
     "EmptyStateProps": [
       {
         "name": "variant",
@@ -22370,6 +26786,48 @@
         "required": false
       }
     ],
+    "ProgressRingProps": [
+      {
+        "name": "value",
+        "type": "number | null",
+        "required": false
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "ProgressRingSize",
+        "required": false
+      },
+      {
+        "name": "thickness",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "tone",
+        "type": "ProgressRingTone",
+        "required": false
+      },
+      {
+        "name": "showValue",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
     "SeparatorProps": [
       {
         "name": "orientation",
@@ -22511,12 +26969,111 @@
     "SpinnerProps": [
       {
         "name": "size",
-        "type": "DisplaySize",
+        "type": "SpinnerSize",
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "SpinnerVariant",
+        "required": false
+      },
+      {
+        "name": "tone",
+        "type": "DisplayTone",
+        "required": false
+      },
+      {
+        "name": "thickness",
+        "type": "number | string",
         "required": false
       },
       {
         "name": "label",
         "type": "string",
+        "required": false
+      }
+    ],
+    "StatProps": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "string | number",
+        "required": false
+      },
+      {
+        "name": "prefix",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "suffix",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "delta",
+        "type": "string | number",
+        "required": false
+      },
+      {
+        "name": "trend",
+        "type": "StatTrend",
+        "required": false
+      },
+      {
+        "name": "trendTone",
+        "type": "StatTrendTone",
+        "required": false
+      },
+      {
+        "name": "helpText",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "StatVariant",
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "StatSize",
+        "required": false
+      },
+      {
+        "name": "icon",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "trendContent",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "chart",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "footer",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "StatGroupProps": [
+      {
+        "name": "cols",
+        "type": "StatGroupCols",
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "StatGroupVariant",
         "required": false
       }
     ],
@@ -22653,7 +27210,61 @@
         "required": false
       }
     ],
+    "TableHandle": [
+      {
+        "name": "expandAll",
+        "type": "() => void",
+        "required": true
+      },
+      {
+        "name": "collapseAll",
+        "type": "() => void",
+        "required": true
+      },
+      {
+        "name": "toggleSection",
+        "type": "(id: string, force?: boolean) => void",
+        "required": true
+      },
+      {
+        "name": "isSectionExpanded",
+        "type": "(id: string) => boolean",
+        "required": true
+      },
+      {
+        "name": "element",
+        "type": "HTMLTableElement | null",
+        "required": true
+      }
+    ],
+    "TableSectionsContextValue": [
+      {
+        "name": "isSectionExpanded",
+        "type": "(id: string, fallbackExpanded?: boolean) => boolean",
+        "required": true
+      },
+      {
+        "name": "toggleSection",
+        "type": "(id: string, force?: boolean) => void",
+        "required": true
+      },
+      {
+        "name": "registerSection",
+        "type": "(id: string, defaultExpanded?: boolean) => void",
+        "required": true
+      },
+      {
+        "name": "unregisterSection",
+        "type": "(id: string) => void",
+        "required": true
+      }
+    ],
     "TableProps": [
+      {
+        "name": "ref",
+        "type": "Ref<TableHandle>",
+        "required": false
+      },
       {
         "name": "variant",
         "type": "TableVariant",
@@ -22697,6 +27308,73 @@
       {
         "name": "wrapClassName",
         "type": "string",
+        "required": false
+      },
+      {
+        "name": "expandedSections",
+        "type": "string[]",
+        "required": false
+      },
+      {
+        "name": "defaultExpandedSections",
+        "type": "string[]",
+        "required": false
+      },
+      {
+        "name": "onExpandedSectionsChange",
+        "type": "(expandedSections: string[]) => void",
+        "required": false
+      }
+    ],
+    "TableSectionProps": [
+      {
+        "name": "id",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "colSpan",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "colspan",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "count",
+        "type": "number | string",
+        "required": false
+      },
+      {
+        "name": "defaultExpanded",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "actions",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "onToggle",
+        "type": "(expanded: boolean) => void",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
         "required": false
       }
     ],
@@ -22931,6 +27609,117 @@
       {
         "name": "caption",
         "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "TimelineEntry": [
+      {
+        "name": "id",
+        "type": "string | number",
+        "required": false
+      },
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "time",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "tone",
+        "type": "TimelineTone",
+        "required": false
+      },
+      {
+        "name": "icon",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "dot",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "line",
+        "type": "TimelineLine",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "TimelineProps": [
+      {
+        "name": "size",
+        "type": "TimelineSize",
+        "required": false
+      },
+      {
+        "name": "line",
+        "type": "TimelineLine",
+        "required": false
+      },
+      {
+        "name": "items",
+        "type": "TimelineEntry[]",
+        "required": false
+      }
+    ],
+    "TimelineItemProps": [
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "time",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "tone",
+        "type": "TimelineTone",
+        "required": false
+      },
+      {
+        "name": "icon",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "dot",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "active",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "line",
+        "type": "TimelineLine",
         "required": false
       }
     ],
@@ -23353,6 +28142,11 @@
       },
       {
         "name": "fullWidth",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "default",
         "type": "boolean",
         "required": false
       }
@@ -24169,7 +28963,7 @@
       },
       {
         "name": "value",
-        "type": "string",
+        "type": "string | number",
         "required": true
       },
       {
@@ -24181,17 +28975,22 @@
     "SelectProps": [
       {
         "name": "value",
-        "type": "string",
+        "type": "string | number",
         "required": false
       },
       {
         "name": "defaultValue",
-        "type": "string",
+        "type": "string | number",
         "required": false
       },
       {
         "name": "onValueChange",
         "type": "(value: string) => void",
+        "required": false
+      },
+      {
+        "name": "onClear",
+        "type": "() => void",
         "required": false
       },
       {
@@ -24217,6 +29016,26 @@
       {
         "name": "invalid",
         "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "clearable",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "emptyValue",
+        "type": "string | number",
+        "required": false
+      },
+      {
+        "name": "clearLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "clearTooltip",
+        "type": "string",
         "required": false
       }
     ],
@@ -26668,6 +31487,11 @@
         "name": "size",
         "type": "PageSize",
         "required": false
+      },
+      {
+        "name": "stickyHeader",
+        "type": "boolean",
+        "required": false
       }
     ],
     "PageProps": [
@@ -26679,6 +31503,11 @@
       {
         "name": "size",
         "type": "PageSize",
+        "required": false
+      },
+      {
+        "name": "stickyHeader",
+        "type": "boolean",
         "required": false
       }
     ],
@@ -26705,6 +31534,11 @@
       },
       {
         "name": "bordered",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "sticky",
         "type": "boolean",
         "required": false
       }
@@ -26888,6 +31722,11 @@
       {
         "name": "scrollbar",
         "type": "ScrollbarVisibility",
+        "required": false
+      },
+      {
+        "name": "overscroll",
+        "type": "ScrollOverscroll",
         "required": false
       },
       {
@@ -27118,6 +31957,251 @@
         "required": false
       }
     ],
+    "SidebarLayoutContextValue": [
+      {
+        "name": "state",
+        "type": "SidebarState",
+        "required": true
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "required": true
+      },
+      {
+        "name": "hasRail",
+        "type": "boolean",
+        "required": true
+      },
+      {
+        "name": "toggleLabel",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "toggle",
+        "type": "() => void",
+        "required": true
+      },
+      {
+        "name": "setState",
+        "type": "(next: SidebarState) => void",
+        "required": true
+      },
+      {
+        "name": "setWidth",
+        "type": "(next: number) => void",
+        "required": true
+      }
+    ],
+    "SidebarLayoutHandle": [
+      {
+        "name": "state",
+        "type": "SidebarState",
+        "required": true
+      },
+      {
+        "name": "toggle",
+        "type": "() => void",
+        "required": true
+      },
+      {
+        "name": "setState",
+        "type": "(next: SidebarState) => void",
+        "required": true
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "required": true
+      },
+      {
+        "name": "setWidth",
+        "type": "(next: number) => void",
+        "required": true
+      }
+    ],
+    "SidebarLayoutProps": [
+      {
+        "name": "storageKey",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "defaultWidth",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "min",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "max",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "initialState",
+        "type": "SidebarState",
+        "required": false
+      },
+      {
+        "name": "state",
+        "type": "SidebarState",
+        "required": false
+      },
+      {
+        "name": "onStateChange",
+        "type": "(state: SidebarState) => void",
+        "required": false
+      },
+      {
+        "name": "width",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "onWidthChange",
+        "type": "(width: number) => void",
+        "required": false
+      },
+      {
+        "name": "toggleLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "sidebarAriaLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "height",
+        "type": "string | number",
+        "required": false
+      },
+      {
+        "name": "bordered",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "sidebarHeader",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "sidebar",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "rail",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "mainHeader",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "elementRef",
+        "type": "Ref<HTMLDivElement>",
+        "required": false
+      },
+      {
+        "name": "apiRef",
+        "type": "Ref<SidebarLayoutHandle | null>",
+        "required": false
+      }
+    ],
+    "SidebarToggleProps": [
+      {
+        "name": "label",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "kbd",
+        "type": "string | string[]",
+        "required": false
+      },
+      {
+        "name": "tooltipSide",
+        "type": "FloatingSide",
+        "required": false
+      }
+    ],
+    "SplitHandleProps": [
+      {
+        "name": "orientation",
+        "type": "SplitHandleOrientation",
+        "required": false
+      },
+      {
+        "name": "withGrip",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "step",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "largeStep",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "valueNow",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "valueMin",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "valueMax",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "onDragStart",
+        "type": "(event: PointerEvent) => void",
+        "required": false
+      },
+      {
+        "name": "onDrag",
+        "type": "(payload: SplitHandleDragPayload) => void",
+        "required": false
+      },
+      {
+        "name": "onDragEnd",
+        "type": "(event: PointerEvent) => void",
+        "required": false
+      }
+    ],
     "StackOwnProps": [
       {
         "name": "as",
@@ -27174,6 +32258,26 @@
         "required": false
       },
       {
+        "name": "size",
+        "type": "StatusBarSize",
+        "required": false
+      },
+      {
+        "name": "height",
+        "type": "number | string",
+        "required": false
+      },
+      {
+        "name": "textSize",
+        "type": "StatusBarTextSize",
+        "required": false
+      },
+      {
+        "name": "mono",
+        "type": "boolean",
+        "required": false
+      },
+      {
         "name": "border",
         "type": "StatusBarBorder",
         "required": false
@@ -27186,6 +32290,11 @@
       {
         "name": "role",
         "type": "AriaRole",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
         "required": false
       },
       {
@@ -27221,6 +32330,26 @@
         "required": false
       },
       {
+        "name": "size",
+        "type": "StatusBarSize",
+        "required": false
+      },
+      {
+        "name": "height",
+        "type": "number | string",
+        "required": false
+      },
+      {
+        "name": "textSize",
+        "type": "StatusBarTextSize",
+        "required": false
+      },
+      {
+        "name": "mono",
+        "type": "boolean",
+        "required": false
+      },
+      {
         "name": "border",
         "type": "StatusBarBorder",
         "required": false
@@ -27233,6 +32362,11 @@
       {
         "name": "role",
         "type": "AriaRole",
+        "required": false
+      },
+      {
+        "name": "style",
+        "type": "CSSProperties",
         "required": false
       },
       {
@@ -27601,6 +32735,108 @@
       {
         "name": "children",
         "type": "ReactNode",
+        "required": false
+      }
+    ],
+    "AlertDialogProps": [
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": false
+      },
+      {
+        "name": "title",
+        "type": "ReactNode",
+        "required": true
+      },
+      {
+        "name": "description",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "tone",
+        "type": "AlertDialogTone",
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "AlertDialogSize",
+        "required": false
+      },
+      {
+        "name": "confirmLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "cancelLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "icon",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "closeOnBackdrop",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "closeOnEscape",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "teleport",
+        "type": "boolean | string | HTMLElement",
+        "required": false
+      },
+      {
+        "name": "portal",
+        "type": "boolean | HTMLElement",
+        "required": false
+      },
+      {
+        "name": "trigger",
+        "type": "ReactNode | ((api: { open: () => void }) => ReactNode)",
+        "required": false
+      },
+      {
+        "name": "onConfirm",
+        "type": "(event: ReactMouseEvent<HTMLButtonElement>) => void | Promise<unknown>",
+        "required": false
+      },
+      {
+        "name": "onCancel",
+        "type": "() => void",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode | ((api: { close: () => void; cancel: () => void }) => ReactNode)",
         "required": false
       }
     ],
@@ -28384,6 +33620,11 @@
         "required": false
       },
       {
+        "name": "defaultAction",
+        "type": "boolean | string",
+        "required": false
+      },
+      {
         "name": "teleport",
         "type": "boolean | string | HTMLElement",
         "required": false
@@ -29062,6 +34303,109 @@
         "required": false
       }
     ],
+    "MenubarHandle": [
+      {
+        "name": "open",
+        "type": "(index: number) => void",
+        "required": true
+      },
+      {
+        "name": "close",
+        "type": "(restoreFocus?: boolean) => void",
+        "required": true
+      },
+      {
+        "name": "refresh",
+        "type": "() => void",
+        "required": true
+      },
+      {
+        "name": "el",
+        "type": "HTMLDivElement | null",
+        "required": true
+      }
+    ],
+    "MenubarContextValue": [
+      {
+        "name": "openForTrigger",
+        "type": "(trigger: HTMLElement | null) => void",
+        "required": true
+      },
+      {
+        "name": "closeForTrigger",
+        "type": "(trigger: HTMLElement | null) => void",
+        "required": true
+      }
+    ],
+    "MenubarProps": [
+      {
+        "name": "size",
+        "type": "MenubarSize",
+        "required": false
+      },
+      {
+        "name": "variant",
+        "type": "MenubarVariant",
+        "required": false
+      },
+      {
+        "name": "loop",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "menubarRef",
+        "type": "Ref<MenubarHandle>",
+        "required": false
+      },
+      {
+        "name": "onSelect",
+        "type": "(event: CustomEvent) => void",
+        "required": false
+      }
+    ],
+    "MenubarMenuProps": [
+      {
+        "name": "label",
+        "type": "ReactNode",
+        "required": true
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "open",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "defaultOpen",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "onOpenChange",
+        "type": "(open: boolean) => void",
+        "required": false
+      },
+      {
+        "name": "onSelect",
+        "type": "(event: CustomEvent) => void",
+        "required": false
+      },
+      {
+        "name": "children",
+        "type": "ReactNode | ((api: { close: () => void }) => ReactNode)",
+        "required": false
+      }
+    ],
     "PopoverProps": [
       {
         "name": "trigger",
@@ -29116,6 +34460,297 @@
       {
         "name": "children",
         "type": "ReactNode | ((api: { close: () => void }) => ReactNode)",
+        "required": false
+      }
+    ],
+    "TabStripItem": [
+      {
+        "name": "id",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "title",
+        "type": "string",
+        "required": true
+      },
+      {
+        "name": "label",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "icon",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "closable",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "pinned",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "preview",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "dirty",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "loading",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "indicator",
+        "type": "boolean | 'accent' | 'success' | 'warning' | 'danger' | 'info' | string",
+        "required": false
+      },
+      {
+        "name": "description",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "disabled",
+        "type": "boolean",
+        "required": false
+      }
+    ],
+    "TabStripHandle": [
+      {
+        "name": "scrollToTab",
+        "type": "(id: string, instant?: boolean) => void",
+        "required": true
+      },
+      {
+        "name": "focusActiveTab",
+        "type": "() => void",
+        "required": true
+      },
+      {
+        "name": "scrollActiveIntoView",
+        "type": "(instant?: boolean) => void",
+        "required": true
+      },
+      {
+        "name": "closeContextMenu",
+        "type": "() => void",
+        "required": true
+      },
+      {
+        "name": "closeSearch",
+        "type": "() => void",
+        "required": true
+      },
+      {
+        "name": "sync",
+        "type": "() => void",
+        "required": true
+      },
+      {
+        "name": "el",
+        "type": "HTMLDivElement | null",
+        "required": true
+      }
+    ],
+    "TabStripProps": [
+      {
+        "name": "tabs",
+        "type": "TabStripItem[]",
+        "required": true
+      },
+      {
+        "name": "active",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "value",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "defaultActive",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "defaultValue",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "onActiveChange",
+        "type": "(id: string) => void",
+        "required": false
+      },
+      {
+        "name": "onValueChange",
+        "type": "(id: string) => void",
+        "required": false
+      },
+      {
+        "name": "onTabsChange",
+        "type": "(tabs: TabStripItem[]) => void",
+        "required": false
+      },
+      {
+        "name": "onTabClose",
+        "type": "(id: string) => void",
+        "required": false
+      },
+      {
+        "name": "onClose",
+        "type": "(id: string) => void",
+        "required": false
+      },
+      {
+        "name": "onCloseOthers",
+        "type": "(id: string) => void",
+        "required": false
+      },
+      {
+        "name": "onCloseRight",
+        "type": "(id: string) => void",
+        "required": false
+      },
+      {
+        "name": "onTabDoubleClick",
+        "type": "(id: string) => void",
+        "required": false
+      },
+      {
+        "name": "onReorder",
+        "type": "(detail: TabStripReorderDetail) => void",
+        "required": false
+      },
+      {
+        "name": "onDetach",
+        "type": "(detail: TabStripDetachDetail) => void",
+        "required": false
+      },
+      {
+        "name": "onNewTab",
+        "type": "(afterId?: string) => void",
+        "required": false
+      },
+      {
+        "name": "onNew",
+        "type": "(afterId?: string) => void",
+        "required": false
+      },
+      {
+        "name": "size",
+        "type": "TabStripSize",
+        "required": false
+      },
+      {
+        "name": "closable",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "closablePinned",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "addable",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "draggable",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "detachable",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "search",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "titlebar",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "contextMenu",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "middleClickClose",
+        "type": "boolean",
+        "required": false
+      },
+      {
+        "name": "previewDelay",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "ariaLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "newTabLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "searchLabel",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "searchPlaceholder",
+        "type": "string",
+        "required": false
+      },
+      {
+        "name": "start",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "end",
+        "type": "ReactNode",
+        "required": false
+      },
+      {
+        "name": "renderIcon",
+        "type": "(tab: TabStripItem) => ReactNode",
+        "required": false
+      },
+      {
+        "name": "renderContextMenu",
+        "type": "(ctx: { tab: TabStripItem; close: () => void }) => ReactNode",
+        "required": false
+      },
+      {
+        "name": "ref",
+        "type": "Ref<TabStripHandle>",
+        "required": false
+      },
+      {
+        "name": "handleRef",
+        "type": "Ref<TabStripHandle>",
         "required": false
       }
     ],

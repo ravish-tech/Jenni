@@ -26,6 +26,31 @@ export { default as JCombobox } from './overlay/JCombobox.vue';
 export { default as JContextMenu } from './overlay/JContextMenu.vue';
 export { default as JHoverCard } from './overlay/JHoverCard.vue';
 export { default as JCommandPalette } from './overlay/JCommandPalette.vue';
+export {
+  default as JAlertDialog,
+  type JAlertDialogProps,
+  type AlertDialogTone,
+  type AlertDialogSize,
+} from './overlay/JAlertDialog.vue';
+export {
+  default as JMenubar,
+  type JMenubarProps,
+  type JMenubarHandle,
+  type MenubarSize,
+  type MenubarVariant,
+} from './overlay/JMenubar.vue';
+export {
+  default as JMenubarMenu,
+  type JMenubarMenuProps,
+} from './overlay/JMenubarMenu.vue';
+export {
+  default as JTabStrip,
+  type TabStripItem,
+  type TabStripSize,
+  type TabStripIndicatorTone,
+  type JTabStripProps,
+  type JTabStripHandle,
+} from './overlay/JTabStrip.vue';
 export { toast, dismissToast, updateToast, promiseToast, toastFromResult } from 'jenni-core/behaviors/toast.js';
 export type {
   FloatingSide,

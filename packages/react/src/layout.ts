@@ -13,6 +13,16 @@ export {
   type SidebarGroupProps,
   type SidebarItemProps,
 } from './layout/Sidebar';
+export {
+  SidebarLayout,
+  SidebarToggle,
+  SidebarLayoutContext,
+  type SidebarState,
+  type SidebarLayoutProps,
+  type SidebarToggleProps,
+  type SidebarLayoutHandle,
+  type SidebarLayoutContextValue,
+} from './layout/SidebarLayout';
 export { TopBar, type TopBarProps } from './layout/TopBar';
 export { BottomBar, BottomBarItem, type BottomBarProps, type BottomBarItemProps } from './layout/BottomBar';
 export {
@@ -24,6 +34,8 @@ export {
   type StatusBarSeparatorProps,
   type StatusBarVariant,
   type StatusBarBorder,
+  type StatusBarSize,
+  type StatusBarTextSize,
 } from './layout/StatusBar';
 export {
   Toolbar,
@@ -56,6 +68,13 @@ export {
   type ResizableHandleProps,
   type ResizableGroupHandle,
 } from './layout/Resizable';
+export {
+  SplitHandle,
+  type SplitHandleProps,
+  type SplitHandleDragPayload,
+  type SplitHandleOrientation,
+  type SplitHandleSource,
+} from './layout/SplitHandle';
 export type {
   LayoutGap,
   LayoutAlign,
@@ -84,5 +103,6 @@ export type {
   CanvasToolsPlacement,
   ScrollOrientation,
   ScrollbarVisibility,
+  ScrollOverscroll,
   ResizableOrientation,
 } from './layout/types';

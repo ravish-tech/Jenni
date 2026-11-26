@@ -12,7 +12,8 @@ export { ENTITY_HUE_RING, hashEntitySeed, getEntityHue, getEntityColorVars } fro
 export { initAvatars } from './avatar.js';
 export { computeSparkline, createSparkline, initSparklines } from './sparkline.js';
 export { initAccordions } from './accordion.js';
-export { createDataTable, initDataTables } from './table.js';
+export * from './code-block.js';
+export * from './table.js';
 export { createVirtualizer } from './virtual-list.js';
 export {
   sortGridRows,

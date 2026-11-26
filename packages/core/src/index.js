@@ -1,5 +1,11 @@
 // Jenni — vanilla behaviors (optional; only needed for interactive components in plain HTML).
-import { initShells, initScrollAreas, initResizableGroups, initToolbars } from './behaviors/layout.js';
+import {
+  initShells,
+  initScrollAreas,
+  initResizableGroups,
+  initSplitHandles,
+  initToolbars,
+} from './behaviors/layout.js';
 import {
   initSliders,
   initSegmented,
@@ -17,6 +23,8 @@ import {
   initAvatars,
   initSparklines,
   initAccordions,
+  initCopyButtons,
+  initCodeBlocks,
   initDataTables,
   initSteppers,
   initTreeViews,
@@ -41,6 +49,7 @@ export function initJenni(root = document) {
     initShells(root),
     initScrollAreas(root),
     initResizableGroups(root),
+    initSplitHandles(root),
     initToolbars(root),
     initSliders(root),
     initSegmented(root),
@@ -56,6 +65,8 @@ export function initJenni(root = document) {
     initAvatars(root),
     initSparklines(root),
     initAccordions(root),
+    initCopyButtons(root),
+    initCodeBlocks(root),
     initDataTables(root),
     initSteppers(root),
     initTreeViews(root),
