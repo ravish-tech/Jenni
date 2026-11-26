@@ -1,15 +1,17 @@
 /*
  * Scroll Area — .j-scroll-area
  *   Refined cross-browser scroll container with calm 6px thin scrollbars,
- *   overscroll containment, and optional 20px dynamic edge fade masks.
+ *   dynamic overscroll containment, and optional 20px dynamic edge fade masks.
  *
  * Attributes:
  *   data-orientation: vertical (default) | horizontal | both
  *   data-scrollbar:   subtle (default) | hover | hidden
+ *   data-overscroll:  dynamic (default, omitted) | contain | auto
  *   data-fade:        enables 20px CSS mask-image fades driven by scroll state
  *   data-bordered:    optional crisp 1px hairline surface frame
  *
  * State attributes (managed by behaviors/scroll-area.js):
+ *   data-overflows-y / data-overflows-x
  *   data-can-scroll-start / data-can-scroll-end
  *   data-can-scroll-inline-start / data-can-scroll-inline-end
  *   data-scrolling
@@ -41,12 +43,23 @@
     min-block-size: 0;
     overflow-y: auto;
     overflow-x: hidden;
-    overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
 
     /* Standard scrollbar styling (Firefox & modern engines) */
     scrollbar-width: thin;
     scrollbar-color: var(--_thumb-rest) transparent;
+  }
+
+  :where(.j-scroll-area[data-overflows-y]:not([data-overscroll="auto"])) {
+    overscroll-behavior-y: contain;
+  }
+
+  :where(.j-scroll-area[data-overflows-x]:not([data-overscroll="auto"])) {
+    overscroll-behavior-x: contain;
+  }
+
+  :where(.j-scroll-area[data-overscroll="contain"]) {
+    overscroll-behavior: contain;
   }
 
   :where(.j-scroll-area[data-orientation="horizontal"]) {

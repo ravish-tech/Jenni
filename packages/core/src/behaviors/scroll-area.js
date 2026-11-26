@@ -1,6 +1,7 @@
-// Jenni — ScrollArea edge-fade & scroll-activity behavior.
+// ScrollArea edge-fade, overflow & scroll-activity behavior.
 // Observes passive `scroll`, `ResizeObserver`, and direct child mutations on
-// `.j-scroll-area` to toggle `data-can-scroll-start`, `data-can-scroll-end`,
+// `.j-scroll-area` to toggle `data-overflows-y`, `data-overflows-x`,
+// `data-can-scroll-start`, `data-can-scroll-end`,
 // `data-can-scroll-inline-start`, `data-can-scroll-inline-end`, and
 // `data-scrolling` with zero layout shift. Idempotent & framework-friendly.
 
@@ -16,6 +17,8 @@ const controllers = new WeakMap();
  * @property {boolean} canScrollEnd
  * @property {boolean} canScrollInlineStart
  * @property {boolean} canScrollInlineEnd
+ * @property {boolean} overflowsY
+ * @property {boolean} overflowsX
  */
 
 /**
@@ -61,6 +64,8 @@ export function createScrollArea(el, options = {}) {
     canScrollEnd: false,
     canScrollInlineStart: false,
     canScrollInlineEnd: false,
+    overflowsY: false,
+    overflowsX: false,
   };
 
   /** @type {ReturnType<typeof setTimeout> | null} */
@@ -82,6 +87,8 @@ export function createScrollArea(el, options = {}) {
     const canScrollInlineStart = canScrollInline && scrollLeft > EPSILON;
     const canScrollInlineEnd = canScrollInline && scrollLeft + el.clientWidth < el.scrollWidth - EPSILON;
 
+    syncAttr(el, 'data-overflows-y', canScrollBlock);
+    syncAttr(el, 'data-overflows-x', canScrollInline);
     syncAttr(el, 'data-can-scroll-start', canScrollStart);
     syncAttr(el, 'data-can-scroll-end', canScrollEnd);
     syncAttr(el, 'data-can-scroll-inline-start', canScrollInlineStart);
@@ -91,13 +98,17 @@ export function createScrollArea(el, options = {}) {
       state.canScrollStart !== canScrollStart ||
       state.canScrollEnd !== canScrollEnd ||
       state.canScrollInlineStart !== canScrollInlineStart ||
-      state.canScrollInlineEnd !== canScrollInlineEnd
+      state.canScrollInlineEnd !== canScrollInlineEnd ||
+      state.overflowsY !== canScrollBlock ||
+      state.overflowsX !== canScrollInline
     ) {
       state = {
         canScrollStart,
         canScrollEnd,
         canScrollInlineStart,
         canScrollInlineEnd,
+        overflowsY: canScrollBlock,
+        overflowsX: canScrollInline,
       };
       options.onStateChange?.(state);
     }
@@ -213,6 +224,8 @@ export function createScrollArea(el, options = {}) {
       observedChildren.clear();
       mo?.disconnect();
       el.removeAttribute('data-scrolling');
+      el.removeAttribute('data-overflows-y');
+      el.removeAttribute('data-overflows-x');
       el.removeAttribute('data-can-scroll-start');
       el.removeAttribute('data-can-scroll-end');
       el.removeAttribute('data-can-scroll-inline-start');

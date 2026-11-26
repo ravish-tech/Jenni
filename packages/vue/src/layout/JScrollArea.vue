@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<JScrollAreaProps>(), {
   as: 'div',
   orientation: 'vertical',
   scrollbar: 'subtle',
+  overscroll: 'dynamic',
   fade: false,
   bordered: false,
 });
@@ -78,6 +79,7 @@ defineExpose({
     class="j-scroll-area"
     :data-orientation="attr(orientation, 'vertical')"
     :data-scrollbar="attr(scrollbar, 'subtle')"
+    :data-overscroll="attr(overscroll, 'dynamic')"
     :data-fade="fade ? '' : undefined"
     :data-bordered="bordered ? '' : undefined"
     :style="areaStyle"

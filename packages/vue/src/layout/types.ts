@@ -142,6 +142,8 @@ export interface JListItemProps {
 export interface JPageProps {
   as?: string | object;
   size?: JPageSize;
+  /** Convenience prop forwarding `sticky` to child `JPageHeader`s via CSS/context. */
+  stickyHeader?: boolean;
 }
 
 export interface JPageHeaderProps {
@@ -149,6 +151,8 @@ export interface JPageHeaderProps {
   description?: string;
   eyebrow?: string;
   bordered?: boolean;
+  /** Stick to the top of the nearest scroll container with an IntersectionObserver hairline on scroll. */
+  sticky?: boolean;
 }
 
 export interface JSectionProps {
@@ -284,10 +288,14 @@ export interface JCanvasStageProps {
   height?: string | number;
 }
 
+export type JScrollOverscroll = 'dynamic' | 'contain' | 'auto';
+
 export interface JScrollAreaProps {
   as?: string | object;
   orientation?: JScrollOrientation;
   scrollbar?: JScrollbarVisibility;
+  /** Overscroll behavior: `'dynamic'` (default — contain only when overflowing), `'contain'`, or `'auto'`. */
+  overscroll?: JScrollOverscroll;
   fade?: boolean;
   fadeSize?: string | number;
   maxHeight?: string | number;

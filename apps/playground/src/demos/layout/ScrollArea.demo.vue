@@ -3,13 +3,13 @@ export const meta = {
   name: 'Scroll Area',
   group: 'Layout',
   order: 7,
-  description: 'Refined cross-browser scroll container with thin 6px scrollbars, overscroll containment, and 20px dynamic edge fade masks.',
-  status: 'draft',
+  description: 'Refined cross-browser scroll container with thin 6px scrollbars, dynamic overscroll containment, and 20px dynamic edge fade masks.',
+  status: 'stable',
 };
 </script>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
 import {
   JScrollArea,
@@ -21,6 +21,7 @@ import {
   JBadge,
   JAvatar,
   JButton,
+  JDialog,
   JKbd,
 } from 'jenni-vue';
 
@@ -81,6 +82,18 @@ const shortShortcuts = [
   { label: 'Toggle dark theme', keys: '⌘J' },
   { label: 'View keyboard map', keys: '?' },
 ];
+
+const dialogOpen = ref(false);
+const expandNestedItems = ref(false);
+const nestedScopes = computed(() =>
+  expandNestedItems.value ? shortShortcuts : shortShortcuts.slice(0, 2),
+);
+const nestedState = ref({
+  canScrollStart: false,
+  canScrollEnd: false,
+  canScrollInlineStart: false,
+  canScrollInlineEnd: false,
+});
 
 function scrollVerticalTo(top: number) {
   verticalRef.value?.scrollTo({ top, behavior: 'smooth' });
@@ -352,6 +365,93 @@ const html = `<div
         </JScrollArea>
       </JStack>
     </JGrid>
+  </DemoSection>
+
+  <DemoSection
+    title="Dynamic Overscroll & Dialog Wheel Chaining"
+    description="overscroll=&quot;dynamic&quot; (default) sets overscroll-behavior: contain only on axes that actually overflow (data-overflows-y / data-overflows-x). Short, non-overflowing ScrollAreas inside a scrollable JDialog body let wheel events chain naturally to the dialog instead of trapping pointer scroll."
+  >
+    <JStack gap="item" style="width: 100%; max-width: 620px">
+      <JInline gap="related" align="center">
+        <JButton variant="outline" tone="neutral" @click="dialogOpen = true">
+          Open Scrollable Dialog
+        </JButton>
+        <JButton
+          size="sm"
+          variant="soft"
+          tone="neutral"
+          @click="expandNestedItems = !expandNestedItems"
+        >
+          {{ expandNestedItems ? 'Use 2 items (chains wheel)' : 'Use 8 items (contains wheel)' }}
+        </JButton>
+        <JBadge
+          size="sm"
+          :variant="nestedState.canScrollStart || nestedState.canScrollEnd ? 'soft' : 'outline'"
+          :tone="nestedState.canScrollStart || nestedState.canScrollEnd ? 'accent' : 'neutral'"
+        >
+          {{ nestedState.canScrollStart || nestedState.canScrollEnd ? 'overflows-y: contain' : 'fits: wheel chains' }}
+        </JBadge>
+      </JInline>
+
+      <JDialog
+        v-model:open="dialogOpen"
+        title="Token Permissions & Scope Audit"
+        description="Scroll over the nested JScrollArea below — when its content fits without overflowing, wheel events pass straight through to the dialog body."
+      >
+        <JStack gap="field" style="max-height: 280px; overflow-y: auto; padding-inline-end: var(--j-space-1)">
+          <div style="font-size: var(--j-text-sm); line-height: var(--j-leading); color: var(--j-fg-muted)">
+            Service tokens inherit workspace boundaries and expire automatically after 90 days of inactivity. Review the attached keybindings before issuing credentials.
+          </div>
+
+          <JStack gap="inline">
+            <JInline justify="between" align="center">
+              <span style="font-size: var(--j-text-xs); font-weight: var(--j-weight-semibold); color: var(--j-fg-muted)">
+                Attached Scopes (max-height: 148px · overscroll="dynamic")
+              </span>
+              <JButton
+                size="sm"
+                variant="ghost"
+                tone="neutral"
+                @click="expandNestedItems = !expandNestedItems"
+              >
+                {{ expandNestedItems ? 'Show 2 rows' : 'Show 8 rows' }}
+              </JButton>
+            </JInline>
+            <JScrollArea
+              bordered
+              fade
+              :max-height="148"
+              aria-label="Attached scopes"
+              @scroll-state-change="(s) => (nestedState = s)"
+            >
+              <JList lines="compact" variant="divided">
+                <JListItem v-for="s in nestedScopes" :key="s.label" :title="s.label">
+                  <template #trailing><JKbd size="sm">{{ s.keys }}</JKbd></template>
+                </JListItem>
+              </JList>
+            </JScrollArea>
+          </JStack>
+
+          <div
+            v-for="n in 4"
+            :key="n"
+            style="
+              padding: var(--j-space-3);
+              border-radius: var(--j-radius-md);
+              background: var(--j-surface-2);
+              font-size: var(--j-text-xs);
+              line-height: var(--j-leading);
+              color: var(--j-fg-muted);
+            "
+          >
+            Audit checkpoint #{{ n }} — Hardware-backed attestation verified for regional edge workers with zero policy drift.
+          </div>
+        </JStack>
+        <template #footer="{ close }">
+          <JButton variant="outline" tone="neutral" @click="close">Close</JButton>
+        </template>
+      </JDialog>
+    </JStack>
   </DemoSection>
 
   <DemoSection title="Plain HTML">

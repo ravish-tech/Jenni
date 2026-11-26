@@ -14,6 +14,7 @@ import {
   cx,
   mergeRefs,
   type ScrollOrientation,
+  type ScrollOverscroll,
   type ScrollbarVisibility,
 } from './types';
 
@@ -22,6 +23,8 @@ export type { ScrollAreaState };
 export interface ScrollAreaProps extends ComponentProps<'div'> {
   orientation?: ScrollOrientation;
   scrollbar?: ScrollbarVisibility;
+  /** Overscroll behavior: `'dynamic'` (default — contain only when overflowing), `'contain'`, or `'auto'`. */
+  overscroll?: ScrollOverscroll;
   fade?: boolean;
   fadeSize?: string | number;
   maxHeight?: string | number;
@@ -37,6 +40,7 @@ const toPx = (v: string | number) => (typeof v === 'number' ? `${v}px` : v);
 export function ScrollArea({
   orientation = 'vertical',
   scrollbar = 'subtle',
+  overscroll = 'dynamic',
   fade = false,
   fadeSize,
   maxHeight,
@@ -90,6 +94,7 @@ export function ScrollArea({
       className={cx('j-scroll-area', className)}
       data-orientation={attr(orientation, 'vertical')}
       data-scrollbar={attr(scrollbar, 'subtle')}
+      data-overscroll={attr(overscroll, 'dynamic')}
       data-fade={fade ? '' : undefined}
       data-bordered={bordered ? '' : undefined}
       style={mergedStyle}

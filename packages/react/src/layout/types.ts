@@ -59,6 +59,7 @@ export type CanvasGrid = 'none' | 'dots' | 'lines';
 export type CanvasToolsPlacement = 'left' | 'bottom';
 export type ScrollOrientation = 'vertical' | 'horizontal' | 'both';
 export type ScrollbarVisibility = 'subtle' | 'hover' | 'hidden';
+export type ScrollOverscroll = 'dynamic' | 'contain' | 'auto';
 export type ResizableOrientation = 'horizontal' | 'vertical';
 
 export const attr = <T extends string>(value: T | undefined, fallback?: T): T | undefined =>
