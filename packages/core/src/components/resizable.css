@@ -1,15 +1,26 @@
 /*
- * Resizable Panels — .j-resizable
- *   Multi-pane architectural split layout with a 1px hairline divider,
- *   generous 10px invisible pointer target, optional centered grip capsule,
- *   WAI-ARIA separator keyboard control, collapsible panes, and ratio persistence.
+ * Resizable Panels & Standalone Split Handle — .j-resizable, .j-resize-handle
+ *   Multi-pane architectural split layout and standalone splitter primitive with a
+ *   1px hairline divider, generous 10px invisible pointer target, optional centered
+ *   grip capsule, WAI-ARIA separator keyboard control, collapsible panes, and ratio
+ *   persistence.
  *
- * Markup:
+ * Markup (.j-resizable):
  *   <div class="j-resizable" data-orientation="horizontal" data-bordered>
  *     <div class="j-resizable__panel" data-panel-id="nav" data-default-size="25" data-min-size="15" data-collapsible>…</div>
  *     <div class="j-resizable__handle" role="separator" tabindex="0" aria-orientation="vertical" data-with-grip></div>
  *     <div class="j-resizable__panel" data-panel-id="main" data-default-size="75" data-min-size="30">…</div>
  *   </div>
+ *
+ * Standalone Handle Markup (.j-resize-handle):
+ *   <div
+ *     class="j-resize-handle"
+ *     role="separator"
+ *     tabindex="0"
+ *     data-orientation="horizontal"
+ *     aria-orientation="vertical"
+ *     data-with-grip
+ *   ></div>
  *
  * Attributes on .j-resizable:
  *   data-orientation: horizontal (default) | vertical
@@ -20,7 +31,8 @@
  *   data-panel-id, data-default-size, data-min-size, data-max-size,
  *   data-collapsible, data-collapsed-size, data-collapsed (managed)
  *
- * Attributes on .j-resizable__handle:
+ * Attributes on .j-resizable__handle / .j-resize-handle:
+ *   data-orientation: horizontal (default: vertical 1px bar, col-resize) | vertical (horizontal 1px bar, row-resize)
  *   data-with-grip, data-disabled, data-dragging (managed)
  *
  * Public custom properties:
@@ -69,6 +81,21 @@
     cursor: row-resize;
   }
 
+  /* Global document cursor + selection lock during standalone split-handle dragging */
+  html[data-j-split-dragging="horizontal"],
+  html[data-j-split-dragging="horizontal"] * {
+    cursor: col-resize;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  html[data-j-split-dragging="vertical"],
+  html[data-j-split-dragging="vertical"] * {
+    cursor: row-resize;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
   /* ---- Panel ---- */
   :where(.j-resizable__panel) {
     box-sizing: border-box;
@@ -92,7 +119,8 @@
   }
 
   /* ---- Handle (1px architectural hairline + 10px invisible hit target) ---- */
-  :where(.j-resizable__handle) {
+  :where(.j-resizable__handle, .j-resize-handle) {
+    --_hit: var(--j-resizable-hit, 10px);
     --_line-bg: var(--j-border);
     --_line-glow: transparent;
     --_grip-bg: light-dark(var(--j-surface-1), var(--j-surface-2));
@@ -102,6 +130,7 @@
     box-sizing: border-box;
     position: relative;
     flex: 0 0 1px;
+    align-self: stretch;
     inline-size: 1px;
     block-size: auto;
     background-color: var(--_line-bg);
@@ -117,14 +146,18 @@
       box-shadow var(--j-duration-fast) var(--j-ease-out);
   }
 
-  :where(.j-resizable[data-orientation="vertical"] > .j-resizable__handle) {
+  :where(
+    .j-resizable[data-orientation="vertical"] > .j-resizable__handle,
+    .j-resizable__handle[data-orientation="vertical"],
+    .j-resize-handle[data-orientation="vertical"]
+  ) {
     inline-size: auto;
     block-size: 1px;
     cursor: row-resize;
   }
 
   /* Generous 10px invisible pointer hit zone centered over the 1px hairline */
-  :where(.j-resizable__handle)::before {
+  :where(.j-resizable__handle, .j-resize-handle)::before {
     content: "";
     position: absolute;
     inset-block: 0;
@@ -134,7 +167,11 @@
     z-index: 1;
   }
 
-  :where(.j-resizable[data-orientation="vertical"] > .j-resizable__handle)::before {
+  :where(
+    .j-resizable[data-orientation="vertical"] > .j-resizable__handle,
+    .j-resizable__handle[data-orientation="vertical"],
+    .j-resize-handle[data-orientation="vertical"]
+  )::before {
     inset-block: auto;
     inset-inline: 0;
     inset-block-start: 50%;
@@ -145,14 +182,17 @@
 
   /* Hover / Focus / Active Drag states — calm, poised accent highlight */
   @media (hover: hover) {
-    :where(.j-resizable__handle:hover:not([data-disabled], [aria-disabled="true"])) {
+    :where(
+      .j-resizable__handle:hover:not([data-disabled], [aria-disabled="true"]),
+      .j-resize-handle:hover:not([data-disabled], [aria-disabled="true"])
+    ) {
       --_line-bg: color-mix(in oklch, var(--j-accent) 72%, var(--j-border));
       --_grip-border: color-mix(in oklch, var(--j-accent) 55%, var(--j-border-strong));
       --_grip-dots: var(--j-fg-muted);
     }
   }
 
-  :where(.j-resizable__handle:focus-visible) {
+  :where(.j-resizable__handle:focus-visible, .j-resize-handle:focus-visible) {
     --_line-bg: var(--j-accent);
     --_line-glow: color-mix(in oklch, var(--j-accent) 26%, transparent);
     --_grip-border: var(--j-accent);
@@ -160,7 +200,7 @@
     z-index: 3;
   }
 
-  :where(.j-resizable__handle[data-dragging]) {
+  :where(.j-resizable__handle[data-dragging], .j-resize-handle[data-dragging]) {
     --_line-bg: var(--j-accent);
     --_line-glow: color-mix(in oklch, var(--j-accent) 30%, transparent);
     --_grip-bg: light-dark(var(--j-accent-soft), var(--j-surface-3));
@@ -170,7 +210,10 @@
     transition-duration: 0ms;
   }
 
-  :where(.j-resizable__handle:is([data-disabled], [aria-disabled="true"])) {
+  :where(
+    .j-resizable__handle:is([data-disabled], [aria-disabled="true"]),
+    .j-resize-handle:is([data-disabled], [aria-disabled="true"])
+  ) {
     cursor: default;
     pointer-events: none;
     opacity: 0.6;
@@ -180,7 +223,7 @@
    * Uses a 9px cross-axis width centered on the 1px hairline (-4px offset)
    * so left and right 1px borders land on exact integer pixels at all densities.
    */
-  :where(.j-resizable__handle[data-with-grip])::after {
+  :where(.j-resizable__handle[data-with-grip], .j-resize-handle[data-with-grip])::after {
     --_grip-len: max(20px, round(calc(26px * var(--j-density)), 2px));
 
     content: "";
@@ -207,7 +250,11 @@
       box-shadow var(--j-duration-fast) var(--j-ease-out);
   }
 
-  :where(.j-resizable[data-orientation="vertical"] > .j-resizable__handle[data-with-grip])::after {
+  :where(
+    .j-resizable[data-orientation="vertical"] > .j-resizable__handle[data-with-grip],
+    .j-resizable__handle[data-orientation="vertical"][data-with-grip],
+    .j-resize-handle[data-orientation="vertical"][data-with-grip]
+  )::after {
     inset-inline-start: 50%;
     inset-block-start: -4px;
     inline-size: var(--_grip-len);
@@ -217,7 +264,10 @@
     background-repeat: repeat-x;
   }
 
-  :where(.j-resizable__handle[data-with-grip]:focus-visible)::after {
+  :where(
+    .j-resizable__handle[data-with-grip]:focus-visible,
+    .j-resize-handle[data-with-grip]:focus-visible
+  )::after {
     box-shadow: var(--j-ring);
   }
 }

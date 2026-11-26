@@ -4,7 +4,7 @@ export const meta = {
   group: 'Layout',
   order: 10,
   description: 'Multi-pane split layout with a 1px architectural hairline splitter, 10px invisible hit target, WAI-ARIA separator keyboard control, collapsible panes, and persisted ratios.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 
@@ -15,11 +15,13 @@ import {
   JResizableGroup,
   JResizablePanel,
   JResizableHandle,
+  JSplitHandle,
   JStack,
   JInline,
   JBadge,
   JButton,
   JKbd,
+  type SplitHandleDragPayload,
 } from 'jenni-vue';
 
 // 1. Studio 3-pane & 2-pane split state
@@ -89,6 +91,21 @@ function onPersistedLayout(sizes: number[]) {
 }
 
 const fmtPct = (n: number | undefined) => `${Math.round(n ?? 0)}%`;
+
+// 4. Custom standalone splitters (JSplitHandle & .j-resize-handle)
+const customLeftPx = ref<number>(236);
+const customTopPx = ref<number>(96);
+const customLastSource = ref<'pointer' | 'keyboard' | 'idle'>('idle');
+
+function onCustomHorizDrag(payload: SplitHandleDragPayload) {
+  customLastSource.value = payload.source;
+  customLeftPx.value = Math.min(380, Math.max(140, Math.round(customLeftPx.value + payload.delta)));
+}
+
+function onCustomVertDrag(payload: SplitHandleDragPayload) {
+  customLastSource.value = payload.source;
+  customTopPx.value = Math.min(168, Math.max(56, Math.round(customTopPx.value + payload.delta)));
+}
 
 const html = `<div
   class="j-resizable"
@@ -465,6 +482,123 @@ const html = `<div
           </div>
         </JResizablePanel>
       </JResizableGroup>
+    </JStack>
+  </DemoSection>
+
+  <DemoSection
+    title="Custom Splitters (JSplitHandle & .j-resize-handle)"
+    description="Use JSplitHandle (or standalone .j-resize-handle + initSplitHandles()) inside any custom CSS Grid or Flexbox layout without a JResizableGroup wrapper — supporting both horizontal and standalone vertical orientations, pointer capture, and Arrow / Shift+Arrow stepping."
+  >
+    <JStack gap="item" style="width: 100%">
+      <JInline justify="between" align="center">
+        <JInline gap="inline" align="center">
+          <JBadge size="sm" variant="soft" tone="accent">
+            Left pane: {{ customLeftPx }}px
+          </JBadge>
+          <JBadge size="sm" variant="soft" tone="info">
+            Top pane: {{ customTopPx }}px
+          </JBadge>
+          <JBadge size="sm" variant="outline" tone="neutral">
+            source: {{ customLastSource }}
+          </JBadge>
+        </JInline>
+        <JButton
+          size="sm"
+          variant="ghost"
+          tone="neutral"
+          @click="
+            customLeftPx = 236;
+            customTopPx = 96;
+            customLastSource = 'idle';
+          "
+        >
+          Reset custom split
+        </JButton>
+      </JInline>
+
+      <div
+        style="display: flex; flex-direction: row; width: 100%; height: 240px; border-radius: var(--j-radius-lg); background: var(--j-surface-1); box-shadow: 0 0 0 1px var(--j-border); overflow: hidden"
+      >
+        <div
+          :style="{
+            flex: `0 0 ${customLeftPx}px`,
+            width: `${customLeftPx}px`,
+            padding: 'var(--j-space-3)',
+            background: 'var(--j-surface-2)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+          }"
+        >
+          <JStack gap="inline">
+            <span style="font-size: var(--j-text-xs); font-weight: var(--j-weight-semibold); color: var(--j-fg-subtle); text-transform: uppercase; letter-spacing: 0.04em">
+              Fixed Pixel Pane
+            </span>
+            <span style="font-size: var(--j-text-sm); color: var(--j-fg)">
+              Driven by <code>@drag</code> delta ({{ customLeftPx }}px)
+            </span>
+          </JStack>
+          <span style="font-family: var(--j-font-mono); font-size: var(--j-text-xs); color: var(--j-fg-subtle)">
+            min 140px · max 380px
+          </span>
+        </div>
+
+        <JSplitHandle
+          orientation="horizontal"
+          with-grip
+          aria-label="Resize custom left pane"
+          :step="16"
+          :large-step="64"
+          :value-now="customLeftPx"
+          :value-min="140"
+          :value-max="380"
+          @drag="onCustomHorizDrag"
+        />
+
+        <div style="flex: 1 1 0%; min-width: 0; display: flex; flex-direction: column">
+          <div
+            :style="{
+              flex: `0 0 ${customTopPx}px`,
+              height: `${customTopPx}px`,
+              padding: 'var(--j-space-3)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              gap: 'var(--j-space-1)',
+            }"
+          >
+            <span style="font-size: var(--j-text-sm); font-weight: var(--j-weight-semibold); color: var(--j-fg)">
+              Standalone Vertical Handle Below
+            </span>
+            <span style="font-size: var(--j-text-xs); color: var(--j-fg-muted)">
+              <code>orientation="vertical"</code> works inside any plain column container without <code>.j-resizable</code>.
+            </span>
+          </div>
+
+          <JSplitHandle
+            orientation="vertical"
+            with-grip
+            aria-label="Resize custom top and bottom panes"
+            :step="16"
+            :large-step="64"
+            :value-now="customTopPx"
+            :value-min="56"
+            :value-max="168"
+            @drag="onCustomVertDrag"
+          />
+
+          <div
+            style="flex: 1 1 0%; min-height: 0; padding: var(--j-space-3); background: var(--j-surface-2); display: flex; align-items: center; justify-content: space-between; font-size: var(--j-text-xs); color: var(--j-fg-muted)"
+          >
+            <span>Flexible remainder pane (<code>flex: 1 1 0%</code>)</span>
+            <JInline gap="inline" align="center">
+              <JKbd size="sm">↑</JKbd>
+              <JKbd size="sm">↓</JKbd>
+              <span>16px · Shift 64px</span>
+            </JInline>
+          </div>
+        </div>
+      </div>
     </JStack>
   </DemoSection>
 
