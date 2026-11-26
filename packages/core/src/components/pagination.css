@@ -76,7 +76,7 @@
   }
 
   /* ---- Page & Nav buttons ---- */
-  :where(.j-pagination__item) {
+  :where(.j-pagination__item, .j-pagination__btn) {
     position: relative;
     display: inline-flex;
     align-items: center;
@@ -112,6 +112,10 @@
       flex: none;
       inline-size: var(--_icon);
       block-size: var(--_icon);
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, var(--_icon));
     }
 
     @media (hover: hover) {

@@ -16,7 +16,7 @@
     --_h: var(--j-control-md);
     --_px: var(--j-space-3);
     --_fs: var(--j-text-md);
-    --_icon: 16px;
+    --_icon: 18px;
     --_radius: var(--j-toggle-radius, var(--j-radius-md));
     --_bg: var(--j-surface-1);
     --_bg-hover: var(--j-surface-2);
@@ -64,6 +64,10 @@
       inline-size: min(var(--_icon), calc(var(--_h) - 6px));
       block-size: min(var(--_icon), calc(var(--_h) - 6px));
       flex-shrink: 0;
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, min(var(--_icon), calc(var(--_h) - 6px)));
     }
 
     @media (hover: hover) {
@@ -152,7 +156,7 @@
     --_h: var(--j-control-sm);
     --_px: calc(var(--j-space-2) + 2px);
     --_fs: var(--j-text-sm);
-    --_icon: 14px;
+    --_icon: 16px;
     --_radius: var(--j-toggle-radius, var(--j-radius-sm));
     gap: var(--j-space-1);
   }
@@ -161,7 +165,7 @@
     --_h: var(--j-control-lg);
     --_px: var(--j-space-4);
     --_fs: var(--j-text-lg);
-    --_icon: 18px;
+    --_icon: 20px;
     --_radius: var(--j-toggle-radius, var(--j-radius-lg));
     gap: var(--j-gap-related);
   }

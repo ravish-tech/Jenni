@@ -15,7 +15,7 @@
     --_h: var(--j-control-md);
     --_px: var(--j-space-3);
     --_fs: var(--j-text-md);
-    --_icon: 16px;
+    --_icon: 18px;
     --_radius: var(--j-button-radius, var(--j-radius-md));
     --_bg: var(--j-tone);
     --_bg-hover: var(--j-tone-hover);
@@ -65,6 +65,10 @@
       inline-size: min(var(--_icon), calc(var(--_h) - 6px));
       block-size: min(var(--_icon), calc(var(--_h) - 6px));
       flex-shrink: 0;
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, min(var(--_icon), calc(var(--_h) - 6px)));
     }
 
     @media (hover: hover) {
@@ -158,7 +162,7 @@
     --_h: var(--j-control-sm);
     --_px: calc(var(--j-space-2) + 2px);
     --_fs: var(--j-text-sm);
-    --_icon: 14px;
+    --_icon: 16px;
     --_radius: var(--j-button-radius, var(--j-radius-sm));
     gap: var(--j-space-1);
   }
@@ -166,7 +170,7 @@
     --_h: var(--j-control-lg);
     --_px: var(--j-space-4);
     --_fs: var(--j-text-lg);
-    --_icon: 18px;
+    --_icon: 20px;
     --_radius: var(--j-button-radius, var(--j-radius-lg));
     gap: var(--j-gap-related);
   }
@@ -194,12 +198,13 @@
       position: absolute;
       inset: 0;
       margin: auto;
-      inline-size: calc(var(--_icon) - 1px);
-      block-size: calc(var(--_icon) - 1px);
-      border: 1.5px solid color-mix(in oklch, var(--_fg) 26%, transparent);
-      border-block-start-color: var(--_fg);
-      border-radius: var(--j-radius-full);
-      animation: j-button-spin 0.95s linear infinite;
+      inline-size: min(16px, calc(var(--_h) - 8px));
+      block-size: min(16px, calc(var(--_h) - 8px));
+      background-color: var(--_fg);
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Ccircle cx='12' cy='12' r='9.5' stroke='black' stroke-opacity='0.2' stroke-width='2.4'/%3E%3Cpath d='M12 2.5a9.5 9.5 0 0 1 9.5 9.5' stroke='black' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
+      mask-size: 100% 100%;
+      mask-repeat: no-repeat;
+      animation: j-button-spin 0.85s linear infinite;
     }
   }
 

@@ -102,7 +102,10 @@
     inline-size: var(--_icon);
     block-size: var(--_icon);
   }
-  :where(.j-badge > svg:first-child, .j-badge > .j-badge__dot:first-child) {
+  :where(.j-badge > .j-icon:not([data-size])) {
+    --_size: var(--j-icon-size, var(--_icon));
+  }
+  :where(.j-badge > svg:first-child, .j-badge > .j-icon:first-child, .j-badge > .j-badge__dot:first-child) {
     margin-inline-start: calc(var(--j-space-0-5) * -1);
   }
   :where(.j-badge__remove) {
@@ -130,6 +133,10 @@
       width: 10px;
       height: 10px;
       flex: none;
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, 10px);
     }
 
     &:hover {

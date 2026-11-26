@@ -45,6 +45,16 @@
     min-inline-size: 0;
     color: var(--j-fg-muted);
 
+    & > svg {
+      flex: none;
+      inline-size: var(--_icon);
+      block-size: var(--_icon);
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, var(--_icon));
+    }
+
     &:not(:last-child)::after {
       content: "";
       display: inline-block;
@@ -53,6 +63,23 @@
       block-size: var(--_chev);
       background-color: var(--j-fg-subtle);
       mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 4l4 4-4 4'/%3E%3C/svg%3E") center / contain no-repeat;
+    }
+  }
+
+  :where(.j-breadcrumb__sep) {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+    color: var(--j-fg-subtle);
+
+    & > svg {
+      flex: none;
+      inline-size: var(--_chev);
+      block-size: var(--_chev);
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, var(--_chev));
     }
   }
 
@@ -92,6 +119,10 @@
       block-size: var(--_icon);
     }
 
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, var(--_icon));
+    }
+
     @media (hover: hover) {
       &:hover:not([aria-disabled="true"]) {
         color: var(--j-fg);
@@ -125,6 +156,10 @@
       inline-size: var(--_icon);
       block-size: var(--_icon);
     }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, var(--_icon));
+    }
   }
 
   /* Collapsed middle items trigger (…) */
@@ -153,6 +188,10 @@
     & > svg {
       inline-size: var(--_icon);
       block-size: var(--_icon);
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, var(--_icon));
     }
 
     @media (hover: hover) {
