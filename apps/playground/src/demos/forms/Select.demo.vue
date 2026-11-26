@@ -4,7 +4,7 @@ export const meta = {
   group: 'Forms',
   order: 10,
   description: 'Styled native <select>. Customizable picker where appearance: base-select is supported.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 
@@ -14,6 +14,7 @@ import { DemoSection, DemoCode } from '@/kit';
 import { JButton, JInline, JSelect, JStack } from 'jenni-vue';
 
 const fruit = ref<string | number>();
+const filterEnv = ref<string | number>('fra1');
 const region = ref<string | number>('fra1');
 const fruits = ['Apple', 'Banana', 'Cherry', 'Dragonfruit', 'Elderberry'];
 const regions = [
@@ -36,6 +37,22 @@ const html = `<select class="j-select" style="width:100%;max-width:280px">
     <JStack gap="item" style="width: 100%; max-width: 320px">
       <JSelect v-model="fruit" :options="fruits" placeholder="Pick a fruit" />
       <span style="color: var(--j-fg-muted); font-size: var(--j-text-sm)">Value: {{ fruit ?? '—' }}</span>
+    </JStack>
+  </DemoSection>
+
+  <DemoSection title="Clearable" description="Pass clearable to reveal an inline reset button before the chevron whenever a non-empty option is selected.">
+    <JStack gap="item" style="width: 100%; max-width: 320px">
+      <JSelect
+        v-model="filterEnv"
+        clearable
+        clear-tooltip="Reset region filter"
+        :options="regions"
+        placeholder="All regions"
+        aria-label="Filter by region"
+      />
+      <span style="color: var(--j-fg-muted); font-size: var(--j-text-sm)">
+        Active filter: {{ filterEnv || 'All regions (cleared)' }}
+      </span>
     </JStack>
   </DemoSection>
 

@@ -12,7 +12,11 @@ export { default as JCheckbox } from './forms/JCheckbox.vue';
 export { default as JRadio } from './forms/JRadio.vue';
 export { default as JRadioGroup } from './forms/JRadioGroup.vue';
 export { default as JSwitch } from './forms/JSwitch.vue';
-export { default as JSelect } from './forms/JSelect.vue';
+export {
+  default as JSelect,
+  type JSelectProps,
+  type SelectOption,
+} from './forms/JSelect.vue';
 export { default as JSlider } from './forms/JSlider.vue';
 export { default as JField } from './forms/JField.vue';
 export { default as JLabel } from './forms/JLabel.vue';

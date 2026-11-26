@@ -34,6 +34,77 @@
     & option { color: var(--j-fg); background-color: var(--j-surface-1); }
   }
 
+  /* ---- Clearable select wrapper ---- */
+  :where(.j-select-wrap) {
+    --_px: calc(var(--j-space-2) + 2px);
+    --_icon: 16px;
+    --_clear-size: max(16px, round(calc(20px * var(--j-density)), 1px));
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    inline-size: 100%;
+    min-inline-size: 0;
+
+    &[data-size="sm"] {
+      --_px: var(--j-space-2);
+      --_icon: 14px;
+      --_clear-size: max(14px, round(calc(18px * var(--j-density)), 1px));
+    }
+
+    &[data-size="lg"] {
+      --_px: var(--j-space-3);
+      --_icon: 18px;
+      --_clear-size: max(18px, round(calc(22px * var(--j-density)), 1px));
+    }
+  }
+
+  :where(.j-select-wrap[data-has-clear]) > :where(.j-select:not([multiple], [size]:not([size="1"]))) {
+    padding-inline-end: calc(var(--_px, 10px) + 16px + var(--_clear-size) + var(--j-space-1-5));
+  }
+
+  :where(.j-select__clear) {
+    appearance: none;
+    position: absolute;
+    inset-inline-end: calc(var(--_px, 10px) + 16px);
+    inset-block-start: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--_clear-size, 20px);
+    block-size: var(--_clear-size, 20px);
+    padding: 0;
+    border: 0;
+    border-radius: var(--j-radius-xs);
+    background: transparent;
+    color: var(--j-fg-muted);
+    cursor: pointer;
+    outline: none;
+    transition:
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+
+    & > svg {
+      inline-size: max(11px, round(calc(13px * var(--j-density)), 1px));
+      block-size: max(11px, round(calc(13px * var(--j-density)), 1px));
+      pointer-events: none;
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: var(--j-bg-subtle, var(--j-surface-3));
+        color: var(--j-fg);
+      }
+    }
+
+    &:focus-visible {
+      color: var(--j-fg);
+      box-shadow: var(--j-ring);
+    }
+  }
+
   /* ---- Customizable select (Chromium 135+) ---- */
   @supports (appearance: base-select) {
     :where(.j-select:not([multiple], [size]:not([size="1"]))) {
@@ -108,6 +179,11 @@
       }
       & optgroup { font-size: var(--j-text-xs); color: var(--j-fg-subtle); }
       & hr { margin: var(--j-space-1) calc(-1 * var(--j-space-1)); border: 0; border-block-start: 1px solid var(--j-border); }
+    }
+
+    :where(.j-select-wrap[data-has-clear]) > :where(.j-select:not([multiple], [size]:not([size="1"]))) {
+      padding-inline-end: var(--_px);
+      gap: calc(var(--_clear-size, 20px) + var(--j-space-2));
     }
 
     @starting-style {
