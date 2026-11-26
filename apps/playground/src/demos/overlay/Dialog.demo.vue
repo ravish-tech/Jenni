@@ -4,20 +4,28 @@ export const meta = {
   group: 'Overlay',
   order: 7,
   description: 'Modal dialog built on native <dialog> with focus trap, calm backdrop blur and mobile sheet docking.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 import { DemoSection, DemoCode } from '@/kit';
-import { JDialog, JButton, JField, JInput, JSwitch, JStack, JInline, JList, JListItem, JBadge } from 'jenni-vue';
+import { JDialog, JButton, JField, JInput, JSwitch, JStack, JInline, JList, JListItem, JBadge, JKbd } from 'jenni-vue';
 
 const name = ref('Ada Lovelace');
 const handle = ref('@ada');
 const newsletter = ref(true);
 const deleteOpen = ref(false);
+const notifyOnPromote = ref(true);
+const drainConnections = ref(true);
+const promoteCount = ref(0);
 const sizes = ['sm', 'md', 'lg'] as const;
+
+function confirmPromote(close: () => void) {
+  promoteCount.value += 1;
+  close();
+}
 
 const html = `<button class="j-button" data-variant="outline" commandfor="demo-html-dlg-1" command="show-modal">
   Open native dialog
@@ -33,7 +41,7 @@ const html = `<button class="j-button" data-variant="outline" commandfor="demo-h
     </p>
   </div>
   <footer class="j-dialog__footer">
-    <button class="j-button" data-size="sm" commandfor="demo-html-dlg-1" command="close">Understood</button>
+    <button class="j-button" data-size="sm" data-default-action commandfor="demo-html-dlg-1" command="close">Understood</button>
   </footer>
   <button class="j-dialog__close" commandfor="demo-html-dlg-1" command="close" aria-label="Close">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg>
@@ -65,9 +73,53 @@ const html = `<button class="j-button" data-variant="outline" commandfor="demo-h
 
       <template #footer="{ close }">
         <JButton variant="ghost" @click="close">Cancel</JButton>
-        <JButton @click="close">Save changes</JButton>
+        <JButton default @click="close">Save changes</JButton>
       </template>
     </JDialog>
+  </DemoSection>
+
+  <DemoSection
+    title="Default Action on Enter"
+    description="Mark a footer button with default (or set default-action on JDialog) to focus it on open and trigger it on Enter while preserving Escape and form input behaviour."
+  >
+    <JInline gap="item" align="center">
+      <JDialog
+        size="sm"
+        title="Promote release v2.8.0?"
+        description="Traffic across eu-west-1 and us-east-1 shifts to revision a8f31c9."
+      >
+        <template #trigger="{ open }">
+          <JButton variant="outline" @click="open">Promote release</JButton>
+        </template>
+
+        <JStack gap="item">
+          <JSwitch
+            v-model="drainConnections"
+            placement="end"
+            label="Graceful connection drain"
+            description="Wait up to 30s for in-flight requests to settle."
+          />
+          <JSwitch
+            v-model="notifyOnPromote"
+            placement="end"
+            label="Post release marker"
+            description="Emit deployment annotation to telemetry timelines."
+          />
+          <p style="font-size: var(--j-text-xs); color: var(--j-fg-muted)">
+            Press <JKbd size="sm">Enter</JKbd> anywhere outside text fields to confirm, or <JKbd size="sm">Esc</JKbd> to cancel.
+          </p>
+        </JStack>
+
+        <template #footer="{ close }">
+          <JButton variant="ghost" @click="close">Cancel</JButton>
+          <JButton default @click="confirmPromote(close)">Promote now</JButton>
+        </template>
+      </JDialog>
+
+      <span v-if="promoteCount > 0" style="font-size: var(--j-text-sm); color: var(--j-fg-muted)">
+        Promoted {{ promoteCount }} {{ promoteCount === 1 ? 'time' : 'times' }}
+      </span>
+    </JInline>
   </DemoSection>
 
   <DemoSection title="Sizes" description="sm (25rem) · md (32rem, default) · lg (44rem). Docks as a bottom sheet below 40rem.">
@@ -104,7 +156,7 @@ const html = `<button class="j-button" data-variant="outline" commandfor="demo-h
     >
       <template #footer="{ close }">
         <JButton variant="ghost" @click="close">Keep key</JButton>
-        <JButton tone="danger" @click="close">Revoke key</JButton>
+        <JButton tone="danger" default @click="close">Revoke key</JButton>
       </template>
     </JDialog>
   </DemoSection>
@@ -138,7 +190,7 @@ const html = `<button class="j-button" data-variant="outline" commandfor="demo-h
 
       <template #footer="{ close }">
         <JButton variant="ghost" @click="close">Cancel</JButton>
-        <JButton @click="close">Continue</JButton>
+        <JButton default @click="close">Continue</JButton>
       </template>
     </JDialog>
   </DemoSection>

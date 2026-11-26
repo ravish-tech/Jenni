@@ -27,8 +27,23 @@ declare module 'jenni-core/behaviors/popover.js' {
 }
 
 declare module 'jenni-core/behaviors/dialog.js' {
+  export interface DialogDefaultActionOptions {
+    defaultAction?: boolean | string | (() => boolean | string | undefined);
+  }
   export function lightDismiss(dialog: HTMLDialogElement): () => void;
   export function requestClose(dialog: HTMLDialogElement): void;
+  export function resolveDialogDefaultButton(
+    dialog: HTMLDialogElement,
+    defaultAction?: boolean | string,
+  ): HTMLElement | null;
+  export function focusDialogDefaultAction(
+    dialog: HTMLDialogElement,
+    defaultAction?: boolean | string,
+  ): boolean;
+  export function bindDialogDefaultAction(
+    dialog: HTMLDialogElement,
+    options?: DialogDefaultActionOptions,
+  ): () => void;
   export function initDialogs(root?: Document | HTMLElement): () => void;
 }
 

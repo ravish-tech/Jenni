@@ -12,8 +12,26 @@ import {
   type SyntheticEvent,
 } from 'react';
 import { createPortal } from 'react-dom';
-import { lightDismiss } from 'jenni-core/behaviors/dialog.js';
+import { bindDialogDefaultAction, lightDismiss } from 'jenni-core/behaviors/dialog.js';
 import { cx, mergeRefs, sizeAttr, useControllable, type OverlaySize } from './types';
+
+declare module 'jenni-core/behaviors/dialog.js' {
+  export interface DialogDefaultActionOptions {
+    defaultAction?: boolean | string | (() => boolean | string | undefined);
+  }
+  export function resolveDialogDefaultButton(
+    dialog: HTMLDialogElement,
+    defaultAction?: boolean | string,
+  ): HTMLElement | null;
+  export function focusDialogDefaultAction(
+    dialog: HTMLDialogElement,
+    defaultAction?: boolean | string,
+  ): boolean;
+  export function bindDialogDefaultAction(
+    dialog: HTMLDialogElement,
+    options?: DialogDefaultActionOptions,
+  ): () => void;
+}
 
 export interface DialogProps extends Omit<ComponentProps<'dialog'>, 'title' | 'children'> {
   open?: boolean;
@@ -33,6 +51,13 @@ export interface DialogProps extends Omit<ComponentProps<'dialog'>, 'title' | 'c
   flush?: boolean;
   /** Alias for `flush`. */
   bodyFlush?: boolean;
+  /**
+   * Primary action triggered on `Enter` and focused on open.
+   * `true` (default) discovers any footer `[data-default-action]` button (`<Button default>`);
+   * a `string` matches by `[data-action]`, `id`, `aria-label`, or trimmed button text;
+   * `false` disables default Enter activation.
+   */
+  defaultAction?: boolean | string;
   /** Portal `<dialog>` into `document.body` (or selector / element); pass `false` to keep inline. */
   teleport?: boolean | string | HTMLElement;
   /** Alias for `teleport`. */
@@ -54,6 +79,7 @@ export function Dialog({
   dismissible = true,
   flush,
   bodyFlush,
+  defaultAction = true,
   teleport,
   portal,
   className,
@@ -67,6 +93,8 @@ export function Dialog({
   const titleId = `${id}-title`;
   const descId = `${id}-desc`;
   const dialogRef = useRef<HTMLDialogElement | null>(null);
+  const defaultActionRef = useRef(defaultAction);
+  defaultActionRef.current = defaultAction;
   const [isOpen, setOpen] = useControllable(open, defaultOpen ?? false, onOpenChange);
   const [mounted, setMounted] = useState(false);
 
@@ -103,6 +131,14 @@ export function Dialog({
     if (!el || !dismissible) return;
     return lightDismiss(el);
   }, [dismissible, mounted, portalTarget, effectiveTeleport, portal]);
+
+  useEffect(() => {
+    const el = dialogRef.current;
+    if (!el) return;
+    return bindDialogDefaultAction(el, {
+      defaultAction: () => defaultActionRef.current,
+    });
+  }, [mounted, portalTarget, effectiveTeleport, portal]);
 
   useEffect(() => {
     const el = dialogRef.current;
@@ -151,6 +187,7 @@ export function Dialog({
       {...rest}
       ref={mergeRefs(dialogRef, ref)}
       className={cx('j-dialog', className)}
+      data-j-managed=""
       data-size={sizeAttr(size)}
       data-flush={flush || bodyFlush ? '' : undefined}
       aria-labelledby={title != null || header != null ? titleId : undefined}
@@ -191,14 +228,16 @@ export function Dialog({
       {closable && (
         <button type="button" className="j-dialog__close" aria-label="Close" onClick={close}>
           <svg
-            viewBox="0 0 16 16"
+            viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            strokeWidth={1.5}
+            strokeWidth="1.8"
             strokeLinecap="round"
+            strokeLinejoin="round"
+            shapeRendering="geometricPrecision"
             aria-hidden="true"
           >
-            <path d="M4 4l8 8M12 4l-8 8" />
+            <path d="M18 6 6 18M6 6l12 12" />
           </svg>
         </button>
       )}

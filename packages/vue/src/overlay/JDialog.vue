@@ -1,8 +1,28 @@
+<script lang="ts">
+declare module 'jenni-core/behaviors/dialog.js' {
+  export interface DialogDefaultActionOptions {
+    defaultAction?: boolean | string | (() => boolean | string | undefined);
+  }
+  export function resolveDialogDefaultButton(
+    dialog: HTMLDialogElement,
+    defaultAction?: boolean | string,
+  ): HTMLElement | null;
+  export function focusDialogDefaultAction(
+    dialog: HTMLDialogElement,
+    defaultAction?: boolean | string,
+  ): boolean;
+  export function bindDialogDefaultAction(
+    dialog: HTMLDialogElement,
+    options?: DialogDefaultActionOptions,
+  ): () => void;
+}
+</script>
+
 <script setup lang="ts">
 // JDialog — native modal <dialog>, teleported to <body> by default.
 // Focus trap, Escape, and focus restore come from the browser.
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, useId, useSlots, watch } from 'vue';
-import { lightDismiss } from 'jenni-core/behaviors/dialog.js';
+import { bindDialogDefaultAction, lightDismiss } from 'jenni-core/behaviors/dialog.js';
 
 defineOptions({ inheritAttrs: false });
 
@@ -19,10 +39,17 @@ const props = withDefaults(
     flush?: boolean;
     /** Alias for `flush`. */
     bodyFlush?: boolean;
+    /**
+     * Primary action triggered on `Enter` and focused on open.
+     * `true` (default) discovers any footer `[data-default-action]` button (`<JButton default>`);
+     * a `string` matches by `[data-action]`, `id`, `aria-label`, or trimmed button text;
+     * `false` disables default Enter activation.
+     */
+    defaultAction?: boolean | string;
     /** Teleport <dialog> to `<body>` (or a selector / element); pass `false` to keep inline. */
     teleport?: boolean | string | HTMLElement;
   }>(),
-  { size: 'md', closable: true, dismissible: true, teleport: true },
+  { size: 'md', closable: true, dismissible: true, defaultAction: true, teleport: true },
 );
 
 const open = defineModel<boolean>('open', { default: false });
@@ -33,6 +60,7 @@ const titleId = `${id}-title`;
 const descId = `${id}-desc`;
 const el = ref<HTMLDialogElement | null>(null);
 let stopDismiss: (() => void) | null = null;
+let stopDefaultAction: (() => void) | null = null;
 
 const teleportTo = computed(() =>
   typeof props.teleport === 'string' ||
@@ -75,13 +103,22 @@ function bindDismiss() {
   stopDismiss = el.value && props.dismissible ? lightDismiss(el.value) : null;
 }
 
+function bindDefault() {
+  stopDefaultAction?.();
+  stopDefaultAction = el.value
+    ? bindDialogDefaultAction(el.value, { defaultAction: () => props.defaultAction })
+    : null;
+}
+
 onMounted(() => {
   if (el.value) {
     bindDismiss();
+    bindDefault();
     if (open.value) show();
   } else {
     nextTick(() => {
       bindDismiss();
+      bindDefault();
       if (open.value) show();
     });
   }
@@ -89,6 +126,7 @@ onMounted(() => {
 
 watch(el, () => {
   bindDismiss();
+  bindDefault();
   if (open.value && el.value && !el.value.open) el.value.showModal();
 });
 watch(open, (v) => (v ? show() : close()));
@@ -96,6 +134,7 @@ watch(() => props.dismissible, bindDismiss);
 
 onBeforeUnmount(() => {
   stopDismiss?.();
+  stopDefaultAction?.();
   if (el.value?.open) el.value.close();
 });
 
@@ -108,6 +147,7 @@ defineExpose({ show, close });
     <dialog
       ref="el"
       class="j-dialog"
+      data-j-managed=""
       :data-size="size === 'md' ? undefined : size"
       :data-flush="flush || bodyFlush ? '' : undefined"
       :aria-labelledby="title || slots.header ? titleId : undefined"
@@ -136,14 +176,16 @@ defineExpose({ show, close });
         @click="close"
       >
         <svg
-          viewBox="0 0 16 16"
+          viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
-          stroke-width="1.5"
+          stroke-width="1.8"
           stroke-linecap="round"
+          stroke-linejoin="round"
+          shape-rendering="geometricPrecision"
           aria-hidden="true"
         >
-          <path d="M4 4l8 8M12 4l-8 8" />
+          <path d="M18 6 6 18M6 6l12 12" />
         </svg>
       </button>
     </dialog>

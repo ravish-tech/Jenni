@@ -13,6 +13,8 @@ const props = withDefaults(
     disabled?: boolean;
     iconOnly?: boolean;
     fullWidth?: boolean;
+    /** Marks this button as the dialog's primary default Enter action (`data-default-action`). */
+    default?: boolean;
     type?: 'button' | 'submit' | 'reset';
     /** Render as another element, e.g. "a" or a RouterLink component. */
     as?: string | object;
@@ -60,6 +62,7 @@ function onClick(e: MouseEvent) {
     :data-loading="loading || undefined"
     :data-icon-only="iconOnly || undefined"
     :data-full-width="fullWidth || undefined"
+    :data-default-action="props.default ? '' : undefined"
     v-bind="passthrough"
     @click="onClick"
   >

@@ -8,6 +8,8 @@ export interface ButtonProps extends ComponentProps<'button'> {
   loading?: boolean;
   iconOnly?: boolean;
   fullWidth?: boolean;
+  /** Marks this button as the dialog's primary default Enter action (`data-default-action`). */
+  default?: boolean;
 }
 
 export function Button({
@@ -17,6 +19,7 @@ export function Button({
   loading,
   iconOnly,
   fullWidth,
+  default: isDefault,
   disabled,
   type = 'button',
   className,
@@ -44,6 +47,7 @@ export function Button({
       data-loading={flag(loading)}
       data-icon-only={flag(iconOnly)}
       data-full-width={flag(fullWidth)}
+      data-default-action={flag(isDefault)}
       onClick={handleClick}
       {...rest}
     />
