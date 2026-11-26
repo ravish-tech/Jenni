@@ -4,7 +4,7 @@ export const meta = {
   group: 'Layout',
   order: 2,
   description: 'Page canvas, page headers, stacked & split settings sections, and container measures.',
-  status: 'draft',
+  status: 'stable',
 };
 </script>
 
@@ -32,6 +32,9 @@ const workspaceSlug = ref('meridian-design');
 const bio = ref('Design tokens, accessible primitives, and adaptive shells.');
 const ssoRequired = ref(true);
 const auditLog = ref(true);
+const zeroDowntime = ref(true);
+const edgeCache = ref(true);
+const previewProtection = ref(true);
 
 const containerSizes = [
   { size: 'sm' as const, token: '--j-container-sm (640px)', note: 'Auth, focused wizards, narrow settings' },
@@ -136,6 +139,78 @@ const html = `<div class="j-page" data-size="md">
                 description="Stream admin events to your SIEM endpoint in real time."
               />
             </JStack>
+          </JCard>
+        </JSection>
+      </JPage>
+    </div>
+  </DemoSection>
+
+  <DemoSection
+    title="Sticky Page Header (IntersectionObserver)"
+    description="Set sticky on JPageHeader (or sticky-header on JPage) to pin the header inside the nearest scroll container and reveal a 1px bottom hairline only once scrolled."
+  >
+    <div
+      style="
+        width: 100%;
+        max-height: 310px;
+        overflow-y: auto;
+        border-radius: var(--j-radius-lg);
+        box-shadow: 0 0 0 1px var(--j-border);
+        background: var(--j-bg);
+      "
+    >
+      <JPage size="md" sticky-header>
+        <JPageHeader
+          title="Delivery Pipeline"
+          description="Scroll inside this viewport to observe the sentinel-driven header border."
+        >
+          <template #eyebrow>
+            <span>Infrastructure</span>
+            <span>/</span>
+            <span style="color: var(--j-fg)">Rollouts</span>
+          </template>
+          <template #actions>
+            <JButton variant="outline" tone="neutral" size="sm">Pause</JButton>
+            <JButton size="sm">Deploy</JButton>
+          </template>
+        </JPageHeader>
+
+        <JSection
+          layout="split"
+          bordered
+          title="Traffic Shifting"
+          description="Progressive canary promotion across primary regions."
+        >
+          <JCard>
+            <JStack gap="field">
+              <JSwitch
+                v-model="zeroDowntime"
+                placement="end"
+                label="Zero-downtime health gates"
+                description="Hold promotion until error budget burn stays under 0.1%."
+              />
+              <JSwitch
+                v-model="edgeCache"
+                placement="end"
+                label="Purge stale edgemanifests"
+                description="Invalidate regional PoP caches atomically after cutover."
+              />
+            </JStack>
+          </JCard>
+        </JSection>
+
+        <JSection
+          layout="split"
+          title="Preview Isolation"
+          description="Protect ephemeral pull-request deployments behind org authentication."
+        >
+          <JCard>
+            <JSwitch
+              v-model="previewProtection"
+              placement="end"
+              label="Require SSO on preview URLs"
+              description="Block unauthenticated external access to branch sandboxes."
+            />
           </JCard>
         </JSection>
       </JPage>
