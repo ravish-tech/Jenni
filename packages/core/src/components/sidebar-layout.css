@@ -1,0 +1,332 @@
+/*
+ * Sidebar Layout — .j-sidebar-layout + .j-sidebar-toggle
+ *   Resizable, collapsible two-pane workspace shell with open / rail / hidden states,
+ *   pixel-exact offset-safe edge splitter, calm hover chevron button, edge right-click
+ *   context menu, and context-driven <JSidebarToggle /> / <SidebarToggle />.
+ *
+ * States on .j-sidebar-layout:
+ *   data-state: open (default) | rail | hidden
+ *   data-bordered: optional 1px surface frame + corner radius
+ *   data-dragging: active pointer resize lock (disables width transition during drag)
+ *
+ * Public custom properties:
+ *   --j-sidebar-layout-h       block-size of the layout root (default 100%)
+ *   --j-sidebar-layout-radius  corner radius when [data-bordered] (default --j-radius-lg)
+ *   --j-sidebar-rail-w         compact rail inline-size
+ */
+@layer jenni.components {
+  :where(.j-sidebar-layout) {
+    --_sidebar-open-w: var(--_sidebar-w, 260px);
+    --_rail-w: var(--j-sidebar-rail-w, max(44px, round(calc(52px * var(--j-density)), 1px)));
+    --_header-h: max(28px, round(calc(40px * var(--j-density)), 1px));
+
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    inline-size: 100%;
+    block-size: var(--j-sidebar-layout-h, 100%);
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: clip;
+    background-color: var(--j-bg);
+    color: var(--j-fg);
+    isolation: isolate;
+  }
+
+  :where(.j-sidebar-layout[data-bordered]) {
+    border-radius: var(--j-sidebar-layout-radius, var(--j-radius-lg));
+    box-shadow: 0 0 0 1px var(--j-border), var(--j-shadow-xs);
+  }
+
+  :where(.j-sidebar-layout[data-dragging]),
+  :where(.j-sidebar-layout[data-dragging] *) {
+    cursor: col-resize;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* ---- Sidebar Pane ---- */
+  :where(.j-sidebar-layout__sidebar) {
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 var(--_sidebar-open-w);
+    inline-size: var(--_sidebar-open-w);
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: hidden;
+    background-color: var(--j-surface-2);
+    color: var(--j-fg);
+    opacity: 1;
+    visibility: visible;
+    transition:
+      inline-size var(--j-duration-slow) var(--j-ease-emphasized),
+      flex-basis var(--j-duration-slow) var(--j-ease-emphasized),
+      opacity var(--j-duration-fast) var(--j-ease-out),
+      visibility 0ms linear 0ms;
+  }
+
+  :where(.j-sidebar-layout[data-state="rail"]) > :where(.j-sidebar-layout__sidebar) {
+    flex-basis: var(--_rail-w);
+    inline-size: var(--_rail-w);
+  }
+
+  :where(.j-sidebar-layout[data-state="hidden"]) > :where(.j-sidebar-layout__sidebar),
+  :where(.j-sidebar-layout__sidebar[hidden]) {
+    flex-basis: 0px;
+    inline-size: 0px;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+      inline-size var(--j-duration-slow) var(--j-ease-emphasized),
+      flex-basis var(--j-duration-slow) var(--j-ease-emphasized),
+      opacity var(--j-duration-fast) var(--j-ease-out),
+      visibility 0ms linear var(--j-duration-slow);
+  }
+
+  :where(.j-sidebar-layout[data-dragging]) > :where(.j-sidebar-layout__sidebar) {
+    transition-duration: 0ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(.j-sidebar-layout__sidebar) {
+      transition-duration: 0ms;
+    }
+  }
+
+  /* Prevent text reflow squishing while the open pane glides closed */
+  :where(.j-sidebar-layout__sidebar-pane) {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    inline-size: 100%;
+    min-inline-size: var(--_sidebar-open-w);
+    min-block-size: 0;
+    overflow: hidden;
+  }
+
+  :where(.j-sidebar-layout__sidebar-header) {
+    box-sizing: border-box;
+    flex-shrink: 0;
+    min-block-size: var(--_header-h);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--j-gap-related);
+    padding-inline: var(--j-space-3);
+    border-block-end: 1px solid var(--j-border);
+    min-inline-size: 0;
+  }
+
+  :where(.j-sidebar-layout__sidebar-header:has(> .j-toolbar)) {
+    min-block-size: 0;
+    padding-inline: 0;
+    border-block-end: 0;
+    display: block;
+  }
+
+  :where(.j-sidebar-layout__sidebar-body) {
+    box-sizing: border-box;
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  :where(.j-sidebar-layout__rail) {
+    box-sizing: border-box;
+    flex: 1 1 0%;
+    inline-size: 100%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--j-space-1-5);
+    padding-block: var(--j-space-2-5);
+    padding-inline: var(--j-space-1);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* ---- Edge Zone (Splitter + Thin Reopen Hover Zone + Chevron Button) ---- */
+  :where(.j-sidebar-layout__edge) {
+    box-sizing: border-box;
+    position: relative;
+    flex: 0 0 1px;
+    inline-size: 1px;
+    display: flex;
+    align-items: stretch;
+    background-color: var(--j-border);
+    z-index: 4;
+    transition: background-color var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  /* When hidden, collapse visible 1px track to 0px while keeping a 10px start-edge hover target */
+  :where(.j-sidebar-layout[data-state="hidden"]) > :where(.j-sidebar-layout__edge) {
+    flex-basis: 0px;
+    inline-size: 0px;
+    background-color: transparent;
+  }
+
+  /* Hover / context-menu hit zone when not using an active open splitter */
+  :where(.j-sidebar-layout__edge-zone) {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 50%;
+    inline-size: var(--j-resizable-hit, 10px);
+    translate: -50% 0;
+    z-index: 2;
+  }
+
+  :where(.j-sidebar-layout[data-state="hidden"]) :where(.j-sidebar-layout__edge-zone) {
+    inset-inline-start: 0;
+    inline-size: 12px;
+    translate: 0 0;
+  }
+
+  @media (hover: hover) {
+    :where(.j-sidebar-layout[data-state="rail"] > .j-sidebar-layout__edge:hover) {
+      background-color: color-mix(in oklch, var(--j-accent) 60%, var(--j-border));
+    }
+    :where(.j-sidebar-layout[data-state="hidden"]) :where(.j-sidebar-layout__edge:hover > .j-sidebar-layout__edge-zone) {
+      box-shadow: inset 2px 0 0 0 color-mix(in oklch, var(--j-accent) 65%, var(--j-border));
+    }
+    :where(.j-sidebar-layout[data-state="hidden"]:dir(rtl)) :where(.j-sidebar-layout__edge:hover > .j-sidebar-layout__edge-zone) {
+      box-shadow: inset -2px 0 0 0 color-mix(in oklch, var(--j-accent) 65%, var(--j-border));
+    }
+  }
+
+  /* Calm floating chevron button along the sidebar edge */
+  :where(.j-sidebar-layout__edge-btn) {
+    --_btn-size: max(20px, round(calc(22px * var(--j-density)), 2px));
+
+    appearance: none;
+    box-sizing: border-box;
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    translate: -50% -50%;
+    inline-size: var(--_btn-size);
+    block-size: var(--_btn-size);
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--j-radius-full);
+    border: 1px solid var(--j-border-strong);
+    background-color: var(--j-surface-1);
+    color: var(--j-fg-muted);
+    box-shadow: var(--j-shadow-sm);
+    cursor: pointer;
+    z-index: 5;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity var(--j-duration-slow) var(--j-ease-emphasized),
+      background-color var(--j-duration-fast) var(--j-ease-out),
+      border-color var(--j-duration-fast) var(--j-ease-out),
+      color var(--j-duration-fast) var(--j-ease-out),
+      box-shadow var(--j-duration-fast) var(--j-ease-out);
+  }
+
+  /* Keep the chevron pill fully inside the container bounds when sidebar is 0px hidden */
+  :where(.j-sidebar-layout[data-state="hidden"]) :where(.j-sidebar-layout__edge-btn) {
+    inset-inline-start: var(--j-space-1-5);
+    translate: 0 -50%;
+  }
+
+  :where(.j-sidebar-layout__edge-btn:dir(rtl)) :where(.j-icon, svg) {
+    scale: -1 1;
+  }
+
+  :where(
+    .j-sidebar-layout__edge:hover .j-sidebar-layout__edge-btn,
+    .j-sidebar-layout__edge:focus-within .j-sidebar-layout__edge-btn,
+    .j-sidebar-layout__edge-btn:focus-visible
+  ) {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* Hide chevron pill during active pointer drag so the hairline tracks cleanly */
+  :where(.j-sidebar-layout[data-dragging]) :where(.j-sidebar-layout__edge-btn) {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @media (hover: hover) {
+    :where(.j-sidebar-layout__edge-btn:hover) {
+      background-color: var(--j-surface-2);
+      border-color: color-mix(in oklch, var(--j-accent) 55%, var(--j-border-strong));
+      color: var(--j-fg);
+    }
+  }
+
+  :where(.j-sidebar-layout__edge-btn:focus-visible) {
+    outline: none;
+    border-color: var(--j-accent);
+    color: var(--j-accent);
+    box-shadow: var(--j-ring);
+  }
+
+  /* ---- Main Pane ---- */
+  :where(.j-sidebar-layout__main) {
+    box-sizing: border-box;
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--j-bg);
+    overflow: hidden;
+  }
+
+  :where(.j-sidebar-layout__main-header) {
+    box-sizing: border-box;
+    flex-shrink: 0;
+    min-block-size: var(--_header-h);
+    display: flex;
+    align-items: center;
+    gap: var(--j-gap-related);
+    padding-inline: var(--j-space-3);
+    border-block-end: 1px solid var(--j-border);
+    background-color: var(--j-surface-1);
+    min-inline-size: 0;
+  }
+
+  :where(.j-sidebar-layout__main-header:has(> .j-toolbar)) {
+    min-block-size: 0;
+    padding-inline: 0;
+    border-block-end: 0;
+    display: block;
+  }
+
+  :where(.j-sidebar-layout__content) {
+    box-sizing: border-box;
+    flex: 1 1 0%;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---- Context-Aware Toggle Button ---- */
+  :where(.j-sidebar-toggle) {
+    flex-shrink: 0;
+    color: var(--j-fg-muted);
+  }
+
+  @media (hover: hover) {
+    :where(.j-sidebar-toggle:hover:not(:disabled, [aria-disabled="true"])) {
+      color: var(--j-fg);
+    }
+  }
+}
