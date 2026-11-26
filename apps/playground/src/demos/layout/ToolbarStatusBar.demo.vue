@@ -4,8 +4,8 @@ export const meta = {
   group: 'Layout',
   order: 3.5,
   wide: true,
-  description: 'WAI-ARIA roving-focus action toolbars and 24px tabular-numeral workbench status bars.',
-  status: 'draft',
+  description: 'WAI-ARIA roving-focus action toolbars and configurable 22px–30px tabular-numeral workbench status bars.',
+  status: 'stable',
 };
 </script>
 
@@ -44,7 +44,7 @@ const code = `<JToolbar size="sm" aria-label="Editor actions">
   </template>
 </JToolbar>
 
-<JStatusBar variant="subtle">
+<JStatusBar size="lg" text-size="sm" mono variant="subtle">
   <template #start>
     <JStatusBarItem icon="git-branch" interactive>{{ branch }}</JStatusBarItem>
     <JStatusBarSeparator />
@@ -76,13 +76,13 @@ const code = `<JToolbar size="sm" aria-label="Editor actions">
         <template #start>
           <JToolbarGroup>
             <JButton size="sm" variant="soft" tone="accent">
-              <JIcon name="play" size="xs" /> Run All
+              <JIcon name="play" /> Run All
             </JButton>
             <JButton size="sm" variant="ghost" tone="neutral">
-              <JIcon name="stop" size="xs" /> Stop
+              <JIcon name="stop" /> Stop
             </JButton>
             <JButton size="sm" variant="ghost" tone="neutral">
-              <JIcon name="refresh" size="xs" /> Restart Kernel
+              <JIcon name="refresh" /> Restart Kernel
             </JButton>
           </JToolbarGroup>
           <JToolbarSeparator />
@@ -91,7 +91,7 @@ const code = `<JToolbar size="sm" aria-label="Editor actions">
         <template #end>
           <JBadge size="sm" tone="success" dot>Kernel Ready</JBadge>
           <JButton size="sm" variant="outline" tone="neutral">
-            <JIcon name="download" size="xs" /> Export
+            <JIcon name="download" /> Export
           </JButton>
         </template>
       </JToolbar>
@@ -156,6 +156,45 @@ const code = `<JToolbar size="sm" aria-label="Editor actions">
           </template>
           <template #end>
             <JStatusBarItem>Accent Active</JStatusBarItem>
+          </template>
+        </JStatusBar>
+      </div>
+    </JStack>
+  </DemoSection>
+
+  <DemoSection
+    title="30px Monospace Workbench Chrome (size=&quot;lg&quot; · text-size=&quot;sm&quot; · mono)"
+    description="StatusBar scales across sm (22px), md (24px default), and lg (30px) — or any explicit height — with optional text-size=&quot;sm&quot; and mono for telemetry and systems monitoring chrome."
+  >
+    <JStack gap="item" style="width: 100%">
+      <div style="border: 1px solid var(--j-border); border-radius: var(--j-radius-sm); overflow: clip">
+        <JStatusBar size="lg" text-size="sm" mono border="none">
+          <template #start>
+            <JStatusBarItem tone="success" dot>LIVE · 1,000 Hz</JStatusBarItem>
+            <JStatusBarSeparator />
+            <JStatusBarItem>
+              <template #icon><JIcon name="terminal" /></template>
+              pid 48210 · rss 41.8 MB
+            </JStatusBarItem>
+          </template>
+          <template #center>
+            <JStatusBarItem>cpu 3.2% · p99 0.84 ms</JStatusBarItem>
+          </template>
+          <template #end>
+            <JStatusBarItem interactive>30px · mono · sm</JStatusBarItem>
+          </template>
+        </JStatusBar>
+      </div>
+
+      <div style="border: 1px solid var(--j-border); border-radius: var(--j-radius-sm); overflow: clip">
+        <JStatusBar size="sm" border="none">
+          <template #start>
+            <JStatusBarItem icon="git-branch">release/v2.9</JStatusBarItem>
+            <JStatusBarSeparator />
+            <JStatusBarItem tone="info" dot>Synced</JStatusBarItem>
+          </template>
+          <template #end>
+            <JStatusBarItem>22px · size="sm"</JStatusBarItem>
           </template>
         </JStatusBar>
       </div>

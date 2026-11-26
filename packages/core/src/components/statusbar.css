@@ -1,7 +1,11 @@
 /*
  * StatusBar — <div class="j-statusbar" role="region" aria-label="Status bar">
  *   data-variant: subtle (default) | contrast | accent
+ *   data-size:    sm | md (default) | lg
+ *   data-text:    xs (default) | sm
+ *   data-mono:    boolean attribute for tabular monospace readout
  *   data-border:  top (default) | bottom | none
+ * Public props: --j-statusbar-h, --j-statusbar-fs
  * Parts:
  *   .j-statusbar__section  — start | center | end groups
  *   .j-statusbar__item     — compact status readout or interactive button/link
@@ -10,23 +14,40 @@
  */
 @layer jenni.components {
   :where(.j-statusbar) {
+    --_icon: 12px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--j-space-3);
-    block-size: max(18px, round(calc(24px * var(--j-density)), 1px));
+    block-size: var(--j-statusbar-h);
     inline-size: 100%;
     flex-shrink: 0;
     padding-inline: var(--j-space-2-5, 10px);
     background-color: var(--j-surface-2);
     border-block-start: 1px solid var(--j-border);
-    font-size: 11px;
+    font-size: var(--j-statusbar-fs, var(--j-text-xs));
     line-height: 1;
     font-variant-numeric: tabular-nums;
     color: var(--j-fg-muted);
     user-select: none;
     min-inline-size: 0;
     overflow: hidden;
+  }
+
+  /* Sizes & typography options */
+  :where(.j-statusbar[data-size="sm"]) {
+    --j-statusbar-h: max(18px, round(calc(22px * var(--j-density)), 1px));
+  }
+  :where(.j-statusbar[data-size="lg"]) {
+    --j-statusbar-h: max(24px, round(calc(30px * var(--j-density)), 1px));
+  }
+  :where(.j-statusbar[data-text="sm"]) {
+    --j-statusbar-fs: var(--j-text-sm);
+    --_icon: 14px;
+  }
+  :where(.j-statusbar[data-mono]) {
+    font-family: var(--j-font-mono);
   }
 
   /* Border placement */
@@ -99,9 +120,13 @@
     outline: none;
 
     & > svg {
-      inline-size: 12px;
-      block-size: 12px;
+      inline-size: var(--_icon, 12px);
+      block-size: var(--_icon, 12px);
       flex-shrink: 0;
+    }
+
+    & > .j-icon:not([data-size]) {
+      --_size: var(--j-icon-size, var(--_icon, 12px));
     }
   }
 
